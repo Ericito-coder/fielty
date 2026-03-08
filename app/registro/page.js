@@ -2,6 +2,8 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
 
+export const dynamic = 'force-dynamic'
+
 export default function Registro() {
   const [nombre, setNombre] = useState('')
   const [dni, setDni] = useState('')
@@ -10,15 +12,14 @@ export default function Registro() {
   const [cargando, setCargando] = useState(false)
   const [clienteId, setClienteId] = useState(null)
   const [error, setError] = useState('')
-
   const [NEGOCIO_ID, setNegocioId] = useState('b6bf5d90-9aca-46c4-8f9a-ff3ec342af67')
-const [REFERIDO_POR, setReferidoPor] = useState(null)
+  const [REFERIDO_POR, setReferidoPor] = useState(null)
 
-useEffect(() => {
-  const params = new URLSearchParams(window.location.search)
-  setNegocioId(params.get('negocio') || 'b6bf5d90-9aca-46c4-8f9a-ff3ec342af67')
-  setReferidoPor(params.get('ref') || null)
-}, [])
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    setNegocioId(params.get('negocio') || 'b6bf5d90-9aca-46c4-8f9a-ff3ec342af67')
+    setReferidoPor(params.get('ref') || null)
+  }, [])
 
   async function registrar() {
     if (!nombre) { setError('Ingresá tu nombre'); return }
@@ -26,7 +27,6 @@ useEffect(() => {
     setError('')
     setCargando(true)
 
-    // Crear el cliente nuevo
     const { data, error: insertError } = await supabase
       .from('clientes')
       .insert([{
@@ -45,9 +45,7 @@ useEffect(() => {
 
     const nuevoCliente = data[0]
 
-    // Si vino con referido, dar puntos a ambos
     if (REFERIDO_POR) {
-      // Buscar config del negocio
       const { data: negocio } = await supabase
         .from('negocios')
         .select('puntos_referido_emisor, puntos_referido_receptor')
@@ -57,7 +55,6 @@ useEffect(() => {
       const ptsEmisor = negocio?.puntos_referido_emisor || 100
       const ptsReceptor = negocio?.puntos_referido_receptor || 50
 
-      // Buscar puntos actuales del que refirió
       const { data: emisor } = await supabase
         .from('clientes')
         .select('puntos, puntos_historicos, referidos_count')
@@ -65,7 +62,6 @@ useEffect(() => {
         .single()
 
       if (emisor) {
-        // Dar puntos al que refirió
         await supabase
           .from('clientes')
           .update({
@@ -85,7 +81,6 @@ useEffect(() => {
             descripcion: `🤝 Referido exitoso: ${nombre} se registró con tu link`
           }])
 
-        // Dar puntos extra al nuevo cliente por venir referido
         await supabase
           .from('clientes')
           .update({
