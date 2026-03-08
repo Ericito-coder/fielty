@@ -148,7 +148,7 @@ export default function Registro() {
         </div>
         <div style={styles.field}>
           <label style={styles.label}>Fecha de nacimiento <span style={{color:'#bbb', fontWeight:400}}>(opcional)</span></label>
-          <input style={styles.input} type="date"
+          <input style={{...styles.input, width:'calc(100% - 32px)'}} type="date"
             value={fechaNacimiento} onChange={e => setFechaNacimiento(e.target.value)} />
         </div>
 
