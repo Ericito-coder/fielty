@@ -325,7 +325,7 @@ export default function Caja() {
 }
 
 const s = {
-  wrap: { minHeight:'100vh', background:'#0e0e0e', color:'white', maxWidth:420, margin:'0 auto', position:'relative' },
+  wrap: { minHeight:'100vh', background:'#0e0e0e', color:'white', width:'100%', maxWidth:420, margin:'0 auto', position:'relative', overflowX:'hidden' },
   toast: { position:'fixed', top:20, left:'50%', transform:'translateX(-50%)', color:'white', padding:'12px 24px', borderRadius:100, fontSize:14, fontWeight:600, zIndex:9999, whiteSpace:'nowrap', boxShadow:'0 8px 24px rgba(0,0,0,0.4)' },
   pinWrap: { display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', minHeight:'100vh', gap:24, padding:32 },
   ppLogo: { width:52, height:52, borderRadius:14, background:'#e0001b', display:'flex', alignItems:'center', justifyContent:'center', fontSize:18, fontWeight:900, color:'white' },
