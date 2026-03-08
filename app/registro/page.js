@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
 
 export default function Registro() {
@@ -11,9 +11,14 @@ export default function Registro() {
   const [clienteId, setClienteId] = useState(null)
   const [error, setError] = useState('')
 
+  const [NEGOCIO_ID, setNegocioId] = useState('b6bf5d90-9aca-46c4-8f9a-ff3ec342af67')
+const [REFERIDO_POR, setReferidoPor] = useState(null)
+
+useEffect(() => {
   const params = new URLSearchParams(window.location.search)
-  const NEGOCIO_ID = params.get('negocio') || 'b6bf5d90-9aca-46c4-8f9a-ff3ec342af67'
-  const REFERIDO_POR = params.get('ref') || null
+  setNegocioId(params.get('negocio') || 'b6bf5d90-9aca-46c4-8f9a-ff3ec342af67')
+  setReferidoPor(params.get('ref') || null)
+}, [])
 
   async function registrar() {
     if (!nombre) { setError('Ingresá tu nombre'); return }
