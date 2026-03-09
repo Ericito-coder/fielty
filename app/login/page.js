@@ -105,7 +105,7 @@ export default function Login() {
         </button>
 
         <button style={s.linkBtn} onClick={() => { setModo('reset'); setError('') }}>
-          ¿Olvidaste tu contraseña?
+          ¿Olvidaste tu contraseña? 
         </button>
 
         <div style={s.register}>
