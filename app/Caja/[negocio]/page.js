@@ -1,11 +1,12 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
 
-const NEGOCIO_ID = 'b6bf5d90-9aca-46c4-8f9a-ff3ec342af67'
 const PIN_CORRECTO = '1234'
 
-export default function Caja() {
+export default function Caja({ params }) {
+  const [negocioId, setNegocioId] = useState(null)
+  const [negocio, setNegocio] = useState(null)
   const [pantalla, setPantalla] = useState('pin')
   const [pin, setPin] = useState('')
   const [busqueda, setBusqueda] = useState('')
@@ -16,6 +17,16 @@ export default function Caja() {
   const [codigo, setCodigo] = useState('')
   const [canjeResult, setCanjeResult] = useState(null)
   const [mensaje, setMensaje] = useState(null)
+
+  useEffect(() => {
+    params.then(p => setNegocioId(p.negocio))
+  }, [params])
+
+  useEffect(() => {
+    if (!negocioId) return
+    supabase.from('negocios').select('*').eq('id', negocioId).single()
+      .then(({ data }) => setNegocio(data))
+  }, [negocioId])
 
   function presionarPin(d) {
     if (pin.length >= 4) return
@@ -37,7 +48,7 @@ export default function Caja() {
     const { data } = await supabase
       .from('clientes')
       .select('*, negocio:negocios(pesos_por_punto, puntos_por_tramo, color, nombre)')
-      .eq('negocio_id', NEGOCIO_ID)
+      .eq('negocio_id', negocioId)
       .or(`nombre.ilike.%${valor}%,dni.ilike.%${valor}%`)
       .limit(5)
     setClientes(data || [])
@@ -78,7 +89,7 @@ export default function Caja() {
       .from('transacciones')
       .insert([{
         cliente_id: clienteSeleccionado.id,
-        negocio_id: NEGOCIO_ID,
+        negocio_id: negocioId,
         tipo: 'suma',
         puntos: pts,
         descripcion: `Compra $${valor.toLocaleString()}`
@@ -95,13 +106,11 @@ export default function Caja() {
     setCargando(true)
     setCanjeResult(null)
 
-    const ahora = new Date().toISOString()
-
     const { data: canje } = await supabase
       .from('canjes')
       .select('*, clientes(id, nombre, puntos), recompensas(nombre, puntos_necesarios)')
       .eq('codigo', codigo.toUpperCase())
-      .eq('negocio_id', NEGOCIO_ID)
+      .eq('negocio_id', negocioId)
       .eq('estado', 'pendiente')
       .single()
 
@@ -109,18 +118,14 @@ export default function Caja() {
 
     if (!canje) { mostrarMensaje('❌ Código inválido o ya usado', 'error'); setCodigo(''); return }
 
-    // Verificar expiración
     if (new Date() > new Date(canje.expira_at)) {
       await supabase.from('canjes').update({ estado: 'expirado' }).eq('id', canje.id)
-
       const { data: clienteActual } = await supabase
         .from('clientes').select('puntos').eq('id', canje.clientes.id).single()
-
       await supabase
         .from('clientes')
         .update({ puntos: (clienteActual?.puntos || 0) + canje.puntos_descontados })
         .eq('id', canje.clientes.id)
-
       mostrarMensaje(`⏱️ Código expirado — se devolvieron ${canje.puntos_descontados} pts a ${canje.clientes.nombre.split(' ')[0]}`, 'error')
       setCodigo('')
       return
@@ -146,27 +151,29 @@ export default function Caja() {
     setTimeout(() => setMensaje(null), 3500)
   }
 
-  // Calcular pts preview
   const pesosPorPunto = clienteSeleccionado?.negocio?.pesos_por_punto || 100
   const puntosPorTramo = clienteSeleccionado?.negocio?.puntos_por_tramo || 1
   const ptsPreview = Math.floor((parseInt(monto) || 0) / pesosPorPunto) * puntosPorTramo
 
-  // Nivel
   const getNivel = (pts) => {
-    if (pts >= 5000) return { nombre:'Oro', emoji:'🥇', color:'#f5c842' }
-    if (pts >= 1000) return { nombre:'Plata', emoji:'🥈', color:'#aaa' }
-    return { nombre:'Bronce', emoji:'🥉', color:'#cd7f32' }
+    if (pts >= 5000) return { nombre:'Oro', emoji:'🥇' }
+    if (pts >= 1000) return { nombre:'Plata', emoji:'🥈' }
+    return { nombre:'Bronce', emoji:'🥉' }
   }
+
+  if (!negocio) return <div style={{minHeight:'100vh', background:'#0e0e0e'}} />
 
   if (pantalla === 'pin') return (
     <div style={s.wrap}>
       <div style={s.pinWrap}>
-        <div style={s.ppLogo}>PP</div>
-        <div style={s.pinTitle}>Ingresá tu PIN</div>
+        <div style={{...s.ppLogo, background: negocio.color}}>
+          {negocio.nombre.slice(0,2).toUpperCase()}
+        </div>
+        <div style={s.pinTitle}>{negocio.nombre}</div>
         <div style={s.pinSub}>Vista de caja · Staff</div>
         <div style={s.pinDots}>
           {[0,1,2,3].map(i => (
-            <div key={i} style={{...s.dot, background: i < pin.length ? '#e0001b' : '#2a2a2a'}} />
+            <div key={i} style={{...s.dot, background: i < pin.length ? negocio.color : '#2a2a2a'}} />
           ))}
         </div>
         <div style={s.numpad}>
@@ -178,7 +185,7 @@ export default function Caja() {
           ))}
         </div>
         <div style={{fontSize:12, color:'#444', textAlign:'center'}}>
-          PIN de prueba: <span style={{fontFamily:'monospace', color:'#e0001b'}}>1234</span>
+          PIN de prueba: <span style={{fontFamily:'monospace', color: negocio.color}}>1234</span>
         </div>
       </div>
     </div>
@@ -189,9 +196,11 @@ export default function Caja() {
       {mensaje && <div style={{...s.toast, background: mensaje.tipo==='error' ? '#e0001b' : '#00b96b'}}>{mensaje.texto}</div>}
       <div style={s.topbar}>
         <div style={s.topbarLeft}>
-          <div style={s.ppLogoSm}>PP</div>
+          <div style={{...s.ppLogoSm, background: negocio.color}}>
+            {negocio.nombre.slice(0,2).toUpperCase()}
+          </div>
           <div>
-            <div style={s.topbarBiz}>Caja · Pet Point</div>
+            <div style={s.topbarBiz}>Caja · {negocio.nombre}</div>
             <div style={s.topbarRole}>👤 Staff</div>
           </div>
         </div>
@@ -210,7 +219,7 @@ export default function Caja() {
               const nivel = getNivel(c.puntos_historicos || 0)
               return (
                 <div key={c.id} style={s.clientRow} onClick={() => seleccionarCliente(c)}>
-                  <div style={{...s.clientAvatar, background: c.negocio?.color || '#e0001b'}}>
+                  <div style={{...s.clientAvatar, background: negocio.color}}>
                     {c.nombre.slice(0,2).toUpperCase()}
                   </div>
                   <div style={{flex:1}}>
@@ -268,13 +277,13 @@ export default function Caja() {
           <div style={s.presets}>
             {[500,1000,2000,5000].map(v => (
               <button key={v}
-                style={{...s.presetBtn, ...(monto==v ? {background:'rgba(224,0,27,0.15)', borderWidth:1, borderStyle:'solid', borderColor:'#e0001b', color:'#e0001b'} : {})}}
+                style={{...s.presetBtn, ...(monto==v ? {background:`${negocio.color}22`, borderWidth:1, borderStyle:'solid', borderColor: negocio.color, color: negocio.color} : {})}}
                 onClick={() => setMonto(String(v))}>
                 ${v.toLocaleString()}
               </button>
             ))}
           </div>
-          <button style={{...s.btnRed, opacity: !monto || parseInt(monto)<100 ? 0.4 : 1}}
+          <button style={{...s.btnPrimary, background: negocio.color, opacity: !monto || parseInt(monto)<100 ? 0.4 : 1}}
             onClick={acreditarPuntos} disabled={cargando || !monto || parseInt(monto)<100}>
             {cargando ? 'Acreditando...' : 'Sumar puntos al cliente'}
           </button>
@@ -302,7 +311,7 @@ export default function Caja() {
               if (v.length > 3) v = v.slice(0,3) + '-' + v.slice(3,6)
               setCodigo(v)
             }} />
-          <button style={s.btnValidate} onClick={validarCanje} disabled={cargando}>
+          <button style={{...s.btnValidate, background: negocio.color}} onClick={validarCanje} disabled={cargando}>
             {cargando ? '...' : 'Validar'}
           </button>
         </div>
@@ -328,7 +337,7 @@ const s = {
   wrap: { minHeight:'100vh', background:'#0e0e0e', color:'white', width:'100%', maxWidth:420, margin:'0 auto', position:'relative', overflowX:'hidden' },
   toast: { position:'fixed', top:20, left:'50%', transform:'translateX(-50%)', color:'white', padding:'12px 24px', borderRadius:100, fontSize:14, fontWeight:600, zIndex:9999, whiteSpace:'nowrap', boxShadow:'0 8px 24px rgba(0,0,0,0.4)' },
   pinWrap: { display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', minHeight:'100vh', gap:24, padding:32 },
-  ppLogo: { width:52, height:52, borderRadius:14, background:'#e0001b', display:'flex', alignItems:'center', justifyContent:'center', fontSize:18, fontWeight:900, color:'white' },
+  ppLogo: { width:52, height:52, borderRadius:14, display:'flex', alignItems:'center', justifyContent:'center', fontSize:18, fontWeight:900, color:'white' },
   pinTitle: { fontSize:24, fontWeight:800 },
   pinSub: { fontSize:14, color:'#666', marginTop:-16 },
   pinDots: { display:'flex', gap:14 },
@@ -337,7 +346,7 @@ const s = {
   numBtn: { aspectRatio:1, borderRadius:20, border:'1px solid #2a2a2a', background:'#1a1a1a', color:'white', fontSize:22, fontWeight:600, cursor:'pointer', fontFamily:'inherit' },
   topbar: { display:'flex', alignItems:'center', gap:12, padding:'20px 20px 16px', borderBottom:'1px solid #1e1e1e' },
   topbarLeft: { display:'flex', alignItems:'center', gap:10, flex:1 },
-  ppLogoSm: { width:32, height:32, borderRadius:9, background:'#e0001b', display:'flex', alignItems:'center', justifyContent:'center', fontSize:12, fontWeight:900, color:'white', flexShrink:0 },
+  ppLogoSm: { width:32, height:32, borderRadius:9, display:'flex', alignItems:'center', justifyContent:'center', fontSize:12, fontWeight:900, color:'white', flexShrink:0 },
   topbarBiz: { fontSize:15, fontWeight:700 },
   topbarRole: { fontSize:11, color:'#666' },
   lockBtn: { background:'#1a1a1a', border:'1px solid #2a2a2a', borderRadius:10, padding:'8px 12px', color:'white', cursor:'pointer', fontSize:16 },
@@ -357,11 +366,11 @@ const s = {
   montoInput: { flex:1, background:'transparent', border:'none', outline:'none', color:'white', fontSize:36, fontWeight:500, fontFamily:'monospace', minWidth:0 },
   presets: { display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:8, marginBottom:16 },
   presetBtn: { padding:12, borderRadius:12, borderWidth:1, borderStyle:'solid', borderColor:'#2a2a2a', background:'#1a1a1a', color:'white', fontSize:13, fontWeight:700, cursor:'pointer', fontFamily:'inherit' },
-  btnRed: { width:'100%', padding:18, background:'#e0001b', border:'none', borderRadius:16, color:'white', fontSize:17, fontWeight:800, cursor:'pointer', fontFamily:'inherit' },
+  btnPrimary: { width:'100%', padding:18, border:'none', borderRadius:16, color:'white', fontSize:17, fontWeight:800, cursor:'pointer', fontFamily:'inherit' },
   btnGhost: { width:'100%', padding:16, background:'#1a1a1a', border:'1px solid #2a2a2a', borderRadius:14, color:'white', fontSize:15, fontWeight:700, cursor:'pointer', fontFamily:'inherit' },
   codeWrap: { display:'flex', gap:10, marginBottom:20 },
   codeInput: { flex:1, background:'#1a1a1a', border:'2px solid #2a2a2a', borderRadius:14, padding:'16px 18px', color:'white', fontSize:22, fontWeight:500, fontFamily:'monospace', letterSpacing:4, textAlign:'center', outline:'none' },
-  btnValidate: { padding:'16px 20px', background:'#00b96b', border:'none', borderRadius:14, color:'white', fontSize:14, fontWeight:800, cursor:'pointer', fontFamily:'inherit' },
+  btnValidate: { padding:'16px 20px', border:'none', borderRadius:14, color:'white', fontSize:14, fontWeight:800, cursor:'pointer', fontFamily:'inherit' },
   canjeCard: { background:'rgba(0,185,107,0.08)', border:'1px solid rgba(0,185,107,0.3)', borderRadius:20, padding:28, textAlign:'center' },
   btnGreen: { width:'100%', padding:18, background:'#00b96b', border:'none', borderRadius:14, color:'white', fontSize:17, fontWeight:800, cursor:'pointer', fontFamily:'inherit', boxShadow:'0 8px 24px rgba(0,185,107,0.3)' },
 }
