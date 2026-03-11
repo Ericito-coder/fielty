@@ -96,6 +96,7 @@ export default function Dashboard() {
           { id:'inicio', label:'📊 Inicio' },
           { id:'clientes', label:'👥 Clientes' },
           { id:'recompensas', label:'🎁 Recompensas' },
+          { id:'sucursales', label:'🏪 Sucursales' },
           { id:'config', label:'⚙️ Config' },
         ].map(item => (
           <button key={item.id} style={{
@@ -182,7 +183,8 @@ export default function Dashboard() {
 
         {/* RECOMPENSAS */}
         {seccion === 'recompensas' && <RecompensasSection negocioId={negocio.id} />}
-
+        {/* SUCURSALES */}
+        {seccion === 'sucursales' && <SucursalesSection negocio={negocio} />}
         {/* CONFIG */}
         {seccion === 'config' && <ConfigSection negocio={negocio} setNegocio={setNegocio} />}
 
@@ -431,6 +433,91 @@ function ConfigSection({ negocio, setNegocio }) {
 
         <button style={s.btnRed} onClick={guardar} disabled={guardando}>
           {guardando ? 'Guardando...' : 'Guardar cambios'}
+        </button>
+      </div>
+    </>
+  )
+}
+
+// ===== SUCURSALES =====
+function SucursalesSection({ negocio }) {
+  const [sucursales, setSucursales] = useState([])
+  const [nueva, setNueva] = useState({ nombre: '', direccion: '' })
+  const [guardando, setGuardando] = useState(false)
+
+  useEffect(() => { cargar() }, [negocio.id])
+
+  async function cargar() {
+    const { data } = await supabase.from('sucursales').select('*')
+      .eq('negocio_id', negocio.id).order('created_at')
+    setSucursales(data || [])
+  }
+
+  async function agregar() {
+    if (!nueva.nombre) return
+    setGuardando(true)
+    await supabase.from('sucursales').insert([{
+      negocio_id: negocio.id,
+      nombre: nueva.nombre,
+      direccion: nueva.direccion,
+    }])
+    setNueva({ nombre: '', direccion: '' })
+    await cargar()
+    setGuardando(false)
+  }
+
+  async function eliminar(id) {
+    await supabase.from('sucursales').delete().eq('id', id)
+    await cargar()
+  }
+
+  const urlBase = typeof window !== 'undefined' ? window.location.origin : ''
+
+  return (
+    <>
+      <div style={s.sectionTitle}>Sucursales ({sucursales.length})</div>
+
+      {sucursales.length === 0 && (
+        <div style={{...s.card, textAlign:'center', color:'#888', fontSize:14, padding:28}}>
+          Sin sucursales — tu caja usa la URL principal.<br/>
+          <span style={{fontSize:12, marginTop:8, display:'block'}}>Agregá sucursales si tenés más de un local.</span>
+        </div>
+      )}
+
+      {sucursales.map((suc, i) => (
+        <div key={i} style={s.card}>
+          <div style={{display:'flex', alignItems:'flex-start', justifyContent:'space-between', marginBottom:12}}>
+            <div>
+              <div style={{fontSize:16, fontWeight:800, color:'#0e0e0e'}}>{suc.nombre}</div>
+              {suc.direccion && <div style={{fontSize:12, color:'#888', marginTop:2}}>{suc.direccion}</div>}
+            </div>
+            <button style={s.deleteBtn} onClick={() => eliminar(suc.id)}>✕</button>
+          </div>
+          <div style={{fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.06em', color:'#888', marginBottom:6}}>URL de caja</div>
+          <div style={{background:'#f0f2f7', borderRadius:10, padding:'10px 14px', fontSize:12, fontFamily:'monospace', color:'#0e0e0e', wordBreak:'break-all'}}>
+            {urlBase}/caja/{negocio.id}/{suc.id}
+          </div>
+          <button style={{...s.btnRed, marginTop:12, padding:12, fontSize:13}}
+            onClick={() => navigator.clipboard.writeText(`${urlBase}/caja/${negocio.id}/${suc.id}`)}>
+            📋 Copiar URL de caja
+          </button>
+        </div>
+      ))}
+
+      <div style={s.sectionTitle}>Agregar sucursal</div>
+      <div style={s.card}>
+        <div style={s.configField}>
+          <label style={s.configLabel}>Nombre</label>
+          <input style={s.inputField} placeholder="Ej: Sucursal Centro"
+            value={nueva.nombre} onChange={e => setNueva({...nueva, nombre: e.target.value})} />
+        </div>
+        <div style={s.configField}>
+          <label style={s.configLabel}>Dirección (opcional)</label>
+          <input style={s.inputField} placeholder="Ej: Av. Corrientes 1234"
+            value={nueva.direccion} onChange={e => setNueva({...nueva, direccion: e.target.value})} />
+        </div>
+        <button style={s.btnRed} onClick={agregar} disabled={guardando}>
+          {guardando ? 'Guardando...' : '+ Agregar sucursal'}
         </button>
       </div>
     </>
