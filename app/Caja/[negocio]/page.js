@@ -2,7 +2,11 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
 
-const PIN_CORRECTO = '1234'
+useEffect(() => {
+    if (!negocioId) return
+    supabase.from('negocios').select('*').eq('id', negocioId).single()
+      .then(({ data }) => setNegocio(data))
+  }, [negocioId])
 
 export default function Caja({ params }) {
   const [negocioId, setNegocioId] = useState(null)
@@ -34,7 +38,7 @@ export default function Caja({ params }) {
     setPin(nuevo)
     if (nuevo.length === 4) {
       setTimeout(() => {
-        if (nuevo === PIN_CORRECTO) { setPantalla('buscar'); setPin('') }
+        if (nuevo === (negocio?.pin_caja || '1234')) { setPantalla('buscar'); setPin('') }
         else { mostrarMensaje('❌ PIN incorrecto', 'error'); setPin('') }
       }, 200)
     }

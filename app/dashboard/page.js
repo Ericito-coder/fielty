@@ -339,6 +339,7 @@ function ConfigSection({ negocio, setNegocio }) {
     puntos_cumpleanos: negocio.puntos_cumpleanos || 50,
     puntos_referido_emisor: negocio.puntos_referido_emisor || 100,
     puntos_referido_receptor: negocio.puntos_referido_receptor || 50,
+    pin_caja: negocio.pin_caja || '1234',
   })
   const [guardando, setGuardando] = useState(false)
   const [ok, setOk] = useState(false)
@@ -398,7 +399,16 @@ function ConfigSection({ negocio, setNegocio }) {
             value={form.puntos_cumpleanos}
             onChange={e => setForm({...form, puntos_cumpleanos: parseInt(e.target.value)})} />
         </div>
-
+<div style={s.configField}>
+          <label style={s.configLabel}>PIN de caja 🔐</label>
+          <input style={{...s.inputField, width:120, fontFamily:'monospace', letterSpacing:4}}
+            type="password" maxLength={6} placeholder="••••"
+            value={form.pin_caja || ''}
+            onChange={e => setForm({...form, pin_caja: e.target.value})} />
+          <div style={{fontSize:11, color:'#aaa', marginTop:6}}>
+            El PIN que usan tus empleados para entrar a la caja
+          </div>
+        </div>
         <div style={s.configField}>
           <label style={s.configLabel}>Puntos por referido 🤝</label>
           <div style={{display:'flex', gap:10, flexWrap:'wrap'}}>
