@@ -2,12 +2,6 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
 
-useEffect(() => {
-    if (!negocioId) return
-    supabase.from('negocios').select('*').eq('id', negocioId).single()
-      .then(({ data }) => setNegocio(data))
-  }, [negocioId])
-
 export default function Caja({ params }) {
   const [negocioId, setNegocioId] = useState(null)
   const [negocio, setNegocio] = useState(null)
