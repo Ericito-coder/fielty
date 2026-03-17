@@ -211,22 +211,73 @@ export default function Tarjeta({ params }) {
         </div>
       </div>
 
-      <div style={st.section}>
-        <div style={st.sectionTitle}>Historial</div>
-        <div style={st.histItem}>
-          <div style={st.histIcon}>✨</div>
-          <div style={st.histInfo}>
-            <div style={st.histTitle}>Bienvenida + bonus</div>
-            <div style={st.histDate}>Al registrarte</div>
-          </div>
-          <div style={st.histPts}>+10 pts</div>
-        </div>
-      </div>
+      <HistorialSection clienteId={id} />
 
     </div>
   )
 }
+function HistorialSection({ clienteId }) {
+  const [transacciones, setTransacciones] = useState([])
+  const [cargando, setCargando] = useState(true)
 
+  useEffect(() => {
+    if (!clienteId) return
+    supabase
+      .from('transacciones')
+      .select('*, sucursal:sucursales(nombre)')
+      .eq('cliente_id', clienteId)
+      .order('created_at', { ascending: false })
+      .limit(20)
+      .then(({ data }) => {
+        setTransacciones(data || [])
+        setCargando(false)
+      })
+  }, [clienteId])
+
+  const getIcono = (tipo) => {
+    if (tipo === 'suma') return '⭐'
+    if (tipo === 'cumpleanos') return '🎂'
+    if (tipo === 'referido') return '🤝'
+    if (tipo === 'canje') return '🎁'
+    return '✨'
+  }
+
+  const getColor = (tipo) => {
+    if (tipo === 'canje') return '#e0001b'
+    return '#00b96b'
+  }
+
+  const getPrefix = (tipo) => tipo === 'canje' ? '-' : '+'
+
+  return (
+    <div style={st.section}>
+      <div style={st.sectionTitle}>Historial</div>
+      {cargando && <div style={{textAlign:'center', padding:20, color:'#888', fontSize:13}}>Cargando...</div>}
+      {!cargando && transacciones.length === 0 && (
+        <div style={{textAlign:'center', padding:20, color:'#888', fontSize:13}}>
+          Todavía no hay movimientos
+        </div>
+      )}
+      {transacciones.map((t, i) => (
+        <div key={i} style={{...st.histItem, borderBottom: i < transacciones.length - 1 ? '1px solid #f0f1f5' : 'none'}}>
+          <div style={{...st.histIcon, background: t.tipo === 'canje' ? '#fff0f0' : t.tipo === 'cumpleanos' ? '#fff8e0' : '#f0f2f7'}}>
+            {getIcono(t.tipo)}
+          </div>
+          <div style={st.histInfo}>
+            <div style={st.histTitle}>{t.descripcion}</div>
+            <div style={st.histDate}>
+              {new Date(t.created_at).toLocaleDateString('es-AR', { day:'numeric', month:'short', year:'numeric' })}
+              {t.sucursal?.nombre && ` · ${t.sucursal.nombre}`}
+            </div>
+          </div>
+          <div style={{...st.histPts, color: getColor(t.tipo)}}>
+            {getPrefix(t.tipo)}{t.puntos} pts
+          </div>
+        </div>
+      ))}
+    </div>
+  )
+}
 const st = {
   wrap: { minHeight:'100vh', background:'#f0f2f7', padding:'20px 16px 60px', maxWidth:420, margin:'0 auto' },
   loader: { textAlign:'center', padding:60, color:'#888', fontSize:16 },
