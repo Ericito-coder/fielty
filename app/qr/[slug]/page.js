@@ -17,7 +17,7 @@ export default function QRPage({ params }) {
 
   useEffect(() => {
     if (!negocio) return
-    const url = `${window.location.origin}/registro?negocio=${negocio.id}`
+    const url = `${window.location.origin}/registro/${negocio.slug}`
     QRCode.toDataURL(url, {
       width: 400,
       margin: 2,
