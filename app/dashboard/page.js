@@ -442,7 +442,7 @@ function ConfigSection({ negocio, setNegocio }) {
 // ===== SUCURSALES =====
 function SucursalesSection({ negocio }) {
   const [sucursales, setSucursales] = useState([])
-  const [nueva, setNueva] = useState({ nombre: '', direccion: '' })
+  const [nueva, setNueva] = useState({ nombre: '', direccion: '', pin_caja: '1234' })
   const [guardando, setGuardando] = useState(false)
 
   useEffect(() => { cargar() }, [negocio.id])
@@ -460,6 +460,7 @@ function SucursalesSection({ negocio }) {
       negocio_id: negocio.id,
       nombre: nueva.nombre,
       direccion: nueva.direccion,
+      pin_caja: nueva.pin_caja || '1234',
     }])
     setNueva({ nombre: '', direccion: '' })
     await cargar()
@@ -515,6 +516,13 @@ function SucursalesSection({ negocio }) {
           <label style={s.configLabel}>Dirección (opcional)</label>
           <input style={s.inputField} placeholder="Ej: Av. Corrientes 1234"
             value={nueva.direccion} onChange={e => setNueva({...nueva, direccion: e.target.value})} />
+        </div>
+        <div style={s.configField}>
+          <label style={s.configLabel}>PIN de caja 🔐</label>
+          <input style={{...s.inputField, width:120, fontFamily:'monospace', letterSpacing:4}}
+            type="password" maxLength={6} placeholder="1234"
+            value={nueva.pin_caja}
+            onChange={e => setNueva({...nueva, pin_caja: e.target.value})} />
         </div>
         <button style={s.btnRed} onClick={agregar} disabled={guardando}>
           {guardando ? 'Guardando...' : '+ Agregar sucursal'}
