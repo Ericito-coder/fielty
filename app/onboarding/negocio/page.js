@@ -22,11 +22,17 @@ export default function ConfigNegocio() {
 
     const userId = localStorage.getItem('fielty_user_id')
 
+    const slug = nombre.toLowerCase()
+      .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-|-$/g, '')
+
     const { data, error: dbError } = await supabase
       .from('negocios')
       .insert([{
         nombre,
         color,
+        slug,
         tipo: 'puntos',
         pesos_por_punto: parseInt(pesosPorTramo) || 100,
         puntos_por_tramo: parseInt(puntosPorTramo) || 1,

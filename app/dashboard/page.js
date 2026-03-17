@@ -456,9 +456,15 @@ function SucursalesSection({ negocio }) {
   async function agregar() {
     if (!nueva.nombre) return
     setGuardando(true)
+    const slugSuc = nueva.nombre.toLowerCase()
+      .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-|-$/g, '')
+
     await supabase.from('sucursales').insert([{
       negocio_id: negocio.id,
       nombre: nueva.nombre,
+      slug: slugSuc,
       direccion: nueva.direccion,
       pin_caja: nueva.pin_caja || '1234',
     }])
@@ -496,10 +502,10 @@ function SucursalesSection({ negocio }) {
           </div>
           <div style={{fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.06em', color:'#888', marginBottom:6}}>URL de caja</div>
           <div style={{background:'#f0f2f7', borderRadius:10, padding:'10px 14px', fontSize:12, fontFamily:'monospace', color:'#0e0e0e', wordBreak:'break-all'}}>
-            {urlBase}/caja/{negocio.id}/{suc.id}
+            {urlBase}/c/{negocio.slug}/{suc.slug}
           </div>
           <button style={{...s.btnRed, marginTop:12, padding:12, fontSize:13}}
-            onClick={() => navigator.clipboard.writeText(`${urlBase}/caja/${negocio.id}/${suc.id}`)}>
+            onClick={() => navigator.clipboard.writeText(`${urlBase}/c/${negocio.slug}/${suc.slug}`)}>
             📋 Copiar URL de caja
           </button>
         </div>
