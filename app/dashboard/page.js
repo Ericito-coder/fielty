@@ -152,6 +152,35 @@ export default function Dashboard() {
                 <div style={s.metricLabel}>Tasa de retorno</div>
               </div>
             </div>
+            <div style={s.sectionTitle}>Links del negocio</div>
+<div style={s.card}>
+  <div style={{marginBottom:16}}>
+    <div style={{fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.06em', color:'#888', marginBottom:6}}>Registro de clientes</div>
+    <div style={{background:'#f0f2f7', borderRadius:10, padding:'10px 14px', fontSize:12, fontFamily:'monospace', color:'#0e0e0e', wordBreak:'break-all', marginBottom:8}}>
+      {typeof window !== 'undefined' ? window.location.origin : ''}/registro/{negocio.slug}
+    </div>
+    <div style={{display:'flex', gap:8}}>
+      <button style={{...s.btnRed, padding:10, fontSize:13, flex:1}}
+        onClick={() => navigator.clipboard.writeText(`${window.location.origin}/registro/${negocio.slug}`)}>
+        📋 Copiar link
+      </button>
+      <button style={{...s.btnRed, padding:10, fontSize:13, flex:1, background:'#0e0e0e'}}
+        onClick={() => window.open(`/qr/${negocio.slug}`, '_blank')}>
+        🖨️ Ver QR
+      </button>
+    </div>
+  </div>
+  <div>
+    <div style={{fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.06em', color:'#888', marginBottom:6}}>Caja (sin sucursal)</div>
+    <div style={{background:'#f0f2f7', borderRadius:10, padding:'10px 14px', fontSize:12, fontFamily:'monospace', color:'#0e0e0e', wordBreak:'break-all', marginBottom:8}}>
+      {typeof window !== 'undefined' ? window.location.origin : ''}/c/{negocio.slug}
+    </div>
+    <button style={{...s.btnRed, padding:10, fontSize:13}}
+      onClick={() => navigator.clipboard.writeText(`${window.location.origin}/c/${negocio.slug}`)}>
+      📋 Copiar link de caja
+    </button>
+  </div>
+</div>
 
             <div style={s.sectionTitle}>Últimas transacciones</div>
             <div style={s.card}>
