@@ -8,6 +8,7 @@ export default function RegistroSlug({ params }) {
   const [nombre, setNombre] = useState('')
   const [dni, setDni] = useState('')
   const [telefono, setTelefono] = useState('')
+const [email, setEmail] = useState('')
   const [fechaNacimiento, setFechaNacimiento] = useState('')
   const [cargando, setCargando] = useState(false)
   const [clienteId, setClienteId] = useState(null)
@@ -26,7 +27,8 @@ export default function RegistroSlug({ params }) {
 
   async function registrar() {
     if (!nombre) { setError('Ingresá tu nombre'); return }
-    if (!dni) { setError('Ingresá tu DNI'); return }
+if (!dni) { setError('Ingresá tu DNI'); return }
+if (!telefono) { setError('Ingresá tu WhatsApp'); return }
     if (!negocio) { setError('Negocio no encontrado'); return }
     setError('')
     setCargando(true)
@@ -37,6 +39,7 @@ export default function RegistroSlug({ params }) {
         nombre,
         dni,
         telefono,
+email: email || null,
         negocio_id: negocio.id,
         puntos: 10,
         puntos_historicos: 10,
@@ -141,9 +144,14 @@ export default function RegistroSlug({ params }) {
             value={dni} onChange={e => setDni(e.target.value)} />
         </div>
         <div style={styles.field}>
-          <label style={styles.label}>WhatsApp <span style={{color:'#bbb', fontWeight:400}}>(opcional)</span></label>
+          <label style={styles.label}>WhatsApp</label>
           <input style={styles.input} placeholder="Ej: 11 5555-1234"
             value={telefono} onChange={e => setTelefono(e.target.value)} />
+        </div>
+        <div style={styles.field}>
+          <label style={styles.label}>Email <span style={{color:'#bbb', fontWeight:400}}>(opcional)</span></label>
+          <input style={styles.input} type="email" placeholder="Ej: martina@gmail.com"
+            value={email} onChange={e => setEmail(e.target.value)} />
         </div>
         <div style={styles.field}>
           <label style={styles.label}>Fecha de nacimiento <span style={{color:'#bbb', fontWeight:400}}>(opcional)</span></label>
