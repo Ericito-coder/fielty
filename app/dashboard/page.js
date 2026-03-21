@@ -522,21 +522,22 @@ function SucursalesSection({ negocio }) {
       )}
       <div style={{display:'grid', gridTemplateColumns:'repeat(auto-fill, minmax(300px, 1fr))', gap:16, marginBottom:20}}>
         {sucursales.map((suc, i) => (
-          <div key={i} style={s.card}>
-            <div style={{display:'flex', alignItems:'flex-start', justifyContent:'space-between', marginBottom:12}}>
-              <div>
-                <div style={{fontSize:16, fontWeight:800, color:'#0e0e0e'}}>{suc.nombre}</div>
-                {suc.direccion && <div style={{fontSize:12, color:'#888', marginTop:2}}>{suc.direccion}</div>}
-              </div>
-              <button style={s.deleteBtn} onClick={() => eliminar(suc.id)}>✕</button>
+        <div key={i} style={s.card}>
+          <div style={{display:'flex', alignItems:'flex-start', justifyContent:'space-between', marginBottom:12}}>
+            <div>
+              <div style={{fontSize:16, fontWeight:800, color:'#0e0e0e'}}>{suc.nombre}</div>
+              {suc.direccion && <div style={{fontSize:12, color:'#888', marginTop:2}}>{suc.direccion}</div>}
             </div>
-            <div style={{fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.06em', color:'#888', marginBottom:6}}>URL de caja</div>
-            <div style={{background:'#f0f2f7', borderRadius:10, padding:'10px 14px', fontSize:12, fontFamily:'monospace', color:'#0e0e0e', wordBreak:'break-all', marginBottom:8}}>
-              {urlBase}/c/{negocio.slug}/{suc.slug}
-            </div>
-            <button style={{...s.btnRed, padding:12, fontSize:13}} onClick={() => navigator.clipboard.writeText(`${urlBase}/c/${negocio.slug}/${suc.slug}`)}>📋 Copiar URL de caja</button>
+            <button style={s.deleteBtn} onClick={() => eliminar(suc.id)}>✕</button>
           </div>
-        ))}
+          <div style={{fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.06em', color:'#888', marginBottom:6}}>URL de caja</div>
+          <div style={{background:'#f0f2f7', borderRadius:10, padding:'10px 14px', fontSize:12, fontFamily:'monospace', color:'#0e0e0e', wordBreak:'break-all', marginBottom:8}}>
+            {urlBase}/c/{negocio.slug}/{suc.slug}
+          </div>
+          <button style={{...s.btnRed, padding:12, fontSize:13, marginBottom:12}} onClick={() => navigator.clipboard.writeText(`${urlBase}/c/${negocio.slug}/${suc.slug}`)}>📋 Copiar URL de caja</button>
+          <PinSucursal suc={suc} recargar={cargar} />
+        </div>
+      ))}
       </div>
       <div style={s.sectionTitle}>Agregar sucursal</div>
       <div style={{...s.card, maxWidth:480}}>
@@ -555,6 +556,36 @@ function SucursalesSection({ negocio }) {
         <button style={s.btnRed} onClick={agregar} disabled={guardando}>{guardando ? 'Guardando...' : '+ Agregar sucursal'}</button>
       </div>
     </>
+  )
+}
+
+function PinSucursal({ suc, recargar }) {
+  const [pin, setPin] = useState(suc.pin_caja || '1234')
+  const [guardando, setGuardando] = useState(false)
+  const [ok, setOk] = useState(false)
+
+  async function guardar() {
+    setGuardando(true)
+    await supabase.from('sucursales').update({ pin_caja: pin }).eq('id', suc.id)
+    setGuardando(false)
+    setOk(true)
+    setTimeout(() => setOk(false), 2000)
+    recargar()
+  }
+
+  return (
+    <div style={{borderTop:'1px solid #f0f2f7', paddingTop:12}}>
+      <div style={{fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.06em', color:'#888', marginBottom:8}}>PIN de caja 🔐</div>
+      <div style={{display:'flex', gap:8, alignItems:'center'}}>
+        <input style={{padding:'10px 14px', border:'2px solid #e8eaf0', borderRadius:12, fontSize:15, fontFamily:'monospace', letterSpacing:4, outline:'none', width:120}}
+          type="password" maxLength={6} value={pin}
+          onChange={e => setPin(e.target.value)} />
+        <button style={{padding:'10px 16px', background: ok ? '#00b96b' : '#0e0e0e', border:'none', borderRadius:12, color:'white', fontSize:13, fontWeight:700, cursor:'pointer', fontFamily:'inherit'}}
+          onClick={guardar} disabled={guardando}>
+          {ok ? '✓ Guardado' : guardando ? '...' : 'Cambiar'}
+        </button>
+      </div>
+    </div>
   )
 }
 
