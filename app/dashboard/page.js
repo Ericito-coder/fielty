@@ -561,6 +561,7 @@ function SucursalesSection({ negocio }) {
 
 function PinSucursal({ suc, recargar }) {
   const [pin, setPin] = useState(suc.pin_caja || '1234')
+  const [mostrar, setMostrar] = useState(false)
   const [guardando, setGuardando] = useState(false)
   const [ok, setOk] = useState(false)
 
@@ -577,9 +578,15 @@ function PinSucursal({ suc, recargar }) {
     <div style={{borderTop:'1px solid #f0f2f7', paddingTop:12}}>
       <div style={{fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.06em', color:'#888', marginBottom:8}}>PIN de caja 🔐</div>
       <div style={{display:'flex', gap:8, alignItems:'center'}}>
-        <input style={{padding:'10px 14px', border:'2px solid #e8eaf0', borderRadius:12, fontSize:15, fontFamily:'monospace', letterSpacing:4, outline:'none', width:120}}
-          type="password" maxLength={6} value={pin}
-          onChange={e => setPin(e.target.value)} />
+        <div style={{display:'flex', alignItems:'center', border:'2px solid #e8eaf0', borderRadius:12, overflow:'hidden', flex:1, maxWidth:180}}>
+          <input style={{padding:'10px 14px', border:'none', fontSize:15, fontFamily:'monospace', letterSpacing: mostrar ? 2 : 4, outline:'none', width:'100%'}}
+            type={mostrar ? 'text' : 'password'} maxLength={6} value={pin}
+            onChange={e => setPin(e.target.value)} />
+          <button style={{padding:'10px 12px', background:'#f0f2f7', border:'none', cursor:'pointer', fontSize:14}}
+            onClick={() => setMostrar(!mostrar)}>
+            {mostrar ? '🙈' : '👁️'}
+          </button>
+        </div>
         <button style={{padding:'10px 16px', background: ok ? '#00b96b' : '#0e0e0e', border:'none', borderRadius:12, color:'white', fontSize:13, fontWeight:700, cursor:'pointer', fontFamily:'inherit'}}
           onClick={guardar} disabled={guardando}>
           {ok ? '✓ Guardado' : guardando ? '...' : 'Cambiar'}
