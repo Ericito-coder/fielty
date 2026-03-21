@@ -15,7 +15,7 @@ export default function Dashboard() {
   const [metricas, setMetricas] = useState(null)
   const [cargando, setCargando] = useState(true)
   const [seccion, setSeccion] = useState('inicio')
-  const [isMobile, setIsMobile] = useState(false)
+  const [isMobile, setIsMobile] = useState(null)
 
   useEffect(() => {
     verificarAuth()
@@ -55,6 +55,9 @@ export default function Dashboard() {
     window.location.href = '/login'
   }
 
+  if (isMobile === null) return (
+    <div style={{minHeight:'100vh', background:'#f0f2f7'}} />
+  )
   if (cargando) return (
     <div style={{minHeight:'100vh', background:'#f0f2f7', display:'flex', alignItems:'center', justifyContent:'center'}}>
       <div style={{color:'#888'}}>Cargando panel...</div>
