@@ -238,6 +238,7 @@ function InicioSection({ negocio, metricas, isDesktop }) {
           </div>
         </div>
       </div>
+      <MetricasSucursales negocioId={negocio.id} isDesktop={isDesktop} />
     </>
   )
 }
@@ -593,6 +594,86 @@ function PinSucursal({ suc, recargar }) {
         </button>
       </div>
     </div>
+  )
+}
+
+function MetricasSucursales({ negocioId, isDesktop }) {
+  const [datos, setDatos] = useState([])
+  const [cargando, setCargando] = useState(true)
+
+  useEffect(() => {
+    async function cargar() {
+      const { data: sucursales } = await supabase
+        .from('sucursales').select('*').eq('negocio_id', negocioId)
+
+      if (!sucursales || sucursales.length === 0) { setCargando(false); return }
+
+      const resultados = await Promise.all(sucursales.map(async (suc) => {
+        const { data: transacciones } = await supabase
+          .from('transacciones').select('puntos, tipo')
+          .eq('negocio_id', negocioId).eq('sucursal_id', suc.id)
+
+        const { data: canjes } = await supabase
+          .from('canjes').select('id')
+          .eq('negocio_id', negocioId).eq('sucursal_id', suc.id).eq('estado', 'usado')
+
+        const puntosAcreditados = transacciones?.filter(t => t.tipo === 'suma')
+          .reduce((a, t) => a + (t.puntos || 0), 0) || 0
+        const totalTransacciones = transacciones?.filter(t => t.tipo === 'suma').length || 0
+        const totalCanjes = canjes?.length || 0
+
+        return {
+          nombre: suc.nombre,
+          puntosAcreditados,
+          totalTransacciones,
+          totalCanjes,
+        }
+      }))
+
+      setDatos(resultados.sort((a, b) => b.puntosAcreditados - a.puntosAcreditados))
+      setCargando(false)
+    }
+    cargar()
+  }, [negocioId])
+
+  if (cargando || datos.length === 0) return null
+
+  const maxPuntos = Math.max(...datos.map(d => d.puntosAcreditados), 1)
+
+  return (
+    <>
+      <div style={s.sectionTitle}>Rendimiento por sucursal</div>
+      <div style={{display: isDesktop ? 'grid' : 'block', gridTemplateColumns:'repeat(auto-fill, minmax(280px, 1fr))', gap:16, marginBottom:20}}>
+        {datos.map((suc, i) => (
+          <div key={i} style={{background:'white', borderRadius:20, padding:20, boxShadow:'0 2px 8px rgba(0,0,0,0.06)', marginBottom: isDesktop ? 0 : 12}}>
+            <div style={{display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:16}}>
+              <div style={{fontSize:15, fontWeight:800, color:'#0e0e0e'}}>📍 {suc.nombre}</div>
+              {i === 0 && datos.length > 1 && (
+                <div style={{background:'#fff8e0', color:'#f0a500', fontSize:11, fontWeight:700, padding:'3px 10px', borderRadius:100}}>🏆 Top</div>
+              )}
+            </div>
+            <div style={{display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:10, marginBottom:16}}>
+              <div style={{textAlign:'center', background:'#f0f2f7', borderRadius:12, padding:'12px 8px'}}>
+                <div style={{fontSize:20, fontWeight:800, color:'#0e0e0e', fontFamily:'monospace'}}>{suc.totalTransacciones}</div>
+                <div style={{fontSize:10, color:'#888', marginTop:2}}>Ventas</div>
+              </div>
+              <div style={{textAlign:'center', background:'#f0f2f7', borderRadius:12, padding:'12px 8px'}}>
+                <div style={{fontSize:20, fontWeight:800, color:'#f0a500', fontFamily:'monospace'}}>{suc.puntosAcreditados}</div>
+                <div style={{fontSize:10, color:'#888', marginTop:2}}>Puntos</div>
+              </div>
+              <div style={{textAlign:'center', background:'#f0f2f7', borderRadius:12, padding:'12px 8px'}}>
+                <div style={{fontSize:20, fontWeight:800, color:'#00b96b', fontFamily:'monospace'}}>{suc.totalCanjes}</div>
+                <div style={{fontSize:10, color:'#888', marginTop:2}}>Canjes</div>
+              </div>
+            </div>
+            <div style={{fontSize:11, color:'#888', marginBottom:6}}>Puntos acreditados</div>
+            <div style={{background:'#f0f2f7', borderRadius:100, height:8, overflow:'hidden'}}>
+              <div style={{height:'100%', borderRadius:100, background:'linear-gradient(90deg, #e0001b, #f0a500)', width: `${Math.round((suc.puntosAcreditados / maxPuntos) * 100)}%`, transition:'width 0.8s ease'}} />
+            </div>
+          </div>
+        ))}
+      </div>
+    </>
   )
 }
 
