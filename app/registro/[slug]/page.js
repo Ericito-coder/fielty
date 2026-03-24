@@ -33,20 +33,27 @@ if (!telefono) { setError('Ingresá tu WhatsApp'); return }
     setError('')
     setCargando(true)
 
-    const { data: existente } = await supabase
-      .from('clientes')
-      .select('id, dni, telefono, email')
-      .eq('negocio_id', negocio.id)
-      .or(`dni.eq.${dni},telefono.eq.${telefono}${email ? `,email.eq.${email}` : ''}`)
-      .single()
+    const { data: porDni } = await supabase
+      .from('clientes').select('id').eq('negocio_id', negocio.id).eq('dni', dni).single()
+    if (porDni) {
+      setError('Ya tenés una tarjeta en este negocio registrada con ese DNI. ¡Pedile al empleado que te busque!')
+      setCargando(false); return
+    }
 
-    if (existente) {
-      let motivo = 'DNI'
-      if (existente.telefono === telefono) motivo = 'WhatsApp'
-      if (email && existente.email === email) motivo = 'email'
-      setError(`Ya tenés una tarjeta en este negocio registrada con ese ${motivo}. ¡Pedile al empleado que te busque!`)
-      setCargando(false)
-      return
+    const { data: porTelefono } = await supabase
+      .from('clientes').select('id').eq('negocio_id', negocio.id).eq('telefono', telefono).single()
+    if (porTelefono) {
+      setError('Ya tenés una tarjeta en este negocio registrada con ese WhatsApp. ¡Pedile al empleado que te busque!')
+      setCargando(false); return
+    }
+
+    if (email) {
+      const { data: porEmail } = await supabase
+        .from('clientes').select('id').eq('negocio_id', negocio.id).eq('email', email).single()
+      if (porEmail) {
+        setError('Ya tenés una tarjeta en este negocio registrada con ese email. ¡Pedile al empleado que te busque!')
+        setCargando(false); return
+      }
     }
 
     const { data, error: insertError } = await supabase
