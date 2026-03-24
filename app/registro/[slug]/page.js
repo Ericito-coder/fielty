@@ -35,13 +35,16 @@ if (!telefono) { setError('Ingresá tu WhatsApp'); return }
 
     const { data: existente } = await supabase
       .from('clientes')
-      .select('id')
+      .select('id, dni, telefono, email')
       .eq('negocio_id', negocio.id)
-      .eq('dni', dni)
+      .or(`dni.eq.${dni},telefono.eq.${telefono}${email ? `,email.eq.${email}` : ''}`)
       .single()
 
     if (existente) {
-      setError('Ya tenés una tarjeta en este negocio. ¡Pedile al empleado que te busque por tu DNI!')
+      let motivo = 'DNI'
+      if (existente.telefono === telefono) motivo = 'WhatsApp'
+      if (email && existente.email === email) motivo = 'email'
+      setError(`Ya tenés una tarjeta en este negocio registrada con ese ${motivo}. ¡Pedile al empleado que te busque!`)
       setCargando(false)
       return
     }
