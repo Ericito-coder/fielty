@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 
 export default function Landing() {
   const [scrolled, setScrolled] = useState(false)
-
+const [isMobile, setIsMobile] = useState(false)
   useEffect(() => {
     const hash = window.location.hash
     if (hash && hash.includes('access_token') && hash.includes('type=recovery')) {
@@ -12,7 +12,15 @@ export default function Landing() {
     }
     const handleScroll = () => setScrolled(window.scrollY > 40)
     window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
+
+    const checkMobile = () => setIsMobile(window.innerWidth < 768)
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+      window.removeEventListener('resize', checkMobile)
+    }
   }, [])
 
   return (
@@ -25,18 +33,19 @@ export default function Landing() {
             <div style={s.logoDot} />
             <span style={s.logoText}>fielty</span>
           </div>
-          {/* Desktop nav */}
-          <div style={{display:'flex', alignItems:'center', gap:28, '@media(max-width:768px)':{display:'none'}}}>
-            <a href="#como-funciona" style={s.navLink}>Cómo funciona</a>
-            <a href="#precios" style={s.navLink}>Precios</a>
-            <a href="/login" style={s.navLink}>Ingresar</a>
-            <a href="/onboarding/registro" style={s.navCta}>Empezá gratis →</a>
-          </div>
-          {/* Mobile nav — solo dos botones */}
-          <div style={{display:'flex', gap:10, alignItems:'center'}}>
-            <a href="/login" style={{fontSize:13, color:'#888', textDecoration:'none', fontWeight:500, padding:'8px 14px'}}>Ingresar</a>
-            <a href="/onboarding/registro" style={{...s.navCta, fontSize:13, padding:'8px 16px'}}>Empezá →</a>
-          </div>
+          {isMobile ? (
+            <div style={{display:'flex', gap:8, alignItems:'center'}}>
+              <a href="/login" style={{fontSize:13, color:'#888', textDecoration:'none', fontWeight:500, padding:'8px 12px'}}>Ingresar</a>
+              <a href="/onboarding/registro" style={{fontSize:13, color:'white', textDecoration:'none', fontWeight:700, background:'#e0001b', padding:'9px 16px', borderRadius:10}}>Empezá →</a>
+            </div>
+          ) : (
+            <div style={{display:'flex', alignItems:'center', gap:28}}>
+              <a href="#como-funciona" style={s.navLink}>Cómo funciona</a>
+              <a href="#precios" style={s.navLink}>Precios</a>
+              <a href="/login" style={s.navLink}>Ingresar</a>
+              <a href="/onboarding/registro" style={s.navCta}>Empezá gratis →</a>
+            </div>
+          )}
         </div>
       </nav>
 
