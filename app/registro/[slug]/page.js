@@ -33,15 +33,15 @@ if (!telefono) { setError('Ingresá tu WhatsApp'); return }
     setError('')
     setCargando(true)
 
-    const { data: porDni } = await supabase
-      .from('clientes').select('id').eq('negocio_id', negocio.id).eq('dni', dni).single()
+  const { data: porDni } = await supabase
+      .from('clientes').select('id').eq('negocio_id', negocio.id).eq('dni', dni).maybeSingle()
     if (porDni) {
       setError('Ya tenés una tarjeta en este negocio registrada con ese DNI. ¡Pedile al empleado que te busque!')
       setCargando(false); return
     }
 
     const { data: porTelefono } = await supabase
-      .from('clientes').select('id').eq('negocio_id', negocio.id).eq('telefono', telefono).single()
+      .from('clientes').select('id').eq('negocio_id', negocio.id).eq('telefono', telefono).maybeSingle()
     if (porTelefono) {
       setError('Ya tenés una tarjeta en este negocio registrada con ese WhatsApp. ¡Pedile al empleado que te busque!')
       setCargando(false); return
@@ -49,7 +49,7 @@ if (!telefono) { setError('Ingresá tu WhatsApp'); return }
 
     if (email) {
       const { data: porEmail } = await supabase
-        .from('clientes').select('id').eq('negocio_id', negocio.id).eq('email', email).single()
+        .from('clientes').select('id').eq('negocio_id', negocio.id).eq('email', email).maybeSingle()
       if (porEmail) {
         setError('Ya tenés una tarjeta en este negocio registrada con ese email. ¡Pedile al empleado que te busque!')
         setCargando(false); return
