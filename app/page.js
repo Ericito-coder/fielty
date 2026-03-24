@@ -141,13 +141,15 @@ const [isMobile, setIsMobile] = useState(false)
               },
               {
                 nombre: 'Pro',
-                precio: '$20.000',
-                periodo: 'por mes',
+                precio: '$10.000',
+                precioOriginal: '$20.000',
+                periodo: 'por mes · primer año',
                 color: '#e0001b',
                 features: ['Clientes ilimitados', 'Hasta 3 sucursales', 'Métricas por sucursal', 'Puntos de cumpleaños', 'Sistema de referidos', 'Soporte por WhatsApp'],
                 cta: 'Empezar con Pro',
                 href: '/onboarding/registro',
                 destacado: true,
+                oferta: true,
               },
               {
                 nombre: 'Business',
@@ -163,6 +165,12 @@ const [isMobile, setIsMobile] = useState(false)
               <div key={i} style={{...s.planCard, border: plan.destacado ? `2px solid ${plan.color}` : '1px solid #1e1e1e', transform: plan.destacado ? 'scale(1.04)' : 'scale(1)'}}>
                 {plan.destacado && <div style={{...s.planBadge, background: plan.color}}>Más popular</div>}
                 <div style={{fontSize:18, fontWeight:800, color:'white', marginBottom:8}}>{plan.nombre}</div>
+                {plan.precioOriginal && (
+                  <div style={{display:'flex', alignItems:'center', gap:8, marginBottom:4}}>
+                    <span style={{fontSize:16, color:'#555', fontFamily:'monospace', textDecoration:'line-through'}}>{plan.precioOriginal}</span>
+                    <span style={{background:'#e0001b', color:'white', fontSize:11, fontWeight:800, padding:'3px 8px', borderRadius:100}}>50% OFF</span>
+                  </div>
+                )}
                 <div style={{display:'flex', alignItems:'baseline', gap:6, marginBottom:4}}>
                   <span style={{fontSize:36, fontWeight:900, color:'white', fontFamily:'monospace'}}>{plan.precio}</span>
                 </div>
@@ -181,7 +189,7 @@ const [isMobile, setIsMobile] = useState(false)
             ))}
           </div>
           <div style={{textAlign:'center', marginTop:32, fontSize:14, color:'#555'}}>
-            🎁 <strong style={{color:'#888'}}>Early adopters:</strong> 50% de descuento en el plan Pro por un año. <a href="/onboarding/registro" style={{color:'#e0001b', fontWeight:700}}>Registrate ahora →</a>
+            🎁 <strong style={{color:'#888'}}>Por ser de los primeros:</strong> 50% de descuento en el plan Pro por un año. <a href="/onboarding/registro" style={{color:'#e0001b', fontWeight:700}}>Registrate ahora →</a>
           </div>
         </div>
       </section>
