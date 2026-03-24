@@ -55,7 +55,16 @@ if (!telefono) { setError('Ingresá tu WhatsApp'); return }
         setCargando(false); return
       }
     }
+const { count } = await supabase
+      .from('clientes')
+      .select('*', { count: 'exact', head: true })
+      .eq('negocio_id', negocio.id)
 
+    if (negocio.plan === 'gratis' && count >= 50) {
+      setError('No se pudo completar el registro. Contactá al negocio para más información.')
+      setCargando(false)
+      return
+    }
     const { data, error: insertError } = await supabase
       .from('clientes')
       .insert([{
