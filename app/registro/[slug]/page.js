@@ -29,9 +29,22 @@ const [email, setEmail] = useState('')
     if (!nombre) { setError('Ingresá tu nombre'); return }
 if (!dni) { setError('Ingresá tu DNI'); return }
 if (!telefono) { setError('Ingresá tu WhatsApp'); return }
-    if (!negocio) { setError('Negocio no encontrado'); return }
+   if (!negocio) { setError('Negocio no encontrado'); return }
     setError('')
     setCargando(true)
+
+    const { data: existente } = await supabase
+      .from('clientes')
+      .select('id')
+      .eq('negocio_id', negocio.id)
+      .eq('dni', dni)
+      .single()
+
+    if (existente) {
+      setError('Ya tenés una tarjeta en este negocio. ¡Pedile al empleado que te busque por tu DNI!')
+      setCargando(false)
+      return
+    }
 
     const { data, error: insertError } = await supabase
       .from('clientes')
