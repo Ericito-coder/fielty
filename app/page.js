@@ -25,11 +25,17 @@ export default function Landing() {
             <div style={s.logoDot} />
             <span style={s.logoText}>fielty</span>
           </div>
-          <div style={s.navLinks}>
+          {/* Desktop nav */}
+          <div style={{display:'flex', alignItems:'center', gap:28, '@media(max-width:768px)':{display:'none'}}}>
             <a href="#como-funciona" style={s.navLink}>Cómo funciona</a>
             <a href="#precios" style={s.navLink}>Precios</a>
             <a href="/login" style={s.navLink}>Ingresar</a>
             <a href="/onboarding/registro" style={s.navCta}>Empezá gratis →</a>
+          </div>
+          {/* Mobile nav — solo dos botones */}
+          <div style={{display:'flex', gap:10, alignItems:'center'}}>
+            <a href="/login" style={{fontSize:13, color:'#888', textDecoration:'none', fontWeight:500, padding:'8px 14px'}}>Ingresar</a>
+            <a href="/onboarding/registro" style={{...s.navCta, fontSize:13, padding:'8px 16px'}}>Empezá →</a>
           </div>
         </div>
       </nav>
@@ -217,7 +223,7 @@ const s = {
   hero: { minHeight:'100vh', display:'flex', alignItems:'center', justifyContent:'center', padding:'120px 32px 80px', position:'relative' },
   heroInner: { maxWidth:800, textAlign:'center' },
   heroBadge: { display:'inline-block', background:'#1a1a1a', border:'1px solid #2a2a2a', borderRadius:100, padding:'8px 20px', fontSize:13, color:'#888', marginBottom:32, fontWeight:500 },
-  heroTitle: { fontSize:72, fontWeight:900, lineHeight:1.05, letterSpacing:-2, marginBottom:24, color:'white' },
+  heroTitle: { fontSize:'clamp(36px, 8vw, 72px)', fontWeight:900, lineHeight:1.05, letterSpacing:-2, marginBottom:24, color:'white' },
   heroGradient: { background:'linear-gradient(135deg, #e0001b, #f0a500)', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent' },
   heroSub: { fontSize:20, color:'#666', lineHeight:1.7, marginBottom:40, maxWidth:580, margin:'0 auto 40px' },
   heroCtas: { display:'flex', gap:16, justifyContent:'center', flexWrap:'wrap', marginBottom:60 },
@@ -231,7 +237,7 @@ const s = {
   section: { padding:'100px 32px' },
   sectionInner: { maxWidth:1100, margin:'0 auto' },
   sectionBadge: { display:'inline-block', background:'#1a1a1a', border:'1px solid #2a2a2a', borderRadius:100, padding:'6px 16px', fontSize:12, color:'#888', marginBottom:20, fontWeight:600, textTransform:'uppercase', letterSpacing:'0.08em' },
-  sectionTitle: { fontSize:48, fontWeight:900, color:'white', marginBottom:16, letterSpacing:-1 },
+  sectionTitle: { fontSize:'clamp(28px, 5vw, 48px)', fontWeight:900, color:'white', marginBottom:16, letterSpacing:-1 },
   sectionSub: { fontSize:18, color:'#555', lineHeight:1.7, marginBottom:60 },
   stepsGrid: { display:'grid', gridTemplateColumns:'repeat(auto-fit, minmax(280px, 1fr))', gap:24 },
   stepCard: { background:'#1a1a1a', borderRadius:24, padding:32, border:'1px solid #2a2a2a' },
