@@ -229,9 +229,9 @@ export default function CajaSlug({ params }) {
         </div>
 
         {/* PANEL DERECHO */}
-        <div style={{flex:1, padding:32, overflowY:'auto'}}>
+        <div style={{flex:1, padding:32, overflowY:'auto', height:'calc(100vh - 65px)'}}>
           {!clienteSeleccionado && tabDesktop !== 'canje' && (
-            <div style={{display:'flex', alignItems:'center', justifyContent:'center', height:'100%', color:'#333', fontSize:15}}>
+            <div style={{display:'flex', alignItems:'center', justifyContent:'center', minHeight:400, color:'#333', fontSize:15}}>
               ← Seleccioná un cliente para acreditar puntos
             </div>
           )}
