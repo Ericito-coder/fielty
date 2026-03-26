@@ -236,7 +236,7 @@ export default function CajaSlug({ params }) {
             </div>
           )}
 
-          {clienteSeleccionado && tabDesktop !== 'canje' && (() => {
+          {clienteSeleccionado && (() => {
             const nivel = getNivel(clienteSeleccionado.puntos_historicos || 0)
             return (
               <div style={{maxWidth:520}}>
