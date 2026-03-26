@@ -292,7 +292,11 @@ export default function CajaSlug({ params }) {
                   </>
                 )}
 
-                {tabDesktop === 'canje' && <ValidarCanjePanel negocio={negocio} codigo={codigo} setCodigo={setCodigo} canjeResult={canjeResult} validarCanje={validarCanje} confirmarCanje={confirmarCanje} cargando={cargando} />}
+                {tabDesktop === 'canje' && (
+                  <div style={{marginTop:8}}>
+                    <ValidarCanjePanel negocio={negocio} codigo={codigo} setCodigo={setCodigo} canjeResult={canjeResult} validarCanje={validarCanje} confirmarCanje={confirmarCanje} cargando={cargando} />
+                  </div>
+                )}
               </div>
             )
           })()}
