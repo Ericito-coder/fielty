@@ -12,10 +12,7 @@ export default function Tarjeta({ params }) {
   const [segundos, setSegundos] = useState(86399)
 
   useEffect(() => { params.then(p => setId(p.id)) }, [params])
-  useEffect(() => { 
-    if (!id) return
-    cargarDatos()
-  }, [id])
+  useEffect(() => { if (!id) return; cargarDatos() }, [id])
 
   useEffect(() => {
     if (!codigoCanje || segundos <= 0) return
@@ -42,7 +39,6 @@ export default function Tarjeta({ params }) {
       .eq('activa', true)
       .order('puntos_necesarios', { ascending: true })
 
-       // Buscar canje pendiente activo
     const { data: canjeActivo } = await supabase
       .from('canjes')
       .select('*, recompensas(nombre)')
@@ -97,7 +93,6 @@ export default function Tarjeta({ params }) {
     setCodigoCanje({ codigo, recompensa })
     setCanjeando(null)
     setSegundos(86399)
-
   }
 
   function formatTime(s) {
@@ -110,23 +105,6 @@ export default function Tarjeta({ params }) {
   if (cargando) return <div style={st.wrap}><div style={st.loader}>Cargando tu tarjeta...</div></div>
   if (!cliente) return <div style={st.wrap}><div style={{textAlign:'center', padding:60}}>😕 Cliente no encontrado</div></div>
 
-  {codigoCanje && (
-  <div style={{background:'linear-gradient(135deg, #0e0e0e, #1a1a2e)', borderRadius:24, padding:24, marginBottom:16, textAlign:'center', boxShadow:'0 8px 32px rgba(0,0,0,0.2)'}}>
-    <div style={{fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.1em', color:'#00b96b', marginBottom:8}}>🎁 Canje activo</div>
-    <div style={{fontSize:18, fontWeight:800, color:'white', marginBottom:4}}>{codigoCanje.recompensa.nombre}</div>
-    <div style={{fontFamily:'monospace', fontSize:32, fontWeight:700, letterSpacing:6, color:'white', marginBottom:8}}>{codigoCanje.codigo}</div>
-    <div style={{fontSize:13, color:'#666', marginBottom:16}}>
-      Expira en <span style={{color: segundos < 3600 ? '#e0001b' : '#00b96b', fontWeight:700}}>{formatTime(segundos)}</span>
-    </div>
-    <div style={{fontSize:12, color:'#555', marginBottom:16}}>📌 Mostrá este código al empleado para canjear tu recompensa.</div>
-    <button style={{padding:'10px 20px', background:'#1e1e1e', border:'1px solid #2a2a2a', borderRadius:12, color:'#888', fontSize:13, fontWeight:600, cursor:'pointer', fontFamily:'inherit'}}
-      onClick={() => setCodigoCanje(null)}>
-      Cerrar
-    </button>
-  </div>
-)}
-
-  // Nivel del cliente
   const nivel = cliente.puntos_historicos >= 5000 ? { nombre:'Oro', emoji:'🥇', color:'#f5c842' }
     : cliente.puntos_historicos >= 1000 ? { nombre:'Plata', emoji:'🥈', color:'#aaa' }
     : { nombre:'Bronce', emoji:'🥉', color:'#cd7f32' }
@@ -137,6 +115,24 @@ export default function Tarjeta({ params }) {
 
   return (
     <div style={st.wrap}>
+
+      {/* CANJE ACTIVO */}
+      {codigoCanje && (
+        <div style={{background:'linear-gradient(135deg, #0e0e0e, #1a1a2e)', borderRadius:24, padding:24, marginBottom:16, textAlign:'center', boxShadow:'0 8px 32px rgba(0,0,0,0.2)'}}>
+          <div style={{fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.1em', color:'#00b96b', marginBottom:8}}>🎁 Canje activo</div>
+          <div style={{fontSize:18, fontWeight:800, color:'white', marginBottom:4}}>{codigoCanje.recompensa.nombre}</div>
+          <div style={{fontFamily:'monospace', fontSize:32, fontWeight:700, letterSpacing:6, color:'white', marginBottom:8}}>{codigoCanje.codigo}</div>
+          <div style={{fontSize:13, color:'#666', marginBottom:16}}>
+            Expira en <span style={{color: segundos < 3600 ? '#e0001b' : '#00b96b', fontWeight:700}}>{formatTime(segundos)}</span>
+          </div>
+          <div style={{fontSize:12, color:'#555', marginBottom:16}}>📌 Mostrá este código al empleado para canjear tu recompensa.</div>
+          <button style={{padding:'10px 20px', background:'#1e1e1e', border:'1px solid #2a2a2a', borderRadius:12, color:'#888', fontSize:13, fontWeight:600, cursor:'pointer', fontFamily:'inherit'}}
+            onClick={() => setCodigoCanje(null)}>
+            Cerrar
+          </button>
+        </div>
+      )}
+
       <div style={st.loyaltyCard}>
         <div style={st.cardTop}>
           <div style={{...st.bizLogo, background: cliente.negocio?.color || '#e0001b'}}>
@@ -200,7 +196,6 @@ export default function Tarjeta({ params }) {
         })}
       </div>
 
-      {/* REFERIDOS */}
       <div style={st.section}>
         <div style={st.sectionTitle}>Invitá amigos</div>
         <div style={{textAlign:'center', padding:'8px 0 16px'}}>
@@ -217,7 +212,7 @@ export default function Tarjeta({ params }) {
             border:'none', borderRadius:14, color:'white',
             fontSize:14, fontWeight:700, cursor:'pointer', fontFamily:'inherit'
           }} onClick={() => {
-            const link = `${window.location.origin}/registro?negocio=${cliente.negocio_id}&ref=${cliente.id}`
+            const link = `${window.location.origin}/registro/${cliente.negocio?.slug || ''}?ref=${cliente.id}`
             if (navigator.share) {
               navigator.share({ title: 'Sumate al programa de puntos', text: '¡Registrate con mi link y los dos ganamos puntos!', url: link })
             } else {
@@ -235,6 +230,7 @@ export default function Tarjeta({ params }) {
     </div>
   )
 }
+
 function HistorialSection({ clienteId }) {
   const [transacciones, setTransacciones] = useState([])
   const [cargando, setCargando] = useState(true)
@@ -261,11 +257,7 @@ function HistorialSection({ clienteId }) {
     return '✨'
   }
 
-  const getColor = (tipo) => {
-    if (tipo === 'canje') return '#e0001b'
-    return '#00b96b'
-  }
-
+  const getColor = (tipo) => tipo === 'canje' ? '#e0001b' : '#00b96b'
   const getPrefix = (tipo) => tipo === 'canje' ? '-' : '+'
 
   return (
@@ -273,9 +265,7 @@ function HistorialSection({ clienteId }) {
       <div style={st.sectionTitle}>Historial</div>
       {cargando && <div style={{textAlign:'center', padding:20, color:'#888', fontSize:13}}>Cargando...</div>}
       {!cargando && transacciones.length === 0 && (
-        <div style={{textAlign:'center', padding:20, color:'#888', fontSize:13}}>
-          Todavía no hay movimientos
-        </div>
+        <div style={{textAlign:'center', padding:20, color:'#888', fontSize:13}}>Todavía no hay movimientos</div>
       )}
       {transacciones.map((t, i) => (
         <div key={i} style={{...st.histItem, borderBottom: i < transacciones.length - 1 ? '1px solid #f0f1f5' : 'none'}}>
@@ -297,6 +287,7 @@ function HistorialSection({ clienteId }) {
     </div>
   )
 }
+
 const st = {
   wrap: { minHeight:'100vh', background:'#f0f2f7', padding:'20px 16px 60px', maxWidth:420, margin:'0 auto' },
   loader: { textAlign:'center', padding:60, color:'#888', fontSize:16 },
@@ -330,13 +321,4 @@ const st = {
   histTitle: { fontSize:14, fontWeight:600 },
   histDate: { fontSize:12, color:'#888', marginTop:1 },
   histPts: { fontSize:14, fontWeight:700, color:'#00b96b' },
-  qrCard: { background:'white', borderRadius:28, padding:'36px 28px', textAlign:'center', maxWidth:380, margin:'40px auto' },
-  qrReward: { fontSize:24, fontWeight:800, color:'#0e0e0e', marginBottom:6 },
-  qrDesc: { fontSize:14, color:'#888', marginBottom:28 },
-  qrBox: { width:180, height:180, background:'#0e0e0e', borderRadius:16, margin:'0 auto 24px', padding:16, display:'flex', alignItems:'center', justifyContent:'center' },
-  qrGrid: { display:'grid', gridTemplateColumns:'repeat(7,1fr)', gap:3, width:'100%', height:'100%' },
-  codigo: { fontFamily:'monospace', fontSize:28, fontWeight:700, letterSpacing:6, color:'#0e0e0e', marginBottom:8 },
-  expira: { fontSize:13, color:'#888', marginBottom:24 },
-  warning: { background:'#fff8f0', border:'1px solid #ffe5cc', borderRadius:12, padding:'14px 16px', fontSize:13, color:'#888', lineHeight:1.6, marginBottom:20, textAlign:'left' },
-  btnVolver: { width:'100%', padding:16, background:'#f0f2f7', border:'none', borderRadius:14, fontSize:15, fontWeight:700, cursor:'pointer', fontFamily:'inherit', color:'#0e0e0e' },
 }
