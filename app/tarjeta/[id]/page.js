@@ -43,7 +43,7 @@ export default function Tarjeta({ params }) {
     codigo += '-'
     for (let i = 0; i < 3; i++) codigo += chars[Math.floor(Math.random() * chars.length)]
 
-    const expira_at = new Date(Date.now() + 5 * 60 * 1000).toISOString()
+    const expira_at = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()
 
     const { error } = await supabase
       .from('canjes')
