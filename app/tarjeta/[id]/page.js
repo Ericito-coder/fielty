@@ -65,7 +65,7 @@ export default function Tarjeta({ params }) {
     setCliente({ ...cliente, puntos: nuevosPuntos })
     setCodigoCanje({ codigo, recompensa })
     setCanjeando(null)
-    setSegundos(299)
+    setSegundos(86399)
 
     const interval = setInterval(() => {
       setSegundos(s => {
@@ -99,7 +99,7 @@ export default function Tarjeta({ params }) {
         </div>
         <div style={st.codigo}>{codigoCanje.codigo}</div>
         <div style={st.expira}>
-          Expira en <span style={{color: segundos < 60 ? '#e0001b' : '#00b96b', fontWeight:700}}>{formatTime(segundos)}</span>
+          Expira en <span style={{color: segundos < 3600 ? '#e0001b' : '#00b96b', fontWeight:700}}>{formatTime(segundos)}</span>
         </div>
         <div style={st.warning}>📌 Una vez validado por el empleado, el código se invalida automáticamente.</div>
         <button style={st.btnVolver} onClick={() => setCodigoCanje(null)}>← Volver a mi tarjeta</button>
