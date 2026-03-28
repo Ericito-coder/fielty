@@ -76,9 +76,10 @@ export default function Tarjeta({ params }) {
   }
 
   function formatTime(s) {
-    const m = Math.floor(s / 60)
-    const sec = s % 60
-    return `${m}:${String(sec).padStart(2, '0')}`
+    const h = Math.floor(s / 3600)
+    const m = Math.floor((s % 3600) / 60)
+    if (h > 0) return `${h}h ${m}m`
+    return `${m}m ${s % 60}s`
   }
 
   if (cargando) return <div style={st.wrap}><div style={st.loader}>Cargando tu tarjeta...</div></div>
