@@ -110,28 +110,21 @@ export default function Tarjeta({ params }) {
   if (cargando) return <div style={st.wrap}><div style={st.loader}>Cargando tu tarjeta...</div></div>
   if (!cliente) return <div style={st.wrap}><div style={{textAlign:'center', padding:60}}>😕 Cliente no encontrado</div></div>
 
-  if (codigoCanje) return (
-    <div style={st.wrap}>
-      <div style={st.qrCard}>
-        <div style={{fontSize:14, color:'#888', marginBottom:4}}>{cliente.negocio?.nombre}</div>
-        <div style={st.qrReward}>{codigoCanje.recompensa.nombre}</div>
-        <div style={st.qrDesc}>Mostrá este código al empleado</div>
-        <div style={st.qrBox}>
-          <div style={st.qrGrid}>
-            {Array.from({length:49}).map((_,i) => (
-              <div key={i} style={{borderRadius:2, background: Math.random() > 0.5 ? '#0e0e0e' : 'white'}}/>
-            ))}
-          </div>
-        </div>
-        <div style={st.codigo}>{codigoCanje.codigo}</div>
-        <div style={st.expira}>
-          Expira en <span style={{color: segundos < 3600 ? '#e0001b' : '#00b96b', fontWeight:700}}>{formatTime(segundos)}</span>
-        </div>
-        <div style={st.warning}>📌 Una vez validado por el empleado, el código se invalida automáticamente.</div>
-        <button style={st.btnVolver} onClick={() => setCodigoCanje(null)}>← Volver a mi tarjeta</button>
-      </div>
+  {codigoCanje && (
+  <div style={{background:'linear-gradient(135deg, #0e0e0e, #1a1a2e)', borderRadius:24, padding:24, marginBottom:16, textAlign:'center', boxShadow:'0 8px 32px rgba(0,0,0,0.2)'}}>
+    <div style={{fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.1em', color:'#00b96b', marginBottom:8}}>🎁 Canje activo</div>
+    <div style={{fontSize:18, fontWeight:800, color:'white', marginBottom:4}}>{codigoCanje.recompensa.nombre}</div>
+    <div style={{fontFamily:'monospace', fontSize:32, fontWeight:700, letterSpacing:6, color:'white', marginBottom:8}}>{codigoCanje.codigo}</div>
+    <div style={{fontSize:13, color:'#666', marginBottom:16}}>
+      Expira en <span style={{color: segundos < 3600 ? '#e0001b' : '#00b96b', fontWeight:700}}>{formatTime(segundos)}</span>
     </div>
-  )
+    <div style={{fontSize:12, color:'#555', marginBottom:16}}>📌 Mostrá este código al empleado para canjear tu recompensa.</div>
+    <button style={{padding:'10px 20px', background:'#1e1e1e', border:'1px solid #2a2a2a', borderRadius:12, color:'#888', fontSize:13, fontWeight:600, cursor:'pointer', fontFamily:'inherit'}}
+      onClick={() => setCodigoCanje(null)}>
+      Cerrar
+    </button>
+  </div>
+)}
 
   // Nivel del cliente
   const nivel = cliente.puntos_historicos >= 5000 ? { nombre:'Oro', emoji:'🥇', color:'#f5c842' }
