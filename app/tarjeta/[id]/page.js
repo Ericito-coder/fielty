@@ -9,7 +9,7 @@ export default function Tarjeta({ params }) {
   const [id, setId] = useState(null)
   const [canjeando, setCanjeando] = useState(null)
   const [codigoCanje, setCodigoCanje] = useState(null)
-  const [segundos, setSegundos] = useState(299)
+  const [segundos, setSegundos] = useState(86399)
 
   useEffect(() => { params.then(p => setId(p.id)) }, [params])
   useEffect(() => { if (!id) return; cargarDatos() }, [id])
