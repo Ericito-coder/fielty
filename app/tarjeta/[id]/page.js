@@ -12,7 +12,21 @@ export default function Tarjeta({ params }) {
   const [segundos, setSegundos] = useState(86399)
 
   useEffect(() => { params.then(p => setId(p.id)) }, [params])
-  useEffect(() => { if (!id) return; cargarDatos() }, [id])
+  useEffect(() => { 
+    if (!id) return
+    cargarDatos()
+  }, [id])
+
+  useEffect(() => {
+    if (!codigoCanje || segundos <= 0) return
+    const interval = setInterval(() => {
+      setSegundos(s => {
+        if (s <= 1) { clearInterval(interval); return 0 }
+        return s - 1
+      })
+    }, 1000)
+    return () => clearInterval(interval)
+  }, [codigoCanje])
 
   async function cargarDatos() {
     const { data: clienteData } = await supabase
@@ -27,6 +41,23 @@ export default function Tarjeta({ params }) {
       .eq('negocio_id', clienteData.negocio_id)
       .eq('activa', true)
       .order('puntos_necesarios', { ascending: true })
+
+       // Buscar canje pendiente activo
+    const { data: canjeActivo } = await supabase
+      .from('canjes')
+      .select('*, recompensas(nombre)')
+      .eq('cliente_id', id)
+      .eq('estado', 'pendiente')
+      .gt('expira_at', new Date().toISOString())
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .maybeSingle()
+
+    if (canjeActivo) {
+      const segsRestantes = Math.floor((new Date(canjeActivo.expira_at) - new Date()) / 1000)
+      setSegundos(segsRestantes)
+      setCodigoCanje({ codigo: canjeActivo.codigo, recompensa: canjeActivo.recompensas })
+    }
 
     setCliente(clienteData)
     setRecompensas(recompensasData || [])
@@ -67,12 +98,6 @@ export default function Tarjeta({ params }) {
     setCanjeando(null)
     setSegundos(86399)
 
-    const interval = setInterval(() => {
-      setSegundos(s => {
-        if (s <= 1) { clearInterval(interval); return 0 }
-        return s - 1
-      })
-    }, 1000)
   }
 
   function formatTime(s) {
