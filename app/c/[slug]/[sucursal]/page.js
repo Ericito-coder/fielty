@@ -228,15 +228,22 @@ export default function CajaSlugSucursal({ params }) {
           </div>
         </div>
 
-        {/* PANEL DERECHO */}
-        <div style={{flex:1, padding:32, overflowY:'auto'}}>
+                {/* PANEL DERECHO */}
+        <div style={{flex:1, padding:32, overflowY:'auto', height:'calc(100vh - 65px)'}}>
           {!clienteSeleccionado && tabDesktop !== 'canje' && (
-            <div style={{display:'flex', alignItems:'center', justifyContent:'center', height:'100%', color:'#333', fontSize:15}}>
+            <div style={{display:'flex', alignItems:'center', justifyContent:'center', minHeight:400, color:'#333', fontSize:15}}>
               ← Seleccioná un cliente para acreditar puntos
             </div>
           )}
 
-          {clienteSeleccionado && tabDesktop !== 'canje' && (() => {
+          {tabDesktop === 'canje' && !clienteSeleccionado && (
+            <div style={{maxWidth:520}}>
+              <div style={{fontSize:20, fontWeight:800, marginBottom:24}}>🎁 Validar canje</div>
+              <ValidarCanjePanel negocio={negocio} codigo={codigo} setCodigo={setCodigo} canjeResult={canjeResult} validarCanje={validarCanje} confirmarCanje={confirmarCanje} cargando={cargando} />
+            </div>
+          )}
+
+          {clienteSeleccionado && (() => {
             const nivel = getNivel(clienteSeleccionado.puntos_historicos || 0)
             return (
               <div style={{maxWidth:520}}>
@@ -287,22 +294,16 @@ export default function CajaSlugSucursal({ params }) {
                     </button>
                   </>
                 )}
-                {tabDesktop === 'canje' && <ValidarCanjePanel negocio={negocio} codigo={codigo} setCodigo={setCodigo} canjeResult={canjeResult} validarCanje={validarCanje} confirmarCanje={confirmarCanje} cargando={cargando} />}
+                {tabDesktop === 'canje' && (
+                  <ValidarCanjePanel negocio={negocio} codigo={codigo} setCodigo={setCodigo} canjeResult={canjeResult} validarCanje={validarCanje} confirmarCanje={confirmarCanje} cargando={cargando} />
+                )}
               </div>
             )
           })()}
-
-          {tabDesktop === 'canje' && !clienteSeleccionado && (
-            <div style={{maxWidth:520}}>
-              <div style={{fontSize:20, fontWeight:800, marginBottom:24}}>🎁 Validar canje</div>
-              <ValidarCanjePanel negocio={negocio} codigo={codigo} setCodigo={setCodigo} canjeResult={canjeResult} validarCanje={validarCanje} confirmarCanje={confirmarCanje} cargando={cargando} />
-            </div>
-          )}
         </div>
       </div>
     </div>
   )
-
   // ===== MOBILE =====
   if (pantalla === 'buscar') return (
     <div style={s.mobileWrap}>
