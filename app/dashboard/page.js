@@ -1,6 +1,5 @@
 'use client'
 import { useEffect, useState } from 'react'
-import { useSearchParams } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 
 const NAV_ITEMS = [
@@ -18,17 +17,15 @@ export default function Dashboard() {
   const [seccion, setSeccion] = useState('inicio')
   const [isMobile, setIsMobile] = useState(null)
   const [mostrarExito, setMostrarExito] = useState(false)
-  const searchParams = useSearchParams()
 
   useEffect(() => {
-    if (searchParams.get('suscripcion') === 'ok') {
+    const params = new URLSearchParams(window.location.search)
+    if (params.get('suscripcion') === 'ok') {
       setMostrarExito(true)
-      // Limpiar el param de la URL sin recargar
       window.history.replaceState({}, '', '/dashboard')
-      // Auto-ocultar después de 8 segundos
       setTimeout(() => setMostrarExito(false), 8000)
     }
-  }, [searchParams])
+  }, [])
 
   useEffect(() => {
     verificarAuth()
