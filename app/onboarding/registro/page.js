@@ -8,11 +8,15 @@ export default function Registro() {
   const [nombre, setNombre] = useState('')
   const [cargando, setCargando] = useState(false)
   const [error, setError] = useState('')
+  const [plan, setPlan] = useState('')
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
-    const plan = params.get('plan')
-    if (plan) localStorage.setItem('fielty_plan', plan)
+    const p = params.get('plan')
+    if (p) {
+      localStorage.setItem('fielty_plan', p)
+      setPlan(p)
+    }
   }, [])
 
   async function registrar() {
@@ -50,7 +54,12 @@ export default function Registro() {
 
         <div style={s.step}>Paso 1 de 3</div>
         <h1 style={s.title}>Creá tu cuenta</h1>
-        <p style={s.sub}>Gratis para empezar. Sin tarjeta de crédito.</p>
+        <p style={s.sub}>
+          {plan === 'pro_early' && 'Estás a un paso de activar el plan Pro. Primero creá tu cuenta.'}
+          {plan === 'pro' && 'Estás a un paso de activar el plan Pro. Primero creá tu cuenta.'}
+          {plan === 'business' && 'Estás a un paso de activar el plan Business. Primero creá tu cuenta.'}
+          {!plan && 'Gratis para empezar. Sin tarjeta de crédito.'}
+        </p>
 
         <div style={s.field}>
           <label style={s.label}>Tu nombre</label>
