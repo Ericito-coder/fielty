@@ -68,7 +68,7 @@ export default function Registro() {
         </div>
         <div style={s.field}>
           <label style={s.label}>Email</label>
-          <input style={s.input} type="email" placeholder="Ej: marcos@petpoint.com"
+          <input style={s.input} type="email" placeholder="Ej: marcos@gmail.com"
             value={email} onChange={e => setEmail(e.target.value)} />
         </div>
         <div style={s.field}>
