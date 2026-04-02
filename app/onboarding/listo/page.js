@@ -16,6 +16,14 @@ export default function Listo() {
       .then(({ data }) => setNegocio(data))
   }, [])
 
+  useEffect(() => {
+    if (!negocio) return
+    const plan = localStorage.getItem('fielty_plan')
+    if (plan && plan !== 'gratis') {
+      setTimeout(() => { window.location.href = '/dashboard/upgrade' }, 1800)
+    }
+  }, [negocio])
+
   if (!negocio) return (
     <div style={s.wrap}>
       <div style={{color:'#888', fontSize:16}}>Cargando...</div>
@@ -83,8 +91,13 @@ export default function Listo() {
           </div>
         </div>
 
-        <button style={s.btn} onClick={() => window.location.href = '/dashboard'}>
-          Ir al panel →
+        <button style={s.btn} onClick={() => {
+          const plan = localStorage.getItem('fielty_plan')
+          window.location.href = (plan && plan !== 'gratis') ? '/dashboard/upgrade' : '/dashboard'
+        }}>
+          {typeof window !== 'undefined' && localStorage.getItem('fielty_plan') && localStorage.getItem('fielty_plan') !== 'gratis'
+            ? 'Completar pago →'
+            : 'Ir al panel →'}
         </button>
       </div>
     </div>

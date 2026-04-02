@@ -1,9 +1,15 @@
 import { NextResponse } from 'next/server'
 import { MercadoPagoConfig, PreApprovalPlan } from 'mercadopago'
+import { createClient } from '@supabase/supabase-js'
 
-const client = new MercadoPagoConfig({ 
-  accessToken: process.env.MP_ACCESS_TOKEN 
+const client = new MercadoPagoConfig({
+  accessToken: process.env.MP_ACCESS_TOKEN
 })
+
+const supabaseAdmin = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL,
+  process.env.SUPABASE_SERVICE_ROLE_KEY
+)
 
 export async function POST(request) {
   try {
@@ -35,9 +41,15 @@ export async function POST(request) {
       }
     })
 
-    return NextResponse.json({ 
+    // Guardar el plan ID de MP en el negocio para poder resolverlo desde el webhook
+    await supabaseAdmin
+      .from('negocios')
+      .update({ mp_plan_id: resultado.id, mp_plan_tipo: plan })
+      .eq('id', negocioId)
+
+    return NextResponse.json({
       init_point: resultado.init_point,
-      id: resultado.id 
+      id: resultado.id
     })
 
   } catch (error) {

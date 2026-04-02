@@ -1,5 +1,6 @@
 'use client'
 import { useEffect, useState } from 'react'
+import { useSearchParams } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 
 const NAV_ITEMS = [
@@ -16,6 +17,18 @@ export default function Dashboard() {
   const [cargando, setCargando] = useState(true)
   const [seccion, setSeccion] = useState('inicio')
   const [isMobile, setIsMobile] = useState(null)
+  const [mostrarExito, setMostrarExito] = useState(false)
+  const searchParams = useSearchParams()
+
+  useEffect(() => {
+    if (searchParams.get('suscripcion') === 'ok') {
+      setMostrarExito(true)
+      // Limpiar el param de la URL sin recargar
+      window.history.replaceState({}, '', '/dashboard')
+      // Auto-ocultar después de 8 segundos
+      setTimeout(() => setMostrarExito(false), 8000)
+    }
+  }, [searchParams])
 
   useEffect(() => {
     verificarAuth()
@@ -88,6 +101,7 @@ export default function Dashboard() {
         ))}
       </div>
       <div style={{padding:16}}>
+        {mostrarExito && <BannerExito onClose={() => setMostrarExito(false)} />}
         <SeccionContenido seccion={seccion} negocio={negocio} metricas={metricas} setNegocio={setNegocio} />
       </div>
     </div>
@@ -143,6 +157,7 @@ export default function Dashboard() {
 
       {/* MAIN CONTENT */}
       <div style={{marginLeft:260, flex:1, padding:32, minHeight:'100vh'}}>
+        {mostrarExito && <BannerExito onClose={() => setMostrarExito(false)} />}
         {/* Header */}
         <div style={{marginBottom:28}}>
           <div style={{fontSize:22, fontWeight:800, color:'#0e0e0e'}}>
@@ -687,4 +702,33 @@ const s = {
   configLabel: { display:'block', fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.06em', color:'#888', marginBottom:8 },
   inputField: { width:'100%', padding:'12px 14px', border:'2px solid #e8eaf0', borderRadius:12, fontSize:15, fontFamily:'inherit', outline:'none', boxSizing:'border-box' },
   btnRed: { width:'100%', padding:16, background:'#e0001b', border:'none', borderRadius:14, color:'white', fontSize:15, fontWeight:800, cursor:'pointer', fontFamily:'inherit' },
+}
+
+function BannerExito({ onClose }) {
+  return (
+    <div style={{
+      background: 'linear-gradient(135deg, #00c853, #1de9b6)',
+      borderRadius: 16,
+      padding: '16px 20px',
+      marginBottom: 20,
+      display: 'flex',
+      alignItems: 'center',
+      gap: 12,
+      boxShadow: '0 4px 16px rgba(0,200,83,0.25)',
+    }}>
+      <span style={{ fontSize: 24 }}>🎉</span>
+      <div style={{ flex: 1 }}>
+        <div style={{ fontSize: 15, fontWeight: 800, color: 'white' }}>¡Suscripción activada!</div>
+        <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.85)', marginTop: 2 }}>
+          Tu plan fue activado correctamente. Los beneficios ya están disponibles.
+        </div>
+      </div>
+      <button
+        onClick={onClose}
+        style={{ background: 'rgba(255,255,255,0.25)', border: 'none', borderRadius: 8, padding: '4px 10px', color: 'white', fontSize: 13, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}
+      >
+        ✕
+      </button>
+    </div>
+  )
 }

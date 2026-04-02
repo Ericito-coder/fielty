@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
 
 export default function Registro() {
@@ -8,6 +8,12 @@ export default function Registro() {
   const [nombre, setNombre] = useState('')
   const [cargando, setCargando] = useState(false)
   const [error, setError] = useState('')
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    const plan = params.get('plan')
+    if (plan) localStorage.setItem('fielty_plan', plan)
+  }, [])
 
   async function registrar() {
     if (!nombre) { setError('Ingresá tu nombre'); return }
