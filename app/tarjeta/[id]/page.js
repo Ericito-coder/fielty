@@ -28,7 +28,7 @@ export default function Tarjeta({ params }) {
   async function cargarDatos() {
     const { data: clienteData } = await supabase
       .from('clientes')
-      .select('*, negocio:negocios(nombre, color, pesos_por_punto, puntos_por_tramo)')
+      .select('*, negocio:negocios(nombre, color, pesos_por_punto, puntos_por_tramo, logo_url)')
       .eq('id', id)
       .single()
 
@@ -135,9 +135,12 @@ export default function Tarjeta({ params }) {
 
       <div style={st.loyaltyCard}>
         <div style={st.cardTop}>
-          <div style={{...st.bizLogo, background: cliente.negocio?.color || '#e0001b'}}>
-            {cliente.negocio?.nombre?.slice(0,2).toUpperCase() || 'PP'}
-          </div>
+          {cliente.negocio?.logo_url
+            ? <img src={cliente.negocio.logo_url} style={{...st.bizLogo, objectFit:'cover', padding:0}} />
+            : <div style={{...st.bizLogo, background: cliente.negocio?.color || '#e0001b'}}>
+                {cliente.negocio?.nombre?.slice(0,2).toUpperCase() || 'PP'}
+              </div>
+          }
           <div>
             <div style={st.bizName}>{cliente.negocio?.nombre || 'Mi Negocio'}</div>
             <div style={st.bizType}>Programa de puntos</div>

@@ -191,7 +191,7 @@ export default function Dashboard() {
 
 function SeccionContenido({ seccion, negocio, metricas, setNegocio, isDesktop }) {
   if (seccion === 'inicio') return <InicioSection negocio={negocio} metricas={metricas} isDesktop={isDesktop} />
-  if (seccion === 'clientes') return <ClientesSection negocioId={negocio.id} color={negocio.color} isDesktop={isDesktop} />
+  if (seccion === 'clientes') return <ClientesSection negocioId={negocio.id} color={negocio.color} plan={negocio.plan} isDesktop={isDesktop} />
   if (seccion === 'recompensas') return <RecompensasSection negocioId={negocio.id} isDesktop={isDesktop} />
   if (seccion === 'sucursales') return <SucursalesSection negocio={negocio} />
   if (seccion === 'config') return <ConfigSection negocio={negocio} setNegocio={setNegocio} />
@@ -271,7 +271,7 @@ function InicioSection({ negocio, metricas, isDesktop }) {
 }
 
 // ===== CLIENTES =====
-function ClientesSection({ negocioId, color, isDesktop }) {
+function ClientesSection({ negocioId, color, plan, isDesktop }) {
   const [clientes, setClientes] = useState([])
   const [filtro, setFiltro] = useState('todos')
   const [busqueda, setBusqueda] = useState('')
@@ -281,6 +281,21 @@ function ClientesSection({ negocioId, color, isDesktop }) {
       .order('created_at', { ascending: false })
       .then(({ data }) => setClientes(data || []))
   }, [negocioId])
+
+  function exportarCSV() {
+    const headers = ['Nombre', 'DNI', 'Teléfono', 'Email', 'Puntos', 'Puntos históricos', 'Visitas', 'Última visita', 'Registrado']
+    const rows = filtrados.map(c => [
+      c.nombre, c.dni, c.telefono || '', c.email || '',
+      c.puntos, c.puntos_historicos, c.visitas,
+      c.ultima_visita ? new Date(c.ultima_visita).toLocaleDateString('es-AR') : '',
+      new Date(c.created_at).toLocaleDateString('es-AR'),
+    ])
+    const csv = [headers, ...rows].map(r => r.map(v => `"${v}"`).join(',')).join('\n')
+    const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a'); a.href = url; a.download = 'clientes.csv'; a.click()
+    URL.revokeObjectURL(url)
+  }
 
   const hace30dias = new Date(); hace30dias.setDate(hace30dias.getDate() - 30)
 
@@ -305,8 +320,19 @@ function ClientesSection({ negocioId, color, isDesktop }) {
           ))}
         </div>
         {isDesktop && (
-          <input placeholder="🔍 Buscar por nombre o DNI..." value={busqueda} onChange={e => setBusqueda(e.target.value)}
-            style={{padding:'10px 16px', border:'2px solid #e8eaf0', borderRadius:12, fontSize:14, fontFamily:'inherit', outline:'none', width:280}} />
+          <div style={{display:'flex', gap:8, alignItems:'center'}}>
+            <input placeholder="🔍 Buscar por nombre o DNI..." value={busqueda} onChange={e => setBusqueda(e.target.value)}
+              style={{padding:'10px 16px', border:'2px solid #e8eaf0', borderRadius:12, fontSize:14, fontFamily:'inherit', outline:'none', width:280}} />
+            {plan === 'business' ? (
+              <button onClick={exportarCSV} style={{padding:'10px 16px', background:'#0e0e0e', border:'none', borderRadius:12, color:'white', fontSize:13, fontWeight:700, cursor:'pointer', fontFamily:'inherit', whiteSpace:'nowrap'}}>
+                ↓ Exportar CSV
+              </button>
+            ) : (
+              <button onClick={() => window.location.href = '/dashboard/upgrade'} title="Función exclusiva del plan Business" style={{padding:'10px 16px', background:'#f5f6fa', border:'1px dashed #ccc', borderRadius:12, color:'#aaa', fontSize:13, fontWeight:700, cursor:'pointer', fontFamily:'inherit', whiteSpace:'nowrap'}}>
+                🔒 Exportar CSV
+              </button>
+            )}
+          </div>
         )}
       </div>
       <div style={s.card}>
@@ -435,6 +461,21 @@ function RecompensasSection({ negocioId, isDesktop }) {
 
 // ===== CONFIG =====
 function ConfigSection({ negocio, setNegocio }) {
+  const [subiendoLogo, setSubiendoLogo] = useState(false)
+
+  async function subirLogo(e) {
+    const file = e.target.files[0]
+    if (!file) return
+    setSubiendoLogo(true)
+    const ext = file.name.split('.').pop()
+    const path = `${negocio.id}/logo.${ext}`
+    await supabase.storage.from('negocios-media').upload(path, file, { upsert: true })
+    const { data: { publicUrl } } = supabase.storage.from('negocios-media').getPublicUrl(path)
+    await supabase.from('negocios').update({ logo_url: publicUrl }).eq('id', negocio.id)
+    setNegocio(n => ({ ...n, logo_url: publicUrl }))
+    setSubiendoLogo(false)
+  }
+
   const [form, setForm] = useState({
     nombre: negocio.nombre, color: negocio.color,
     telefono: negocio.telefono || '',
@@ -534,11 +575,41 @@ function ConfigSection({ negocio, setNegocio }) {
         {ok && <div style={{background:'#e8faf2', color:'#00b96b', padding:'10px 14px', borderRadius:10, fontSize:13, marginBottom:12}}>✅ Cambios guardados</div>}
         <button style={s.btnRed} onClick={guardar} disabled={guardando}>{guardando ? 'Guardando...' : 'Guardar cambios'}</button>
       </div>
+
+      {/* Logo — solo Business */}
+      {negocio.plan === 'business' ? (
+        <div style={s.card}>
+          <div style={{fontSize:13, fontWeight:800, color:'#0e0e0e', marginBottom:4}}>Logo del negocio</div>
+          <div style={{fontSize:12, color:'#888', marginBottom:16}}>Aparece en la tarjeta digital de tus clientes en lugar de las iniciales.</div>
+          <div style={{display:'flex', alignItems:'center', gap:16}}>
+            {negocio.logo_url
+              ? <img src={negocio.logo_url} style={{width:64, height:64, borderRadius:14, objectFit:'cover', border:'2px solid #e8eaf0'}} />
+              : <div style={{width:64, height:64, borderRadius:14, background:'#f0f2f7', display:'flex', alignItems:'center', justifyContent:'center', fontSize:12, color:'#aaa'}}>Sin logo</div>
+            }
+            <label style={{padding:'10px 20px', background:'#0e0e0e', borderRadius:12, color:'white', fontSize:13, fontWeight:700, cursor:'pointer'}}>
+              {subiendoLogo ? 'Subiendo...' : negocio.logo_url ? 'Cambiar logo' : 'Subir logo'}
+              <input type="file" accept="image/*" style={{display:'none'}} onChange={subirLogo} disabled={subiendoLogo} />
+            </label>
+          </div>
+        </div>
+      ) : (
+        <div style={{...s.card, display:'flex', alignItems:'center', justifyContent:'space-between', gap:12, opacity:0.6}}>
+          <div>
+            <div style={{fontSize:13, fontWeight:800, color:'#0e0e0e'}}>🔒 Logo personalizado</div>
+            <div style={{fontSize:12, color:'#888', marginTop:2}}>Disponible en el plan Business</div>
+          </div>
+          <button onClick={() => window.location.href = '/dashboard/upgrade'} style={{padding:'8px 16px', background:'#f0a500', border:'none', borderRadius:10, color:'white', fontSize:13, fontWeight:700, cursor:'pointer', fontFamily:'inherit'}}>
+            Mejorar →
+          </button>
+        </div>
+      )}
     </div>
   )
 }
 
 // ===== SUCURSALES =====
+const LIMITE_SUCURSALES = { gratis: 1, pro_early: 3, pro: 3, business: 999 }
+
 function SucursalesSection({ negocio }) {
   const [sucursales, setSucursales] = useState([])
   const [nueva, setNueva] = useState({ nombre: '', direccion: '', pin_caja: '1234' })
@@ -551,8 +622,11 @@ function SucursalesSection({ negocio }) {
     setSucursales(data || [])
   }
 
+  const limite = LIMITE_SUCURSALES[negocio.plan || 'gratis']
+  const alcanzaLimite = sucursales.length >= limite
+
   async function agregar() {
-    if (!nueva.nombre) return
+    if (!nueva.nombre || alcanzaLimite) return
     setGuardando(true)
     const slugSuc = nueva.nombre.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
     await supabase.from('sucursales').insert([{ negocio_id: negocio.id, nombre: nueva.nombre, slug: slugSuc, direccion: nueva.direccion, pin_caja: nueva.pin_caja || '1234' }])
@@ -596,7 +670,19 @@ function SucursalesSection({ negocio }) {
       ))}
       </div>
       <div style={s.sectionTitle}>Agregar sucursal</div>
-      <div style={{...s.card, maxWidth:480}}>
+      {alcanzaLimite && (
+        <div style={{background:'#fff8e6', border:'1px solid #f0a500', borderRadius:14, padding:'14px 18px', marginBottom:16, display:'flex', alignItems:'center', justifyContent:'space-between', gap:12}}>
+          <div style={{fontSize:13, color:'#b37a00'}}>
+            {negocio.plan === 'gratis'
+              ? `El plan Gratis permite 1 sucursal. Mejorar a Pro para tener hasta 3.`
+              : `El plan Pro permite hasta 3 sucursales. Mejorar a Business para sucursales ilimitadas.`}
+          </div>
+          <button onClick={() => window.location.href = '/dashboard/upgrade'} style={{padding:'8px 16px', background:'#f0a500', border:'none', borderRadius:10, color:'white', fontSize:13, fontWeight:800, cursor:'pointer', fontFamily:'inherit', whiteSpace:'nowrap'}}>
+            Mejorar plan →
+          </button>
+        </div>
+      )}
+      <div style={{...s.card, maxWidth:480, opacity: alcanzaLimite ? 0.4 : 1, pointerEvents: alcanzaLimite ? 'none' : 'auto'}}>
         <div style={s.configField}>
           <label style={s.configLabel}>Nombre</label>
           <input style={s.inputField} placeholder="Ej: Sucursal Centro" value={nueva.nombre} onChange={e => setNueva({...nueva, nombre: e.target.value})} />
