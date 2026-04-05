@@ -6,6 +6,7 @@ const COLORES = ['#e0001b', '#0e76fd', '#00b96b', '#7c3aed', '#f0a500', '#0e0e0e
 
 export default function ConfigNegocio() {
   const [nombre, setNombre] = useState('')
+  const [telefono, setTelefono] = useState('')
   const [color, setColor] = useState('#e0001b')
   const [pesosPorTramo, setPesosPorTramo] = useState('100')
   const [puntosPorTramo, setPuntosPorTramo] = useState('1')
@@ -17,6 +18,7 @@ export default function ConfigNegocio() {
 
   async function guardar() {
     if (!nombre) { setError('Ingresá el nombre del negocio'); return }
+    if (!telefono) { setError('Ingresá el teléfono del negocio'); return }
     setError('')
     setCargando(true)
 
@@ -31,6 +33,7 @@ export default function ConfigNegocio() {
       .from('negocios')
       .insert([{
         nombre,
+        telefono,
         color,
         slug,
         tipo: 'puntos',
@@ -67,6 +70,13 @@ export default function ConfigNegocio() {
           <label style={s.label}>Nombre del negocio</label>
           <input style={s.input} placeholder="Ej: Pet Point"
             value={nombre} onChange={e => setNombre(e.target.value)} />
+        </div>
+
+        <div style={s.field}>
+          <label style={s.label}>Teléfono del negocio</label>
+          <input style={s.input} type="tel" placeholder="Ej: 1123456789"
+            value={telefono} onChange={e => setTelefono(e.target.value.replace(/[^0-9+\s()-]/g, ''))} />
+          <div style={{fontSize:12, color:'#aaa', marginTop:6}}>Para que tus clientes puedan contactarte</div>
         </div>
 
         <div style={s.field}>
