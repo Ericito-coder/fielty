@@ -32,7 +32,7 @@ export default function ConfigNegocio() {
       .from('negocios')
       .insert([{
         nombre,
-        telefono_dueno: telefonoDueno,
+        telefono: telefonoDueno,
         color,
         slug,
         tipo: 'puntos',
