@@ -437,6 +437,7 @@ function RecompensasSection({ negocioId, isDesktop }) {
 function ConfigSection({ negocio, setNegocio }) {
   const [form, setForm] = useState({
     nombre: negocio.nombre, color: negocio.color,
+    telefono: negocio.telefono || '',
     pesos_por_punto: negocio.pesos_por_punto || 100,
     puntos_por_tramo: negocio.puntos_por_tramo || 1,
     puntos_cumpleanos: negocio.puntos_cumpleanos || 50,
@@ -485,6 +486,10 @@ function ConfigSection({ negocio, setNegocio }) {
         <div style={s.configField}>
           <label style={s.configLabel}>Nombre del negocio</label>
           <input style={s.inputField} value={form.nombre} onChange={e => setForm({...form, nombre: e.target.value})} />
+        </div>
+        <div style={s.configField}>
+          <label style={s.configLabel}>Teléfono del negocio</label>
+          <input style={s.inputField} type="tel" placeholder="Ej: 1123456789" value={form.telefono} onChange={e => setForm({...form, telefono: e.target.value.replace(/[^0-9+\s()-]/g, '')})} />
         </div>
         <div style={s.configField}>
           <label style={s.configLabel}>Color de marca</label>
