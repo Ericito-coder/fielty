@@ -462,14 +462,30 @@ function RecompensasSection({ negocioId, isDesktop }) {
 // ===== CONFIG =====
 function ConfigSection({ negocio, setNegocio }) {
   const [subiendoLogo, setSubiendoLogo] = useState(false)
+  const [errorLogo, setErrorLogo] = useState('')
 
   async function subirLogo(e) {
     const file = e.target.files[0]
     if (!file) return
+    const FORMATOS = ['image/jpeg', 'image/png', 'image/webp', 'image/svg+xml', 'image/gif']
+    if (!FORMATOS.includes(file.type)) {
+      setErrorLogo('Formato no soportado. Usá JPG, PNG, WEBP o SVG.')
+      return
+    }
+    if (file.size > 2 * 1024 * 1024) {
+      setErrorLogo('La imagen no puede superar 2MB.')
+      return
+    }
+    setErrorLogo('')
     setSubiendoLogo(true)
     const ext = file.name.split('.').pop()
     const path = `${negocio.id}/logo.${ext}`
-    await supabase.storage.from('negocios-media').upload(path, file, { upsert: true })
+    const { error: uploadError } = await supabase.storage.from('negocios-media').upload(path, file, { upsert: true })
+    if (uploadError) {
+      setErrorLogo('Error al subir la imagen. Verificá que el bucket "negocios-media" exista y sea público en Supabase.')
+      setSubiendoLogo(false)
+      return
+    }
     const { data: { publicUrl } } = supabase.storage.from('negocios-media').getPublicUrl(path)
     await supabase.from('negocios').update({ logo_url: publicUrl }).eq('id', negocio.id)
     setNegocio(n => ({ ...n, logo_url: publicUrl }))
@@ -550,11 +566,14 @@ function ConfigSection({ negocio, setNegocio }) {
                 ? <img src={negocio.logo_url} style={{width:56, height:56, borderRadius:12, objectFit:'cover', border:'2px solid #e8eaf0'}} />
                 : <div style={{width:56, height:56, borderRadius:12, background:'#f0f2f7', display:'flex', alignItems:'center', justifyContent:'center', fontSize:11, color:'#aaa'}}>Sin logo</div>
               }
-              <label style={{padding:'10px 18px', background:'#0e0e0e', borderRadius:12, color:'white', fontSize:13, fontWeight:700, cursor:'pointer'}}>
-                {subiendoLogo ? 'Subiendo...' : negocio.logo_url ? 'Cambiar logo' : 'Subir logo'}
-                <input type="file" accept="image/*" style={{display:'none'}} onChange={subirLogo} disabled={subiendoLogo} />
-              </label>
-              <div style={{fontSize:12, color:'#aaa'}}>Aparece en la tarjeta de tus clientes</div>
+              <div>
+                <label style={{padding:'10px 18px', background:'#0e0e0e', borderRadius:12, color:'white', fontSize:13, fontWeight:700, cursor:'pointer', display:'inline-block'}}>
+                  {subiendoLogo ? 'Subiendo...' : negocio.logo_url ? 'Cambiar logo' : 'Subir logo'}
+                  <input type="file" accept=".jpg,.jpeg,.png,.webp,.svg" style={{display:'none'}} onChange={subirLogo} disabled={subiendoLogo} />
+                </label>
+                <div style={{fontSize:11, color:'#aaa', marginTop:6}}>JPG, PNG, WEBP o SVG · Máx 2MB</div>
+                {errorLogo && <div style={{fontSize:11, color:'#e0001b', marginTop:4}}>{errorLogo}</div>}
+              </div>
             </div>
           ) : (
             <div style={{display:'flex', alignItems:'center', gap:12}}>
