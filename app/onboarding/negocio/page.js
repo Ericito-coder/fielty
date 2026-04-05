@@ -23,6 +23,7 @@ export default function ConfigNegocio() {
     setCargando(true)
 
     const userId = localStorage.getItem('fielty_user_id')
+    const telefonoDueno = localStorage.getItem('fielty_telefono_dueno') || ''
 
     const slug = nombre.toLowerCase()
       .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
@@ -34,6 +35,7 @@ export default function ConfigNegocio() {
       .insert([{
         nombre,
         telefono,
+        telefono_dueno: telefonoDueno,
         color,
         slug,
         tipo: 'puntos',

@@ -6,6 +6,7 @@ export default function Registro() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [nombre, setNombre] = useState('')
+  const [telefono, setTelefono] = useState('')
   const [cargando, setCargando] = useState(false)
   const [error, setError] = useState('')
   const [plan, setPlan] = useState('')
@@ -21,6 +22,7 @@ export default function Registro() {
 
   async function registrar() {
     if (!nombre) { setError('Ingresá tu nombre'); return }
+    if (!telefono) { setError('Ingresá tu teléfono'); return }
     if (!email) { setError('Ingresá tu email'); return }
     if (password.length < 6) { setError('La contraseña tiene que tener al menos 6 caracteres'); return }
     setError('')
@@ -39,8 +41,8 @@ export default function Registro() {
       return
     }
 
-    // Guardar el user_id en localStorage para el siguiente paso
     localStorage.setItem('fielty_user_id', data.user.id)
+    localStorage.setItem('fielty_telefono_dueno', telefono)
     window.location.href = '/onboarding/negocio'
   }
 
@@ -65,6 +67,11 @@ export default function Registro() {
           <label style={s.label}>Tu nombre</label>
           <input style={s.input} placeholder="Ej: Marcos Pérez"
             value={nombre} onChange={e => setNombre(e.target.value)} />
+        </div>
+        <div style={s.field}>
+          <label style={s.label}>Tu teléfono</label>
+          <input style={s.input} type="tel" placeholder="Ej: 1123456789"
+            value={telefono} onChange={e => setTelefono(e.target.value.replace(/[^0-9+\s()-]/g, ''))} />
         </div>
         <div style={s.field}>
           <label style={s.label}>Email</label>
