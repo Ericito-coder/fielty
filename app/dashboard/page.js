@@ -534,11 +534,37 @@ function ConfigSection({ negocio, setNegocio }) {
         </div>
         <div style={s.configField}>
           <label style={s.configLabel}>Color de marca</label>
+
           <div style={{display:'flex', alignItems:'center', gap:12}}>
             <div style={{width:36, height:36, borderRadius:10, background:form.color, border:'1px solid #e8eaf0'}}/>
             <input type="color" value={form.color} onChange={e => setForm({...form, color: e.target.value})} style={{width:48, height:36, borderRadius:10, border:'1px solid #e8eaf0', cursor:'pointer', padding:2}} />
             <input style={{...s.inputField, flex:1, fontFamily:'monospace'}} placeholder="e0001b" maxLength={7} value={form.color} onChange={e => setForm({...form, color: e.target.value})} />
           </div>
+        </div>
+        {/* Logo */}
+        <div style={s.configField}>
+          <label style={s.configLabel}>Logo del negocio</label>
+          {negocio.plan === 'business' ? (
+            <div style={{display:'flex', alignItems:'center', gap:16}}>
+              {negocio.logo_url
+                ? <img src={negocio.logo_url} style={{width:56, height:56, borderRadius:12, objectFit:'cover', border:'2px solid #e8eaf0'}} />
+                : <div style={{width:56, height:56, borderRadius:12, background:'#f0f2f7', display:'flex', alignItems:'center', justifyContent:'center', fontSize:11, color:'#aaa'}}>Sin logo</div>
+              }
+              <label style={{padding:'10px 18px', background:'#0e0e0e', borderRadius:12, color:'white', fontSize:13, fontWeight:700, cursor:'pointer'}}>
+                {subiendoLogo ? 'Subiendo...' : negocio.logo_url ? 'Cambiar logo' : 'Subir logo'}
+                <input type="file" accept="image/*" style={{display:'none'}} onChange={subirLogo} disabled={subiendoLogo} />
+              </label>
+              <div style={{fontSize:12, color:'#aaa'}}>Aparece en la tarjeta de tus clientes</div>
+            </div>
+          ) : (
+            <div style={{display:'flex', alignItems:'center', gap:12}}>
+              <div style={{width:56, height:56, borderRadius:12, background:'#f0f2f7', display:'flex', alignItems:'center', justifyContent:'center', fontSize:18}}>🔒</div>
+              <div>
+                <div style={{fontSize:13, color:'#aaa'}}>Disponible en el plan Business</div>
+                <button onClick={() => window.location.href = '/dashboard/upgrade'} style={{marginTop:4, padding:'5px 12px', background:'#f0a500', border:'none', borderRadius:8, color:'white', fontSize:12, fontWeight:700, cursor:'pointer', fontFamily:'inherit'}}>Mejorar →</button>
+              </div>
+            </div>
+          )}
         </div>
         <div style={s.configField}>
           <label style={s.configLabel}>Regla de puntos</label>
@@ -575,34 +601,6 @@ function ConfigSection({ negocio, setNegocio }) {
         {ok && <div style={{background:'#e8faf2', color:'#00b96b', padding:'10px 14px', borderRadius:10, fontSize:13, marginBottom:12}}>✅ Cambios guardados</div>}
         <button style={s.btnRed} onClick={guardar} disabled={guardando}>{guardando ? 'Guardando...' : 'Guardar cambios'}</button>
       </div>
-
-      {/* Logo — solo Business */}
-      {negocio.plan === 'business' ? (
-        <div style={s.card}>
-          <div style={{fontSize:13, fontWeight:800, color:'#0e0e0e', marginBottom:4}}>Logo del negocio</div>
-          <div style={{fontSize:12, color:'#888', marginBottom:16}}>Aparece en la tarjeta digital de tus clientes en lugar de las iniciales.</div>
-          <div style={{display:'flex', alignItems:'center', gap:16}}>
-            {negocio.logo_url
-              ? <img src={negocio.logo_url} style={{width:64, height:64, borderRadius:14, objectFit:'cover', border:'2px solid #e8eaf0'}} />
-              : <div style={{width:64, height:64, borderRadius:14, background:'#f0f2f7', display:'flex', alignItems:'center', justifyContent:'center', fontSize:12, color:'#aaa'}}>Sin logo</div>
-            }
-            <label style={{padding:'10px 20px', background:'#0e0e0e', borderRadius:12, color:'white', fontSize:13, fontWeight:700, cursor:'pointer'}}>
-              {subiendoLogo ? 'Subiendo...' : negocio.logo_url ? 'Cambiar logo' : 'Subir logo'}
-              <input type="file" accept="image/*" style={{display:'none'}} onChange={subirLogo} disabled={subiendoLogo} />
-            </label>
-          </div>
-        </div>
-      ) : (
-        <div style={{...s.card, display:'flex', alignItems:'center', justifyContent:'space-between', gap:12, opacity:0.6}}>
-          <div>
-            <div style={{fontSize:13, fontWeight:800, color:'#0e0e0e'}}>🔒 Logo personalizado</div>
-            <div style={{fontSize:12, color:'#888', marginTop:2}}>Disponible en el plan Business</div>
-          </div>
-          <button onClick={() => window.location.href = '/dashboard/upgrade'} style={{padding:'8px 16px', background:'#f0a500', border:'none', borderRadius:10, color:'white', fontSize:13, fontWeight:700, cursor:'pointer', fontFamily:'inherit'}}>
-            Mejorar →
-          </button>
-        </div>
-      )}
     </div>
   )
 }
