@@ -145,7 +145,22 @@ export default function Dashboard() {
         </div>
 
         {/* Logout */}
-        <div style={{padding:'16px 12px', borderTop:'1px solid #1e1e1e'}}>
+        {/* Plan badge */}
+        <div style={{padding:'12px 12px 0'}}>
+          {negocio.plan && negocio.plan !== 'gratis' ? (
+            <div style={{padding:'10px 16px', borderRadius:12, background:'#1e1e1e', display:'flex', alignItems:'center', gap:8}}>
+              <div style={{width:8, height:8, borderRadius:'50%', background: negocio.plan === 'business' ? '#f0a500' : '#e0001b', flexShrink:0}} />
+              <span style={{fontSize:13, fontWeight:700, color:'white', textTransform:'capitalize'}}>
+                Plan {negocio.plan === 'pro_early' ? 'Pro' : negocio.plan}
+              </span>
+            </div>
+          ) : (
+            <button onClick={() => window.location.href = '/dashboard/upgrade'} style={{width:'100%', padding:'10px 16px', borderRadius:12, border:'1px dashed #333', background:'transparent', cursor:'pointer', fontFamily:'inherit', fontSize:13, fontWeight:700, color:'#e0001b', textAlign:'left', display:'flex', alignItems:'center', gap:8}}>
+              <span>⬆</span> Mejorar plan
+            </button>
+          )}
+        </div>
+        <div style={{padding:'12px 12px', borderTop:'1px solid #1e1e1e', marginTop:12}}>
           <button onClick={cerrarSesion} style={{width:'100%', padding:'12px 16px', borderRadius:12, border:'none', cursor:'pointer', fontFamily:'inherit', fontSize:14, fontWeight:600, background:'transparent', color:'#555', textAlign:'left', display:'flex', alignItems:'center', gap:12}}>
             <span>🚪</span> Cerrar sesión
           </button>
@@ -441,8 +456,31 @@ function ConfigSection({ negocio, setNegocio }) {
     setTimeout(() => setOk(false), 2000)
   }
 
+  const planInfo = {
+    gratis:    { label: 'Gratis', color: '#888',    desc: 'Hasta 50 clientes' },
+    pro_early: { label: 'Pro',    color: '#e0001b', desc: 'Early Adopter · $10.000/mes' },
+    pro:       { label: 'Pro',    color: '#e0001b', desc: '$20.000/mes' },
+    business:  { label: 'Business', color: '#f0a500', desc: '$35.000/mes' },
+  }
+  const pi = planInfo[negocio.plan] || planInfo.gratis
+
   return (
     <div style={{maxWidth:600}}>
+      {/* Plan actual */}
+      <div style={{...s.card, display:'flex', alignItems:'center', justifyContent:'space-between', flexWrap:'wrap', gap:12, marginBottom:16}}>
+        <div style={{display:'flex', alignItems:'center', gap:12}}>
+          <div style={{width:10, height:10, borderRadius:'50%', background:pi.color}} />
+          <div>
+            <div style={{fontSize:15, fontWeight:800, color:'#0e0e0e'}}>Plan {pi.label}</div>
+            <div style={{fontSize:12, color:'#888', marginTop:2}}>{pi.desc}</div>
+          </div>
+        </div>
+        {(!negocio.plan || negocio.plan === 'gratis') && (
+          <button onClick={() => window.location.href = '/dashboard/upgrade'} style={{padding:'10px 20px', background:'#e0001b', border:'none', borderRadius:12, color:'white', fontSize:13, fontWeight:800, cursor:'pointer', fontFamily:'inherit'}}>
+            Mejorar plan →
+          </button>
+        )}
+      </div>
       <div style={s.card}>
         <div style={s.configField}>
           <label style={s.configLabel}>Nombre del negocio</label>
