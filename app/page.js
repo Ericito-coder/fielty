@@ -216,7 +216,9 @@ const [isMobile, setIsMobile] = useState(false)
             <span style={s.logoText}>fielty</span>
           </div>
           <div style={{fontSize:13, color:'#333'}}>© 2026 Fielty. Todos los derechos reservados.</div>
-          <div style={{display:'flex', gap:20}}>
+          <div style={{display:'flex', gap:20, flexWrap:'wrap'}}>
+            <a href="/terminos" style={{fontSize:13, color:'#333', textDecoration:'none'}}>Términos y condiciones</a>
+            <a href="/privacidad" style={{fontSize:13, color:'#333', textDecoration:'none'}}>Política de privacidad</a>
             <a href="/login" style={{fontSize:13, color:'#333', textDecoration:'none'}}>Ingresar</a>
             <a href="/onboarding/registro" style={{fontSize:13, color:'#333', textDecoration:'none'}}>Registrarse</a>
           </div>
