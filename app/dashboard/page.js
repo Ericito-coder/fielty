@@ -198,11 +198,78 @@ function SeccionContenido({ seccion, negocio, metricas, setNegocio, isDesktop })
   return null
 }
 
+// ===== TUTORIAL =====
+function TutorialChecklist({ negocio, metricas }) {
+  const [visible, setVisible] = useState(false)
+  const [recompensasOk, setRecompensasOk] = useState(false)
+  const [tieneSuma, setTieneSuma] = useState(false)
+
+  useEffect(() => {
+    if (localStorage.getItem('fielty_tutorial_cerrado')) return
+    setVisible(true)
+    supabase.from('recompensas').select('id', { count: 'exact', head: true })
+      .eq('negocio_id', negocio.id)
+      .then(({ count }) => setRecompensasOk((count || 0) > 0))
+    supabase.from('transacciones').select('id').eq('negocio_id', negocio.id).eq('tipo', 'suma').limit(1)
+      .then(({ data }) => setTieneSuma(data && data.length > 0))
+  }, [negocio.id])
+
+  const cerrar = () => {
+    localStorage.setItem('fielty_tutorial_cerrado', '1')
+    setVisible(false)
+  }
+
+  if (!visible) return null
+
+  const pasos = [
+    { label: 'Creaste tu programa de fidelización', done: true },
+    { label: 'Copiaste el link de registro para tus clientes', done: metricas.totalClientes > 0 || !!localStorage.getItem('fielty_tutorial_link_copiado') },
+    { label: 'Tu primer cliente se registró', done: metricas.totalClientes > 0 },
+    { label: 'Acreditaste puntos desde la caja', done: tieneSuma },
+    { label: 'Configuraste una recompensa para tus clientes', done: recompensasOk },
+  ]
+  const completados = pasos.filter(p => p.done).length
+
+  if (completados === pasos.length) {
+    localStorage.setItem('fielty_tutorial_cerrado', '1')
+    return null
+  }
+
+  const progreso = Math.round((completados / pasos.length) * 100)
+
+  return (
+    <div style={{background:'white', borderRadius:20, padding:'24px 24px 20px', marginBottom:24, boxShadow:'0 2px 12px rgba(0,0,0,0.07)'}}>
+      <div style={{display:'flex', alignItems:'flex-start', justifyContent:'space-between', marginBottom:14}}>
+        <div>
+          <div style={{fontSize:16, fontWeight:800, color:'#0e0e0e'}}>🚀 Primeros pasos</div>
+          <div style={{fontSize:13, color:'#888', marginTop:3}}>{completados} de {pasos.length} completados</div>
+        </div>
+        <button onClick={cerrar} style={{background:'none', border:'none', cursor:'pointer', fontSize:20, color:'#ccc', padding:'0 4px', lineHeight:1}}>×</button>
+      </div>
+      <div style={{background:'#f0f2f7', borderRadius:99, height:6, marginBottom:20}}>
+        <div style={{background:'#e0001b', borderRadius:99, height:6, width:`${progreso}%`, transition:'width 0.5s'}} />
+      </div>
+      {pasos.map((paso, i) => (
+        <div key={i} style={{display:'flex', alignItems:'center', gap:12, padding:'10px 0', borderBottom: i < pasos.length - 1 ? '1px solid #f0f2f7' : 'none'}}>
+          <div style={{width:24, height:24, borderRadius:'50%', flexShrink:0, display:'flex', alignItems:'center', justifyContent:'center', fontSize:12, fontWeight:800,
+            background: paso.done ? '#00b96b' : '#f0f2f7', color: paso.done ? 'white' : '#aaa'}}>
+            {paso.done ? '✓' : i + 1}
+          </div>
+          <span style={{fontSize:14, fontWeight: paso.done ? 400 : 600, color: paso.done ? '#aaa' : '#0e0e0e', textDecoration: paso.done ? 'line-through' : 'none'}}>
+            {paso.label}
+          </span>
+        </div>
+      ))}
+    </div>
+  )
+}
+
 // ===== INICIO =====
 function InicioSection({ negocio, metricas, isDesktop }) {
   const gridCols = isDesktop ? 'repeat(3,1fr)' : 'repeat(3,1fr)'
   return (
     <>
+      <TutorialChecklist negocio={negocio} metricas={metricas} />
       <div style={{display:'grid', gridTemplateColumns: isDesktop ? 'repeat(6,1fr)' : 'repeat(3,1fr)', gap:12, marginBottom:24}}>
         {[
           { icon:'👥', value: metricas.totalClientes, label:'Clientes totales' },
