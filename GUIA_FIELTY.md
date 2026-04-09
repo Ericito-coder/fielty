@@ -24,7 +24,7 @@ Ideal para: peluquerías, cafeterías, veterinarias, restaurantes, tiendas de ro
 | Sucursales | 1 | Hasta 3 | Ilimitadas |
 | Logo personalizado | ✗ | ✗ | ✓ |
 | Exportación CSV | ✗ | ✗ | ✓ |
-| Precio | $0 | $10.000/mes* | Consultar |
+| Precio | $0 | $10.000/mes* | $35.000/mes |
 
 *Precio especial para los primeros 100 negocios. Precio regular: $20.000/mes.
 

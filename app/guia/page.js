@@ -35,7 +35,7 @@ export default function Guia() {
               ['Sucursales', '1', 'Hasta 3', 'Ilimitadas'],
               ['Logo personalizado', '✗', '✗', '✓'],
               ['Exportación CSV', '✗', '✗', '✓'],
-              ['Precio', '$0', '$10.000/mes*', 'Consultar'],
+              ['Precio', '$0', '$10.000/mes*', '$35.000/mes'],
             ].map(([label, ...vals], i) => (
               <tr key={i} style={{ background: i % 2 === 0 ? '#f9f9f9' : 'white' }}>
                 <td style={{ ...td, fontWeight: 700 }}>{label}</td>
