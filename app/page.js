@@ -219,6 +219,7 @@ const [isMobile, setIsMobile] = useState(false)
           <div style={{display:'flex', gap:20, flexWrap:'wrap'}}>
             <a href="/terminos" style={{fontSize:13, color:'#333', textDecoration:'none'}}>Términos y condiciones</a>
             <a href="/privacidad" style={{fontSize:13, color:'#333', textDecoration:'none'}}>Política de privacidad</a>
+            <a href="/faq" style={{fontSize:13, color:'#333', textDecoration:'none'}}>FAQ</a>
             <a href="/login" style={{fontSize:13, color:'#333', textDecoration:'none'}}>Ingresar</a>
             <a href="/onboarding/registro" style={{fontSize:13, color:'#333', textDecoration:'none'}}>Registrarse</a>
           </div>
