@@ -173,9 +173,12 @@ email: email || null,
     <div style={styles.wrap}>
       <div style={styles.card}>
         <div style={{display:'flex', alignItems:'center', gap:10, marginBottom:16}}>
-          <div style={{width:40, height:40, borderRadius:12, background: negocio.color, display:'flex', alignItems:'center', justifyContent:'center', fontSize:14, fontWeight:900, color:'white'}}>
-            {negocio.nombre.slice(0,2).toUpperCase()}
-          </div>
+          {negocio.logo_url
+            ? <img src={negocio.logo_url} alt={negocio.nombre} style={{width:40, height:40, borderRadius:12, objectFit:'cover'}} />
+            : <div style={{width:40, height:40, borderRadius:12, background: negocio.color, display:'flex', alignItems:'center', justifyContent:'center', fontSize:14, fontWeight:900, color:'white'}}>
+                {negocio.nombre.slice(0,2).toUpperCase()}
+              </div>
+          }
           <div style={{fontSize:13, color: negocio.color, fontWeight:700, letterSpacing:'0.05em'}}>
             {negocio.nombre.toUpperCase()}
           </div>
