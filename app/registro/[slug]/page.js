@@ -8,7 +8,8 @@ export default function RegistroSlug({ params }) {
   const [nombre, setNombre] = useState('')
   const [dni, setDni] = useState('')
   const [telefono, setTelefono] = useState('')
-const [email, setEmail] = useState('')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
   const [fechaNacimiento, setFechaNacimiento] = useState('')
   const [cargando, setCargando] = useState(false)
   const [clienteId, setClienteId] = useState(null)
@@ -27,9 +28,12 @@ const [email, setEmail] = useState('')
 
   async function registrar() {
     if (!nombre) { setError('Ingresá tu nombre'); return }
-if (!dni) { setError('Ingresá tu DNI'); return }
-if (!telefono) { setError('Ingresá tu WhatsApp'); return }
-   if (!negocio) { setError('Negocio no encontrado'); return }
+    if (!dni) { setError('Ingresá tu DNI'); return }
+    if (!telefono) { setError('Ingresá tu WhatsApp'); return }
+    if (!email) { setError('Ingresá tu email'); return }
+    if (!password) { setError('Creá una contraseña'); return }
+    if (password.length < 6) { setError('La contraseña debe tener al menos 6 caracteres'); return }
+    if (!negocio) { setError('Negocio no encontrado'); return }
     setError('')
     setCargando(true)
 
@@ -92,6 +96,13 @@ email: email || null,
     }
 
     const nuevoCliente = data[0]
+
+    // Guardar contraseña hasheada (no bloqueante si falla, pero es importante)
+    await fetch('/api/cliente/set-password', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ clienteId: nuevoCliente.id, password }),
+    }).catch(() => {})
 
     if (REFERIDO_POR) {
       const ptsEmisor = negocio.puntos_referido_emisor || 100
@@ -190,9 +201,14 @@ email: email || null,
             value={telefono} onChange={e => setTelefono(e.target.value)} />
         </div>
         <div style={styles.field}>
-          <label style={styles.label}>Email <span style={{color:'#bbb', fontWeight:400}}>(opcional)</span></label>
+          <label style={styles.label}>Email</label>
           <input style={styles.input} type="email" placeholder="Ej: martina@gmail.com"
             value={email} onChange={e => setEmail(e.target.value)} />
+        </div>
+        <div style={styles.field}>
+          <label style={styles.label}>Contraseña <span style={{color:'#bbb', fontWeight:400}}>(para ver tu tarjeta)</span></label>
+          <input style={styles.input} type="password" placeholder="Mínimo 6 caracteres"
+            value={password} onChange={e => setPassword(e.target.value)} />
         </div>
         <div style={styles.field}>
           <label style={styles.label}>Fecha de nacimiento <span style={{color:'#bbb', fontWeight:400}}>(opcional)</span></label>

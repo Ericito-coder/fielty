@@ -230,6 +230,12 @@ export default function Tarjeta({ params }) {
 
       <HistorialSection clienteId={id} />
 
+      <div style={{ textAlign: 'center', padding: '8px 0 32px' }}>
+        <a href="/mi-tarjeta" style={{ fontSize: 13, color: 'rgba(255,255,255,0.3)', textDecoration: 'none' }}>
+          ¿No sos vos? Ingresá con tu cuenta
+        </a>
+      </div>
+
     </div>
   )
 }
