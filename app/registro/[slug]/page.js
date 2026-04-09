@@ -29,7 +29,7 @@ export default function RegistroSlug({ params }) {
   async function registrar() {
     if (!nombre) { setError('Ingresá tu nombre'); return }
     if (!dni) { setError('Ingresá tu DNI'); return }
-    if (!telefono) { setError('Ingresá tu WhatsApp'); return }
+
     if (!email) { setError('Ingresá tu email'); return }
     if (!password) { setError('Creá una contraseña'); return }
     if (password.length < 6) { setError('La contraseña debe tener al menos 6 caracteres'); return }
@@ -44,11 +44,13 @@ export default function RegistroSlug({ params }) {
       setCargando(false); return
     }
 
-    const { data: porTelefono } = await supabase
-      .from('clientes').select('id').eq('negocio_id', negocio.id).eq('telefono', telefono).limit(1)
-    if (porTelefono && porTelefono.length > 0) {
-      setError('Ya tenés una tarjeta en este negocio registrada con ese WhatsApp. ¡Pedile al empleado que te busque!')
-      setCargando(false); return
+    if (telefono) {
+      const { data: porTelefono } = await supabase
+        .from('clientes').select('id').eq('negocio_id', negocio.id).eq('telefono', telefono).limit(1)
+      if (porTelefono && porTelefono.length > 0) {
+        setError('Ya tenés una tarjeta en este negocio registrada con ese WhatsApp. ¡Pedile al empleado que te busque!')
+        setCargando(false); return
+      }
     }
 
     if (email) {
@@ -196,7 +198,7 @@ email: email || null,
             value={dni} onChange={e => setDni(e.target.value)} />
         </div>
         <div style={styles.field}>
-          <label style={styles.label}>WhatsApp</label>
+          <label style={styles.label}>WhatsApp <span style={{color:'#bbb', fontWeight:400}}>(opcional)</span></label>
           <input style={styles.input} placeholder="Ej: 11 5555-1234"
             value={telefono} onChange={e => setTelefono(e.target.value)} />
         </div>
