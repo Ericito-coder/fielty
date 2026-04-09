@@ -82,6 +82,15 @@ email: email || null,
 
     if (insertError) { setError('Hubo un error, intentá de nuevo'); setCargando(false); return }
 
+    // Notificar al dueño si se acerca o llega al límite (no bloqueante)
+    if (negocio.plan === 'gratis') {
+      fetch('/api/notificar-limite', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ negocioId: negocio.id }),
+      }).catch(() => {})
+    }
+
     const nuevoCliente = data[0]
 
     if (REFERIDO_POR) {
