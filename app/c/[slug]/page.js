@@ -301,6 +301,12 @@ export default function CajaSlug({ params }) {
             )
           })()}
 
+          {tabDesktop === 'sumar' && !clienteSeleccionado && (
+            <div style={{maxWidth:520}}>
+              <TarjetaClienteInfo />
+            </div>
+          )}
+
           {tabDesktop === 'canje' && !clienteSeleccionado && (
             <div style={{maxWidth:520}}>
               <div style={{fontSize:20, fontWeight:800, marginBottom:24}}>🎁 Validar canje</div>
@@ -356,8 +362,9 @@ export default function CajaSlug({ params }) {
         {busqueda.length < 2 && (
           <div style={{marginTop:24}}>
             <div style={s.mobileLabel}>Accesos rápidos</div>
-            <button style={{width:'100%', padding:16, background:'#1a1a1a', border:'1px solid #2a2a2a', borderRadius:14, color:'white', fontSize:15, fontWeight:700, cursor:'pointer', fontFamily:'inherit', textAlign:'left'}}
+            <button style={{width:'100%', padding:16, background:'#1a1a1a', border:'1px solid #2a2a2a', borderRadius:14, color:'white', fontSize:15, fontWeight:700, cursor:'pointer', fontFamily:'inherit', textAlign:'left', marginBottom:10}}
               onClick={() => setPantalla('validar')}>🎁 Validar canje de recompensa</button>
+            <TarjetaClienteInfo />
           </div>
         )}
       </div>
@@ -420,6 +427,36 @@ export default function CajaSlug({ params }) {
       <div style={{padding:20}}>
         <ValidarCanjePanel negocio={negocio} codigo={codigo} setCodigo={setCodigo} canjeResult={canjeResult} validarCanje={validarCanje} confirmarCanje={confirmarCanje} cargando={cargando} />
       </div>
+    </div>
+  )
+}
+
+function TarjetaClienteInfo() {
+  const [abierto, setAbierto] = useState(false)
+  const appUrl = typeof window !== 'undefined' ? window.location.origin : 'https://www.fielty.app'
+
+  return (
+    <div>
+      <button
+        onClick={() => setAbierto(!abierto)}
+        style={{width:'100%', padding:16, background:'#1a1a1a', border:'1px solid #2a2a2a', borderRadius:14, color:'#888', fontSize:14, fontWeight:600, cursor:'pointer', fontFamily:'inherit', textAlign:'left', display:'flex', alignItems:'center', justifyContent:'space-between'}}>
+        <span>❓ ¿El cliente no sabe cómo ver su tarjeta?</span>
+        <span style={{fontSize:18, color:'#555', transform: abierto ? 'rotate(45deg)' : 'none', transition:'transform 0.2s'}}>+</span>
+      </button>
+      {abierto && (
+        <div style={{background:'#111', border:'1px solid #2a2a2a', borderTop:'none', borderRadius:'0 0 14px 14px', padding:'16px 18px'}}>
+          <p style={{fontSize:14, color:'#888', margin:'0 0 10px', lineHeight:1.6}}>
+            Indicale que tiene que ingresar a este link desde su celular:
+          </p>
+          <div style={{background:'#1a1a1a', borderRadius:10, padding:'10px 14px', fontSize:13, fontFamily:'monospace', color:'white', wordBreak:'break-all', marginBottom:12}}>
+            {appUrl}/mi-tarjeta
+          </div>
+          <button onClick={() => { navigator.clipboard.writeText(`${appUrl}/mi-tarjeta`); alert('¡Link copiado!') }}
+            style={{padding:'9px 16px', background:'#2a2a2a', border:'none', borderRadius:10, color:'white', fontSize:13, fontWeight:700, cursor:'pointer', fontFamily:'inherit'}}>
+            📋 Copiar link
+          </button>
+        </div>
+      )}
     </div>
   )
 }
