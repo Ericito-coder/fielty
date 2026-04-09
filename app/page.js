@@ -42,6 +42,7 @@ const [isMobile, setIsMobile] = useState(false)
             <div style={{display:'flex', alignItems:'center', gap:28}}>
               <a href="#como-funciona" style={s.navLink}>Cómo funciona</a>
               <a href="#precios" style={s.navLink}>Precios</a>
+              <a href="/faq" style={s.navLink}>FAQ</a>
               <a href="/login" style={s.navLink}>Ingresar</a>
               <a href="/onboarding/registro" style={s.navCta}>Empezá gratis →</a>
             </div>
