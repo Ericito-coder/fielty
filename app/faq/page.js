@@ -122,10 +122,13 @@ export default function FAQ() {
       <div style={{ maxWidth: 720, margin: '0 auto', padding: '64px 24px 48px' }}>
         <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', color: '#e0001b', marginBottom: 16 }}>Ayuda</div>
         <h1 style={{ fontSize: 40, fontWeight: 900, color: 'white', marginBottom: 16, letterSpacing: -1, lineHeight: 1.1 }}>Preguntas frecuentes</h1>
-        <p style={{ fontSize: 16, color: '#666', lineHeight: 1.7, marginBottom: 0 }}>
+        <p style={{ fontSize: 16, color: '#666', lineHeight: 1.7, marginBottom: 32 }}>
           Todo lo que necesitás saber sobre Fielty. ¿No encontrás tu respuesta?{' '}
           <a href="mailto:eric.bohl10@gmail.com" style={{ color: '#e0001b', textDecoration: 'none', fontWeight: 600 }}>Escribinos</a>.
         </p>
+        <a href="/onboarding/registro" style={{ display: 'inline-block', background: '#e0001b', color: 'white', padding: '14px 28px', borderRadius: 12, fontSize: 15, fontWeight: 800, textDecoration: 'none' }}>
+          Empezá gratis →
+        </a>
       </div>
 
       {/* FAQ */}
