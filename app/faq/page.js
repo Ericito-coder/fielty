@@ -122,13 +122,10 @@ export default function FAQ() {
       <div style={{ maxWidth: 720, margin: '0 auto', padding: '64px 24px 48px' }}>
         <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', color: '#e0001b', marginBottom: 16 }}>Ayuda</div>
         <h1 style={{ fontSize: 40, fontWeight: 900, color: 'white', marginBottom: 16, letterSpacing: -1, lineHeight: 1.1 }}>Preguntas frecuentes</h1>
-        <p style={{ fontSize: 16, color: '#666', lineHeight: 1.7, marginBottom: 32 }}>
+        <p style={{ fontSize: 16, color: '#666', lineHeight: 1.7, marginBottom: 0 }}>
           Todo lo que necesitás saber sobre Fielty. ¿No encontrás tu respuesta?{' '}
           <a href="mailto:eric.bohl10@gmail.com" style={{ color: '#e0001b', textDecoration: 'none', fontWeight: 600 }}>Escribinos</a>.
         </p>
-        <a href="/onboarding/registro" style={{ display: 'inline-block', background: '#e0001b', color: 'white', padding: '14px 28px', borderRadius: 12, fontSize: 15, fontWeight: 800, textDecoration: 'none' }}>
-          Empezá gratis →
-        </a>
       </div>
 
       {/* FAQ */}
@@ -162,6 +159,15 @@ export default function FAQ() {
             </div>
           </div>
         ))}
+
+        {/* Empezá gratis */}
+        <div style={{ border: '1px solid #1a1a1a', borderRadius: 20, padding: '40px 32px', textAlign: 'center', marginBottom: 16 }}>
+          <div style={{ fontSize: 22, fontWeight: 800, color: 'white', marginBottom: 10 }}>¿Listo para fidelizar tus clientes?</div>
+          <p style={{ fontSize: 14, color: '#666', marginBottom: 28, lineHeight: 1.6 }}>Empezá gratis hoy. Sin tarjeta, sin contrato.</p>
+          <a href="/onboarding/registro" style={{ display: 'inline-block', background: '#e0001b', color: 'white', padding: '14px 28px', borderRadius: 12, fontSize: 15, fontWeight: 800, textDecoration: 'none' }}>
+            Empezá gratis →
+          </a>
+        </div>
 
         {/* CTA final */}
         <div style={{ border: '1px solid #1a1a1a', borderRadius: 20, padding: '40px 32px', textAlign: 'center', marginTop: 8 }}>
