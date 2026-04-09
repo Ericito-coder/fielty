@@ -13,7 +13,19 @@ export default function Listo() {
       .select('*')
       .eq('id', id)
       .single()
-      .then(({ data }) => setNegocio(data))
+      .then(({ data }) => {
+        setNegocio(data)
+        // Enviar email de bienvenida solo la primera vez (si no fue enviado antes)
+        const yaEnviado = localStorage.getItem('fielty_bienvenida_enviada')
+        if (!yaEnviado) {
+          fetch('/api/bienvenida', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ negocioId: data.id }),
+          }).catch(() => {})
+          localStorage.setItem('fielty_bienvenida_enviada', '1')
+        }
+      })
   }, [])
 
   useEffect(() => {
