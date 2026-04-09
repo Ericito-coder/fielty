@@ -203,6 +203,7 @@ function TutorialChecklist({ negocio, metricas }) {
   const [visible, setVisible] = useState(false)
   const [recompensasOk, setRecompensasOk] = useState(false)
   const [tieneSuma, setTieneSuma] = useState(false)
+  const [confirmarCierre, setConfirmarCierre] = useState(false)
 
   useEffect(() => {
     if (localStorage.getItem('fielty_tutorial_cerrado')) return
@@ -239,12 +240,22 @@ function TutorialChecklist({ negocio, metricas }) {
 
   return (
     <div style={{background:'white', borderRadius:20, padding:'24px 24px 20px', marginBottom:24, boxShadow:'0 2px 12px rgba(0,0,0,0.07)'}}>
+      {confirmarCierre && (
+        <div style={{background:'#fff8e6', border:'1px solid #f0a500', borderRadius:14, padding:'16px 18px', marginBottom:16}}>
+          <div style={{fontSize:14, fontWeight:700, color:'#0e0e0e', marginBottom:4}}>¿Cerrar la guía de primeros pasos?</div>
+          <div style={{fontSize:13, color:'#888', marginBottom:14}}>Todavía no completaste todos los pasos. Podés volver a abrirla desde Configuración si querés.</div>
+          <div style={{display:'flex', gap:10}}>
+            <button onClick={cerrar} style={{padding:'8px 18px', background:'#0e0e0e', border:'none', borderRadius:10, color:'white', fontSize:13, fontWeight:700, cursor:'pointer', fontFamily:'inherit'}}>Sí, cerrar</button>
+            <button onClick={() => setConfirmarCierre(false)} style={{padding:'8px 18px', background:'#f0f2f7', border:'none', borderRadius:10, color:'#555', fontSize:13, fontWeight:700, cursor:'pointer', fontFamily:'inherit'}}>Cancelar</button>
+          </div>
+        </div>
+      )}
       <div style={{display:'flex', alignItems:'flex-start', justifyContent:'space-between', marginBottom:14}}>
         <div>
           <div style={{fontSize:16, fontWeight:800, color:'#0e0e0e'}}>🚀 Primeros pasos</div>
           <div style={{fontSize:13, color:'#888', marginTop:3}}>{completados} de {pasos.length} completados</div>
         </div>
-        <button onClick={cerrar} style={{background:'none', border:'none', cursor:'pointer', fontSize:20, color:'#ccc', padding:'0 4px', lineHeight:1}}>×</button>
+        <button onClick={() => setConfirmarCierre(true)} style={{background:'none', border:'none', cursor:'pointer', fontSize:20, color:'#ccc', padding:'0 4px', lineHeight:1}}>×</button>
       </div>
       <div style={{background:'#f0f2f7', borderRadius:99, height:6, marginBottom:20}}>
         <div style={{background:'#e0001b', borderRadius:99, height:6, width:`${progreso}%`, transition:'width 0.5s'}} />
