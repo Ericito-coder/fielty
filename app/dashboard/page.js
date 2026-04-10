@@ -575,6 +575,7 @@ function ConfigSection({ negocio, setNegocio }) {
     telefono: negocio.telefono || '',
     pesos_por_punto: negocio.pesos_por_punto || 100,
     puntos_por_tramo: negocio.puntos_por_tramo || 1,
+    puntos_bienvenida: negocio.puntos_bienvenida || 10,
     puntos_cumpleanos: negocio.puntos_cumpleanos || 50,
     puntos_referido_emisor: negocio.puntos_referido_emisor || 100,
     puntos_referido_receptor: negocio.puntos_referido_receptor || 50,
@@ -672,6 +673,11 @@ function ConfigSection({ negocio, setNegocio }) {
             <input style={{...s.inputField, width:60}} type="number" value={form.puntos_por_tramo} onChange={e => setForm({...form, puntos_por_tramo: parseInt(e.target.value)})} />
             <span style={{fontSize:13, color:'#888'}}>pts</span>
           </div>
+        </div>
+        <div style={s.configField}>
+          <label style={s.configLabel}>Puntos de bienvenida 🎁</label>
+          <input style={{...s.inputField, width:100}} type="number" value={form.puntos_bienvenida} onChange={e => setForm({...form, puntos_bienvenida: parseInt(e.target.value)})} />
+          <div style={{fontSize:11, color:'#aaa', marginTop:6}}>Los que recibe cada cliente al registrarse por primera vez</div>
         </div>
         <div style={s.configField}>
           <label style={s.configLabel}>Puntos por cumpleaños 🎂</label>

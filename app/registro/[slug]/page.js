@@ -79,8 +79,8 @@ const { count } = await supabase
         telefono,
 email: email || null,
         negocio_id: negocio.id,
-        puntos: 10,
-        puntos_historicos: 10,
+        puntos: negocio.puntos_bienvenida || 10,
+        puntos_historicos: negocio.puntos_bienvenida || 10,
         fecha_nacimiento: fechaNacimiento || null,
         referido_por: REFERIDO_POR || null
       }])
