@@ -160,7 +160,7 @@ email: email || null,
         <div style={{fontSize:56, marginBottom:16}}>🎉</div>
         <h2 style={styles.title}>¡Bienvenido!</h2>
         <p style={styles.sub}>
-          Tu tarjeta fue creada con <strong>{REFERIDO_POR ? '10 puntos + bonus por referido' : '10 puntos'}</strong> de regalo.
+          Tu tarjeta fue creada con <strong>{REFERIDO_POR ? `${negocio.puntos_referido_receptor || 50} puntos por referido` : `${negocio.puntos_bienvenida || 10} puntos`}</strong> de regalo.
         </p>
         <button style={{...styles.btn, background: negocio.color}} onClick={() => window.location.href = `/tarjeta/${clienteId}`}>
           Ver mi tarjeta →
