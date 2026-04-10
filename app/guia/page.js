@@ -98,7 +98,7 @@ export default function Guia() {
           'Color de marca',
           'Logo personalizado (solo Business — PNG, JPG, WebP, máx 2MB)',
           'Regla de puntos: cuántos puntos por cada peso de compra',
-          'Puntos de bienvenida al registrarse (default: 10)',
+          'Puntos de bienvenida al registrarse de forma orgánica (default: 10)',
           'Puntos por referido para el que invita (default: 100)',
           'Puntos por referido para el nuevo cliente (default: 50)',
         ]} />
@@ -188,8 +188,8 @@ export default function Guia() {
 
         <SubTitle>Al registrarse recibe automáticamente</SubTitle>
         <List items={[
-          '10 puntos de bienvenida (configurable por el dueño)',
-          'Puntos extra si se registró con un link de referido',
+          'Puntos de bienvenida si se registró de forma orgánica (configurable por el dueño, default: 10)',
+          'Puntos de referido si se registró con el link de otro cliente — en ese caso NO recibe puntos de bienvenida',
         ]} />
 
         <Highlight>Si el negocio tiene logo (plan Business), aparece el logo en la página de registro en lugar de las iniciales.</Highlight>

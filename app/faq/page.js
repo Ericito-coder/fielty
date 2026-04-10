@@ -24,7 +24,7 @@ const FAQS = [
     preguntas: [
       {
         q: '¿Cómo se registran mis clientes?',
-        a: 'Mostrales el QR o compartiles el link de registro de tu negocio. Ellos completan su nombre, DNI y WhatsApp en menos de un minuto y ya tienen su tarjeta digital con puntos de bienvenida.',
+        a: 'Mostrales el QR o compartiles el link de registro de tu negocio. Ellos completan su nombre, DNI y email en menos de un minuto y ya tienen su tarjeta digital. Los clientes que se registran de forma orgánica reciben los puntos de bienvenida que vos configurás. Los que llegan por referido de otro cliente reciben los puntos de referido en su lugar.',
       },
       {
         q: '¿Qué datos se piden al registrarse?',

@@ -201,7 +201,7 @@ Al llegar al límite, el formulario de nueva sucursal se bloquea con un aviso pa
 **Programa de puntos:**
 - **Regla de puntos**: cuántos puntos por cada peso de compra
   - Ej: "1 punto cada $100"
-- **Puntos de bienvenida**: los que recibe un cliente al registrarse (default: 10)
+- **Puntos de bienvenida**: los que recibe un cliente orgánico al registrarse (default: 10). Los clientes que llegan por referido reciben los puntos de referido en su lugar, no los de bienvenida.
 
 **Sistema de referidos:**
 - **Puntos para el que invita** (emisor): default 100 pts
@@ -304,8 +304,8 @@ El cliente llega a esta página escaneando el QR del negocio o con el link que l
 - No puede registrarse dos veces con el mismo email en el mismo negocio
 
 **Al registrarse recibe:**
-- 10 puntos de bienvenida (configurable por el dueño)
-- Puntos extra si se registró con un link de referido de otro cliente
+- **Si es orgánico**: puntos de bienvenida configurados por el dueño (default: 10)
+- **Si es referido**: puntos de referido del receptor (default: 50) — no recibe puntos de bienvenida
 
 **Si el negocio tiene logo** (plan Business), aparece el logo en lugar de las iniciales.
 
@@ -397,7 +397,7 @@ Cada cliente tiene un link único de referido: `fielty.app/registro/[slug]?ref=[
 
 **Cuando alguien se registra con ese link:**
 - El cliente que invitó recibe X puntos (default: 100, configurable)
-- El nuevo cliente recibe X puntos extra además de los de bienvenida (default: 50, configurable)
+- El nuevo cliente recibe X puntos de referido en lugar de los de bienvenida (default: 50, configurable)
 - El contador de referidos del cliente que invitó sube en 1
 - Ambas transacciones quedan registradas en el historial con el ícono 🤝
 
