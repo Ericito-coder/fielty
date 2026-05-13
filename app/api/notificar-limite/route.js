@@ -88,7 +88,7 @@ export async function POST(request) {
     `
 
     await resend.emails.send({
-      from: 'Fielty <onboarding@resend.dev>',
+      from: 'Fielty <hola@fielty.app>',
       to: user.email,
       subject: asunto,
       html,

@@ -39,7 +39,7 @@ export async function POST(request) {
     const resetUrl = `${appUrl}/mi-tarjeta/reset?token=${token}`
 
     await resend.emails.send({
-      from: 'Fielty <onboarding@resend.dev>',
+      from: 'Fielty <hola@fielty.app>',
       to: email,
       subject: 'Recuperá tu contraseña de Fielty',
       html: `

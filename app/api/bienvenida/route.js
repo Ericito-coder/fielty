@@ -29,7 +29,7 @@ export async function POST(request) {
     const dashboardUrl = `${appUrl}/dashboard`
 
     await resend.emails.send({
-      from: 'Fielty <onboarding@resend.dev>',
+      from: 'Fielty <hola@fielty.app>',
       to: user.email,
       subject: `¡Bienvenido a Fielty, ${negocio.nombre}! 🎉`,
       html: `
