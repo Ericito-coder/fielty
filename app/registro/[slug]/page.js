@@ -134,6 +134,9 @@ export default function RegistroSlug({ params }) {
           <label style={styles.label}>Fecha de nacimiento <span style={{color:'#bbb', fontWeight:400}}>(opcional)</span></label>
           <input style={{...styles.input, width:'calc(100% - 32px)'}} type="date"
             value={fechaNacimiento} onChange={e => setFechaNacimiento(e.target.value)} />
+          {negocio.puntos_cumpleanos > 0 && (
+            <div style={{fontSize:12, color:'#888', marginTop:6}}>🎂 Si la cargás, recibís {negocio.puntos_cumpleanos} puntos de regalo en tu cumpleaños.</div>
+          )}
         </div>
 
         {error && <div style={styles.error}>{error}</div>}

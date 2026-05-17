@@ -88,6 +88,11 @@ export default function CajaSlug({ params }) {
     setCargando(false)
     setMonto('')
     mostrarMensaje(`✅ +${pts} puntos a ${clienteSeleccionado.nombre.split(' ')[0]}`, 'success')
+    fetch('/api/cliente/notificar-puntos', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ clienteId: clienteSeleccionado.id, puntos: pts, totalPuntos: nuevosPuntos, negocioNombre: negocio.nombre, monto }),
+    }).catch(() => {})
   }
 
   async function validarCanje() {
@@ -301,12 +306,6 @@ export default function CajaSlug({ params }) {
             )
           })()}
 
-          {tabDesktop === 'sumar' && !clienteSeleccionado && (
-            <div style={{maxWidth:520}}>
-              <TarjetaClienteInfo />
-            </div>
-          )}
-
           {tabDesktop === 'canje' && !clienteSeleccionado && (
             <div style={{maxWidth:520}}>
               <div style={{fontSize:20, fontWeight:800, marginBottom:24}}>🎁 Validar canje</div>
@@ -433,7 +432,14 @@ export default function CajaSlug({ params }) {
 
 function TarjetaClienteInfo() {
   const [abierto, setAbierto] = useState(false)
+  const [copiado, setCopiado] = useState(false)
   const appUrl = typeof window !== 'undefined' ? window.location.origin : 'https://www.fielty.app'
+
+  function copiar() {
+    navigator.clipboard.writeText(`${appUrl}/mi-tarjeta`).catch(() => {})
+    setCopiado(true)
+    setTimeout(() => setCopiado(false), 2500)
+  }
 
   return (
     <div>
@@ -451,9 +457,9 @@ function TarjetaClienteInfo() {
           <div style={{background:'#1a1a1a', borderRadius:10, padding:'10px 14px', fontSize:13, fontFamily:'monospace', color:'white', wordBreak:'break-all', marginBottom:12}}>
             {appUrl}/mi-tarjeta
           </div>
-          <button onClick={() => { navigator.clipboard.writeText(`${appUrl}/mi-tarjeta`); alert('¡Link copiado!') }}
-            style={{padding:'9px 16px', background:'#2a2a2a', border:'none', borderRadius:10, color:'white', fontSize:13, fontWeight:700, cursor:'pointer', fontFamily:'inherit'}}>
-            📋 Copiar link
+          <button onClick={copiar}
+            style={{padding:'9px 16px', background: copiado ? '#00b96b' : '#2a2a2a', border:'none', borderRadius:10, color:'white', fontSize:13, fontWeight:700, cursor:'pointer', fontFamily:'inherit', transition:'background 0.2s'}}>
+            {copiado ? '✓ ¡Copiado!' : '📋 Copiar link'}
           </button>
         </div>
       )}

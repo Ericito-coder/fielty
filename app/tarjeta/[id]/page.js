@@ -28,7 +28,7 @@ export default function Tarjeta({ params }) {
   async function cargarDatos() {
     const { data: clienteData } = await supabase
       .from('clientes')
-      .select('*, negocio:negocios(nombre, color, pesos_por_punto, puntos_por_tramo, logo_url)')
+      .select('*, negocio:negocios(nombre, color, pesos_por_punto, puntos_por_tramo, logo_url, slug, puntos_referido_receptor, puntos_referido_quien_refiere)')
       .eq('id', id)
       .single()
 
@@ -121,13 +121,25 @@ export default function Tarjeta({ params }) {
       {/* CANJE ACTIVO */}
       {codigoCanje && (
         <div style={{background:'linear-gradient(135deg, #0e0e0e, #1a1a2e)', borderRadius:24, padding:24, marginBottom:16, textAlign:'center', boxShadow:'0 8px 32px rgba(0,0,0,0.2)'}}>
-          <div style={{fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.1em', color:'#00b96b', marginBottom:8}}>🎁 Canje activo</div>
-          <div style={{fontSize:18, fontWeight:800, color:'white', marginBottom:4}}>{codigoCanje.recompensa.nombre}</div>
-          <div style={{fontFamily:'monospace', fontSize:32, fontWeight:700, letterSpacing:6, color:'white', marginBottom:8}}>{codigoCanje.codigo}</div>
-          <div style={{fontSize:13, color:'#666', marginBottom:16}}>
-            Expira en <span style={{color: segundos < 3600 ? '#e0001b' : '#00b96b', fontWeight:700}}>{formatTime(segundos)}</span>
-          </div>
-          <div style={{fontSize:12, color:'#555', marginBottom:16}}>📌 Mostrá este código al empleado para canjear tu recompensa.</div>
+          {segundos <= 0 ? (
+            <>
+              <div style={{fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.1em', color:'#e0001b', marginBottom:8}}>⏱ Código vencido</div>
+              <div style={{fontSize:18, fontWeight:800, color:'white', marginBottom:8}}>{codigoCanje.recompensa.nombre}</div>
+              <div style={{fontSize:13, color:'#888', marginBottom:16, lineHeight:1.5}}>
+                Tu código expiró. Los puntos volvieron a tu saldo. Podés generar uno nuevo cuando quieras.
+              </div>
+            </>
+          ) : (
+            <>
+              <div style={{fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.1em', color:'#00b96b', marginBottom:8}}>🎁 Canje activo</div>
+              <div style={{fontSize:18, fontWeight:800, color:'white', marginBottom:4}}>{codigoCanje.recompensa.nombre}</div>
+              <div style={{fontFamily:'monospace', fontSize:32, fontWeight:700, letterSpacing:6, color:'white', marginBottom:8}}>{codigoCanje.codigo}</div>
+              <div style={{fontSize:13, color:'#666', marginBottom:16}}>
+                Expira en <span style={{color: segundos < 3600 ? '#e0001b' : '#00b96b', fontWeight:700}}>{formatTime(segundos)}</span>
+              </div>
+              <div style={{fontSize:12, color:'#555', marginBottom:16}}>📌 Mostrá este código al empleado para canjear tu recompensa.</div>
+            </>
+          )}
           <button style={{padding:'10px 20px', background:'#1e1e1e', border:'1px solid #2a2a2a', borderRadius:12, color:'#888', fontSize:13, fontWeight:600, cursor:'pointer', fontFamily:'inherit'}}
             onClick={() => setCodigoCanje(null)}>
             Cerrar
@@ -152,12 +164,19 @@ export default function Tarjeta({ params }) {
           </div>
         </div>
 
+        <div style={{fontSize:11, color:'rgba(255,255,255,0.35)', marginBottom:16, lineHeight:1.5}}>
+          🥉 Bronce · 🥈 Plata desde 1.000 pts históricos · 🥇 Oro desde 5.000 pts históricos
+        </div>
         <div style={st.ptsLabel}>Tus puntos</div>
         <div style={st.ptsValue}>{cliente.puntos} <span style={st.ptsUnit}>pts</span></div>
 
         <div style={st.progressInfo}>
           <span style={st.progressText}>
-            {proxima ? `Te faltan ${meta - cliente.puntos} pts para: ${proxima.nombre}` : '🎉 ¡Tenés todos los premios disponibles!'}
+            {recompensas.length === 0
+              ? 'Próximamente habrá recompensas disponibles'
+              : proxima
+                ? `Te faltan ${meta - cliente.puntos} pts para: ${proxima.nombre}`
+                : '🎉 ¡Tenés todos los premios disponibles!'}
           </span>
         </div>
         <div style={st.progressBg}>
@@ -209,7 +228,10 @@ export default function Tarjeta({ params }) {
             Compartí tu link y ganá puntos
           </div>
           <div style={{fontSize:13, color:'#888', marginBottom:20, lineHeight:1.5}}>
-            Cuando un amigo se registra con tu link,<br/>los dos reciben puntos de regalo.
+            Cuando un amigo se registra con tu link, vos ganás{' '}
+            <strong style={{color:'#0e0e0e'}}>{cliente.negocio?.puntos_referido_quien_refiere || 50} pts</strong>{' '}
+            y tu amigo gana{' '}
+            <strong style={{color:'#0e0e0e'}}>{cliente.negocio?.puntos_referido_receptor || 50} pts</strong>.
           </div>
           <button style={{
             width:'100%', padding:14,

@@ -87,7 +87,7 @@ const FAQS = [
       },
       {
         q: '¿Qué pasa si Fielty tiene un problema técnico?',
-        a: 'Ante cualquier inconveniente podés escribirnos a eric.bohl10@gmail.com y te respondemos a la brevedad.',
+        a: 'Ante cualquier inconveniente podés escribirnos a hola@fielty.app y te respondemos a la brevedad.',
       },
       {
         q: '¿Puedo usar Fielty desde el celular?',
@@ -124,7 +124,7 @@ export default function FAQ() {
         <h1 style={{ fontSize: 40, fontWeight: 900, color: 'white', marginBottom: 16, letterSpacing: -1, lineHeight: 1.1 }}>Preguntas frecuentes</h1>
         <p style={{ fontSize: 16, color: '#666', lineHeight: 1.7, marginBottom: 0 }}>
           Todo lo que necesitás saber sobre Fielty. ¿No encontrás tu respuesta?{' '}
-          <a href="mailto:eric.bohl10@gmail.com" style={{ color: '#e0001b', textDecoration: 'none', fontWeight: 600 }}>Escribinos</a>.
+          <a href="mailto:hola@fielty.app" style={{ color: '#e0001b', textDecoration: 'none', fontWeight: 600 }}>Escribinos</a>.
         </p>
       </div>
 
@@ -173,7 +173,7 @@ export default function FAQ() {
         <div style={{ border: '1px solid #1a1a1a', borderRadius: 20, padding: '40px 32px', textAlign: 'center', marginTop: 8 }}>
           <div style={{ fontSize: 22, fontWeight: 800, color: 'white', marginBottom: 10 }}>¿Todavía tenés dudas?</div>
           <p style={{ fontSize: 14, color: '#666', marginBottom: 28, lineHeight: 1.6 }}>Escribinos y te respondemos en menos de 24 horas.</p>
-          <a href="mailto:eric.bohl10@gmail.com" style={{ display: 'inline-block', background: '#e0001b', color: 'white', padding: '14px 28px', borderRadius: 12, fontSize: 15, fontWeight: 800, textDecoration: 'none' }}>
+          <a href="mailto:hola@fielty.app" style={{ display: 'inline-block', background: '#e0001b', color: 'white', padding: '14px 28px', borderRadius: 12, fontSize: 15, fontWeight: 800, textDecoration: 'none' }}>
             Contactar →
           </a>
         </div>

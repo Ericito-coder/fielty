@@ -108,7 +108,7 @@ export default function Listo() {
           </div>
           <div style={s.pasoItem}>
             <div style={s.pasoNum}>2</div>
-            <div>Pedile a tus empleados que usen <strong>/caja</strong> para acreditar puntos</div>
+            <div>Pedile a tus empleados que usen <strong style={{fontFamily:'monospace', fontSize:12, background:'#e8eaf0', padding:'2px 6px', borderRadius:4}}>{typeof window !== 'undefined' ? `${window.location.origin}/c/${negocio.slug}` : `/c/${negocio.slug}`}</strong> para acreditar puntos</div>
           </div>
           <div style={s.pasoItem}>
             <div style={s.pasoNum}>3</div>

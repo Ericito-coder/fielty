@@ -1,0 +1,70 @@
+import { NextResponse } from 'next/server'
+import { Resend } from 'resend'
+import { createClient } from '@supabase/supabase-js'
+
+const resend = new Resend(process.env.RESEND_API_KEY)
+const supabaseAdmin = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL,
+  process.env.SUPABASE_SERVICE_ROLE_KEY
+)
+
+export async function POST(request) {
+  try {
+    const { clienteId, puntos, totalPuntos, negocioNombre, monto } = await request.json()
+    if (!clienteId || !puntos) return NextResponse.json({ ok: true })
+
+    const { data: cliente } = await supabaseAdmin
+      .from('clientes')
+      .select('nombre, email')
+      .eq('id', clienteId)
+      .single()
+
+    if (!cliente?.email) return NextResponse.json({ ok: true })
+
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://www.fielty.app'
+    const montoFormateado = monto ? `$${parseInt(monto).toLocaleString('es-AR')}` : null
+
+    await resend.emails.send({
+      from: 'Fielty <hola@fielty.app>',
+      to: cliente.email,
+      subject: `+${puntos} puntos en ${negocioNombre} ⭐`,
+      html: `
+        <div style="font-family: sans-serif; max-width: 520px; margin: 0 auto; padding: 32px 24px; background: #ffffff;">
+
+          <div style="margin-bottom: 28px;">
+            <span style="font-size: 20px; font-weight: 900; color: #0e0e0e; letter-spacing: -0.5px;">● fielty</span>
+          </div>
+
+          <div style="background: linear-gradient(135deg, #1a1a2e, #0f3460); border-radius: 20px; padding: 28px; text-align: center; margin-bottom: 28px;">
+            <div style="font-size: 11px; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 12px;">Puntos acreditados</div>
+            <div style="font-size: 60px; font-weight: 900; color: #00b96b; font-family: monospace; line-height: 1; margin-bottom: 8px;">+${puntos}</div>
+            <div style="font-size: 14px; color: rgba(255,255,255,0.5);">puntos en ${negocioNombre}</div>
+          </div>
+
+          <p style="font-size: 16px; color: #0e0e0e; margin: 0 0 10px;">
+            Hola <strong>${cliente.nombre.split(' ')[0]}</strong>,
+          </p>
+          <p style="font-size: 15px; color: #555; line-height: 1.7; margin: 0 0 28px;">
+            ${montoFormateado
+              ? `Acreditamos <strong>${puntos} puntos</strong> por tu compra de <strong>${montoFormateado}</strong> en ${negocioNombre}.`
+              : `Acreditamos <strong>${puntos} puntos</strong> en ${negocioNombre}.`
+            }
+            Ahora tenés <strong>${totalPuntos} puntos</strong> en total.
+          </p>
+
+          <a href="${appUrl}/mi-tarjeta" style="display: inline-block; background: #e0001b; color: white; padding: 14px 28px; border-radius: 12px; font-size: 15px; font-weight: 800; text-decoration: none; margin-bottom: 40px;">
+            Ver mi tarjeta →
+          </a>
+
+          <p style="font-size: 12px; color: #aaa; padding-top: 24px; border-top: 1px solid #e8eaf0; margin: 0;">
+            Fielty · <a href="${appUrl}" style="color: #aaa; text-decoration: none;">fielty.app</a>
+          </p>
+        </div>
+      `,
+    })
+
+    return NextResponse.json({ ok: true })
+  } catch {
+    return NextResponse.json({ ok: true })
+  }
+}
