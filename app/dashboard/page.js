@@ -602,15 +602,29 @@ function ConfigSection({ negocio, setNegocio }) {
     puntos_cumpleanos: negocio.puntos_cumpleanos || 50,
     puntos_referido_emisor: negocio.puntos_referido_emisor || 100,
     puntos_referido_receptor: negocio.puntos_referido_receptor || 50,
-    pin_caja: negocio.pin_caja || '1234',
+    pin_caja: '',
+    pin_confirmar: '',
   })
   const [guardando, setGuardando] = useState(false)
   const [ok, setOk] = useState(false)
+  const [errorPin, setErrorPin] = useState('')
+
+  const pinActualEsDebil = PINES_COMUNES.includes(negocio.pin_caja || '1234')
 
   async function guardar() {
+    // Si el usuario completó alguno de los campos de PIN, validar ambos
+    if (form.pin_caja || form.pin_confirmar) {
+      const errorValidacion = validarPin(form.pin_caja, form.pin_confirmar)
+      if (errorValidacion) { setErrorPin(errorValidacion); return }
+    }
+    setErrorPin('')
     setGuardando(true)
-    const { data } = await supabase.from('negocios').update(form).eq('id', negocio.id).select().single()
+    const payload = { ...form }
+    delete payload.pin_confirmar
+    if (!payload.pin_caja) delete payload.pin_caja // No sobreescribir si no cambió
+    const { data } = await supabase.from('negocios').update(payload).eq('id', negocio.id).select().single()
     setNegocio(data)
+    setForm(f => ({ ...f, pin_caja: '', pin_confirmar: '' }))
     setGuardando(false)
     setOk(true)
     setTimeout(() => setOk(false), 2000)
@@ -708,8 +722,17 @@ function ConfigSection({ negocio, setNegocio }) {
         </div>
         <div style={s.configField}>
           <label style={s.configLabel}>PIN de caja 🔐</label>
-          <input style={{...s.inputField, width:120, fontFamily:'monospace', letterSpacing:4}} type="password" maxLength={6} placeholder="••••" value={form.pin_caja || ''} onChange={e => setForm({...form, pin_caja: e.target.value})} />
-          <div style={{fontSize:11, color:'#aaa', marginTop:6}}>El PIN que usan tus empleados para entrar a la caja</div>
+          {pinActualEsDebil && (
+            <div style={{background:'#fff8e6', border:'1px solid #f0a500', borderRadius:10, padding:'8px 12px', fontSize:12, color:'#b37a00', marginBottom:8}}>
+              ⚠️ Tu PIN actual es débil. Cambialo antes de usar la caja.
+            </div>
+          )}
+          <div style={{display:'flex', flexDirection:'column', gap:8, maxWidth:220}}>
+            <input style={{...s.inputField, fontFamily:'monospace', letterSpacing:4}} type="password" maxLength={6} placeholder="Nuevo PIN" value={form.pin_caja} onChange={e => { setForm({...form, pin_caja: e.target.value}); setErrorPin('') }} />
+            <input style={{...s.inputField, fontFamily:'monospace', letterSpacing:4}} type="password" maxLength={6} placeholder="Confirmar PIN" value={form.pin_confirmar} onChange={e => { setForm({...form, pin_confirmar: e.target.value}); setErrorPin('') }} />
+          </div>
+          {errorPin && <div style={{fontSize:12, color:'#e0001b', marginTop:6}}>⚠️ {errorPin}</div>}
+          <div style={{fontSize:11, color:'#aaa', marginTop:6}}>Solo números, mínimo 4 dígitos. Dejá vacío para no cambiar el PIN actual.</div>
         </div>
         <div style={s.configField}>
           <label style={s.configLabel}>Puntos por referido 🤝</label>
@@ -733,10 +756,21 @@ function ConfigSection({ negocio, setNegocio }) {
 
 // ===== SUCURSALES =====
 const LIMITE_SUCURSALES = { gratis: 1, pro_early: 3, pro: 3, business: 999 }
+const PINES_COMUNES = ['1234','0000','1111','1212','4321','1122','9999','0123','2222','3333','4444','5555','6666','7777','8888','0000']
+
+function validarPin(pin, confirmar) {
+  if (!pin) return 'El PIN es obligatorio'
+  if (!/^\d+$/.test(pin)) return 'El PIN debe contener solo números'
+  if (pin.length < 4) return 'El PIN debe tener al menos 4 dígitos'
+  if (PINES_COMUNES.includes(pin)) return 'Ese PIN es muy común. Elegí uno más seguro'
+  if (confirmar !== undefined && pin !== confirmar) return 'Los PINs no coinciden'
+  return null
+}
 
 function SucursalesSection({ negocio }) {
   const [sucursales, setSucursales] = useState([])
-  const [nueva, setNueva] = useState({ nombre: '', direccion: '', pin_caja: '1234' })
+  const [nueva, setNueva] = useState({ nombre: '', direccion: '', pin_caja: '', pin_confirmar: '' })
+  const [errorPin, setErrorPin] = useState('')
   const [guardando, setGuardando] = useState(false)
 
   useEffect(() => { cargar() }, [negocio.id])
@@ -751,10 +785,13 @@ function SucursalesSection({ negocio }) {
 
   async function agregar() {
     if (!nueva.nombre || alcanzaLimite) return
+    const errorValidacion = validarPin(nueva.pin_caja, nueva.pin_confirmar)
+    if (errorValidacion) { setErrorPin(errorValidacion); return }
+    setErrorPin('')
     setGuardando(true)
     const slugSuc = nueva.nombre.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
-    await supabase.from('sucursales').insert([{ negocio_id: negocio.id, nombre: nueva.nombre, slug: slugSuc, direccion: nueva.direccion, pin_caja: nueva.pin_caja || '1234' }])
-    setNueva({ nombre: '', direccion: '', pin_caja: '1234' })
+    await supabase.from('sucursales').insert([{ negocio_id: negocio.id, nombre: nueva.nombre, slug: slugSuc, direccion: nueva.direccion, pin_caja: nueva.pin_caja }])
+    setNueva({ nombre: '', direccion: '', pin_caja: '', pin_confirmar: '' })
     await cargar()
     setGuardando(false)
   }
@@ -817,8 +854,14 @@ function SucursalesSection({ negocio }) {
         </div>
         <div style={s.configField}>
           <label style={s.configLabel}>PIN de caja 🔐</label>
-          <input style={{...s.inputField, width:120, fontFamily:'monospace', letterSpacing:4}} type="password" maxLength={6} placeholder="1234" value={nueva.pin_caja} onChange={e => setNueva({...nueva, pin_caja: e.target.value})} />
+          <input style={{...s.inputField, width:120, fontFamily:'monospace', letterSpacing:4}} type="password" maxLength={6} placeholder="Mín. 4 dígitos" value={nueva.pin_caja} onChange={e => { setNueva({...nueva, pin_caja: e.target.value}); setErrorPin('') }} />
+          <div style={{fontSize:11, color:'#aaa', marginTop:6}}>Solo números, mínimo 4 dígitos, no uses PINs obvios</div>
         </div>
+        <div style={s.configField}>
+          <label style={s.configLabel}>Confirmar PIN 🔐</label>
+          <input style={{...s.inputField, width:120, fontFamily:'monospace', letterSpacing:4}} type="password" maxLength={6} placeholder="Repetí el PIN" value={nueva.pin_confirmar} onChange={e => { setNueva({...nueva, pin_confirmar: e.target.value}); setErrorPin('') }} />
+        </div>
+        {errorPin && <div style={{background:'#fff0f0', color:'#e0001b', padding:'10px 14px', borderRadius:10, fontSize:13, marginBottom:12}}>⚠️ {errorPin}</div>}
         <button style={s.btnRed} onClick={agregar} disabled={guardando}>{guardando ? 'Guardando...' : '+ Agregar sucursal'}</button>
       </div>
     </>
@@ -826,14 +869,23 @@ function SucursalesSection({ negocio }) {
 }
 
 function PinSucursal({ suc, recargar }) {
-  const [pin, setPin] = useState(suc.pin_caja || '1234')
+  const [pin, setPin] = useState('')
+  const [confirmar, setConfirmar] = useState('')
   const [mostrar, setMostrar] = useState(false)
   const [guardando, setGuardando] = useState(false)
   const [ok, setOk] = useState(false)
+  const [errorPin, setErrorPin] = useState('')
+
+  const pinActualEsDebil = PINES_COMUNES.includes(suc.pin_caja || '1234')
 
   async function guardar() {
+    const errorValidacion = validarPin(pin, confirmar)
+    if (errorValidacion) { setErrorPin(errorValidacion); return }
+    setErrorPin('')
     setGuardando(true)
     await supabase.from('sucursales').update({ pin_caja: pin }).eq('id', suc.id)
+    setPin('')
+    setConfirmar('')
     setGuardando(false)
     setOk(true)
     setTimeout(() => setOk(false), 2000)
@@ -843,19 +895,28 @@ function PinSucursal({ suc, recargar }) {
   return (
     <div style={{borderTop:'1px solid #f0f2f7', paddingTop:12}}>
       <div style={{fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.06em', color:'#888', marginBottom:8}}>PIN de caja 🔐</div>
-      <div style={{display:'flex', gap:8, alignItems:'center'}}>
-        <div style={{display:'flex', alignItems:'center', border:'2px solid #e8eaf0', borderRadius:12, overflow:'hidden', flex:1, maxWidth:180}}>
+      {pinActualEsDebil && (
+        <div style={{background:'#fff8e6', border:'1px solid #f0a500', borderRadius:10, padding:'8px 12px', fontSize:12, color:'#b37a00', marginBottom:10}}>
+          ⚠️ El PIN actual es débil. Cambialo antes de usar la caja.
+        </div>
+      )}
+      <div style={{display:'flex', flexDirection:'column', gap:8, maxWidth:220}}>
+        <div style={{display:'flex', alignItems:'center', border:'2px solid #e8eaf0', borderRadius:12, overflow:'hidden'}}>
           <input style={{padding:'10px 14px', border:'none', fontSize:15, fontFamily:'monospace', letterSpacing: mostrar ? 2 : 4, outline:'none', width:'100%'}}
-            type={mostrar ? 'text' : 'password'} maxLength={6} value={pin}
-            onChange={e => setPin(e.target.value)} />
+            type={mostrar ? 'text' : 'password'} maxLength={6} placeholder="Nuevo PIN"
+            value={pin} onChange={e => { setPin(e.target.value); setErrorPin('') }} />
           <button style={{padding:'10px 12px', background:'#f0f2f7', border:'none', cursor:'pointer', fontSize:14}}
             onClick={() => setMostrar(!mostrar)}>
             {mostrar ? '🙈' : '👁️'}
           </button>
         </div>
+        <input style={{padding:'10px 14px', border:'2px solid #e8eaf0', borderRadius:12, fontSize:15, fontFamily:'monospace', letterSpacing: mostrar ? 2 : 4, outline:'none', width:'100%', boxSizing:'border-box'}}
+          type={mostrar ? 'text' : 'password'} maxLength={6} placeholder="Confirmar PIN"
+          value={confirmar} onChange={e => { setConfirmar(e.target.value); setErrorPin('') }} />
+        {errorPin && <div style={{fontSize:12, color:'#e0001b'}}>⚠️ {errorPin}</div>}
         <button style={{padding:'10px 16px', background: ok ? '#00b96b' : '#0e0e0e', border:'none', borderRadius:12, color:'white', fontSize:13, fontWeight:700, cursor:'pointer', fontFamily:'inherit'}}
           onClick={guardar} disabled={guardando}>
-          {ok ? '✓ Guardado' : guardando ? '...' : 'Cambiar'}
+          {ok ? '✓ PIN actualizado' : guardando ? '...' : 'Cambiar PIN'}
         </button>
       </div>
     </div>
