@@ -1,99 +1,88 @@
 export default function Terminos() {
   return (
-    <div style={s.wrap}>
-      <div style={s.inner}>
-        <div style={s.logo}>
-          <div style={s.logoDot} />
-          <span style={s.logoText}>fielty</span>
+    <div style={{ minHeight: '100vh', background: '#0e0e0e', fontFamily: 'sans-serif' }}>
+
+      <nav style={{ borderBottom: '1px solid #1a1a1a', padding: '0 32px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: 64 }}>
+        <a href="/" style={{ display: 'flex', alignItems: 'center', gap: 8, textDecoration: 'none' }}>
+          <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#e0001b', boxShadow: '0 0 8px #e0001b' }} />
+          <span style={{ fontSize: 18, fontWeight: 800, color: 'white', letterSpacing: -0.5 }}>fielty</span>
+        </a>
+        <div style={{ display: 'flex', gap: 24, alignItems: 'center' }}>
+          <a href="/login" style={{ fontSize: 13, color: '#888', textDecoration: 'none', fontWeight: 500 }}>Ingresar</a>
+          <a href="/onboarding/registro" style={{ fontSize: 13, color: 'white', textDecoration: 'none', fontWeight: 700, background: '#e0001b', padding: '9px 16px', borderRadius: 10 }}>Empezá →</a>
         </div>
+      </nav>
 
-        <h1 style={s.titulo}>Términos y Condiciones</h1>
-        <p style={s.fecha}>Última actualización: abril 2026</p>
-
-        <p style={s.intro}>
-          Al registrarte y utilizar Fielty, aceptás los siguientes términos y condiciones. Si no estás de acuerdo con alguno de ellos, te pedimos que no uses el servicio.
-        </p>
-
-        <Seccion titulo="1. Descripción del servicio">
-          Fielty es una plataforma de fidelización de clientes que permite a negocios crear y gestionar programas de puntos, recompensas y beneficios para sus clientes. El servicio se presta a través del sitio web fielty.app y sus subdominios.
-        </Seccion>
-
-        <Seccion titulo="2. Registro y cuenta">
-          Para usar Fielty, el dueño del negocio debe registrarse proporcionando información verídica y actualizada. Sos responsable de mantener la confidencialidad de tu contraseña y de todas las actividades que ocurran bajo tu cuenta. Fielty no se responsabiliza por pérdidas derivadas del uso no autorizado de tu cuenta.
-        </Seccion>
-
-        <Seccion titulo="3. Planes y pagos">
-          Fielty ofrece un plan gratuito con funcionalidades limitadas y planes pagos (Pro y Business) con funcionalidades adicionales. Los planes pagos se facturan mensualmente mediante Mercado Pago. Los precios están expresados en pesos argentinos (ARS) e incluyen IVA cuando corresponde. Podés cancelar tu suscripción en cualquier momento desde tu cuenta de Mercado Pago. No se realizan reembolsos por períodos parciales ya abonados.
-        </Seccion>
-
-        <Seccion titulo="4. Uso aceptable">
-          Al usar Fielty te comprometés a:
-          <ul style={s.lista}>
-            <li>No usar el servicio para fines ilegales o no autorizados.</li>
-            <li>No registrar clientes sin su consentimiento expreso.</li>
-            <li>No intentar acceder a cuentas de otros usuarios.</li>
-            <li>No enviar contenido spam, ofensivo o fraudulento.</li>
-            <li>Respetar la privacidad de los datos de tus clientes.</li>
-          </ul>
-        </Seccion>
-
-        <Seccion titulo="5. Datos de clientes">
-          Como dueño del negocio, sos el responsable del tratamiento de los datos personales de tus clientes (nombre, DNI, teléfono, email, fecha de nacimiento). Fielty actúa como encargado del tratamiento en los términos de la Ley 25.326 de Protección de Datos Personales de Argentina. Te comprometés a obtener el consentimiento de tus clientes antes de registrar sus datos en la plataforma.
-        </Seccion>
-
-        <Seccion titulo="6. Propiedad intelectual">
-          Fielty y todos sus contenidos, logotipos, diseños y software son propiedad de sus creadores. No podés copiar, modificar, distribuir ni usar ningún elemento de Fielty sin autorización expresa.
-        </Seccion>
-
-        <Seccion titulo="7. Disponibilidad del servicio">
-          Fielty se esfuerza por mantener el servicio disponible de forma continua, pero no garantiza disponibilidad del 100%. Pueden existir interrupciones por mantenimiento, actualizaciones o causas de fuerza mayor. No nos responsabilizamos por pérdidas ocasionadas por la no disponibilidad temporal del servicio.
-        </Seccion>
-
-        <Seccion titulo="8. Limitación de responsabilidad">
-          Fielty no se responsabiliza por daños directos, indirectos, incidentales o consecuentes derivados del uso o imposibilidad de uso del servicio. La responsabilidad máxima de Fielty en ningún caso superará el monto abonado por el usuario en los últimos 3 meses.
-        </Seccion>
-
-        <Seccion titulo="9. Cancelación y suspensión">
-          Fielty se reserva el derecho de suspender o cancelar cuentas que violen estos términos, sin previo aviso. En caso de cancelación del servicio por parte de Fielty sin causa imputable al usuario, se reembolsará el proporcional del período no utilizado.
-        </Seccion>
-
-        <Seccion titulo="10. Modificaciones">
-          Fielty puede modificar estos términos en cualquier momento. Los cambios se notificarán con al menos 15 días de anticipación por email. El uso continuado del servicio después de esa fecha implica la aceptación de los nuevos términos.
-        </Seccion>
-
-        <Seccion titulo="11. Ley aplicable">
-          Estos términos se rigen por las leyes de la República Argentina. Cualquier disputa se someterá a la jurisdicción de los tribunales ordinarios de la Ciudad Autónoma de Buenos Aires.
-        </Seccion>
-
-        <Seccion titulo="12. Contacto">
-          Para consultas sobre estos términos, escribinos a <a href="mailto:eric.bohl10@gmail.com" style={{color:'#e0001b'}}>eric.bohl10@gmail.com</a>.
-        </Seccion>
-
-        <div style={{marginTop:40, paddingTop:24, borderTop:'1px solid #e8eaf0', textAlign:'center'}}>
-          <a href="/" style={{color:'#e0001b', fontWeight:700, textDecoration:'none', fontSize:14}}>← Volver al inicio</a>
-        </div>
+      <div style={{ maxWidth: 720, margin: '0 auto', padding: '64px 24px 48px' }}>
+        <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', color: '#e0001b', marginBottom: 16 }}>Legal</div>
+        <h1 style={{ fontSize: 40, fontWeight: 900, color: 'white', marginBottom: 16, letterSpacing: -1, lineHeight: 1.1 }}>Términos y condiciones</h1>
+        <p style={{ fontSize: 14, color: '#555', lineHeight: 1.7 }}>Última actualización: mayo de 2026</p>
       </div>
+
+      <div style={{ maxWidth: 720, margin: '0 auto', padding: '0 24px 80px' }}>
+
+        <Section title="1. Aceptación de los términos">
+          Al registrarte y usar Fielty, aceptás estos Términos y Condiciones en su totalidad. Si no estás de acuerdo con alguno de ellos, no debés usar el servicio. Fielty se reserva el derecho de modificar estos términos en cualquier momento, notificando los cambios por email o mediante un aviso en la plataforma.
+        </Section>
+
+        <Section title="2. Descripción del servicio">
+          Fielty es una plataforma de fidelización de clientes para negocios. Permite a los dueños de negocios crear programas de puntos digitales, y a sus clientes acumular y canjear recompensas sin necesidad de descargar una aplicación. El servicio se presta a través del sitio web fielty.app.
+        </Section>
+
+        <Section title="3. Cuentas de negocios">
+          Para usar Fielty como negocio, debés registrarte con información verídica y completa. Sos responsable de mantener la confidencialidad de tu contraseña y del PIN de caja de tu negocio. Cualquier actividad realizada desde tu cuenta es tu responsabilidad. Fielty puede suspender o cancelar cuentas que violen estos términos, sin previo aviso.
+        </Section>
+
+        <Section title="4. Planes y pagos">
+          Fielty ofrece un plan gratuito con hasta 50 clientes, y planes de pago con funcionalidades adicionales. Los planes de pago se facturan mensualmente a través de Mercado Pago. Podés cancelar tu suscripción en cualquier momento directamente desde Mercado Pago; el servicio continuará activo hasta el fin del período ya abonado. No se realizan reembolsos por períodos parciales.
+        </Section>
+
+        <Section title="5. Uso aceptable">
+          Te comprometés a usar Fielty únicamente para fines lícitos y en conformidad con estos términos. Queda expresamente prohibido: usar el servicio para actividades fraudulentas o ilegales, intentar acceder sin autorización a cuentas de otros usuarios, realizar ingeniería inversa sobre la plataforma, o utilizar el servicio de forma que pueda dañar, sobrecargar o deteriorar la infraestructura de Fielty.
+        </Section>
+
+        <Section title="6. Datos de clientes finales">
+          Como negocio que usa Fielty, sos responsable de obtener el consentimiento informado de tus clientes para recopilar y tratar sus datos personales dentro de la plataforma, en cumplimiento de la Ley 25.326 de Protección de Datos Personales de la República Argentina. Fielty actúa como encargado del tratamiento de esos datos en tu nombre y conforme a tus instrucciones.
+        </Section>
+
+        <Section title="7. Propiedad intelectual">
+          Todo el contenido, diseño, código fuente y marca de Fielty son propiedad exclusiva de sus creadores. No podés reproducir, distribuir ni crear obras derivadas sin autorización expresa y por escrito. El contenido que cargás en la plataforma (nombre de negocio, logo, recompensas) es de tu propiedad; al subirlo nos otorgás una licencia limitada, no exclusiva y revocable para mostrarlo dentro del servicio.
+        </Section>
+
+        <Section title="8. Limitación de responsabilidad">
+          Fielty se provee en el estado en que se encuentra, sin garantías de disponibilidad ininterrumpida ni libre de errores. No somos responsables por pérdida de datos, lucro cesante, daños indirectos o consecuentes derivados del uso o imposibilidad de uso del servicio. En ningún caso nuestra responsabilidad total hacia vos superará el monto efectivamente pagado por el servicio en los últimos tres (3) meses.
+        </Section>
+
+        <Section title="9. Cancelación y eliminación de cuenta">
+          Podés solicitar la cancelación de tu cuenta en cualquier momento escribiéndonos a hola@fielty.app. Ante la cancelación, los datos de clientes asociados a tu negocio serán eliminados de nuestros sistemas en un plazo de 30 días hábiles, salvo obligación legal de retención.
+        </Section>
+
+        <Section title="10. Ley aplicable y jurisdicción">
+          Estos Términos y Condiciones se rigen por las leyes de la República Argentina. Cualquier controversia que surja en relación con el servicio será sometida a la jurisdicción de los tribunales ordinarios de la Ciudad Autónoma de Buenos Aires, renunciando las partes a cualquier otro fuero que pudiera corresponder.
+        </Section>
+
+        <Section title="11. Contacto">
+          Para consultas, reclamos o cualquier comunicación relacionada con estos términos, escribinos a{' '}
+          <a href="mailto:hola@fielty.app" style={{ color: '#e0001b', textDecoration: 'none', fontWeight: 600 }}>hola@fielty.app</a>.
+        </Section>
+
+      </div>
+
+      <div style={{ borderTop: '1px solid #1a1a1a', textAlign: 'center', padding: '24px 20px 40px', fontSize: 13, color: '#444' }}>
+        <a href="/terminos" style={{ color: '#888', textDecoration: 'none', marginRight: 20 }}>Términos</a>
+        <a href="/privacidad" style={{ color: '#444', textDecoration: 'none', marginRight: 20 }}>Privacidad</a>
+        <a href="/" style={{ color: '#444', textDecoration: 'none' }}>fielty.app</a>
+      </div>
+
     </div>
   )
 }
 
-function Seccion({ titulo, children }) {
+function Section({ title, children }) {
   return (
-    <div style={{ marginBottom: 32 }}>
-      <h2 style={{ fontSize: 17, fontWeight: 800, color: '#0e0e0e', marginBottom: 10 }}>{titulo}</h2>
-      <div style={{ fontSize: 15, color: '#444', lineHeight: 1.75 }}>{children}</div>
+    <div style={{ marginBottom: 40 }}>
+      <h2 style={{ fontSize: 17, fontWeight: 800, color: 'white', marginBottom: 12 }}>{title}</h2>
+      <p style={{ fontSize: 14, color: '#888', lineHeight: 1.9 }}>{children}</p>
     </div>
   )
-}
-
-const s = {
-  wrap: { minHeight: '100vh', background: '#f9f9fb', padding: '48px 20px' },
-  inner: { maxWidth: 720, margin: '0 auto', background: 'white', borderRadius: 24, padding: '48px 48px', boxShadow: '0 2px 24px rgba(0,0,0,0.07)' },
-  logo: { display: 'flex', alignItems: 'center', gap: 8, marginBottom: 32 },
-  logoDot: { width: 10, height: 10, borderRadius: '50%', background: '#e0001b', boxShadow: '0 0 10px #e0001b' },
-  logoText: { fontSize: 22, fontWeight: 800, color: '#0e0e0e', letterSpacing: -0.5 },
-  titulo: { fontSize: 32, fontWeight: 900, color: '#0e0e0e', marginBottom: 8 },
-  fecha: { fontSize: 13, color: '#aaa', marginBottom: 32 },
-  intro: { fontSize: 15, color: '#555', lineHeight: 1.75, marginBottom: 40, paddingBottom: 32, borderBottom: '1px solid #e8eaf0' },
-  lista: { paddingLeft: 20, marginTop: 10, display: 'flex', flexDirection: 'column', gap: 6 },
 }

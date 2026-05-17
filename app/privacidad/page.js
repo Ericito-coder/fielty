@@ -1,128 +1,88 @@
 export default function Privacidad() {
   return (
-    <div style={s.wrap}>
-      <div style={s.inner}>
-        <div style={s.logo}>
-          <div style={s.logoDot} />
-          <span style={s.logoText}>fielty</span>
+    <div style={{ minHeight: '100vh', background: '#0e0e0e', fontFamily: 'sans-serif' }}>
+
+      <nav style={{ borderBottom: '1px solid #1a1a1a', padding: '0 32px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: 64 }}>
+        <a href="/" style={{ display: 'flex', alignItems: 'center', gap: 8, textDecoration: 'none' }}>
+          <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#e0001b', boxShadow: '0 0 8px #e0001b' }} />
+          <span style={{ fontSize: 18, fontWeight: 800, color: 'white', letterSpacing: -0.5 }}>fielty</span>
+        </a>
+        <div style={{ display: 'flex', gap: 24, alignItems: 'center' }}>
+          <a href="/login" style={{ fontSize: 13, color: '#888', textDecoration: 'none', fontWeight: 500 }}>Ingresar</a>
+          <a href="/onboarding/registro" style={{ fontSize: 13, color: 'white', textDecoration: 'none', fontWeight: 700, background: '#e0001b', padding: '9px 16px', borderRadius: 10 }}>Empezá →</a>
         </div>
+      </nav>
 
-        <h1 style={s.titulo}>Política de Privacidad</h1>
-        <p style={s.fecha}>Última actualización: abril 2026</p>
-
-        <p style={s.intro}>
-          En Fielty nos tomamos muy en serio la privacidad de tus datos. Esta política describe qué información recopilamos, cómo la usamos y cómo la protegemos, en cumplimiento de la Ley 25.326 de Protección de Datos Personales de la República Argentina.
-        </p>
-
-        <Seccion titulo="1. Responsable del tratamiento">
-          Fielty (en adelante, "nosotros" o "Fielty") es responsable del tratamiento de los datos personales de los dueños de negocios registrados en la plataforma. Para consultas, podés contactarnos en <a href="mailto:eric.bohl10@gmail.com" style={{color:'#e0001b'}}>eric.bohl10@gmail.com</a>.
-        </Seccion>
-
-        <Seccion titulo="2. Datos que recopilamos">
-          <strong style={{color:'#0e0e0e'}}>De los dueños de negocios:</strong>
-          <ul style={s.lista}>
-            <li>Nombre completo</li>
-            <li>Dirección de email</li>
-            <li>Número de teléfono</li>
-            <li>Nombre y datos del negocio</li>
-            <li>Datos de pago procesados por Mercado Pago (no almacenamos datos de tarjetas)</li>
-          </ul>
-          <br />
-          <strong style={{color:'#0e0e0e'}}>De los clientes de los negocios (gestionados por el dueño del negocio):</strong>
-          <ul style={s.lista}>
-            <li>Nombre completo</li>
-            <li>DNI</li>
-            <li>Número de teléfono</li>
-            <li>Email (opcional)</li>
-            <li>Fecha de nacimiento (opcional)</li>
-            <li>Historial de puntos y canjes</li>
-          </ul>
-        </Seccion>
-
-        <Seccion titulo="3. Cómo usamos tus datos">
-          Utilizamos los datos recopilados para:
-          <ul style={s.lista}>
-            <li>Proveer y mejorar el servicio de Fielty.</li>
-            <li>Procesar pagos de suscripciones mediante Mercado Pago.</li>
-            <li>Enviarte comunicaciones relacionadas con tu cuenta (cambios en el servicio, novedades importantes).</li>
-            <li>Cumplir con obligaciones legales.</li>
-          </ul>
-          No vendemos ni compartimos tus datos personales con terceros para fines comerciales.
-        </Seccion>
-
-        <Seccion titulo="4. Datos de clientes de negocios">
-          Los datos de los clientes finales (personas que participan en el programa de puntos) son responsabilidad del negocio que los registra. Fielty actúa como encargado del tratamiento. El negocio es responsable de:
-          <ul style={s.lista}>
-            <li>Obtener el consentimiento del cliente antes de registrar sus datos.</li>
-            <li>Informar al cliente sobre el uso de sus datos.</li>
-            <li>Responder solicitudes de acceso, rectificación o eliminación de datos de sus clientes.</li>
-          </ul>
-        </Seccion>
-
-        <Seccion titulo="5. Almacenamiento y seguridad">
-          Los datos se almacenan en servidores seguros provistos por Supabase (infraestructura en la nube con certificación SOC 2). Implementamos medidas técnicas y organizativas para proteger tus datos contra acceso no autorizado, pérdida o alteración. Las contraseñas se almacenan encriptadas y nunca en texto plano.
-        </Seccion>
-
-        <Seccion titulo="6. Pagos">
-          Los pagos son procesados exclusivamente por Mercado Pago. Fielty no almacena datos de tarjetas de crédito ni débito. Para más información sobre el tratamiento de datos de pago, consultá la política de privacidad de Mercado Pago.
-        </Seccion>
-
-        <Seccion titulo="7. Cookies">
-          Fielty utiliza cookies de sesión necesarias para el funcionamiento del servicio (autenticación). No utilizamos cookies de seguimiento ni publicidad de terceros.
-        </Seccion>
-
-        <Seccion titulo="8. Tus derechos">
-          De acuerdo con la Ley 25.326, tenés derecho a:
-          <ul style={s.lista}>
-            <li><strong>Acceso:</strong> solicitar qué datos tenemos sobre vos.</li>
-            <li><strong>Rectificación:</strong> corregir datos inexactos o incompletos.</li>
-            <li><strong>Eliminación:</strong> solicitar la eliminación de tus datos.</li>
-            <li><strong>Oposición:</strong> oponerte al tratamiento de tus datos.</li>
-          </ul>
-          Para ejercer estos derechos, escribinos a <a href="mailto:eric.bohl10@gmail.com" style={{color:'#e0001b'}}>eric.bohl10@gmail.com</a>. Responderemos en un plazo máximo de 10 días hábiles.
-        </Seccion>
-
-        <Seccion titulo="9. Retención de datos">
-          Conservamos tus datos mientras tu cuenta esté activa. Si eliminás tu cuenta, tus datos serán eliminados en un plazo de 30 días, excepto aquellos que debamos conservar por obligaciones legales o fiscales.
-        </Seccion>
-
-        <Seccion titulo="10. Menores de edad">
-          Fielty no está dirigido a menores de 18 años. No recopilamos datos de menores de forma intencional. Si creés que tenemos datos de un menor, contactanos para eliminarlos.
-        </Seccion>
-
-        <Seccion titulo="11. Cambios en esta política">
-          Podemos actualizar esta política en cualquier momento. Te notificaremos por email ante cambios importantes. El uso continuado del servicio implica la aceptación de la política actualizada.
-        </Seccion>
-
-        <Seccion titulo="12. Contacto">
-          Para cualquier consulta sobre privacidad o ejercicio de derechos, contactanos en <a href="mailto:eric.bohl10@gmail.com" style={{color:'#e0001b'}}>eric.bohl10@gmail.com</a>.
-        </Seccion>
-
-        <div style={{marginTop:40, paddingTop:24, borderTop:'1px solid #e8eaf0', textAlign:'center'}}>
-          <a href="/" style={{color:'#e0001b', fontWeight:700, textDecoration:'none', fontSize:14}}>← Volver al inicio</a>
-        </div>
+      <div style={{ maxWidth: 720, margin: '0 auto', padding: '64px 24px 48px' }}>
+        <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', color: '#e0001b', marginBottom: 16 }}>Legal</div>
+        <h1 style={{ fontSize: 40, fontWeight: 900, color: 'white', marginBottom: 16, letterSpacing: -1, lineHeight: 1.1 }}>Política de privacidad</h1>
+        <p style={{ fontSize: 14, color: '#555', lineHeight: 1.7 }}>Última actualización: mayo de 2026</p>
       </div>
+
+      <div style={{ maxWidth: 720, margin: '0 auto', padding: '0 24px 80px' }}>
+
+        <Section title="1. Responsable del tratamiento">
+          Fielty (en adelante &quot;nosotros&quot; o &quot;Fielty&quot;) es responsable del tratamiento de los datos personales de los dueños de negocios registrados en la plataforma. Para consultas sobre privacidad, podés contactarnos en <a href="mailto:hola@fielty.app" style={{ color: '#e0001b', textDecoration: 'none', fontWeight: 600 }}>hola@fielty.app</a>.
+        </Section>
+
+        <Section title="2. Qué datos recopilamos">
+          <strong style={{ color: 'white' }}>De los dueños de negocios:</strong> nombre, email, nombre del negocio, configuración del programa de fidelización y datos de facturación procesados por Mercado Pago (no almacenamos datos de tarjetas de crédito).
+          <br /><br />
+          <strong style={{ color: 'white' }}>De los clientes de los negocios:</strong> nombre, DNI, email, número de WhatsApp (opcional) y fecha de nacimiento (opcional). Estos datos son cargados por los propios clientes al registrarse en el programa de un negocio.
+          <br /><br />
+          <strong style={{ color: 'white' }}>Datos de uso:</strong> actividad dentro de la plataforma (puntos acreditados, canjes, visitas) para el correcto funcionamiento del servicio.
+        </Section>
+
+        <Section title="3. Para qué usamos los datos">
+          Los datos se utilizan exclusivamente para: prestar el servicio de fidelización, enviar notificaciones transaccionales relacionadas con el programa de puntos (acreditación de puntos, recupero de contraseña, cumpleaños), gestionar la suscripción y el cobro del servicio, y mejorar la plataforma. No vendemos ni cedemos datos personales a terceros con fines comerciales.
+        </Section>
+
+        <Section title="4. Almacenamiento y seguridad">
+          Los datos se almacenan en Supabase (infraestructura PostgreSQL en la nube) con cifrado en tránsito (HTTPS/TLS) y en reposo. Las contraseñas se guardan hasheadas con bcrypt y nunca en texto plano. Aplicamos medidas técnicas razonables para proteger la información contra accesos no autorizados.
+        </Section>
+
+        <Section title="5. Servicios de terceros">
+          Fielty utiliza los siguientes servicios de terceros para operar: Supabase (base de datos y autenticación), Vercel (hosting), Resend (envío de emails transaccionales) y Mercado Pago (procesamiento de pagos). Cada uno de estos servicios cuenta con su propia política de privacidad.
+        </Section>
+
+        <Section title="6. Retención de datos">
+          Los datos de clientes se conservan mientras el negocio tenga una cuenta activa en Fielty. Al cancelar la cuenta, los datos se eliminan en un plazo de 30 días hábiles. Los dueños de negocios pueden solicitar la eliminación de su cuenta y datos en cualquier momento escribiendo a hola@fielty.app.
+        </Section>
+
+        <Section title="7. Derechos del titular de los datos">
+          De acuerdo con la Ley 25.326 de Protección de Datos Personales de la República Argentina, tenés derecho a: acceder a tus datos personales, rectificarlos si son inexactos, solicitar su eliminación (derecho al olvido) y oponerte a su tratamiento. Para ejercer cualquiera de estos derechos, escribinos a <a href="mailto:hola@fielty.app" style={{ color: '#e0001b', textDecoration: 'none', fontWeight: 600 }}>hola@fielty.app</a> y te respondemos dentro de los 5 días hábiles.
+        </Section>
+
+        <Section title="8. Cookies">
+          Fielty utiliza almacenamiento local del navegador (localStorage) para mantener tu sesión activa y guardar preferencias básicas. No utilizamos cookies de seguimiento ni publicidad de terceros.
+        </Section>
+
+        <Section title="9. Cambios en esta política">
+          Podemos actualizar esta política ocasionalmente. Te notificaremos por email ante cambios significativos. El uso continuado del servicio tras la notificación implica la aceptación de la política actualizada.
+        </Section>
+
+        <Section title="10. Contacto">
+          Para cualquier consulta relacionada con el tratamiento de tus datos personales, escribinos a{' '}
+          <a href="mailto:hola@fielty.app" style={{ color: '#e0001b', textDecoration: 'none', fontWeight: 600 }}>hola@fielty.app</a>.
+        </Section>
+
+      </div>
+
+      <div style={{ borderTop: '1px solid #1a1a1a', textAlign: 'center', padding: '24px 20px 40px', fontSize: 13, color: '#444' }}>
+        <a href="/terminos" style={{ color: '#444', textDecoration: 'none', marginRight: 20 }}>Términos</a>
+        <a href="/privacidad" style={{ color: '#888', textDecoration: 'none', marginRight: 20 }}>Privacidad</a>
+        <a href="/" style={{ color: '#444', textDecoration: 'none' }}>fielty.app</a>
+      </div>
+
     </div>
   )
 }
 
-function Seccion({ titulo, children }) {
+function Section({ title, children }) {
   return (
-    <div style={{ marginBottom: 32 }}>
-      <h2 style={{ fontSize: 17, fontWeight: 800, color: '#0e0e0e', marginBottom: 10 }}>{titulo}</h2>
-      <div style={{ fontSize: 15, color: '#444', lineHeight: 1.75 }}>{children}</div>
+    <div style={{ marginBottom: 40 }}>
+      <h2 style={{ fontSize: 17, fontWeight: 800, color: 'white', marginBottom: 12 }}>{title}</h2>
+      <p style={{ fontSize: 14, color: '#888', lineHeight: 1.9 }}>{children}</p>
     </div>
   )
-}
-
-const s = {
-  wrap: { minHeight: '100vh', background: '#f9f9fb', padding: '48px 20px' },
-  inner: { maxWidth: 720, margin: '0 auto', background: 'white', borderRadius: 24, padding: '48px 48px', boxShadow: '0 2px 24px rgba(0,0,0,0.07)' },
-  logo: { display: 'flex', alignItems: 'center', gap: 8, marginBottom: 32 },
-  logoDot: { width: 10, height: 10, borderRadius: '50%', background: '#e0001b', boxShadow: '0 0 10px #e0001b' },
-  logoText: { fontSize: 22, fontWeight: 800, color: '#0e0e0e', letterSpacing: -0.5 },
-  titulo: { fontSize: 32, fontWeight: 900, color: '#0e0e0e', marginBottom: 8 },
-  fecha: { fontSize: 13, color: '#aaa', marginBottom: 32 },
-  intro: { fontSize: 15, color: '#555', lineHeight: 1.75, marginBottom: 40, paddingBottom: 32, borderBottom: '1px solid #e8eaf0' },
-  lista: { paddingLeft: 20, marginTop: 10, display: 'flex', flexDirection: 'column', gap: 6 },
 }
