@@ -29,7 +29,6 @@ const PLANES = {
     features: [
       'Todo lo de Pro',
       'Sucursales ilimitadas',
-      'Campañas por WhatsApp',
       'Integraciones (próximamente)',
       'Soporte prioritario',
     ],

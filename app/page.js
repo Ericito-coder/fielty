@@ -157,7 +157,7 @@ const [isMobile, setIsMobile] = useState(false)
                 precio: '$35.000',
                 periodo: 'por mes',
                 color: '#f0a500',
-                features: ['Todo lo de Pro', 'Sucursales ilimitadas', 'Logo personalizado en tarjeta', 'Exportar clientes a CSV', 'Soporte prioritario'],
+                features: ['Todo lo de Pro', 'Sucursales ilimitadas', 'Logo personalizado en tarjeta', 'Exportar clientes a CSV', 'Integraciones (próximamente)', 'Soporte prioritario'],
                 cta: 'Empezar con Business',
                 href: '/onboarding/registro?plan=business',
                 destacado: false,
