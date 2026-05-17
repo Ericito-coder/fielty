@@ -15,6 +15,7 @@ export default function Dashboard() {
   const [negocio, setNegocio] = useState(null)
   const [metricas, setMetricas] = useState(null)
   const [cargando, setCargando] = useState(true)
+  const [errorCarga, setErrorCarga] = useState('')
   const [seccion, setSeccion] = useState('inicio')
   const [isMobile, setIsMobile] = useState(null)
   const [mostrarExito, setMostrarExito] = useState(false)
@@ -37,28 +38,38 @@ export default function Dashboard() {
   }, [])
 
   async function verificarAuth() {
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user) { window.location.href = '/login'; return }
-    const { data: negocioData } = await supabase.from('negocios').select('*').eq('user_id', user.id).single()
-    if (!negocioData) { window.location.href = '/onboarding/registro'; return }
-    setNegocio(negocioData)
-    cargarMetricas(negocioData.id)
+    try {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) { window.location.href = '/login'; return }
+      const { data: negocioData } = await supabase.from('negocios').select('*').eq('user_id', user.id).single()
+      if (!negocioData) { window.location.href = '/onboarding/registro'; return }
+      setNegocio(negocioData)
+      await cargarMetricas(negocioData.id)
+    } catch {
+      setErrorCarga('No se pudo cargar el panel. Revisá tu conexión y recargá la página.')
+      setCargando(false)
+    }
   }
 
   async function cargarMetricas(negocioId) {
-    const { data: clientes } = await supabase.from('clientes').select('*').eq('negocio_id', negocioId)
-    const { data: canjes } = await supabase.from('canjes').select('*').eq('negocio_id', negocioId).eq('estado', 'usado')
-    const { data: transacciones } = await supabase.from('transacciones').select('*').eq('negocio_id', negocioId).order('created_at', { ascending: false }).limit(10)
+    try {
+      const { data: clientes } = await supabase.from('clientes').select('*').eq('negocio_id', negocioId)
+      const { data: canjes } = await supabase.from('canjes').select('*').eq('negocio_id', negocioId).eq('estado', 'usado')
+      const { data: transacciones } = await supabase.from('transacciones').select('*').eq('negocio_id', negocioId).order('created_at', { ascending: false }).limit(10)
 
-    const totalClientes = clientes?.length || 0
-    const totalPuntos = clientes?.reduce((a, c) => a + (c.puntos || 0), 0) || 0
-    const totalCanjes = canjes?.length || 0
-    const hace30dias = new Date(); hace30dias.setDate(hace30dias.getDate() - 30)
-    const clientesActivos = clientes?.filter(c => c.ultima_visita && new Date(c.ultima_visita) > hace30dias).length || 0
-    const referidos = clientes?.filter(c => c.referido_por).length || 0
+      const totalClientes = clientes?.length || 0
+      const totalPuntos = clientes?.reduce((a, c) => a + (c.puntos || 0), 0) || 0
+      const totalCanjes = canjes?.length || 0
+      const hace30dias = new Date(); hace30dias.setDate(hace30dias.getDate() - 30)
+      const clientesActivos = clientes?.filter(c => c.ultima_visita && new Date(c.ultima_visita) > hace30dias).length || 0
+      const referidos = clientes?.filter(c => c.referido_por).length || 0
 
-    setMetricas({ totalClientes, totalPuntos, totalCanjes, clientesActivos, referidos, transacciones: transacciones || [] })
-    setCargando(false)
+      setMetricas({ totalClientes, totalPuntos, totalCanjes, clientesActivos, referidos, transacciones: transacciones || [] })
+      setCargando(false)
+    } catch {
+      setErrorCarga('No se pudieron cargar las métricas. Recargá la página.')
+      setCargando(false)
+    }
   }
 
   async function cerrarSesion() {
@@ -71,7 +82,16 @@ export default function Dashboard() {
   )
   if (cargando) return (
     <div style={{minHeight:'100vh', background:'#f0f2f7', display:'flex', alignItems:'center', justifyContent:'center'}}>
-      <div style={{color:'#888'}}>Cargando panel...</div>
+      {errorCarga
+        ? <div style={{textAlign:'center', padding:40}}>
+            <div style={{fontSize:32, marginBottom:12}}>⚠️</div>
+            <div style={{fontSize:15, fontWeight:700, color:'#0e0e0e', marginBottom:6}}>{errorCarga}</div>
+            <button onClick={() => window.location.reload()} style={{marginTop:12, padding:'10px 24px', background:'#e0001b', border:'none', borderRadius:10, color:'white', fontSize:14, fontWeight:700, cursor:'pointer', fontFamily:'inherit'}}>
+              Recargar
+            </button>
+          </div>
+        : <div style={{color:'#888'}}>Cargando panel...</div>
+      }
     </div>
   )
 
@@ -100,6 +120,7 @@ export default function Dashboard() {
       </div>
       <div style={{padding:16}}>
         {mostrarExito && <BannerExito onClose={() => setMostrarExito(false)} />}
+        {negocio.plan === 'gratis' && metricas && <BannerLimite totalClientes={metricas.totalClientes} />}
         <SeccionContenido seccion={seccion} negocio={negocio} metricas={metricas} setNegocio={setNegocio} />
       </div>
     </div>
@@ -171,6 +192,7 @@ export default function Dashboard() {
       {/* MAIN CONTENT */}
       <div style={{marginLeft:260, flex:1, padding:32, minHeight:'100vh'}}>
         {mostrarExito && <BannerExito onClose={() => setMostrarExito(false)} />}
+        {negocio.plan === 'gratis' && metricas && <BannerLimite totalClientes={metricas.totalClientes} />}
         {/* Header */}
         <div style={{marginBottom:28}}>
           <div style={{fontSize:22, fontWeight:800, color:'#0e0e0e'}}>
@@ -930,6 +952,42 @@ const s = {
   configLabel: { display:'block', fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.06em', color:'#888', marginBottom:8 },
   inputField: { width:'100%', padding:'12px 14px', border:'2px solid #e8eaf0', borderRadius:12, fontSize:15, fontFamily:'inherit', outline:'none', boxSizing:'border-box' },
   btnRed: { width:'100%', padding:16, background:'#e0001b', border:'none', borderRadius:14, color:'white', fontSize:15, fontWeight:800, cursor:'pointer', fontFamily:'inherit' },
+}
+
+function BannerLimite({ totalClientes }) {
+  if (totalClientes < 40) return null
+  const esLimite = totalClientes >= 50
+
+  return (
+    <div style={{
+      background: esLimite ? '#fff0f0' : '#fff8e6',
+      border: `1.5px solid ${esLimite ? '#e0001b' : '#f0a500'}`,
+      borderRadius: 14,
+      padding: '14px 18px',
+      marginBottom: 20,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      gap: 12,
+    }}>
+      <div>
+        <div style={{ fontSize: 14, fontWeight: 700, color: '#0e0e0e', marginBottom: 2 }}>
+          {esLimite ? '⚠️ Llegaste al límite de 50 clientes' : `📊 ${totalClientes} de 50 clientes — te estás acercando al límite`}
+        </div>
+        <div style={{ fontSize: 13, color: '#888' }}>
+          {esLimite
+            ? 'Los nuevos clientes no pueden registrarse. Pasate al plan Pro para seguir creciendo.'
+            : 'En el plan Gratis podés tener hasta 50. Pasate al Pro para no tener límite.'}
+        </div>
+      </div>
+      <button
+        onClick={() => window.location.href = '/dashboard/upgrade'}
+        style={{ padding: '8px 16px', background: esLimite ? '#e0001b' : '#f0a500', border: 'none', borderRadius: 10, color: 'white', fontSize: 13, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit', whiteSpace: 'nowrap', flexShrink: 0 }}
+      >
+        Ver planes →
+      </button>
+    </div>
+  )
 }
 
 function BannerExito({ onClose }) {
