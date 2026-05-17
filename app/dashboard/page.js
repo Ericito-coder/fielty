@@ -1,6 +1,7 @@
 'use client'
 import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
+import { storage } from '@/lib/storage'
 
 const NAV_ITEMS = [
   { id:'inicio', label:'Inicio', icon:'📊' },
@@ -206,7 +207,7 @@ function TutorialChecklist({ negocio, metricas }) {
   const [confirmarCierre, setConfirmarCierre] = useState(false)
 
   useEffect(() => {
-    if (localStorage.getItem('fielty_tutorial_cerrado')) return
+    if (storage.get('fielty_tutorial_cerrado')) return
     setVisible(true)
     supabase.from('recompensas').select('id', { count: 'exact', head: true })
       .eq('negocio_id', negocio.id)
@@ -216,7 +217,7 @@ function TutorialChecklist({ negocio, metricas }) {
   }, [negocio.id])
 
   const cerrar = () => {
-    localStorage.setItem('fielty_tutorial_cerrado', '1')
+    storage.set('fielty_tutorial_cerrado', '1')
     setVisible(false)
   }
 
@@ -224,7 +225,7 @@ function TutorialChecklist({ negocio, metricas }) {
 
   const pasos = [
     { label: 'Creaste tu programa de fidelización', done: true },
-    { label: 'Copiaste el link de registro para tus clientes', done: metricas.totalClientes > 0 || !!localStorage.getItem('fielty_tutorial_link_copiado') },
+    { label: 'Copiaste el link de registro para tus clientes', done: metricas.totalClientes > 0 || !!storage.get('fielty_tutorial_link_copiado') },
     { label: 'Tu primer cliente se registró', done: metricas.totalClientes > 0 },
     { label: 'Acreditaste puntos desde la caja', done: tieneSuma },
     { label: 'Configuraste una recompensa para tus clientes', done: recompensasOk },
@@ -232,7 +233,7 @@ function TutorialChecklist({ negocio, metricas }) {
   const completados = pasos.filter(p => p.done).length
 
   if (completados === pasos.length) {
-    localStorage.setItem('fielty_tutorial_cerrado', '1')
+    storage.set('fielty_tutorial_cerrado', '1')
     return null
   }
 

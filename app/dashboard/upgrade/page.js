@@ -1,6 +1,7 @@
 'use client'
 import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
+import { storage } from '@/lib/storage'
 
 const PLANES = {
   pro_early: {
@@ -52,7 +53,7 @@ export default function Upgrade() {
           if (data.plan === 'business') { window.location.href = '/dashboard'; return }
           setNegocio(data)
           // Pre-seleccionar plan según contexto
-          const planLocalStorage = localStorage.getItem('fielty_plan')
+          const planLocalStorage = storage.get('fielty_plan')
           if (planLocalStorage && PLANES[planLocalStorage]) {
             setPlanSeleccionado(planLocalStorage)
           } else if (!data.plan || data.plan === 'gratis') {
@@ -76,7 +77,7 @@ export default function Upgrade() {
       })
       const data = await res.json()
       if (data.init_point) {
-        localStorage.removeItem('fielty_plan')
+        storage.remove('fielty_plan')
         window.location.href = data.init_point
       } else {
         setError('No se pudo iniciar el pago. Intentá de nuevo.')

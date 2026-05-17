@@ -1,6 +1,7 @@
 'use client'
 import { useState } from 'react'
 import { supabase } from '@/lib/supabase'
+import { storage } from '@/lib/storage'
 
 export default function PrimeraRecompensa() {
   const [recompensas, setRecompensas] = useState([
@@ -29,7 +30,7 @@ export default function PrimeraRecompensa() {
     setError('')
     setCargando(true)
 
-    const negocioId = localStorage.getItem('fielty_negocio_id')
+    const negocioId = storage.get('fielty_negocio_id')
 
     const { error: dbError } = await supabase
       .from('recompensas')

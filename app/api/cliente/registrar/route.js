@@ -1,0 +1,150 @@
+import { NextResponse } from 'next/server'
+import bcrypt from 'bcryptjs'
+import { createClient } from '@supabase/supabase-js'
+
+const supabaseAdmin = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL,
+  process.env.SUPABASE_SERVICE_ROLE_KEY
+)
+
+export async function POST(request) {
+  try {
+    const { nombre, dni, telefono, email, password, slug, referidoPor, fechaNacimiento } = await request.json()
+
+    if (!nombre || !dni || !email || !password || !slug) {
+      return NextResponse.json({ error: 'Faltan datos obligatorios' }, { status: 400 })
+    }
+    if (password.length < 6) {
+      return NextResponse.json({ error: 'La contraseña debe tener al menos 6 caracteres' }, { status: 400 })
+    }
+
+    // Buscar negocio
+    const { data: negocio, error: negocioError } = await supabaseAdmin
+      .from('negocios').select('*').eq('slug', slug).single()
+
+    if (negocioError || !negocio) {
+      return NextResponse.json({ error: 'Negocio no encontrado' }, { status: 404 })
+    }
+
+    // Validar referidor: debe ser un cliente real del mismo negocio
+    let referidoPorValidado = null
+    if (referidoPor) {
+      const { data: referrer } = await supabaseAdmin
+        .from('clientes').select('id').eq('id', referidoPor).eq('negocio_id', negocio.id).maybeSingle()
+      if (referrer) referidoPorValidado = referidoPor
+    }
+
+    // Verificar límite del plan
+    const { count } = await supabaseAdmin
+      .from('clientes').select('*', { count: 'exact', head: true }).eq('negocio_id', negocio.id)
+
+    if (negocio.plan === 'gratis' && count >= 50) {
+      return NextResponse.json({ error: 'No se pudo completar el registro. Contactá al negocio para más información.' }, { status: 403 })
+    }
+
+    // Verificar duplicados
+    const { data: porDni } = await supabaseAdmin
+      .from('clientes').select('id').eq('negocio_id', negocio.id).eq('dni', dni).limit(1)
+    if (porDni?.length > 0) {
+      return NextResponse.json({ error: 'Ya tenés una tarjeta en este negocio registrada con ese DNI. ¡Pedile al empleado que te busque!' }, { status: 409 })
+    }
+
+    if (telefono) {
+      const { data: porTelefono } = await supabaseAdmin
+        .from('clientes').select('id').eq('negocio_id', negocio.id).eq('telefono', telefono).limit(1)
+      if (porTelefono?.length > 0) {
+        return NextResponse.json({ error: 'Ya tenés una tarjeta en este negocio registrada con ese WhatsApp. ¡Pedile al empleado que te busque!' }, { status: 409 })
+      }
+    }
+
+    const { data: porEmail } = await supabaseAdmin
+      .from('clientes').select('id').eq('negocio_id', negocio.id).eq('email', email).limit(1)
+    if (porEmail?.length > 0) {
+      return NextResponse.json({ error: 'Ya tenés una tarjeta en este negocio registrada con ese email. ¡Pedile al empleado que te busque!' }, { status: 409 })
+    }
+
+    // Hash de contraseña + insert (atómico)
+    const passwordHash = await bcrypt.hash(password, 10)
+    const puntosIniciales = referidoPorValidado ? 0 : (negocio.puntos_bienvenida || 10)
+
+    const { data, error: insertError } = await supabaseAdmin
+      .from('clientes')
+      .insert([{
+        nombre,
+        dni,
+        telefono: telefono || null,
+        email,
+        negocio_id: negocio.id,
+        puntos: puntosIniciales,
+        puntos_historicos: puntosIniciales,
+        fecha_nacimiento: fechaNacimiento || null,
+        referido_por: referidoPorValidado || null,
+        password_hash: passwordHash,
+      }])
+      .select()
+
+    if (insertError) {
+      console.error('Error insertando cliente:', insertError)
+      return NextResponse.json({ error: 'Hubo un error, intentá de nuevo' }, { status: 500 })
+    }
+
+    const nuevoCliente = data[0]
+
+    // Notificar límite (no bloqueante)
+    if (negocio.plan === 'gratis') {
+      fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/notificar-limite`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ negocioId: negocio.id }),
+      }).catch(() => {})
+    }
+
+    // Lógica de referidos
+    if (referidoPorValidado) {
+      const ptsEmisor = negocio.puntos_referido_emisor || 100
+      const ptsReceptor = negocio.puntos_referido_receptor || 50
+
+      const { data: emisor } = await supabaseAdmin
+        .from('clientes').select('puntos, puntos_historicos, referidos_count')
+        .eq('id', referidoPorValidado).single()
+
+      if (emisor) {
+        await supabaseAdmin.from('clientes').update({
+          puntos: emisor.puntos + ptsEmisor,
+          puntos_historicos: emisor.puntos_historicos + ptsEmisor,
+          referidos_count: (emisor.referidos_count || 0) + 1
+        }).eq('id', referidoPorValidado)
+
+        await supabaseAdmin.from('transacciones').insert([{
+          cliente_id: referidoPorValidado,
+          negocio_id: negocio.id,
+          tipo: 'referido',
+          puntos: ptsEmisor,
+          descripcion: `Referido exitoso: ${nombre} se registró con tu link`
+        }])
+
+        await supabaseAdmin.from('clientes').update({
+          puntos: ptsReceptor,
+          puntos_historicos: ptsReceptor
+        }).eq('id', nuevoCliente.id)
+
+        await supabaseAdmin.from('transacciones').insert([{
+          cliente_id: nuevoCliente.id,
+          negocio_id: negocio.id,
+          tipo: 'referido',
+          puntos: ptsReceptor,
+          descripcion: `Bonus por registrarte con un link de amigo`
+        }])
+      }
+    }
+
+    return NextResponse.json({
+      ok: true,
+      clienteId: nuevoCliente.id,
+    })
+
+  } catch (error) {
+    console.error('registrar error:', error)
+    return NextResponse.json({ error: 'Error interno' }, { status: 500 })
+  }
+}

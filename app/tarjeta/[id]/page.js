@@ -65,10 +65,12 @@ export default function Tarjeta({ params }) {
     setCanjeando(recompensa.id)
 
     const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'
+    const randomValues = new Uint8Array(6)
+    crypto.getRandomValues(randomValues)
     let codigo = ''
-    for (let i = 0; i < 3; i++) codigo += chars[Math.floor(Math.random() * chars.length)]
+    for (let i = 0; i < 3; i++) codigo += chars[randomValues[i] % chars.length]
     codigo += '-'
-    for (let i = 0; i < 3; i++) codigo += chars[Math.floor(Math.random() * chars.length)]
+    for (let i = 3; i < 6; i++) codigo += chars[randomValues[i] % chars.length]
 
     const expira_at = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()
 

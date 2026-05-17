@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { Resend } from 'resend'
 import { createClient } from '@supabase/supabase-js'
 import { randomBytes } from 'crypto'
+import { rateLimit } from '@/lib/rateLimit'
 
 const resend = new Resend(process.env.RESEND_API_KEY)
 
@@ -12,6 +13,12 @@ const supabaseAdmin = createClient(
 
 export async function POST(request) {
   try {
+    const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown'
+    const { ok: rateLimitOk } = rateLimit({ key: `forgot:${ip}`, maxAttempts: 3, windowMs: 60 * 60 * 1000 })
+    if (!rateLimitOk) {
+      return NextResponse.json({ ok: true }) // Respuesta genérica para no revelar el bloqueo
+    }
+
     const { email } = await request.json()
     if (!email) return NextResponse.json({ error: 'Ingresá tu email' }, { status: 400 })
 

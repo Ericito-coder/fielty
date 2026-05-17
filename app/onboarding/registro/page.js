@@ -1,6 +1,7 @@
 'use client'
 import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
+import { storage } from '@/lib/storage'
 
 export default function Registro() {
   const [email, setEmail] = useState('')
@@ -15,7 +16,7 @@ export default function Registro() {
     const params = new URLSearchParams(window.location.search)
     const p = params.get('plan')
     if (p) {
-      localStorage.setItem('fielty_plan', p)
+      storage.set('fielty_plan', p)
       setPlan(p)
     }
   }, [])
@@ -41,8 +42,8 @@ export default function Registro() {
       return
     }
 
-    localStorage.setItem('fielty_user_id', data.user.id)
-    localStorage.setItem('fielty_telefono_dueno', telefono)
+    storage.set('fielty_user_id', data.user.id)
+    storage.set('fielty_telefono_dueno', telefono)
     window.location.href = '/onboarding/negocio'
   }
 

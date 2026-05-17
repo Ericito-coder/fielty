@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 
-const ADMIN_EMAIL = 'eric.bohl10@gmail.com'
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL
 
 const supabaseAdmin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL,

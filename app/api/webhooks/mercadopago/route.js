@@ -13,6 +13,13 @@ const supabaseAdmin = createClient(
 
 export async function POST(request) {
   try {
+    // Validar secret para que solo MP pueda disparar este webhook
+    const { searchParams } = new URL(request.url)
+    const secret = searchParams.get('secret')
+    if (!process.env.WEBHOOK_SECRET || secret !== process.env.WEBHOOK_SECRET) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
     const body = await request.json()
     const { type, data } = body
 

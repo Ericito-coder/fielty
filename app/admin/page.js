@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
 
-const ADMIN_EMAIL = 'eric.bohl10@gmail.com'
+const ADMIN_EMAIL = process.env.NEXT_PUBLIC_ADMIN_EMAIL
 const PLAN_COLORES = { gratis: '#888', pro_early: '#e0001b', pro: '#e0001b', business: '#f0a500' }
 const PLAN_LABELS = { gratis: 'Gratis', pro_early: 'Pro Early', pro: 'Pro', business: 'Business' }
 const PLANES_OPCIONES = ['gratis', 'pro_early', 'pro', 'business']

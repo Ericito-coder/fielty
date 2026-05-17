@@ -1,12 +1,13 @@
 'use client'
 import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
+import { storage } from '@/lib/storage'
 
 export default function Listo() {
   const [negocio, setNegocio] = useState(null)
 
   useEffect(() => {
-    const id = localStorage.getItem('fielty_negocio_id')
+    const id = storage.get('fielty_negocio_id')
     if (!id) return
     supabase
       .from('negocios')
@@ -16,21 +17,21 @@ export default function Listo() {
       .then(({ data }) => {
         setNegocio(data)
         // Enviar email de bienvenida solo la primera vez (si no fue enviado antes)
-        const yaEnviado = localStorage.getItem('fielty_bienvenida_enviada')
+        const yaEnviado = storage.get('fielty_bienvenida_enviada')
         if (!yaEnviado) {
           fetch('/api/bienvenida', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ negocioId: data.id }),
           }).catch(() => {})
-          localStorage.setItem('fielty_bienvenida_enviada', '1')
+          storage.set('fielty_bienvenida_enviada', '1')
         }
       })
   }, [])
 
   useEffect(() => {
     if (!negocio) return
-    const plan = localStorage.getItem('fielty_plan')
+    const plan = storage.get('fielty_plan')
     if (plan && plan !== 'gratis') {
       setTimeout(() => { window.location.href = '/dashboard/upgrade' }, 1800)
     }
@@ -104,10 +105,10 @@ export default function Listo() {
         </div>
 
         <button style={s.btn} onClick={() => {
-          const plan = localStorage.getItem('fielty_plan')
+          const plan = storage.get('fielty_plan')
           window.location.href = (plan && plan !== 'gratis') ? '/dashboard/upgrade' : '/dashboard'
         }}>
-          {typeof window !== 'undefined' && localStorage.getItem('fielty_plan') && localStorage.getItem('fielty_plan') !== 'gratis'
+          {typeof window !== 'undefined' && storage.get('fielty_plan') && storage.get('fielty_plan') !== 'gratis'
             ? 'Completar pago →'
             : 'Ir al panel →'}
         </button>

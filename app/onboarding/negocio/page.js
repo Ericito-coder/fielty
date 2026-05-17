@@ -1,6 +1,7 @@
 'use client'
 import { useState } from 'react'
 import { supabase } from '@/lib/supabase'
+import { storage } from '@/lib/storage'
 
 const COLORES = ['#e0001b', '#0e76fd', '#00b96b', '#7c3aed', '#f0a500', '#0e0e0e']
 
@@ -20,8 +21,8 @@ export default function ConfigNegocio() {
     setError('')
     setCargando(true)
 
-    const userId = localStorage.getItem('fielty_user_id')
-    const telefonoDueno = localStorage.getItem('fielty_telefono_dueno') || ''
+    const userId = storage.get('fielty_user_id')
+    const telefonoDueno = storage.get('fielty_telefono_dueno') || ''
 
     const slug = nombre.toLowerCase()
       .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
@@ -49,7 +50,7 @@ export default function ConfigNegocio() {
     setCargando(false)
     if (dbError) { setError('Hubo un error, intentá de nuevo'); return }
 
-    localStorage.setItem('fielty_negocio_id', data.id)
+    storage.set('fielty_negocio_id', data.id)
     window.location.href = '/onboarding/recompensa'
   }
 

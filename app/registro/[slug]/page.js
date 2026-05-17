@@ -29,7 +29,6 @@ export default function RegistroSlug({ params }) {
   async function registrar() {
     if (!nombre) { setError('Ingresá tu nombre'); return }
     if (!dni) { setError('Ingresá tu DNI'); return }
-
     if (!email) { setError('Ingresá tu email'); return }
     if (!password) { setError('Creá una contraseña'); return }
     if (password.length < 6) { setError('La contraseña debe tener al menos 6 caracteres'); return }
@@ -37,115 +36,31 @@ export default function RegistroSlug({ params }) {
     setError('')
     setCargando(true)
 
-  const { data: porDni } = await supabase
-      .from('clientes').select('id').eq('negocio_id', negocio.id).eq('dni', dni).limit(1)
-    if (porDni && porDni.length > 0) {
-      setError('Ya tenés una tarjeta en este negocio registrada con ese DNI. ¡Pedile al empleado que te busque!')
-      setCargando(false); return
-    }
+    const res = await fetch('/api/cliente/registrar', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        nombre,
+        dni,
+        telefono: telefono || null,
+        email,
+        password,
+        slug: negocio.slug,
+        referidoPor: REFERIDO_POR || null,
+        fechaNacimiento: fechaNacimiento || null,
+      }),
+    })
 
-    if (telefono) {
-      const { data: porTelefono } = await supabase
-        .from('clientes').select('id').eq('negocio_id', negocio.id).eq('telefono', telefono).limit(1)
-      if (porTelefono && porTelefono.length > 0) {
-        setError('Ya tenés una tarjeta en este negocio registrada con ese WhatsApp. ¡Pedile al empleado que te busque!')
-        setCargando(false); return
-      }
-    }
+    const result = await res.json()
 
-    if (email) {
-      const { data: porEmail } = await supabase
-        .from('clientes').select('id').eq('negocio_id', negocio.id).eq('email', email).limit(1)
-      if (porEmail && porEmail.length > 0) {
-        setError('Ya tenés una tarjeta en este negocio registrada con ese email. ¡Pedile al empleado que te busque!')
-        setCargando(false); return
-      }
-    }
-const { count } = await supabase
-      .from('clientes')
-      .select('*', { count: 'exact', head: true })
-      .eq('negocio_id', negocio.id)
-
-    if (negocio.plan === 'gratis' && count >= 50) {
-      setError('No se pudo completar el registro. Contactá al negocio para más información.')
+    if (!res.ok) {
+      setError(result.error || 'Hubo un error, intentá de nuevo')
       setCargando(false)
       return
     }
-    const { data, error: insertError } = await supabase
-      .from('clientes')
-      .insert([{
-        nombre,
-        dni,
-        telefono,
-email: email || null,
-        negocio_id: negocio.id,
-        puntos: REFERIDO_POR ? 0 : (negocio.puntos_bienvenida || 10),
-        puntos_historicos: REFERIDO_POR ? 0 : (negocio.puntos_bienvenida || 10),
-        fecha_nacimiento: fechaNacimiento || null,
-        referido_por: REFERIDO_POR || null
-      }])
-      .select()
-
-    if (insertError) { setError('Hubo un error, intentá de nuevo'); setCargando(false); return }
-
-    // Notificar al dueño si se acerca o llega al límite (no bloqueante)
-    if (negocio.plan === 'gratis') {
-      fetch('/api/notificar-limite', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ negocioId: negocio.id }),
-      }).catch(() => {})
-    }
-
-    const nuevoCliente = data[0]
-
-    // Guardar contraseña hasheada (no bloqueante si falla, pero es importante)
-    await fetch('/api/cliente/set-password', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ clienteId: nuevoCliente.id, password }),
-    }).catch(() => {})
-
-    if (REFERIDO_POR) {
-      const ptsEmisor = negocio.puntos_referido_emisor || 100
-      const ptsReceptor = negocio.puntos_referido_receptor || 50
-
-      const { data: emisor } = await supabase
-        .from('clientes').select('puntos, puntos_historicos, referidos_count')
-        .eq('id', REFERIDO_POR).single()
-
-      if (emisor) {
-        await supabase.from('clientes').update({
-          puntos: emisor.puntos + ptsEmisor,
-          puntos_historicos: emisor.puntos_historicos + ptsEmisor,
-          referidos_count: (emisor.referidos_count || 0) + 1
-        }).eq('id', REFERIDO_POR)
-
-        await supabase.from('transacciones').insert([{
-          cliente_id: REFERIDO_POR,
-          negocio_id: negocio.id,
-          tipo: 'referido',
-          puntos: ptsEmisor,
-          descripcion: `🤝 Referido exitoso: ${nombre} se registró con tu link`
-        }])
-
-        await supabase.from('clientes').update({
-          puntos: ptsReceptor,
-          puntos_historicos: ptsReceptor
-        }).eq('id', nuevoCliente.id)
-
-        await supabase.from('transacciones').insert([{
-          cliente_id: nuevoCliente.id,
-          negocio_id: negocio.id,
-          tipo: 'referido',
-          puntos: ptsReceptor,
-          descripcion: `🤝 Bonus por registrarte con un link de amigo`
-        }])
-      }
-    }
 
     setCargando(false)
-    setClienteId(nuevoCliente.id)
+    setClienteId(result.clienteId)
   }
 
   if (!negocio) return (

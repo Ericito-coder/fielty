@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import bcrypt from 'bcryptjs'
 import { createClient } from '@supabase/supabase-js'
+import { rateLimit } from '@/lib/rateLimit'
 
 const supabaseAdmin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL,
@@ -9,6 +10,12 @@ const supabaseAdmin = createClient(
 
 export async function POST(request) {
   try {
+    const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown'
+    const { ok: rateLimitOk } = rateLimit({ key: `login:${ip}`, maxAttempts: 5, windowMs: 15 * 60 * 1000 })
+    if (!rateLimitOk) {
+      return NextResponse.json({ error: 'Demasiados intentos. Esperá 15 minutos e intentá de nuevo.' }, { status: 429 })
+    }
+
     const { dni, password } = await request.json()
     if (!dni || !password) return NextResponse.json({ error: 'Ingresá tu DNI y contraseña' }, { status: 400 })
 
