@@ -581,6 +581,25 @@ function RecompensasSection({ negocioId, isDesktop }) {
   )
 }
 
+// ===== PIN DISPLAY =====
+function PinActualDisplay({ pinActual, esDebil }) {
+  const [visible, setVisible] = useState(false)
+  const pin = pinActual || '1234'
+  return (
+    <div style={{display:'flex', alignItems:'center', gap:10, background:'#f5f6fa', borderRadius:10, padding:'10px 14px', maxWidth:220}}>
+      <span style={{fontSize:13, color:'#888', flexShrink:0}}>PIN actual:</span>
+      <span style={{fontFamily:'monospace', fontSize:16, fontWeight:700, letterSpacing:4, color: esDebil ? '#b37a00' : '#0e0e0e', flex:1}}>
+        {visible ? pin : '•'.repeat(pin.length)}
+      </span>
+      <button onClick={() => setVisible(v => !v)}
+        style={{background:'none', border:'none', cursor:'pointer', fontSize:14, color:'#aaa', padding:'0 2px', flexShrink:0}}>
+        {visible ? '🙈' : '👁️'}
+      </button>
+      {esDebil && <span style={{fontSize:10, color:'#b37a00', fontWeight:700}}>⚠️ Débil</span>}
+    </div>
+  )
+}
+
 // ===== CONFIG =====
 function ConfigSection({ negocio, setNegocio }) {
   const [subiendoLogo, setSubiendoLogo] = useState(false)
@@ -743,12 +762,8 @@ function ConfigSection({ negocio, setNegocio }) {
         </div>
         <div style={s.configField}>
           <label style={s.configLabel}>PIN de caja 🔐</label>
-          {pinActualEsDebil && (
-            <div style={{background:'#fff8e6', border:'1px solid #f0a500', borderRadius:10, padding:'8px 12px', fontSize:12, color:'#b37a00', marginBottom:8}}>
-              ⚠️ Tu PIN actual es débil. Cambialo antes de usar la caja.
-            </div>
-          )}
-          <div style={{display:'flex', flexDirection:'column', gap:8, maxWidth:220}}>
+          <PinActualDisplay pinActual={negocio.pin_caja} esDebil={pinActualEsDebil} />
+          <div style={{display:'flex', flexDirection:'column', gap:8, maxWidth:220, marginTop:10}}>
             <input style={{...s.inputField, fontFamily:'monospace', letterSpacing:4}} type="password" maxLength={6} placeholder="Nuevo PIN" value={form.pin_caja} onChange={e => { setForm({...form, pin_caja: e.target.value}); setErrorPin('') }} />
             <input style={{...s.inputField, fontFamily:'monospace', letterSpacing:4}} type="password" maxLength={6} placeholder="Confirmar PIN" value={form.pin_confirmar} onChange={e => { setForm({...form, pin_confirmar: e.target.value}); setErrorPin('') }} />
           </div>
