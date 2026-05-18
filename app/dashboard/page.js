@@ -931,11 +931,9 @@ function PinSucursal({ suc, recargar }) {
   return (
     <div style={{borderTop:'1px solid #f0f2f7', paddingTop:12}}>
       <div style={{fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.06em', color:'#888', marginBottom:8}}>PIN de caja 🔐</div>
-      {pinActualEsDebil && (
-        <div style={{background:'#fff8e6', border:'1px solid #f0a500', borderRadius:10, padding:'8px 12px', fontSize:12, color:'#b37a00', marginBottom:10}}>
-          ⚠️ El PIN actual es débil. Cambialo antes de usar la caja.
-        </div>
-      )}
+      <div style={{marginBottom:10}}>
+        <PinActualDisplay pinActual={suc.pin_caja} esDebil={pinActualEsDebil} />
+      </div>
       <div style={{display:'flex', flexDirection:'column', gap:8, maxWidth:220}}>
         <div style={{display:'flex', alignItems:'center', border:'2px solid #e8eaf0', borderRadius:12, overflow:'hidden'}}>
           <input style={{padding:'10px 14px', border:'none', fontSize:15, fontFamily:'monospace', letterSpacing: mostrar ? 2 : 4, outline:'none', width:'100%'}}
