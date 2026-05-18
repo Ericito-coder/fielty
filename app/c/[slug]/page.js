@@ -32,20 +32,11 @@ export default function CajaSlug({ params }) {
       .then(({ data }) => setNegocio(data))
   }, [slug])
 
-  function presionarPin(d) {
+  function ingresarPin() {
     const pinReal = negocio?.pin_caja || '1234'
-    if (pin.length >= pinReal.length) return
-    const nuevo = pin + d
-    setPin(nuevo)
-    if (nuevo.length === pinReal.length) {
-      setTimeout(() => {
-        if (nuevo === pinReal) { setPantalla('buscar'); setPin('') }
-        else { mostrarMensaje('❌ PIN incorrecto', 'error'); setPin('') }
-      }, 200)
-    }
+    if (pin === pinReal) { setPantalla('buscar'); setPin('') }
+    else { mostrarMensaje('❌ PIN incorrecto', 'error'); setPin('') }
   }
-
-  function borrarPin() { setPin(pin.slice(0, -1)) }
 
   async function buscarCliente(valor) {
     setBusqueda(valor)
@@ -151,19 +142,18 @@ export default function CajaSlug({ params }) {
         <div style={{width:56, height:56, borderRadius:16, background: negocio.color, display:'flex', alignItems:'center', justifyContent:'center', fontSize:20, fontWeight:900}}>{negocio.nombre.slice(0,2).toUpperCase()}</div>
         <div style={{fontSize:26, fontWeight:800}}>{negocio.nombre}</div>
         <div style={{fontSize:14, color:'#666', marginTop:-16}}>Vista de caja · Staff</div>
-        <div style={{display:'flex', gap:14}}>
-          {Array.from({length: (negocio?.pin_caja || '1234').length}, (_, i) => (
-            <div key={i} style={{width:16, height:16, borderRadius:'50%', background: i < pin.length ? negocio.color : '#2a2a2a', transition:'background 0.2s'}} />
-          ))}
-        </div>
-        <div style={{display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:12, width: isMobile ? 280 : 320}}>
-          {[1,2,3,4,5,6,7,8,9,'',0,'⌫'].map((n,i) => (
-            <button key={i} style={{aspectRatio:1, borderRadius:20, border:'1px solid #2a2a2a', background:'#1a1a1a', color:'white', fontSize: isMobile ? 22 : 26, fontWeight:600, cursor:'pointer', fontFamily:'inherit', opacity: n==='' ? 0 : 1}}
-              onClick={() => n==='⌫' ? borrarPin() : n!=='' ? presionarPin(String(n)) : null}>
-              {n}
-            </button>
-          ))}
-        </div>
+        <input
+          type="password"
+          placeholder="PIN de caja"
+          value={pin}
+          onChange={e => setPin(e.target.value)}
+          onKeyDown={e => e.key === 'Enter' && ingresarPin()}
+          autoFocus
+          style={{width:'100%', padding:'16px 20px', background:'#1a1a1a', border:'1px solid #2a2a2a', borderRadius:16, color:'white', fontSize:18, fontFamily:'monospace', outline:'none', textAlign:'center', boxSizing:'border-box', maxWidth:300}}
+        />
+        <button onClick={ingresarPin} style={{width:'100%', maxWidth:300, padding:18, background: negocio.color, border:'none', borderRadius:16, color:'white', fontSize:16, fontWeight:800, cursor:'pointer', fontFamily:'inherit'}}>
+          Ingresar
+        </button>
       </div>
     </div>
   )

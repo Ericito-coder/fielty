@@ -764,11 +764,11 @@ function ConfigSection({ negocio, setNegocio }) {
           <label style={s.configLabel}>PIN de caja 🔐</label>
           <PinActualDisplay pinActual={negocio.pin_caja} esDebil={pinActualEsDebil} />
           <div style={{display:'flex', flexDirection:'column', gap:8, maxWidth:220, marginTop:10}}>
-            <input style={{...s.inputField, fontFamily:'monospace', letterSpacing:4}} type="password" maxLength={6} placeholder="Nuevo PIN" value={form.pin_caja} onChange={e => { setForm({...form, pin_caja: e.target.value}); setErrorPin('') }} />
-            <input style={{...s.inputField, fontFamily:'monospace', letterSpacing:4}} type="password" maxLength={6} placeholder="Confirmar PIN" value={form.pin_confirmar} onChange={e => { setForm({...form, pin_confirmar: e.target.value}); setErrorPin('') }} />
+            <input style={{...s.inputField, fontFamily:'monospace', letterSpacing:2}} type="password" placeholder="Nuevo PIN" value={form.pin_caja} onChange={e => { setForm({...form, pin_caja: e.target.value}); setErrorPin('') }} />
+            <input style={{...s.inputField, fontFamily:'monospace', letterSpacing:2}} type="password" placeholder="Confirmar PIN" value={form.pin_confirmar} onChange={e => { setForm({...form, pin_confirmar: e.target.value}); setErrorPin('') }} />
           </div>
           {errorPin && <div style={{fontSize:12, color:'#e0001b', marginTop:6}}>⚠️ {errorPin}</div>}
-          <div style={{fontSize:11, color:'#aaa', marginTop:6}}>Solo números, mínimo 4 dígitos. Dejá vacío para no cambiar el PIN actual.</div>
+          <div style={{fontSize:11, color:'#aaa', marginTop:6}}>Letras, números o mezcla. Mínimo 4 caracteres. Dejá vacío para no cambiar.</div>
         </div>
         <div style={s.configField}>
           <label style={s.configLabel}>Puntos por referido 🤝</label>
@@ -796,8 +796,7 @@ const PINES_COMUNES = ['1234','0000','1111','1212','4321','1122','9999','0123','
 
 function validarPin(pin, confirmar) {
   if (!pin) return 'El PIN es obligatorio'
-  if (!/^\d+$/.test(pin)) return 'El PIN debe contener solo números'
-  if (pin.length < 4) return 'El PIN debe tener al menos 4 dígitos'
+  if (pin.length < 4) return 'El PIN debe tener al menos 4 caracteres'
   if (PINES_COMUNES.includes(pin)) return 'Ese PIN es muy común. Elegí uno más seguro'
   if (confirmar !== undefined && pin !== confirmar) return 'Los PINs no coinciden'
   return null
@@ -890,8 +889,8 @@ function SucursalesSection({ negocio }) {
         </div>
         <div style={s.configField}>
           <label style={s.configLabel}>PIN de caja 🔐</label>
-          <input style={{...s.inputField, width:120, fontFamily:'monospace', letterSpacing:4}} type="password" maxLength={6} placeholder="Mín. 4 dígitos" value={nueva.pin_caja} onChange={e => { setNueva({...nueva, pin_caja: e.target.value}); setErrorPin('') }} />
-          <div style={{fontSize:11, color:'#aaa', marginTop:6}}>Solo números, mínimo 4 dígitos, no uses PINs obvios</div>
+          <input style={{...s.inputField, width:160, fontFamily:'monospace', letterSpacing:2}} type="password" placeholder="Mín. 4 caracteres" value={nueva.pin_caja} onChange={e => { setNueva({...nueva, pin_caja: e.target.value}); setErrorPin('') }} />
+          <div style={{fontSize:11, color:'#aaa', marginTop:6}}>Letras, números o mezcla. Mínimo 4 caracteres.</div>
         </div>
         <div style={s.configField}>
           <label style={s.configLabel}>Confirmar PIN 🔐</label>
@@ -936,16 +935,16 @@ function PinSucursal({ suc, recargar }) {
       </div>
       <div style={{display:'flex', flexDirection:'column', gap:8, maxWidth:220}}>
         <div style={{display:'flex', alignItems:'center', border:'2px solid #e8eaf0', borderRadius:12, overflow:'hidden'}}>
-          <input style={{padding:'10px 14px', border:'none', fontSize:15, fontFamily:'monospace', letterSpacing: mostrar ? 2 : 4, outline:'none', width:'100%'}}
-            type={mostrar ? 'text' : 'password'} maxLength={6} placeholder="Nuevo PIN"
+          <input style={{padding:'10px 14px', border:'none', fontSize:15, fontFamily:'monospace', letterSpacing: mostrar ? 2 : 3, outline:'none', width:'100%'}}
+            type={mostrar ? 'text' : 'password'} placeholder="Nuevo PIN"
             value={pin} onChange={e => { setPin(e.target.value); setErrorPin('') }} />
           <button style={{padding:'10px 12px', background:'#f0f2f7', border:'none', cursor:'pointer', fontSize:14}}
             onClick={() => setMostrar(!mostrar)}>
             {mostrar ? '🙈' : '👁️'}
           </button>
         </div>
-        <input style={{padding:'10px 14px', border:'2px solid #e8eaf0', borderRadius:12, fontSize:15, fontFamily:'monospace', letterSpacing: mostrar ? 2 : 4, outline:'none', width:'100%', boxSizing:'border-box'}}
-          type={mostrar ? 'text' : 'password'} maxLength={6} placeholder="Confirmar PIN"
+        <input style={{padding:'10px 14px', border:'2px solid #e8eaf0', borderRadius:12, fontSize:15, fontFamily:'monospace', letterSpacing: mostrar ? 2 : 3, outline:'none', width:'100%', boxSizing:'border-box'}}
+          type={mostrar ? 'text' : 'password'} placeholder="Confirmar PIN"
           value={confirmar} onChange={e => { setConfirmar(e.target.value); setErrorPin('') }} />
         {errorPin && <div style={{fontSize:12, color:'#e0001b'}}>⚠️ {errorPin}</div>}
         <button style={{padding:'10px 16px', background: ok ? '#00b96b' : '#0e0e0e', border:'none', borderRadius:12, color:'white', fontSize:13, fontWeight:700, cursor:'pointer', fontFamily:'inherit'}}
