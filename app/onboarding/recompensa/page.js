@@ -63,7 +63,7 @@ export default function PrimeraRecompensa() {
           <div key={i} style={s.recompensaRow}>
             <div style={{flex:2}}>
               <label style={s.label}>Recompensa</label>
-              <input style={s.input} placeholder="Ej: Baño gratis"
+              <input style={s.input} placeholder="Ej: Café gratis"
                 value={r.nombre} onChange={e => actualizar(i, 'nombre', e.target.value)} />
             </div>
             <div style={{flex:1}}>

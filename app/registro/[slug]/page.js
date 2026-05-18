@@ -36,31 +36,36 @@ export default function RegistroSlug({ params }) {
     setError('')
     setCargando(true)
 
-    const res = await fetch('/api/cliente/registrar', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        nombre,
-        dni,
-        telefono: telefono || null,
-        email,
-        password,
-        slug: negocio.slug,
-        referidoPor: REFERIDO_POR || null,
-        fechaNacimiento: fechaNacimiento || null,
-      }),
-    })
+    try {
+      const res = await fetch('/api/cliente/registrar', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          nombre,
+          dni,
+          telefono: telefono || null,
+          email,
+          password,
+          slug: negocio.slug,
+          referidoPor: REFERIDO_POR || null,
+          fechaNacimiento: fechaNacimiento || null,
+        }),
+      })
 
-    const result = await res.json()
+      const result = await res.json()
 
-    if (!res.ok) {
-      setError(result.error || 'Hubo un error, intentá de nuevo')
+      if (!res.ok) {
+        setError(result.error || 'Hubo un error, intentá de nuevo')
+        setCargando(false)
+        return
+      }
+
       setCargando(false)
-      return
+      setClienteId(result.clienteId)
+    } catch {
+      setError('Error de conexión. Revisá tu internet e intentá de nuevo.')
+      setCargando(false)
     }
-
-    setCargando(false)
-    setClienteId(result.clienteId)
   }
 
   if (!negocio) return (
@@ -135,7 +140,7 @@ export default function RegistroSlug({ params }) {
           <input style={{...styles.input, width:'calc(100% - 32px)'}} type="date"
             value={fechaNacimiento} onChange={e => setFechaNacimiento(e.target.value)} />
           {negocio.puntos_cumpleanos > 0 && (
-            <div style={{fontSize:12, color:'#888', marginTop:6}}>🎂 Si la cargás, recibís {negocio.puntos_cumpleanos} puntos de regalo en tu cumpleaños.</div>
+            <div style={{fontSize:12, color:'#888', marginTop:6}}>🎂 Si la cargás, podés recibir puntos de regalo en tu cumpleaños.</div>
           )}
         </div>
 

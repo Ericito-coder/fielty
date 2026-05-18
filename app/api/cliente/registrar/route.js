@@ -1,6 +1,9 @@
 import { NextResponse } from 'next/server'
 import bcrypt from 'bcryptjs'
 import { createClient } from '@supabase/supabase-js'
+import { Resend } from 'resend'
+
+const resend = new Resend(process.env.RESEND_API_KEY)
 
 const supabaseAdmin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL,
@@ -136,6 +139,38 @@ export async function POST(request) {
           descripcion: `Bonus por registrarte con un link de amigo`
         }])
       }
+    }
+
+    // Email de bienvenida al cliente (fire-and-forget)
+    if (nuevoCliente.email) {
+      const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://www.fielty.app'
+      const puntosRecibidos = referidoPorValidado
+        ? (negocio.puntos_referido_receptor || 50)
+        : (negocio.puntos_bienvenida || 10)
+      resend.emails.send({
+        from: 'Fielty <hola@fielty.app>',
+        to: nuevoCliente.email,
+        subject: `Bienvenido a ${negocio.nombre} — tu tarjeta esta lista`,
+        html: `
+          <div style="font-family: sans-serif; max-width: 520px; margin: 0 auto; padding: 32px 24px; background: #ffffff;">
+            <div style="margin-bottom: 28px;">
+              <span style="font-size: 20px; font-weight: 900; color: #0e0e0e; letter-spacing: -0.5px;">● fielty</span>
+            </div>
+            <h1 style="font-size: 24px; font-weight: 800; color: #0e0e0e; margin-bottom: 8px;">
+              Bienvenido a ${negocio.nombre}
+            </h1>
+            <p style="font-size: 15px; color: #555; line-height: 1.7; margin-bottom: 28px;">
+              Hola <strong>${nuevoCliente.nombre.split(' ')[0]}</strong>, tu tarjeta de puntos fue creada con <strong>${puntosRecibidos} puntos de regalo</strong>. Empeza a acumular en cada compra y canjealos por premios.
+            </p>
+            <a href="${appUrl}/mi-tarjeta" style="display: inline-block; background: #e0001b; color: white; padding: 14px 28px; border-radius: 12px; font-size: 15px; font-weight: 800; text-decoration: none; margin-bottom: 32px;">
+              Ver mi tarjeta
+            </a>
+            <p style="font-size: 12px; color: #aaa; padding-top: 24px; border-top: 1px solid #e8eaf0; margin: 0;">
+              Fielty · <a href="${appUrl}" style="color: #aaa; text-decoration: none;">fielty.app</a>
+            </p>
+          </div>
+        `,
+      }).catch(() => {})
     }
 
     return NextResponse.json({

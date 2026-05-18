@@ -31,7 +31,7 @@ export async function POST(request) {
     await resend.emails.send({
       from: 'Fielty <hola@fielty.app>',
       to: user.email,
-      subject: `¡Bienvenido a Fielty, ${negocio.nombre}! 🎉`,
+      subject: `Tu programa de fidelización está listo — ${negocio.nombre}`,
       html: `
         <div style="font-family: sans-serif; max-width: 560px; margin: 0 auto; padding: 32px 24px; background: #ffffff;">
 
@@ -40,10 +40,10 @@ export async function POST(request) {
           </div>
 
           <h1 style="font-size: 26px; font-weight: 800; color: #0e0e0e; margin-bottom: 8px;">
-            ¡Tu programa de fidelización está listo! 🎉
+            Tu programa de fidelización esta listo
           </h1>
           <p style="font-size: 15px; color: #555; line-height: 1.7; margin-bottom: 32px;">
-            <strong>${negocio.nombre}</strong> ya está activo en Fielty. Tus clientes pueden empezar a acumular puntos y canjear recompensas hoy mismo.
+            <strong>${negocio.nombre}</strong> ya esta activo en Fielty. Tus clientes pueden empezar a acumular puntos y canjear recompensas hoy mismo.
           </p>
 
           <!-- Link de registro -->
@@ -51,31 +51,50 @@ export async function POST(request) {
             <p style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #888; margin: 0 0 8px;">Link de registro para tus clientes</p>
             <p style="font-size: 14px; color: #0e0e0e; font-family: monospace; word-break: break-all; margin: 0 0 12px;">${registroUrl}</p>
             <a href="${registroUrl}" style="display: inline-block; background: #0e0e0e; color: white; padding: 10px 18px; border-radius: 10px; font-size: 13px; font-weight: 700; text-decoration: none;">
-              Ver página de registro
+              Ver pagina de registro
             </a>
           </div>
 
           <!-- Próximos pasos -->
-          <div style="margin-bottom: 32px;">
-            <p style="font-size: 14px; font-weight: 700; color: #0e0e0e; margin-bottom: 14px;">3 pasos para empezar:</p>
-            <div style="display: flex; flex-direction: column; gap: 10px;">
-              <div style="display: flex; align-items: flex-start; gap: 12px;">
-                <div style="width: 24px; height: 24px; border-radius: 50%; background: #e0001b; color: white; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800; flex-shrink: 0; text-align: center; line-height: 24px;">1</div>
-                <p style="font-size: 14px; color: #555; margin: 0; line-height: 1.6;">Imprimí el QR y poné en el mostrador — tus clientes escanean para registrarse.</p>
-              </div>
-              <div style="display: flex; align-items: flex-start; gap: 12px;">
-                <div style="width: 24px; height: 24px; border-radius: 50%; background: #e0001b; color: white; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800; flex-shrink: 0; text-align: center; line-height: 24px;">2</div>
-                <p style="font-size: 14px; color: #555; margin: 0; line-height: 1.6;">Usá la caja (<strong>fielty.app/c/${negocio.slug}</strong>) para acreditar puntos en cada compra.</p>
-              </div>
-              <div style="display: flex; align-items: flex-start; gap: 12px;">
-                <div style="width: 24px; height: 24px; border-radius: 50%; background: #e0001b; color: white; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800; flex-shrink: 0; text-align: center; line-height: 24px;">3</div>
-                <p style="font-size: 14px; color: #555; margin: 0; line-height: 1.6;">Seguí las métricas desde tu panel y ajustá las recompensas cuando quieras.</p>
-              </div>
-            </div>
+          <div style="margin-bottom: 24px;">
+            <p style="font-size: 14px; font-weight: 700; color: #0e0e0e; margin: 0 0 16px;">3 pasos para empezar:</p>
+            <table style="width: 100%; border-collapse: collapse;">
+              <tr>
+                <td style="width: 36px; vertical-align: top; padding-bottom: 16px;">
+                  <div style="width: 26px; height: 26px; border-radius: 50%; background: #e0001b; text-align: center; line-height: 26px; font-size: 13px; font-weight: 800; color: white;">1</div>
+                </td>
+                <td style="vertical-align: top; padding-bottom: 16px; padding-left: 12px;">
+                  <p style="font-size: 14px; color: #555; margin: 0; line-height: 1.7; padding-top: 3px;">Imprimí el QR y ponelo en el mostrador — tus clientes lo escanean para registrarse.</p>
+                </td>
+              </tr>
+              <tr>
+                <td style="width: 36px; vertical-align: top; padding-bottom: 16px;">
+                  <div style="width: 26px; height: 26px; border-radius: 50%; background: #e0001b; text-align: center; line-height: 26px; font-size: 13px; font-weight: 800; color: white;">2</div>
+                </td>
+                <td style="vertical-align: top; padding-bottom: 16px; padding-left: 12px;">
+                  <p style="font-size: 14px; color: #555; margin: 0; line-height: 1.7; padding-top: 3px;">Usa la caja (<strong style="color: #0e0e0e;">fielty.app/c/${negocio.slug}</strong>) para acreditar puntos en cada compra.</p>
+                </td>
+              </tr>
+              <tr>
+                <td style="width: 36px; vertical-align: top;">
+                  <div style="width: 26px; height: 26px; border-radius: 50%; background: #e0001b; text-align: center; line-height: 26px; font-size: 13px; font-weight: 800; color: white;">3</div>
+                </td>
+                <td style="vertical-align: top; padding-left: 12px;">
+                  <p style="font-size: 14px; color: #555; margin: 0; line-height: 1.7; padding-top: 3px;">Segui las metricas desde tu panel y ajusta las recompensas cuando quieras.</p>
+                </td>
+              </tr>
+            </table>
+          </div>
+
+          <!-- Nota PIN -->
+          <div style="background: #fff8e6; border-left: 3px solid #f0a500; padding: 14px 18px; margin-bottom: 32px;">
+            <p style="font-size: 13px; color: #7a5800; margin: 0; line-height: 1.6;">
+              <strong>Importante:</strong> antes de usar la caja, configura tu PIN de acceso desde el panel en <a href="${dashboardUrl}" style="color: #7a5800; font-weight: 700;">Configuracion</a>. Esto protege el acceso al sistema de puntos de tu negocio.
+            </p>
           </div>
 
           <a href="${dashboardUrl}" style="display: inline-block; background: #e0001b; color: white; padding: 14px 28px; border-radius: 12px; font-size: 15px; font-weight: 800; text-decoration: none; margin-bottom: 40px;">
-            Ir a mi panel →
+            Ir a mi panel
           </a>
 
           <p style="font-size: 13px; color: #888; line-height: 1.6; margin-bottom: 4px;">

@@ -68,7 +68,7 @@ export default function ConfigNegocio() {
 
         <div style={s.field}>
           <label style={s.label}>Nombre del negocio</label>
-          <input style={s.input} placeholder="Ej: Pet Point"
+          <input style={s.input} placeholder="Ej: La Buena Mesa"
             value={nombre} onChange={e => setNombre(e.target.value)} />
         </div>
 

@@ -331,7 +331,7 @@ function InicioSection({ negocio, metricas, isDesktop }) {
                 {typeof window !== 'undefined' ? window.location.origin : ''}/registro/{negocio.slug}
               </div>
               <div style={{display:'flex', gap:8}}>
-                <button style={{...s.btnRed, padding:10, fontSize:13, flex:1}} onClick={() => navigator.clipboard.writeText(`${window.location.origin}/registro/${negocio.slug}`)}>📋 Copiar link</button>
+                <button style={{...s.btnRed, padding:10, fontSize:13, flex:1}} onClick={() => { navigator.clipboard.writeText(`${window.location.origin}/registro/${negocio.slug}`); storage.set('fielty_tutorial_link_copiado', '1') }}>📋 Copiar link</button>
                 <button style={{...s.btnRed, padding:10, fontSize:13, flex:1, background:'#0e0e0e'}} onClick={() => window.open(`/qr/${negocio.slug}`, '_blank')}>🖨️ Ver QR</button>
               </div>
             </div>
@@ -495,6 +495,7 @@ function RecompensasSection({ negocioId, isDesktop }) {
   const [recompensas, setRecompensas] = useState([])
   const [nueva, setNueva] = useState({ nombre: '', puntos_necesarios: '' })
   const [guardando, setGuardando] = useState(false)
+  const [editando, setEditando] = useState(null) // { id, nombre, puntos_necesarios }
 
   useEffect(() => { cargar() }, [negocioId])
 
@@ -510,6 +511,13 @@ function RecompensasSection({ negocioId, isDesktop }) {
     setNueva({ nombre: '', puntos_necesarios: '' })
     await cargar()
     setGuardando(false)
+  }
+
+  async function guardarEdicion() {
+    if (!editando.nombre || !editando.puntos_necesarios) return
+    await supabase.from('recompensas').update({ nombre: editando.nombre, puntos_necesarios: parseInt(editando.puntos_necesarios) }).eq('id', editando.id)
+    setEditando(null)
+    await cargar()
   }
 
   async function toggleActiva(r) {
@@ -528,15 +536,28 @@ function RecompensasSection({ negocioId, isDesktop }) {
         <div style={s.sectionTitle}>Recompensas activas</div>
         <div style={s.card}>
           {recompensas.map((r, i) => (
-            <div key={i} style={{display:'flex', alignItems:'center', gap:10, padding:'14px 0', borderBottom:'1px solid #f0f2f7'}}>
-              <div style={{flex:1}}>
-                <div style={{fontSize:15, fontWeight:700, color: r.activa ? '#0e0e0e' : '#bbb'}}>{r.nombre}</div>
-                <div style={{fontSize:12, color:'#888'}}>{r.puntos_necesarios} pts</div>
-              </div>
-              <button style={{...s.toggleBtn, background: r.activa ? '#e8faf2' : '#f0f2f7', color: r.activa ? '#00b96b' : '#bbb'}} onClick={() => toggleActiva(r)}>
-                {r.activa ? 'Activa' : 'Inactiva'}
-              </button>
-              <button style={s.deleteBtn} onClick={() => eliminar(r.id)}>✕</button>
+            <div key={i} style={{padding:'14px 0', borderBottom:'1px solid #f0f2f7'}}>
+              {editando?.id === r.id ? (
+                <div style={{display:'flex', alignItems:'center', gap:8, flexWrap:'wrap'}}>
+                  <input style={{...s.inputField, flex:2, minWidth:120}} value={editando.nombre} onChange={e => setEditando({...editando, nombre: e.target.value})} autoFocus />
+                  <input style={{...s.inputField, width:80}} type="number" value={editando.puntos_necesarios} onChange={e => setEditando({...editando, puntos_necesarios: e.target.value})} />
+                  <span style={{fontSize:12, color:'#888'}}>pts</span>
+                  <button style={{...s.btnRed, padding:'8px 14px', fontSize:13}} onClick={guardarEdicion}>Guardar</button>
+                  <button style={{padding:'8px 14px', background:'#f0f2f7', border:'none', borderRadius:10, fontSize:13, cursor:'pointer', fontFamily:'inherit', color:'#888'}} onClick={() => setEditando(null)}>Cancelar</button>
+                </div>
+              ) : (
+                <div style={{display:'flex', alignItems:'center', gap:10}}>
+                  <div style={{flex:1}}>
+                    <div style={{fontSize:15, fontWeight:700, color: r.activa ? '#0e0e0e' : '#bbb'}}>{r.nombre}</div>
+                    <div style={{fontSize:12, color:'#888'}}>{r.puntos_necesarios} pts</div>
+                  </div>
+                  <button style={{padding:'6px 12px', background:'#f0f2f7', border:'none', borderRadius:8, fontSize:12, fontWeight:600, cursor:'pointer', color:'#555', fontFamily:'inherit'}} onClick={() => setEditando({ id: r.id, nombre: r.nombre, puntos_necesarios: r.puntos_necesarios })}>✏️ Editar</button>
+                  <button style={{...s.toggleBtn, background: r.activa ? '#e8faf2' : '#f0f2f7', color: r.activa ? '#00b96b' : '#bbb'}} onClick={() => toggleActiva(r)}>
+                    {r.activa ? 'Activa' : 'Inactiva'}
+                  </button>
+                  <button style={s.deleteBtn} onClick={() => eliminar(r.id)}>✕</button>
+                </div>
+              )}
             </div>
           ))}
           {recompensas.length === 0 && <div style={{textAlign:'center', padding:24, color:'#888', fontSize:14}}>No hay recompensas todavía</div>}
@@ -547,7 +568,7 @@ function RecompensasSection({ negocioId, isDesktop }) {
         <div style={s.card}>
           <div style={s.configField}>
             <label style={s.configLabel}>Nombre</label>
-            <input style={s.inputField} placeholder="Ej: Baño gratis" value={nueva.nombre} onChange={e => setNueva({...nueva, nombre: e.target.value})} />
+            <input style={s.inputField} placeholder="Ej: Café gratis" value={nueva.nombre} onChange={e => setNueva({...nueva, nombre: e.target.value})} />
           </div>
           <div style={s.configField}>
             <label style={s.configLabel}>Puntos necesarios</label>
