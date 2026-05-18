@@ -586,16 +586,16 @@ function PinActualDisplay({ pinActual, esDebil }) {
   const [visible, setVisible] = useState(false)
   const pin = pinActual || '1234'
   return (
-    <div style={{display:'flex', alignItems:'center', gap:10, background:'#f5f6fa', borderRadius:10, padding:'10px 14px', maxWidth:220}}>
-      <span style={{fontSize:13, color:'#888', flexShrink:0}}>PIN actual:</span>
-      <span style={{fontFamily:'monospace', fontSize:16, fontWeight:700, letterSpacing:4, color: esDebil ? '#b37a00' : '#0e0e0e', flex:1}}>
-        {visible ? pin : '•'.repeat(pin.length)}
+    <div style={{display:'flex', alignItems:'center', gap:10, background: esDebil ? '#fff8e6' : '#f5f6fa', border: esDebil ? '1px solid #f0a500' : '1px solid #e8eaf0', borderRadius:10, padding:'10px 14px', maxWidth:260}}>
+      <span style={{fontSize:12, color:'#888', flexShrink:0}}>PIN actual:</span>
+      <span style={{fontFamily:'monospace', fontSize:18, fontWeight:800, letterSpacing:6, color: esDebil ? '#b37a00' : '#0e0e0e', flex:1, minWidth:60}}>
+        {visible ? pin : pin.split('').map(() => '●').join('')}
       </span>
       <button onClick={() => setVisible(v => !v)}
-        style={{background:'none', border:'none', cursor:'pointer', fontSize:14, color:'#aaa', padding:'0 2px', flexShrink:0}}>
-        {visible ? '🙈' : '👁️'}
+        style={{background:'#e8eaf0', border:'none', borderRadius:6, cursor:'pointer', fontSize:12, color:'#555', padding:'4px 8px', flexShrink:0, fontFamily:'inherit', fontWeight:600}}>
+        {visible ? 'Ocultar' : 'Ver'}
       </button>
-      {esDebil && <span style={{fontSize:10, color:'#b37a00', fontWeight:700}}>⚠️ Débil</span>}
+      {esDebil && <span style={{fontSize:10, color:'#b37a00', fontWeight:700, flexShrink:0}}>⚠️ Débil</span>}
     </div>
   )
 }
