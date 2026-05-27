@@ -19,6 +19,7 @@ export default function CajaSlugSucursal({ params }) {
   const [canjeResult, setCanjeResult] = useState(null)
   const [mensaje, setMensaje] = useState(null)
   const [tabDesktop, setTabDesktop] = useState('puntos')
+  const [pinVerificado, setPinVerificado] = useState('')
 
   useEffect(() => {
     params.then(p => { setSlugNegocio(p.slug); setSlugSucursal(p.sucursal) })
@@ -42,8 +43,9 @@ export default function CajaSlugSucursal({ params }) {
   }, [slugNegocio, slugSucursal])
 
   function ingresarPin() {
-    const pinReal = sucursal?.pin_caja || negocio?.pin_caja || '1234'
-    if (pin === pinReal) { setPantalla('buscar'); setPin('') }
+    const pinReal = sucursal?.pin_caja || negocio?.pin_caja
+    if (!pinReal) { mostrarMensaje('❌ PIN no configurado. Contacte al administrador', 'error'); return }
+    if (pin === pinReal) { setPinVerificado(pin); setPantalla('buscar'); setPin('') }
     else { mostrarMensaje('❌ PIN incorrecto', 'error'); setPin('') }
   }
 
@@ -71,24 +73,21 @@ export default function CajaSlugSucursal({ params }) {
   async function acreditarPuntos() {
     const valor = parseInt(monto)
     if (!valor || valor < 100) { mostrarMensaje('⚠️ Ingresá un monto válido', 'error'); return }
-    const pesosPorPunto = clienteSeleccionado.negocio?.pesos_por_punto || 100
-    const puntosPorTramo = clienteSeleccionado.negocio?.puntos_por_tramo || 1
-    const pts = Math.floor(valor / pesosPorPunto) * puntosPorTramo
+
     setCargando(true)
-    const nuevosPuntos = clienteSeleccionado.puntos + pts
-    const nuevosHistoricos = (clienteSeleccionado.puntos_historicos || 0) + pts
-    await supabase.from('clientes').update({
-      puntos: nuevosPuntos, puntos_historicos: nuevosHistoricos,
-      visitas: clienteSeleccionado.visitas + 1, ultima_visita: new Date().toISOString()
-    }).eq('id', clienteSeleccionado.id)
-    await supabase.from('transacciones').insert([{
-      cliente_id: clienteSeleccionado.id, negocio_id: negocio.id, sucursal_id: sucursal.id,
-      tipo: 'suma', puntos: pts, descripcion: `Compra $${valor.toLocaleString()} — ${sucursal.nombre}`
-    }])
-    setClienteSeleccionado({ ...clienteSeleccionado, puntos: nuevosPuntos, puntos_historicos: nuevosHistoricos })
+    const res = await fetch('/api/caja/acreditar-puntos', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ negocioId: negocio.id, clienteId: clienteSeleccionado.id, monto: valor, pin: pinVerificado, sucursalId: sucursal.id })
+    })
+    const result = await res.json()
     setCargando(false)
+
+    if (!res.ok) { mostrarMensaje(`❌ ${result.error || 'Error al acreditar'}`, 'error'); return }
+
+    setClienteSeleccionado({ ...clienteSeleccionado, puntos: result.nuevosPuntos, puntos_historicos: result.nuevosHistoricos })
     setMonto('')
-    mostrarMensaje(`✅ +${pts} puntos a ${clienteSeleccionado.nombre.split(' ')[0]}`, 'success')
+    mostrarMensaje(`✅ +${result.pts} puntos a ${clienteSeleccionado.nombre.split(' ')[0]}`, 'success')
   }
 
   async function validarCanje() {

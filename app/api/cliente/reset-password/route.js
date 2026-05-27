@@ -11,6 +11,7 @@ export async function POST(request) {
   try {
     const { token, password } = await request.json()
     if (!token || !password) return NextResponse.json({ error: 'Faltan datos' }, { status: 400 })
+    if (password.length < 8) return NextResponse.json({ error: 'La contraseña debe tener al menos 8 caracteres' }, { status: 400 })
 
     const { data: cliente } = await supabaseAdmin
       .from('clientes')

@@ -17,8 +17,8 @@ export async function POST(request) {
     if (!nombre || !dni || !email || !password || !slug) {
       return NextResponse.json({ error: 'Faltan datos obligatorios' }, { status: 400 })
     }
-    if (password.length < 6) {
-      return NextResponse.json({ error: 'La contraseña debe tener al menos 6 caracteres' }, { status: 400 })
+    if (password.length < 8) {
+      return NextResponse.json({ error: 'La contraseña debe tener al menos 8 caracteres' }, { status: 400 })
     }
 
     // Buscar negocio

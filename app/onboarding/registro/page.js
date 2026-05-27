@@ -25,7 +25,7 @@ export default function Registro() {
     if (!nombre) { setError('Ingresá tu nombre'); return }
     if (!telefono) { setError('Ingresá tu teléfono'); return }
     if (!email) { setError('Ingresá tu email'); return }
-    if (password.length < 6) { setError('La contraseña tiene que tener al menos 6 caracteres'); return }
+    if (password.length < 8) { setError('La contraseña tiene que tener al menos 8 caracteres'); return }
     setError('')
     setCargando(true)
 
@@ -81,7 +81,7 @@ export default function Registro() {
         </div>
         <div style={s.field}>
           <label style={s.label}>Contraseña</label>
-          <input style={s.input} type="password" placeholder="Mínimo 6 caracteres"
+          <input style={s.input} type="password" placeholder="Mínimo 8 caracteres"
             value={password} onChange={e => setPassword(e.target.value)} />
         </div>
 

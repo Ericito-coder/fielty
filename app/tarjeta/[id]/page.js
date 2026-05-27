@@ -28,9 +28,11 @@ export default function Tarjeta({ params }) {
   async function cargarDatos() {
     const { data: clienteData } = await supabase
       .from('clientes')
-      .select('*, negocio:negocios(nombre, color, pesos_por_punto, puntos_por_tramo, logo_url, slug, puntos_referido_receptor, puntos_referido_quien_refiere)')
+      .select('*, negocio:negocios(nombre, color, pesos_por_punto, puntos_por_tramo, logo_url, slug, puntos_referido_receptor, puntos_referido_emisor)')
       .eq('id', id)
       .single()
+
+    if (!clienteData) { setCargando(false); return }
 
     const { data: recompensasData } = await supabase
       .from('recompensas')
@@ -229,7 +231,7 @@ export default function Tarjeta({ params }) {
           </div>
           <div style={{fontSize:13, color:'#888', marginBottom:20, lineHeight:1.5}}>
             Cuando un amigo se registra con tu link, vos ganás{' '}
-            <strong style={{color:'#0e0e0e'}}>{cliente.negocio?.puntos_referido_quien_refiere || 50} pts</strong>{' '}
+            <strong style={{color:'#0e0e0e'}}>{cliente.negocio?.puntos_referido_emisor || 50} pts</strong>{' '}
             y tu amigo gana{' '}
             <strong style={{color:'#0e0e0e'}}>{cliente.negocio?.puntos_referido_receptor || 50} pts</strong>.
           </div>

@@ -11,6 +11,7 @@ export default function Caja({ params }) {
   const [clientes, setClientes] = useState([])
   const [clienteSeleccionado, setClienteSeleccionado] = useState(null)
   const [monto, setMonto] = useState('')
+  const [pinVerificado, setPinVerificado] = useState('')
   const [cargando, setCargando] = useState(false)
   const [codigo, setCodigo] = useState('')
   const [canjeResult, setCanjeResult] = useState(null)
@@ -26,19 +27,20 @@ export default function Caja({ params }) {
       .then(({ data }) => setNegocio(data))
   }, [negocioId])
 
-  function presionarPin(d) {
-    if (pin.length >= 4) return
-    const nuevo = pin + d
-    setPin(nuevo)
-    if (nuevo.length === 4) {
-      setTimeout(() => {
-        if (nuevo === (negocio?.pin_caja || '1234')) { setPantalla('buscar'); setPin('') }
-        else { mostrarMensaje('❌ PIN incorrecto', 'error'); setPin('') }
-      }, 200)
+  function verificarPin() {
+    if (!negocio?.pin_caja) {
+      mostrarMensaje('❌ PIN no configurado. Contacte al administrador', 'error')
+      return
+    }
+    if (pin === negocio.pin_caja) {
+      setPinVerificado(pin)
+      setPantalla('buscar')
+      setPin('')
+    } else {
+      mostrarMensaje('❌ PIN incorrecto', 'error')
+      setPin('')
     }
   }
-
-  function borrarPin() { setPin(pin.slice(0, -1)) }
 
   async function buscarCliente(valor) {
     setBusqueda(valor)
@@ -64,39 +66,30 @@ export default function Caja({ params }) {
     const valor = parseInt(monto)
     if (!valor || valor < 100) { mostrarMensaje('⚠️ Ingresá un monto válido', 'error'); return }
 
-    const pesosPorPunto = clienteSeleccionado.negocio?.pesos_por_punto || 100
-    const puntosPorTramo = clienteSeleccionado.negocio?.puntos_por_tramo || 1
-    const pts = Math.floor(valor / pesosPorPunto) * puntosPorTramo
-
     setCargando(true)
 
-    const nuevosPuntos = clienteSeleccionado.puntos + pts
-    const nuevosHistoricos = (clienteSeleccionado.puntos_historicos || 0) + pts
-
-    await supabase
-      .from('clientes')
-      .update({
-        puntos: nuevosPuntos,
-        puntos_historicos: nuevosHistoricos,
-        visitas: clienteSeleccionado.visitas + 1,
-        ultima_visita: new Date().toISOString()
+    const res = await fetch('/api/caja/acreditar-puntos', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        negocioId,
+        clienteId: clienteSeleccionado.id,
+        monto: valor,
+        pin: pinVerificado,
       })
-      .eq('id', clienteSeleccionado.id)
+    })
 
-    await supabase
-      .from('transacciones')
-      .insert([{
-        cliente_id: clienteSeleccionado.id,
-        negocio_id: negocioId,
-        tipo: 'suma',
-        puntos: pts,
-        descripcion: `Compra $${valor.toLocaleString()}`
-      }])
-
-    setClienteSeleccionado({ ...clienteSeleccionado, puntos: nuevosPuntos, puntos_historicos: nuevosHistoricos })
+    const result = await res.json()
     setCargando(false)
+
+    if (!res.ok) {
+      mostrarMensaje(`❌ ${result.error || 'Error al acreditar'}`, 'error')
+      return
+    }
+
+    setClienteSeleccionado({ ...clienteSeleccionado, puntos: result.nuevosPuntos, puntos_historicos: result.nuevosHistoricos })
     setMonto('')
-    mostrarMensaje(`✅ +${pts} puntos a ${clienteSeleccionado.nombre.split(' ')[0]}`, 'success')
+    mostrarMensaje(`✅ +${result.pts} puntos a ${clienteSeleccionado.nombre.split(' ')[0]}`, 'success')
   }
 
   async function validarCanje() {
@@ -163,28 +156,29 @@ export default function Caja({ params }) {
 
   if (pantalla === 'pin') return (
     <div style={s.wrap}>
+      {mensaje && <div style={{...s.toast, background: mensaje.tipo==='error' ? '#e0001b' : '#00b96b'}}>{mensaje.texto}</div>}
       <div style={s.pinWrap}>
         <div style={{...s.ppLogo, background: negocio.color}}>
           {negocio.nombre.slice(0,2).toUpperCase()}
         </div>
         <div style={s.pinTitle}>{negocio.nombre}</div>
         <div style={s.pinSub}>Vista de caja · Staff</div>
-        <div style={s.pinDots}>
-          {[0,1,2,3].map(i => (
-            <div key={i} style={{...s.dot, background: i < pin.length ? negocio.color : '#2a2a2a'}} />
-          ))}
-        </div>
-        <div style={s.numpad}>
-          {[1,2,3,4,5,6,7,8,9,'',0,'⌫'].map((n,i) => (
-            <button key={i} style={{...s.numBtn, opacity: n==='' ? 0 : 1}}
-              onClick={() => n==='⌫' ? borrarPin() : n!=='' ? presionarPin(String(n)) : null}>
-              {n}
-            </button>
-          ))}
-        </div>
-        <div style={{fontSize:12, color:'#444', textAlign:'center'}}>
-          PIN de prueba: <span style={{fontFamily:'monospace', color: negocio.color}}>1234</span>
-        </div>
+        <input
+          style={s.pinInput}
+          type="password"
+          placeholder="Ingresá el PIN"
+          value={pin}
+          onChange={e => setPin(e.target.value)}
+          onKeyDown={e => e.key === 'Enter' && verificarPin()}
+          autoFocus
+        />
+        <button
+          style={{...s.btnPrimary, background: negocio.color, width: 280, opacity: pin.length === 0 ? 0.4 : 1}}
+          onClick={verificarPin}
+          disabled={pin.length === 0}
+        >
+          Ingresar
+        </button>
       </div>
     </div>
   )
@@ -338,10 +332,7 @@ const s = {
   ppLogo: { width:52, height:52, borderRadius:14, display:'flex', alignItems:'center', justifyContent:'center', fontSize:18, fontWeight:900, color:'white' },
   pinTitle: { fontSize:24, fontWeight:800 },
   pinSub: { fontSize:14, color:'#666', marginTop:-16 },
-  pinDots: { display:'flex', gap:14 },
-  dot: { width:16, height:16, borderRadius:'50%', transition:'background 0.2s' },
-  numpad: { display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:12, width:280 },
-  numBtn: { aspectRatio:1, borderRadius:20, border:'1px solid #2a2a2a', background:'#1a1a1a', color:'white', fontSize:22, fontWeight:600, cursor:'pointer', fontFamily:'inherit' },
+  pinInput: { width:280, padding:'16px 20px', background:'#1a1a1a', border:'2px solid #2a2a2a', borderRadius:16, color:'white', fontSize:20, fontFamily:'monospace', letterSpacing:4, textAlign:'center', outline:'none', boxSizing:'border-box' },
   topbar: { display:'flex', alignItems:'center', gap:12, padding:'20px 20px 16px', borderBottom:'1px solid #1e1e1e' },
   topbarLeft: { display:'flex', alignItems:'center', gap:10, flex:1 },
   ppLogoSm: { width:32, height:32, borderRadius:9, display:'flex', alignItems:'center', justifyContent:'center', fontSize:12, fontWeight:900, color:'white', flexShrink:0 },

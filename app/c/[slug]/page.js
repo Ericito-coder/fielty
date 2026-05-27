@@ -17,6 +17,7 @@ export default function CajaSlug({ params }) {
   const [canjeResult, setCanjeResult] = useState(null)
   const [mensaje, setMensaje] = useState(null)
   const [tabDesktop, setTabDesktop] = useState('puntos')
+  const [pinVerificado, setPinVerificado] = useState('')
 
   useEffect(() => {
     params.then(p => setSlug(p.slug))
@@ -33,8 +34,9 @@ export default function CajaSlug({ params }) {
   }, [slug])
 
   function ingresarPin() {
-    const pinReal = negocio?.pin_caja || '1234'
-    if (pin === pinReal) { setPantalla('buscar'); setPin('') }
+    const pinReal = negocio?.pin_caja
+    if (!pinReal) { mostrarMensaje('❌ PIN no configurado. Contacte al administrador', 'error'); return }
+    if (pin === pinReal) { setPinVerificado(pin); setPantalla('buscar'); setPin('') }
     else { mostrarMensaje('❌ PIN incorrecto', 'error'); setPin('') }
   }
 
@@ -62,28 +64,25 @@ export default function CajaSlug({ params }) {
   async function acreditarPuntos() {
     const valor = parseInt(monto)
     if (!valor || valor < 100) { mostrarMensaje('⚠️ Ingresá un monto válido', 'error'); return }
-    const pesosPorPunto = clienteSeleccionado.negocio?.pesos_por_punto || 100
-    const puntosPorTramo = clienteSeleccionado.negocio?.puntos_por_tramo || 1
-    const pts = Math.floor(valor / pesosPorPunto) * puntosPorTramo
+
     setCargando(true)
-    const nuevosPuntos = clienteSeleccionado.puntos + pts
-    const nuevosHistoricos = (clienteSeleccionado.puntos_historicos || 0) + pts
-    await supabase.from('clientes').update({
-      puntos: nuevosPuntos, puntos_historicos: nuevosHistoricos,
-      visitas: clienteSeleccionado.visitas + 1, ultima_visita: new Date().toISOString()
-    }).eq('id', clienteSeleccionado.id)
-    await supabase.from('transacciones').insert([{
-      cliente_id: clienteSeleccionado.id, negocio_id: negocio.id,
-      tipo: 'suma', puntos: pts, descripcion: `Compra $${valor.toLocaleString()}`
-    }])
-    setClienteSeleccionado({ ...clienteSeleccionado, puntos: nuevosPuntos, puntos_historicos: nuevosHistoricos })
+    const res = await fetch('/api/caja/acreditar-puntos', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ negocioId: negocio.id, clienteId: clienteSeleccionado.id, monto: valor, pin: pinVerificado })
+    })
+    const result = await res.json()
     setCargando(false)
+
+    if (!res.ok) { mostrarMensaje(`❌ ${result.error || 'Error al acreditar'}`, 'error'); return }
+
+    setClienteSeleccionado({ ...clienteSeleccionado, puntos: result.nuevosPuntos, puntos_historicos: result.nuevosHistoricos })
     setMonto('')
-    mostrarMensaje(`✅ +${pts} puntos a ${clienteSeleccionado.nombre.split(' ')[0]}`, 'success')
+    mostrarMensaje(`✅ +${result.pts} puntos a ${clienteSeleccionado.nombre.split(' ')[0]}`, 'success')
     fetch('/api/cliente/notificar-puntos', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ clienteId: clienteSeleccionado.id, puntos: pts, totalPuntos: nuevosPuntos, negocioNombre: negocio.nombre, monto }),
+      body: JSON.stringify({ clienteId: clienteSeleccionado.id, puntos: result.pts, totalPuntos: result.nuevosPuntos, negocioNombre: negocio.nombre, monto }),
     }).catch(() => {})
   }
 
