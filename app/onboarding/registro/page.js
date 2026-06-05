@@ -38,7 +38,13 @@ export default function Registro() {
     setCargando(false)
 
     if (authError) {
-      setError(authError.message)
+      if (authError.message.toLowerCase().includes('password')) {
+        setError('La contraseña tiene que tener al menos 8 caracteres')
+      } else if (authError.message.toLowerCase().includes('already registered') || authError.message.toLowerCase().includes('already been registered')) {
+        setError('Ya existe una cuenta con ese email')
+      } else {
+        setError('Hubo un error al crear la cuenta. Intentá de nuevo')
+      }
       return
     }
 
