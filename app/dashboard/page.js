@@ -752,7 +752,10 @@ function ConfigSection({ negocio, setNegocio }) {
               size={Math.max(3, (form.pesos_por_punto ? Number(form.pesos_por_punto).toLocaleString('es-AR') : '').length + 1)}
               onChange={e => setForm({...form, pesos_por_punto: parseInt(e.target.value.replace(/\D/g, '')) || 0})} />
             <span style={{fontSize:13, color:'#888'}}>→</span>
-            <input style={{...s.inputField, width:60}} type="number" value={form.puntos_por_tramo} onChange={e => setForm({...form, puntos_por_tramo: parseInt(e.target.value)})} />
+            <input style={{...s.inputField, width:'auto'}} type="text" inputMode="numeric"
+              value={form.puntos_por_tramo || ''}
+              size={Math.max(3, String(form.puntos_por_tramo || '').length + 1)}
+              onChange={e => setForm({...form, puntos_por_tramo: parseInt(e.target.value.replace(/\D/g, '')) || 0})} />
             <span style={{fontSize:13, color:'#888'}}>pts</span>
           </div>
         </div>
