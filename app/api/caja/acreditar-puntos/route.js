@@ -48,7 +48,7 @@ export async function POST(request) {
 
     const pesosPorPunto = negocio.pesos_por_punto || 100
     const puntosPorTramo = negocio.puntos_por_tramo || 1
-    const pts = Math.floor(montoNum / pesosPorPunto) * puntosPorTramo
+    const pts = Math.round(montoNum / pesosPorPunto * puntosPorTramo)
 
     const nuevosPuntos = cliente.puntos + pts
     const nuevosHistoricos = (cliente.puntos_historicos || 0) + pts

@@ -161,7 +161,7 @@ export default function CajaSucursal({ params }) {
 
   const pesosPorPunto = clienteSeleccionado?.negocio?.pesos_por_punto || 100
   const puntosPorTramo = clienteSeleccionado?.negocio?.puntos_por_tramo || 1
-  const ptsPreview = Math.floor((parseInt(monto) || 0) / pesosPorPunto) * puntosPorTramo
+  const ptsPreview = Math.round((parseInt(monto) || 0) / pesosPorPunto * puntosPorTramo)
 
   const getNivel = (pts) => {
     if (pts >= 5000) return { nombre:'Oro', emoji:'🥇' }
