@@ -747,7 +747,9 @@ function ConfigSection({ negocio, setNegocio }) {
           <label style={s.configLabel}>Regla de puntos</label>
           <div style={{display:'flex', alignItems:'center', gap:8, flexWrap:'wrap'}}>
             <span style={{fontSize:13, color:'#888'}}>Cada $</span>
-            <input style={{...s.inputField, width:80}} type="number" value={form.pesos_por_punto} onChange={e => setForm({...form, pesos_por_punto: parseInt(e.target.value)})} />
+            <input style={{...s.inputField, width:110}} type="text" inputMode="numeric"
+              value={form.pesos_por_punto ? Number(form.pesos_por_punto).toLocaleString('es-AR') : ''}
+              onChange={e => setForm({...form, pesos_por_punto: parseInt(e.target.value.replace(/\D/g, '')) || 0})} />
             <span style={{fontSize:13, color:'#888'}}>→</span>
             <input style={{...s.inputField, width:60}} type="number" value={form.puntos_por_tramo} onChange={e => setForm({...form, puntos_por_tramo: parseInt(e.target.value)})} />
             <span style={{fontSize:13, color:'#888'}}>pts</span>
