@@ -269,8 +269,9 @@ export default function CajaSlug({ params }) {
                     <div style={{background:'#1a1a1a', border:'2px solid #2a2a2a', borderRadius:20, padding:'20px 24px', marginBottom:16, display:'flex', alignItems:'center', gap:12}}>
                       <span style={{fontSize:28, color:'#444', fontWeight:300}}>$</span>
                       <input style={{flex:1, background:'transparent', border:'none', outline:'none', color:'white', fontSize:48, fontWeight:500, fontFamily:'monospace', minWidth:0}}
-                        type="number" inputMode="numeric" placeholder="0" value={monto}
-                        onChange={e => setMonto(e.target.value)}
+                        type="text" inputMode="numeric" placeholder="0"
+                        value={monto ? Number(monto).toLocaleString('es-AR') : ''}
+                        onChange={e => setMonto(e.target.value.replace(/\D/g, ''))}
                         onKeyDown={e => e.key === 'Enter' && acreditarPuntos()} autoFocus />
                       <div style={{textAlign:'right', minWidth:80}}>
                         <div style={{fontSize:28, fontWeight:800, color:'#00b96b', fontFamily:'monospace'}}>+{ptsPreview}</div>
@@ -386,7 +387,9 @@ export default function CajaSlug({ params }) {
           <div style={{display:'flex', alignItems:'center', gap:12, background:'#1a1a1a', border:'2px solid #2a2a2a', borderRadius:20, padding:'18px 20px', marginBottom:14}}>
             <span style={{fontSize:24, color:'#666', fontWeight:300}}>$</span>
             <input style={{flex:1, background:'transparent', border:'none', outline:'none', color:'white', fontSize:36, fontWeight:500, fontFamily:'monospace', minWidth:0}}
-              type="number" inputMode="numeric" placeholder="0" value={monto} onChange={e => setMonto(e.target.value)} />
+              type="text" inputMode="numeric" placeholder="0"
+              value={monto ? Number(monto).toLocaleString('es-AR') : ''}
+              onChange={e => setMonto(e.target.value.replace(/\D/g, ''))} />
             <div style={{textAlign:'right'}}>
               <div style={{fontSize:20, fontWeight:800, color:'#00b96b', fontFamily:'monospace'}}>+{ptsPreview}</div>
               <div style={{fontSize:10, color:'#666'}}>puntos</div>

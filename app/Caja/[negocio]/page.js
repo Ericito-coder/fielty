@@ -259,8 +259,10 @@ export default function Caja({ params }) {
           <div style={s.label}>Acreditar puntos</div>
           <div style={s.montoWrap}>
             <span style={{fontSize:24, color:'#666', fontWeight:300}}>$</span>
-            <input style={s.montoInput} type="number" inputMode="numeric"
-              placeholder="0" value={monto} onChange={e => setMonto(e.target.value)} />
+            <input style={s.montoInput} type="text" inputMode="numeric"
+              placeholder="0"
+              value={monto ? Number(monto).toLocaleString('es-AR') : ''}
+              onChange={e => setMonto(e.target.value.replace(/\D/g, ''))} />
             <div style={{textAlign:'right'}}>
               <div style={{fontSize:20, fontWeight:800, color:'#00b96b', fontFamily:'monospace'}}>+{ptsPreview}</div>
               <div style={{fontSize:10, color:'#666'}}>puntos</div>
