@@ -19,6 +19,7 @@ export default function Dashboard() {
   const [seccion, setSeccion] = useState('inicio')
   const [isMobile, setIsMobile] = useState(null)
   const [mostrarExito, setMostrarExito] = useState(false)
+  const [menuAbierto, setMenuAbierto] = useState(false)
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
@@ -97,31 +98,53 @@ export default function Dashboard() {
 
   if (isMobile) return (
     <div style={{minHeight:'100vh', background:'#f0f2f7', maxWidth:480, margin:'0 auto'}}>
+      {/* DRAWER OVERLAY */}
+      {menuAbierto && (
+        <div style={{position:'fixed', inset:0, zIndex:100, display:'flex'}}>
+          <div style={{flex:1, background:'rgba(0,0,0,0.45)'}} onClick={() => setMenuAbierto(false)} />
+          <div style={{width:260, background:'#0e0e0e', height:'100%', display:'flex', flexDirection:'column', padding:'28px 16px', gap:4, overflowY:'auto'}}>
+            <div style={{display:'flex', alignItems:'center', gap:10, marginBottom:24, paddingLeft:8}}>
+              <div style={{width:36, height:36, borderRadius:10, background: negocio.color, display:'flex', alignItems:'center', justifyContent:'center', fontSize:13, fontWeight:900, color:'white', flexShrink:0}}>
+                {negocio.nombre.slice(0,2).toUpperCase()}
+              </div>
+              <div>
+                <div style={{fontSize:14, fontWeight:700, color:'white'}}>{negocio.nombre}</div>
+                <div style={{fontSize:11, color:'#666'}}>Panel del dueño</div>
+              </div>
+            </div>
+            {NAV_ITEMS.map(item => (
+              <button key={item.id} style={{padding:'13px 16px', border:'none', borderRadius:12, fontSize:14, cursor:'pointer', fontFamily:'inherit', textAlign:'left', background: seccion === item.id ? '#1e1e1e' : 'transparent', color: seccion === item.id ? 'white' : '#888', fontWeight: seccion === item.id ? 700 : 500}}
+                onClick={() => { setSeccion(item.id); setMenuAbierto(false) }}>
+                {item.icon} {item.label}
+              </button>
+            ))}
+            <div style={{marginTop:'auto', paddingTop:24}}>
+              <button style={{width:'100%', padding:'12px 16px', background:'transparent', border:'1px solid #2a2a2a', borderRadius:12, color:'#666', fontSize:14, fontWeight:600, cursor:'pointer', fontFamily:'inherit', textAlign:'left'}} onClick={cerrarSesion}>
+                ↩ Cerrar sesión
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       {/* MOBILE TOPBAR */}
-      <div style={{display:'flex', alignItems:'center', justifyContent:'space-between', padding:'20px 20px 16px', background:'white', borderBottom:'1px solid #e8eaf0'}}>
+      <div style={{display:'flex', alignItems:'center', justifyContent:'space-between', padding:'20px 20px 16px', background:'white', borderBottom:'1px solid #e8eaf0', position:'sticky', top:0, zIndex:10}}>
         <div style={{display:'flex', alignItems:'center', gap:12}}>
           <div style={{width:40, height:40, borderRadius:12, background: negocio.color, display:'flex', alignItems:'center', justifyContent:'center', fontSize:14, fontWeight:900, color:'white'}}>
             {negocio.nombre.slice(0,2).toUpperCase()}
           </div>
           <div>
             <div style={{fontSize:16, fontWeight:700, color:'#0e0e0e'}}>{negocio.nombre}</div>
-            <div style={{fontSize:11, color:'#888'}}>Panel del dueño</div>
+            <div style={{fontSize:11, color:'#888'}}>{NAV_ITEMS.find(n => n.id === seccion)?.icon} {NAV_ITEMS.find(n => n.id === seccion)?.label}</div>
           </div>
         </div>
-        <button style={{padding:'8px 16px', background:'#f0f2f7', border:'none', borderRadius:10, fontSize:13, fontWeight:600, cursor:'pointer', color:'#888', fontFamily:'inherit'}} onClick={cerrarSesion}>Salir</button>
-      </div>
-      {/* MOBILE NAV */}
-      <div style={{display:'flex', background:'white', borderBottom:'1px solid #e8eaf0', padding:'0 12px', gap:4, overflowX:'auto'}}>
-        {NAV_ITEMS.map(item => (
-          <button key={item.id} style={{padding:'14px 12px', border:'none', borderRadius:10, fontSize:13, cursor:'pointer', fontFamily:'inherit', whiteSpace:'nowrap', background: seccion === item.id ? 'white' : 'transparent', color: seccion === item.id ? '#0e0e0e' : '#888', fontWeight: seccion === item.id ? 700 : 500}} onClick={() => setSeccion(item.id)}>
-            {item.icon} {item.label}
-          </button>
-        ))}
+        <button style={{width:40, height:40, background:'#f0f2f7', border:'none', borderRadius:10, fontSize:20, cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center'}} onClick={() => setMenuAbierto(true)}>
+          ☰
+        </button>
       </div>
       <div style={{padding:16}}>
         {mostrarExito && <BannerExito onClose={() => setMostrarExito(false)} />}
         {negocio.plan === 'gratis' && metricas && <BannerLimite totalClientes={metricas.totalClientes} />}
-        <BannerPinDebil negocio={negocio} onConfigurar={() => setSeccion('config')} />
+        <BannerPinDebil negocio={negocio} onConfigurar={() => { setSeccion('config'); setMenuAbierto(false) }} />
         <SeccionContenido seccion={seccion} negocio={negocio} metricas={metricas} setNegocio={setNegocio} />
       </div>
     </div>
