@@ -90,6 +90,7 @@ export default function CajaSlugSucursal({ params }) {
     setClientes(prev => prev.map(c => c.id === clienteSeleccionado.id ? clienteActualizado : c))
     setMonto('')
     mostrarMensaje(`✅ +${result.pts} puntos a ${clienteSeleccionado.nombre.split(' ')[0]}`, 'success')
+    if (busqueda.length >= 2) buscarCliente(busqueda)
   }
 
   async function validarCanje() {
