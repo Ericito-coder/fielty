@@ -85,6 +85,12 @@ export default function RegistroSlug({ params }) {
         <button style={{...styles.btn, background: negocio.color}} onClick={() => window.location.href = `/tarjeta/${clienteId}`}>
           Ver mi tarjeta →
         </button>
+        <div style={{marginTop:20, background:'#f5f6fa', borderRadius:14, padding:'14px 16px', display:'flex', gap:12, alignItems:'flex-start'}}>
+          <span style={{fontSize:20, flexShrink:0}}>📲</span>
+          <p style={{margin:0, fontSize:13, color:'#555', lineHeight:1.5}}>
+            <strong style={{color:'#0e0e0e'}}>Guardá tu tarjeta a mano:</strong> una vez que la veas, tocá el menú del navegador y elegí <em>"Agregar a pantalla de inicio"</em> para tenerla siempre disponible como una app.
+          </p>
+        </div>
       </div>
     </div>
   )

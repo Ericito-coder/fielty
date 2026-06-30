@@ -1,0 +1,16 @@
+{
+  "name": "fielty — Mi tarjeta de puntos",
+  "short_name": "fielty",
+  "description": "Tu tarjeta de puntos siempre a mano",
+  "start_url": "/mi-tarjeta",
+  "display": "standalone",
+  "background_color": "#0e0e0e",
+  "theme_color": "#0e0e0e",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "any",
+      "type": "image/x-icon"
+    }
+  ]
+}
