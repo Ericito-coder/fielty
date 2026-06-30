@@ -39,7 +39,9 @@ export default function CajaSucursal({ params }) {
     setPin(nuevo)
     if (nuevo.length === 4) {
       setTimeout(() => {
-        if (nuevo === (sucursal?.pin_caja || negocio?.pin_caja || '1234')) { setPantalla('buscar'); setPin('') }
+        const pinReal = sucursal?.pin_caja || negocio?.pin_caja
+        if (!pinReal) { mostrarMensaje('❌ PIN no configurado. Configuralo en el dashboard', 'error'); setPin(''); return }
+        if (nuevo === pinReal) { setPantalla('buscar'); setPin('') }
         else { mostrarMensaje('❌ PIN incorrecto', 'error'); setPin('') }
       }, 200)
     }

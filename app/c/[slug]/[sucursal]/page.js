@@ -85,7 +85,9 @@ export default function CajaSlugSucursal({ params }) {
 
     if (!res.ok) { mostrarMensaje(`❌ ${result.error || 'Error al acreditar'}`, 'error'); return }
 
-    setClienteSeleccionado({ ...clienteSeleccionado, puntos: result.nuevosPuntos, puntos_historicos: result.nuevosHistoricos })
+    const clienteActualizado = { ...clienteSeleccionado, puntos: result.nuevosPuntos, puntos_historicos: result.nuevosHistoricos }
+    setClienteSeleccionado(clienteActualizado)
+    setClientes(prev => prev.map(c => c.id === clienteSeleccionado.id ? clienteActualizado : c))
     setMonto('')
     mostrarMensaje(`✅ +${result.pts} puntos a ${clienteSeleccionado.nombre.split(' ')[0]}`, 'success')
   }

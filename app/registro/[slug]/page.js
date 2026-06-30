@@ -31,7 +31,7 @@ export default function RegistroSlug({ params }) {
     if (!dni) { setError('Ingresá tu DNI'); return }
     if (!email) { setError('Ingresá tu email'); return }
     if (!password) { setError('Creá una contraseña'); return }
-    if (password.length < 6) { setError('La contraseña debe tener al menos 6 caracteres'); return }
+    if (password.length < 8) { setError('La contraseña debe tener al menos 8 caracteres'); return }
     if (!negocio) { setError('Negocio no encontrado'); return }
     setError('')
     setCargando(true)
@@ -132,7 +132,7 @@ export default function RegistroSlug({ params }) {
         </div>
         <div style={styles.field}>
           <label style={styles.label}>Contraseña <span style={{color:'#bbb', fontWeight:400}}>(para ver tu tarjeta)</span></label>
-          <input style={styles.input} type="password" placeholder="Mínimo 6 caracteres"
+          <input style={styles.input} type="password" placeholder="Mínimo 8 caracteres"
             value={password} onChange={e => setPassword(e.target.value)} />
         </div>
         <div style={styles.field}>
