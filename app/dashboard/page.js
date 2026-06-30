@@ -121,6 +121,7 @@ export default function Dashboard() {
       <div style={{padding:16}}>
         {mostrarExito && <BannerExito onClose={() => setMostrarExito(false)} />}
         {negocio.plan === 'gratis' && metricas && <BannerLimite totalClientes={metricas.totalClientes} />}
+        <BannerPinDebil negocio={negocio} onConfigurar={() => setSeccion('config')} />
         <SeccionContenido seccion={seccion} negocio={negocio} metricas={metricas} setNegocio={setNegocio} />
       </div>
     </div>
@@ -193,6 +194,7 @@ export default function Dashboard() {
       <div style={{marginLeft:260, flex:1, padding:32, minHeight:'100vh'}}>
         {mostrarExito && <BannerExito onClose={() => setMostrarExito(false)} />}
         {negocio.plan === 'gratis' && metricas && <BannerLimite totalClientes={metricas.totalClientes} />}
+        <BannerPinDebil negocio={negocio} onConfigurar={() => setSeccion('config')} />
         {/* Header */}
         <div style={{marginBottom:28}}>
           <div style={{fontSize:22, fontWeight:800, color:'#0e0e0e'}}>
@@ -1046,6 +1048,25 @@ const s = {
   configLabel: { display:'block', fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.06em', color:'#888', marginBottom:8 },
   inputField: { width:'100%', padding:'12px 14px', border:'2px solid #e8eaf0', borderRadius:12, fontSize:15, fontFamily:'inherit', outline:'none', boxSizing:'border-box' },
   btnRed: { width:'100%', padding:16, background:'#e0001b', border:'none', borderRadius:14, color:'white', fontSize:15, fontWeight:800, cursor:'pointer', fontFamily:'inherit' },
+}
+
+function BannerPinDebil({ negocio, onConfigurar }) {
+  const pinDebil = !negocio.pin_caja || PINES_COMUNES.includes(negocio.pin_caja)
+  if (!pinDebil) return null
+  return (
+    <div style={{ background:'#fff8e6', border:'1.5px solid #f0a500', borderRadius:14, padding:'14px 18px', marginBottom:20, display:'flex', alignItems:'center', gap:12 }}>
+      <span style={{ fontSize:22, flexShrink:0 }}>🔐</span>
+      <div style={{ flex:1 }}>
+        <div style={{ fontSize:14, fontWeight:700, color:'#0e0e0e', marginBottom:2 }}>PIN de caja no configurado</div>
+        <div style={{ fontSize:13, color:'#888', lineHeight:1.4 }}>
+          {negocio.pin_caja ? 'El PIN actual es muy común y fácil de adivinar.' : 'Sin PIN configurado, la caja queda bloqueada para el staff.'} Configuralo en Ajustes.
+        </div>
+      </div>
+      <button onClick={onConfigurar} style={{ padding:'8px 16px', background:'#f0a500', border:'none', borderRadius:10, color:'white', fontSize:13, fontWeight:700, cursor:'pointer', fontFamily:'inherit', whiteSpace:'nowrap', flexShrink:0 }}>
+        Configurar →
+      </button>
+    </div>
+  )
 }
 
 function BannerLimite({ totalClientes }) {
