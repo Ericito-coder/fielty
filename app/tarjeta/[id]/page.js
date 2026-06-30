@@ -10,9 +10,19 @@ export default function Tarjeta({ params }) {
   const [canjeando, setCanjeando] = useState(null)
   const [codigoCanje, setCodigoCanje] = useState(null)
   const [segundos, setSegundos] = useState(86399)
+  const [bannerInstalar, setBannerInstalar] = useState(false)
+  const [esIOS, setEsIOS] = useState(false)
 
   useEffect(() => { params.then(p => setId(p.id)) }, [params])
   useEffect(() => { if (!id) return; cargarDatos() }, [id])
+
+  useEffect(() => {
+    const yaInstalada = window.navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches
+    if (yaInstalada) return
+    if (localStorage.getItem('fielty_banner_instalar_ok')) return
+    setEsIOS(/iPad|iPhone|iPod/.test(navigator.userAgent))
+    setBannerInstalar(true)
+  }, [])
 
   useEffect(() => {
     if (!codigoCanje || segundos <= 0) return
@@ -190,6 +200,28 @@ export default function Tarjeta({ params }) {
           <span style={st.cardId}>FLT-{cliente.id.slice(0,5).toUpperCase()}</span>
         </div>
       </div>
+
+      {bannerInstalar && (
+        <div style={{background:'white', borderRadius:20, padding:'16px 18px', marginBottom:16, display:'flex', alignItems:'flex-start', gap:12, boxShadow:'0 4px 20px rgba(0,0,0,0.06)'}}>
+          <span style={{fontSize:22, flexShrink:0}}>📲</span>
+          <div style={{flex:1}}>
+            <div style={{fontSize:14, fontWeight:700, color:'#0e0e0e', marginBottom:4}}>Guardá tu tarjeta</div>
+            {esIOS ? (
+              <p style={{margin:0, fontSize:13, color:'#555', lineHeight:1.5}}>
+                Tocá el ícono <strong>Compartir</strong> (□↑) en la barra de Safari y elegí <strong>"Agregar a pantalla de inicio"</strong>.
+              </p>
+            ) : (
+              <p style={{margin:0, fontSize:13, color:'#555', lineHeight:1.5}}>
+                Tocá los <strong>⋮ tres puntos</strong> del navegador y elegí <strong>"Agregar a pantalla de inicio"</strong>.
+              </p>
+            )}
+          </div>
+          <button style={{background:'none', border:'none', color:'#bbb', fontSize:18, cursor:'pointer', padding:'0 0 0 4px', lineHeight:1, flexShrink:0}}
+            onClick={() => { localStorage.setItem('fielty_banner_instalar_ok', '1'); setBannerInstalar(false) }}>
+            ✕
+          </button>
+        </div>
+      )}
 
       <div style={st.section}>
         <div style={st.sectionTitle}>Tus recompensas</div>
