@@ -23,6 +23,12 @@ export default function CajaSlugSucursal({ params }) {
   const [pinVerificado, setPinVerificado] = useState('')
   const [qrModal, setQrModal] = useState(false)
   const [qrDataUrl, setQrDataUrl] = useState('')
+  const [regModal, setRegModal] = useState(false)
+  const [regNombre, setRegNombre] = useState('')
+  const [regDni, setRegDni] = useState('')
+  const [regMonto, setRegMonto] = useState('')
+  const [regCargando, setRegCargando] = useState(false)
+  const [regError, setRegError] = useState('')
 
   useEffect(() => {
     params.then(p => { setSlugNegocio(p.slug); setSlugSucursal(p.sucursal) })
@@ -141,6 +147,32 @@ export default function CajaSlugSucursal({ params }) {
     return { nombre:'Bronce', emoji:'🥉' }
   }
 
+  function abrirRegModal() {
+    setRegNombre(''); setRegDni(''); setRegMonto(''); setRegError('')
+    setRegModal(true)
+  }
+
+  async function registrarCliente() {
+    if (!regNombre.trim()) { setRegError('Ingresá el nombre'); return }
+    if (!regDni.trim()) { setRegError('Ingresá el DNI'); return }
+    setRegError('')
+    setRegCargando(true)
+    const res = await fetch('/api/caja/registrar-cliente', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ negocioId: negocio.id, nombre: regNombre.trim(), dni: regDni.trim(), monto: regMonto ? parseInt(regMonto) : null, pin: pinVerificado }),
+    })
+    const data = await res.json()
+    setRegCargando(false)
+    if (!res.ok) { setRegError(data.error || 'Error al registrar'); return }
+    setRegModal(false)
+    const partes = [`✅ ${data.cliente.nombre} registrado`]
+    if (data.puntosBienvenida) partes.push(`${data.puntosBienvenida} pts bienvenida`)
+    if (data.ptsConsumo) partes.push(`+${data.ptsConsumo} pts consumo`)
+    mostrarMensaje(partes.join(' · '), 'success')
+    seleccionarCliente({ ...data.cliente, negocio: { pesos_por_punto: negocio.pesos_por_punto, puntos_por_tramo: negocio.puntos_por_tramo, color: negocio.color, nombre: negocio.nombre } })
+  }
+
   async function abrirQrModal() {
     if (!qrDataUrl) {
       const url = `${window.location.origin}/mi-tarjeta`
@@ -176,6 +208,45 @@ export default function CajaSlugSucursal({ params }) {
     </div>
   )
 
+  const regModalJsx = regModal && (
+    <div onClick={() => setRegModal(false)} style={{position:'fixed', inset:0, background:'rgba(0,0,0,0.88)', display:'flex', alignItems:'center', justifyContent:'center', zIndex:9999, padding:24}}>
+      <div onClick={e => e.stopPropagation()} style={{background:'#111', border:'1px solid #2a2a2a', borderRadius:24, padding:'28px 24px', maxWidth:360, width:'100%'}}>
+        <div style={{fontSize:17, fontWeight:800, color:'white', marginBottom:4}}>Registrar nuevo cliente</div>
+        <div style={{fontSize:13, color:'#666', marginBottom:20}}>La contraseña inicial será su DNI.</div>
+
+        <div style={{marginBottom:12}}>
+          <div style={{fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.08em', color:'#555', marginBottom:6}}>Nombre y apellido</div>
+          <input style={{width:'100%', padding:'12px 14px', background:'#1a1a1a', border:'1px solid #2a2a2a', borderRadius:12, color:'white', fontSize:15, fontFamily:'inherit', outline:'none', boxSizing:'border-box'}}
+            placeholder="Ej: María García" value={regNombre} onChange={e => setRegNombre(e.target.value)} autoFocus />
+        </div>
+        <div style={{marginBottom:12}}>
+          <div style={{fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.08em', color:'#555', marginBottom:6}}>DNI</div>
+          <input style={{width:'100%', padding:'12px 14px', background:'#1a1a1a', border:'1px solid #2a2a2a', borderRadius:12, color:'white', fontSize:15, fontFamily:'monospace', outline:'none', boxSizing:'border-box'}}
+            placeholder="Ej: 38452100" inputMode="numeric" value={regDni} onChange={e => setRegDni(e.target.value.replace(/\D/g, ''))} />
+        </div>
+        <div style={{marginBottom:16}}>
+          <div style={{fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.08em', color:'#555', marginBottom:6}}>Consumo de hoy <span style={{color:'#444', fontWeight:400, textTransform:'none'}}>(opcional)</span></div>
+          <div style={{display:'flex', alignItems:'center', gap:8, background:'#1a1a1a', border:'1px solid #2a2a2a', borderRadius:12, padding:'12px 14px'}}>
+            <span style={{color:'#555'}}>$</span>
+            <input style={{flex:1, background:'transparent', border:'none', outline:'none', color:'white', fontSize:15, fontFamily:'monospace'}}
+              placeholder="0" inputMode="numeric" value={regMonto ? Number(regMonto).toLocaleString('es-AR') : ''} onChange={e => setRegMonto(e.target.value.replace(/\D/g, ''))} />
+          </div>
+        </div>
+
+        {regError && <div style={{background:'rgba(224,0,27,0.12)', color:'#e0001b', padding:'10px 14px', borderRadius:10, fontSize:13, marginBottom:12}}>{regError}</div>}
+
+        <div style={{display:'flex', gap:10}}>
+          <button onClick={() => setRegModal(false)} style={{flex:1, padding:14, background:'#1a1a1a', border:'1px solid #2a2a2a', borderRadius:12, color:'#666', fontSize:14, fontWeight:700, cursor:'pointer', fontFamily:'inherit'}}>
+            Cancelar
+          </button>
+          <button onClick={registrarCliente} disabled={regCargando} style={{flex:2, padding:14, background: negocio.color, border:'none', borderRadius:12, color:'white', fontSize:14, fontWeight:800, cursor:'pointer', fontFamily:'inherit'}}>
+            {regCargando ? 'Registrando...' : 'Registrar cliente'}
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+
   const qrModalJsx = qrModal && (
     <div onClick={() => setQrModal(false)} style={{position:'fixed', inset:0, background:'rgba(0,0,0,0.88)', display:'flex', alignItems:'center', justifyContent:'center', zIndex:9999, padding:24}}>
       <div onClick={e => e.stopPropagation()} style={{background:'white', borderRadius:24, padding:'32px 28px', maxWidth:340, width:'100%', textAlign:'center'}}>
@@ -191,6 +262,7 @@ export default function CajaSlugSucursal({ params }) {
   // ===== DESKTOP =====
   if (!isMobile) return (
     <div style={{minHeight:'100vh', background:'#0e0e0e', color:'white', display:'flex', flexDirection:'column'}}>
+      {regModalJsx}
       {qrModalJsx}
       {mensaje && <div style={s.toast(mensaje.tipo)}>{mensaje.texto}</div>}
       <div style={{display:'flex', alignItems:'center', justifyContent:'space-between', padding:'16px 28px', borderBottom:'1px solid #1e1e1e'}}>
@@ -248,6 +320,10 @@ export default function CajaSlugSucursal({ params }) {
             <button style={{width:'100%', padding:14, background:'#1a1a1a', border:'1px solid #2a2a2a', borderRadius:14, color:'#aaa', fontSize:14, fontWeight:600, cursor:'pointer', fontFamily:'inherit'}}
               onClick={abrirQrModal}>
               📱 Mostrar QR al cliente
+            </button>
+            <button style={{width:'100%', padding:14, background:'#1a1a1a', border:'1px solid #2a2a2a', borderRadius:14, color:'#aaa', fontSize:14, fontWeight:600, cursor:'pointer', fontFamily:'inherit'}}
+              onClick={abrirRegModal}>
+              ➕ Registrar cliente nuevo
             </button>
           </div>
         </div>
@@ -332,6 +408,7 @@ export default function CajaSlugSucursal({ params }) {
   // ===== MOBILE =====
   if (pantalla === 'buscar') return (
     <div style={s.mobileWrap}>
+      {regModalJsx}
       {qrModalJsx}
       {mensaje && <div style={s.toast(mensaje.tipo)}>{mensaje.texto}</div>}
       <div style={s.mobileTopbar}>
@@ -376,8 +453,10 @@ export default function CajaSlugSucursal({ params }) {
             <div style={s.mobileLabel}>Accesos rápidos</div>
             <button style={{width:'100%', padding:16, background:'#1a1a1a', border:'1px solid #2a2a2a', borderRadius:14, color:'white', fontSize:15, fontWeight:700, cursor:'pointer', fontFamily:'inherit', textAlign:'left', marginBottom:10}}
               onClick={() => setPantalla('validar')}>🎁 Validar canje de recompensa</button>
-            <button style={{width:'100%', padding:16, background:'#1a1a1a', border:'1px solid #2a2a2a', borderRadius:14, color:'#aaa', fontSize:15, fontWeight:600, cursor:'pointer', fontFamily:'inherit', textAlign:'left'}}
+            <button style={{width:'100%', padding:16, background:'#1a1a1a', border:'1px solid #2a2a2a', borderRadius:14, color:'#aaa', fontSize:15, fontWeight:600, cursor:'pointer', fontFamily:'inherit', textAlign:'left', marginBottom:10}}
               onClick={abrirQrModal}>📱 Mostrar QR al cliente</button>
+            <button style={{width:'100%', padding:16, background:'#1a1a1a', border:'1px solid #2a2a2a', borderRadius:14, color:'#aaa', fontSize:15, fontWeight:600, cursor:'pointer', fontFamily:'inherit', textAlign:'left'}}
+              onClick={abrirRegModal}>➕ Registrar cliente nuevo</button>
           </div>
         )}
       </div>

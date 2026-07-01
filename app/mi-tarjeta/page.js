@@ -33,6 +33,12 @@ export default function MiTarjeta() {
 
     if (!res.ok) { setError(data.error); return }
 
+    if (data.debe_cambiar_password) {
+      sessionStorage.setItem('fielty_cambio_pwd', JSON.stringify({ dni, clienteId: data.clienteId }))
+      window.location.href = '/mi-tarjeta/nueva-password'
+      return
+    }
+
     if (data.tarjetas.length === 1) {
       window.location.href = `/tarjeta/${data.tarjetas[0].id}`
     } else {

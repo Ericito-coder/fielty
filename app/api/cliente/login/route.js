@@ -21,7 +21,7 @@ export async function POST(request) {
 
     const { data: clientes } = await supabaseAdmin
       .from('clientes')
-      .select('id, nombre, negocio_id, password_hash, negocio:negocios(nombre, color)')
+      .select('id, nombre, negocio_id, password_hash, debe_cambiar_password, negocio:negocios(nombre, color)')
       .eq('dni', dni)
 
     if (!clientes || clientes.length === 0) {
@@ -47,7 +47,7 @@ export async function POST(request) {
       nombre: c.nombre,
     }))
 
-    return NextResponse.json({ ok: true, tarjetas })
+    return NextResponse.json({ ok: true, tarjetas, debe_cambiar_password: conHash.debe_cambiar_password || false, clienteId: conHash.id })
   } catch (error) {
     console.error('login cliente error:', error)
     return NextResponse.json({ error: 'Error interno' }, { status: 500 })
