@@ -1,6 +1,7 @@
 'use client'
 import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
+import QRCode from 'qrcode'
 
 export default function CajaSlug({ params }) {
   const [slug, setSlug] = useState(null)
@@ -18,6 +19,8 @@ export default function CajaSlug({ params }) {
   const [mensaje, setMensaje] = useState(null)
   const [tabDesktop, setTabDesktop] = useState('puntos')
   const [pinVerificado, setPinVerificado] = useState('')
+  const [qrModal, setQrModal] = useState(false)
+  const [qrDataUrl, setQrDataUrl] = useState('')
 
   useEffect(() => {
     params.then(p => setSlug(p.slug))
@@ -134,6 +137,15 @@ export default function CajaSlug({ params }) {
     return { nombre:'Bronce', emoji:'🥉' }
   }
 
+  async function abrirQrModal() {
+    if (!qrDataUrl) {
+      const url = `${window.location.origin}/mi-tarjeta`
+      const data = await QRCode.toDataURL(url, { width: 300, margin: 2, color: { dark: '#0e0e0e', light: '#ffffff' } })
+      setQrDataUrl(data)
+    }
+    setQrModal(true)
+  }
+
   if (isMobile === null || !negocio) return <div style={{minHeight:'100vh', background:'#0e0e0e'}} />
 
   // ===== PIN (igual para todos) =====
@@ -160,9 +172,22 @@ export default function CajaSlug({ params }) {
     </div>
   )
 
+  const qrModalJsx = qrModal && (
+    <div onClick={() => setQrModal(false)} style={{position:'fixed', inset:0, background:'rgba(0,0,0,0.88)', display:'flex', alignItems:'center', justifyContent:'center', zIndex:9999, padding:24}}>
+      <div onClick={e => e.stopPropagation()} style={{background:'white', borderRadius:24, padding:'32px 28px', maxWidth:340, width:'100%', textAlign:'center'}}>
+        <div style={{fontSize:18, fontWeight:800, color:'#0e0e0e', marginBottom:4}}>Tarjeta de clientes</div>
+        <div style={{fontSize:13, color:'#888', marginBottom:24, lineHeight:1.5}}>Mostrá este QR al cliente para que acceda a su tarjeta de puntos</div>
+        {qrDataUrl && <img src={qrDataUrl} style={{width:220, height:220}} alt="QR mi tarjeta" />}
+        <div style={{fontSize:12, color:'#bbb', marginTop:12, marginBottom:20, fontFamily:'monospace'}}>{typeof window !== 'undefined' ? window.location.origin : ''}/mi-tarjeta</div>
+        <button onClick={() => setQrModal(false)} style={{padding:'12px 32px', background:'#0e0e0e', border:'none', borderRadius:12, color:'white', fontSize:15, fontWeight:700, cursor:'pointer', fontFamily:'inherit'}}>Cerrar</button>
+      </div>
+    </div>
+  )
+
   // ===== DESKTOP LAYOUT =====
   if (!isMobile) return (
     <div style={{minHeight:'100vh', background:'#0e0e0e', color:'white', display:'flex', flexDirection:'column'}}>
+      {qrModalJsx}
       {mensaje && <div style={s.toast(mensaje.tipo)}>{mensaje.texto}</div>}
 
       {/* TOPBAR */}
@@ -219,11 +244,15 @@ export default function CajaSlug({ params }) {
             )}
           </div>
 
-          {/* Botón validar canje */}
-          <div style={{padding:16, borderTop:'1px solid #1e1e1e'}}>
+          {/* Botones fondo panel izquierdo */}
+          <div style={{padding:16, borderTop:'1px solid #1e1e1e', display:'flex', flexDirection:'column', gap:8}}>
             <button style={{width:'100%', padding:14, background:'#1a1a1a', border:'1px solid #2a2a2a', borderRadius:14, color:'white', fontSize:14, fontWeight:700, cursor:'pointer', fontFamily:'inherit'}}
               onClick={() => { setClienteSeleccionado(null); setTabDesktop('canje') }}>
               🎁 Validar canje de recompensa
+            </button>
+            <button style={{width:'100%', padding:14, background:'#1a1a1a', border:'1px solid #2a2a2a', borderRadius:14, color:'#aaa', fontSize:14, fontWeight:600, cursor:'pointer', fontFamily:'inherit'}}
+              onClick={abrirQrModal}>
+              📱 Mostrar QR al cliente
             </button>
           </div>
         </div>
@@ -316,6 +345,7 @@ export default function CajaSlug({ params }) {
   // ===== MOBILE LAYOUT =====
   if (pantalla === 'buscar') return (
     <div style={s.mobileWrap}>
+      {qrModalJsx}
       {mensaje && <div style={s.toast(mensaje.tipo)}>{mensaje.texto}</div>}
       <div style={s.mobileTopbar}>
         <div style={{display:'flex', alignItems:'center', gap:10, flex:1}}>
@@ -359,6 +389,8 @@ export default function CajaSlug({ params }) {
             <div style={s.mobileLabel}>Accesos rápidos</div>
             <button style={{width:'100%', padding:16, background:'#1a1a1a', border:'1px solid #2a2a2a', borderRadius:14, color:'white', fontSize:15, fontWeight:700, cursor:'pointer', fontFamily:'inherit', textAlign:'left', marginBottom:10}}
               onClick={() => setPantalla('validar')}>🎁 Validar canje de recompensa</button>
+            <button style={{width:'100%', padding:16, background:'#1a1a1a', border:'1px solid #2a2a2a', borderRadius:14, color:'#aaa', fontSize:15, fontWeight:600, cursor:'pointer', fontFamily:'inherit', textAlign:'left', marginBottom:10}}
+              onClick={abrirQrModal}>📱 Mostrar QR al cliente</button>
             <TarjetaClienteInfo />
           </div>
         )}
