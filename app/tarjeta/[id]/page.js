@@ -12,6 +12,8 @@ export default function Tarjeta({ params }) {
   const [segundos, setSegundos] = useState(86399)
   const [bannerInstalar, setBannerInstalar] = useState(false)
   const [esIOS, setEsIOS] = useState(false)
+  const [deferredPrompt, setDeferredPrompt] = useState(null)
+  const [modalIOSAbierto, setModalIOSAbierto] = useState(false)
 
   useEffect(() => { params.then(p => setId(p.id)) }, [params])
   useEffect(() => { if (!id) return; cargarDatos() }, [id])
@@ -20,8 +22,14 @@ export default function Tarjeta({ params }) {
     const yaInstalada = window.navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches
     if (yaInstalada) return
     if (localStorage.getItem('fielty_banner_instalar_ok')) return
-    setEsIOS(/iPad|iPhone|iPod/.test(navigator.userAgent))
+    const ios = /iPad|iPhone|iPod/.test(navigator.userAgent)
+    setEsIOS(ios)
     setBannerInstalar(true)
+    if (!ios) {
+      const handler = (e) => { e.preventDefault(); setDeferredPrompt(e) }
+      window.addEventListener('beforeinstallprompt', handler)
+      return () => window.removeEventListener('beforeinstallprompt', handler)
+    }
   }, [])
 
   useEffect(() => {
@@ -202,24 +210,53 @@ export default function Tarjeta({ params }) {
       </div>
 
       {bannerInstalar && (
-        <div style={{background:'white', borderRadius:20, padding:'16px 18px', marginBottom:16, display:'flex', alignItems:'flex-start', gap:12, boxShadow:'0 4px 20px rgba(0,0,0,0.06)'}}>
+        <div style={{background:'white', borderRadius:20, padding:'16px 18px', marginBottom:16, display:'flex', alignItems:'center', gap:12, boxShadow:'0 4px 20px rgba(0,0,0,0.06)'}}>
           <span style={{fontSize:22, flexShrink:0}}>📲</span>
           <div style={{flex:1}}>
-            <div style={{fontSize:14, fontWeight:700, color:'#0e0e0e', marginBottom:4}}>Guardá tu tarjeta</div>
-            {esIOS ? (
-              <p style={{margin:0, fontSize:13, color:'#555', lineHeight:1.5}}>
-                Tocá los <strong>⋯ tres puntos</strong> en Safari → <strong>Compartir</strong> → <strong>Ver más</strong> → <strong>"Agregar a inicio"</strong>.
-              </p>
-            ) : (
-              <p style={{margin:0, fontSize:13, color:'#555', lineHeight:1.5}}>
-                Tocá los <strong>⋮ tres puntos</strong> del navegador y elegí <strong>"Agregar a pantalla de inicio"</strong>.
-              </p>
-            )}
+            <div style={{fontSize:14, fontWeight:700, color:'#0e0e0e', marginBottom:2}}>Guardá tu tarjeta</div>
+            <div style={{fontSize:12, color:'#888'}}>Accedé sin buscarla cada vez</div>
           </div>
-          <button style={{background:'none', border:'none', color:'#bbb', fontSize:18, cursor:'pointer', padding:'0 0 0 4px', lineHeight:1, flexShrink:0}}
+          {esIOS ? (
+            <button style={{padding:'8px 14px', background:'#0e0e0e', border:'none', borderRadius:10, color:'white', fontSize:13, fontWeight:700, cursor:'pointer', fontFamily:'inherit', flexShrink:0}}
+              onClick={() => setModalIOSAbierto(true)}>
+              Cómo hacerlo
+            </button>
+          ) : deferredPrompt ? (
+            <button style={{padding:'8px 14px', background:'#0e0e0e', border:'none', borderRadius:10, color:'white', fontSize:13, fontWeight:700, cursor:'pointer', fontFamily:'inherit', flexShrink:0}}
+              onClick={async () => { deferredPrompt.prompt(); const { outcome } = await deferredPrompt.userChoice; if (outcome === 'accepted') { localStorage.setItem('fielty_banner_instalar_ok', '1'); setBannerInstalar(false) } }}>
+              Instalar
+            </button>
+          ) : null}
+          <button style={{background:'none', border:'none', color:'#ccc', fontSize:16, cursor:'pointer', padding:4, flexShrink:0}}
             onClick={() => { localStorage.setItem('fielty_banner_instalar_ok', '1'); setBannerInstalar(false) }}>
             ✕
           </button>
+        </div>
+      )}
+
+      {/* MODAL IOS */}
+      {modalIOSAbierto && (
+        <div style={{position:'fixed', inset:0, zIndex:200, display:'flex', flexDirection:'column', justifyContent:'flex-end'}} onClick={() => setModalIOSAbierto(false)}>
+          <div style={{background:'white', borderRadius:'24px 24px 0 0', padding:'28px 24px 40px', boxShadow:'0 -8px 40px rgba(0,0,0,0.15)'}} onClick={e => e.stopPropagation()}>
+            <div style={{width:40, height:4, background:'#e0e0e0', borderRadius:2, margin:'0 auto 24px'}} />
+            <div style={{fontSize:18, fontWeight:800, color:'#0e0e0e', marginBottom:6}}>Agregar a pantalla de inicio</div>
+            <div style={{fontSize:13, color:'#888', marginBottom:24}}>Seguí estos pasos en Safari para tener tu tarjeta como una app:</div>
+            {[
+              { n:1, texto: <>Tocá los <strong>⋯ tres puntos</strong> arriba a la derecha en Safari</> },
+              { n:2, texto: <>Tocá <strong>Compartir</strong></> },
+              { n:3, texto: <>Deslizá y tocá <strong>Ver más</strong></> },
+              { n:4, texto: <>Tocá <strong>"Agregar a pantalla de inicio"</strong> y confirmá</> },
+            ].map(({ n, texto }) => (
+              <div key={n} style={{display:'flex', alignItems:'flex-start', gap:14, marginBottom:18}}>
+                <div style={{width:28, height:28, borderRadius:'50%', background:'#0e0e0e', color:'white', display:'flex', alignItems:'center', justifyContent:'center', fontSize:13, fontWeight:800, flexShrink:0}}>{n}</div>
+                <div style={{fontSize:14, color:'#333', lineHeight:1.5, paddingTop:4}}>{texto}</div>
+              </div>
+            ))}
+            <button style={{width:'100%', padding:16, background:'#0e0e0e', border:'none', borderRadius:14, color:'white', fontSize:15, fontWeight:800, cursor:'pointer', fontFamily:'inherit', marginTop:8}}
+              onClick={() => { setModalIOSAbierto(false); localStorage.setItem('fielty_banner_instalar_ok', '1'); setBannerInstalar(false) }}>
+              Entendido
+            </button>
+          </div>
         </div>
       )}
 
