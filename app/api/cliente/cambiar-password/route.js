@@ -9,7 +9,7 @@ const supabaseAdmin = createClient(
 
 export async function POST(request) {
   try {
-    const { clienteId, dni, nuevaPassword } = await request.json()
+    const { clienteId, dni, nuevaPassword, email } = await request.json()
 
     if (!clienteId || !dni || !nuevaPassword) {
       return NextResponse.json({ error: 'Faltan datos' }, { status: 400 })
@@ -29,9 +29,12 @@ export async function POST(request) {
 
     // Actualizar contraseña en todos los registros del mismo DNI (puede estar en varios negocios)
     const nuevoHash = await bcrypt.hash(nuevaPassword, 10)
+    const update = { password_hash: nuevoHash, debe_cambiar_password: false }
+    if (email) update.email = email
+
     await supabaseAdmin
       .from('clientes')
-      .update({ password_hash: nuevoHash, debe_cambiar_password: false })
+      .update(update)
       .eq('dni', cliente.dni)
 
     return NextResponse.json({ ok: true })

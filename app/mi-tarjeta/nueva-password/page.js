@@ -6,6 +6,7 @@ export default function NuevaPassword() {
   const [dni, setDni] = useState(null)
   const [password, setPassword] = useState('')
   const [confirmar, setConfirmar] = useState('')
+  const [email, setEmail] = useState('')
   const [error, setError] = useState('')
   const [cargando, setCargando] = useState(false)
 
@@ -32,7 +33,7 @@ export default function NuevaPassword() {
     const res = await fetch('/api/cliente/cambiar-password', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ clienteId, dni, nuevaPassword: password }),
+      body: JSON.stringify({ clienteId, dni, nuevaPassword: password, email: email || undefined }),
     })
     const data = await res.json()
     setCargando(false)
@@ -49,8 +50,14 @@ export default function NuevaPassword() {
     <div style={s.wrap}>
       <div style={s.card}>
         <div style={s.logo}><div style={s.logoDot} /><span style={s.logoText}>fielty</span></div>
-        <h1 style={s.title}>Elegí tu contraseña</h1>
-        <p style={s.sub}>Es la primera vez que ingresás. Por seguridad, elegí una contraseña personal.</p>
+        <h1 style={s.title}>Completá tu cuenta</h1>
+        <p style={s.sub}>Es la primera vez que ingresás. Elegí una contraseña y, si querés, agregá tu email para recibir notificaciones de puntos.</p>
+
+        <div style={s.field}>
+          <label style={s.label}>Email <span style={{color:'#bbb', fontWeight:400, textTransform:'none', letterSpacing:0}}>(opcional)</span></label>
+          <input style={s.input} type="email" placeholder="tu@email.com"
+            value={email} onChange={e => setEmail(e.target.value)} autoFocus />
+        </div>
 
         <div style={s.field}>
           <label style={s.label}>Nueva contraseña</label>
