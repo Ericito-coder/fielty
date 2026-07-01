@@ -95,7 +95,7 @@ export default function RegistroSlug({ params }) {
             <p style={{margin:0, fontSize:13, color:'#555', lineHeight:1.5}}>
               <strong style={{color:'#0e0e0e'}}>Guardá tu tarjeta a mano: </strong>
               {esIOS
-                ? <>tocá el ícono <strong>Compartir</strong> (□↑) en Safari y elegí <strong>"Agregar a pantalla de inicio"</strong>.</>
+                ? <>tocá los <strong>⋯ tres puntos</strong> en Safari → <strong>Compartir</strong> → <strong>Ver más</strong> → <strong>"Agregar a inicio"</strong>.</>
                 : <>tocá los <strong>⋮ tres puntos</strong> del navegador y elegí <strong>"Agregar a pantalla de inicio"</strong>.</>
               }
             </p>

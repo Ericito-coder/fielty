@@ -208,7 +208,7 @@ export default function Tarjeta({ params }) {
             <div style={{fontSize:14, fontWeight:700, color:'#0e0e0e', marginBottom:4}}>Guardá tu tarjeta</div>
             {esIOS ? (
               <p style={{margin:0, fontSize:13, color:'#555', lineHeight:1.5}}>
-                Tocá el ícono <strong>Compartir</strong> (□↑) en la barra de Safari y elegí <strong>"Agregar a pantalla de inicio"</strong>.
+                Tocá los <strong>⋯ tres puntos</strong> en Safari → <strong>Compartir</strong> → <strong>Ver más</strong> → <strong>"Agregar a inicio"</strong>.
               </p>
             ) : (
               <p style={{margin:0, fontSize:13, color:'#555', lineHeight:1.5}}>
