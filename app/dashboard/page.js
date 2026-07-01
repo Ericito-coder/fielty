@@ -360,6 +360,16 @@ function InicioSection({ negocio, metricas, isDesktop }) {
                 <button style={{...s.btnRed, padding:10, fontSize:13, flex:1, background:'#0e0e0e'}} onClick={() => window.open(`/qr/${negocio.slug}`, '_blank')}>🖨️ Ver QR</button>
               </div>
             </div>
+            <div style={{marginBottom:16}}>
+              <div style={{fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.06em', color:'#888', marginBottom:6}}>Ver tarjeta (clientes registrados)</div>
+              <div style={{background:'#f0f2f7', borderRadius:10, padding:'10px 14px', fontSize:12, fontFamily:'monospace', color:'#0e0e0e', wordBreak:'break-all', marginBottom:8}}>
+                {typeof window !== 'undefined' ? window.location.origin : ''}/mi-tarjeta
+              </div>
+              <div style={{display:'flex', gap:8}}>
+                <button style={{...s.btnRed, padding:10, fontSize:13, flex:1}} onClick={() => navigator.clipboard.writeText(`${window.location.origin}/mi-tarjeta`)}>📋 Copiar link</button>
+                <button style={{...s.btnRed, padding:10, fontSize:13, flex:1, background:'#0e0e0e'}} onClick={() => window.open('/qr/mi-tarjeta', '_blank')}>🖨️ Ver QR</button>
+              </div>
+            </div>
             <div>
               <div style={{fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.06em', color:'#888', marginBottom:6}}>Caja (sin sucursal)</div>
               <div style={{background:'#f0f2f7', borderRadius:10, padding:'10px 14px', fontSize:12, fontFamily:'monospace', color:'#0e0e0e', wordBreak:'break-all', marginBottom:8}}>
