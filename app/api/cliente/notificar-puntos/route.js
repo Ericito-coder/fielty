@@ -52,7 +52,7 @@ export async function POST(request) {
             Ahora tenés <strong>${totalPuntos} puntos</strong> en total.
           </p>
 
-          <a href="${appUrl}/mi-tarjeta" style="display: inline-block; background: #e0001b; color: white; padding: 14px 28px; border-radius: 12px; font-size: 15px; font-weight: 800; text-decoration: none; margin-bottom: 40px;">
+          <a href="${appUrl}/tarjeta/${clienteId}" style="display: inline-block; background: #e0001b; color: white; padding: 14px 28px; border-radius: 12px; font-size: 15px; font-weight: 800; text-decoration: none; margin-bottom: 40px;">
             Ver mi tarjeta →
           </a>
 
