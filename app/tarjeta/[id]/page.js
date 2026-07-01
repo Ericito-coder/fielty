@@ -21,7 +21,6 @@ export default function Tarjeta({ params }) {
   useEffect(() => {
     const yaInstalada = window.navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches
     if (yaInstalada) return
-    if (localStorage.getItem('fielty_banner_instalar_ok')) return
     const ios = /iPad|iPhone|iPod/.test(navigator.userAgent)
     setEsIOS(ios)
     setBannerInstalar(true)
@@ -223,12 +222,12 @@ export default function Tarjeta({ params }) {
             </button>
           ) : deferredPrompt ? (
             <button style={{padding:'8px 14px', background:'#0e0e0e', border:'none', borderRadius:10, color:'white', fontSize:13, fontWeight:700, cursor:'pointer', fontFamily:'inherit', flexShrink:0}}
-              onClick={async () => { deferredPrompt.prompt(); const { outcome } = await deferredPrompt.userChoice; if (outcome === 'accepted') { localStorage.setItem('fielty_banner_instalar_ok', '1'); setBannerInstalar(false) } }}>
+              onClick={async () => { deferredPrompt.prompt(); const { outcome } = await deferredPrompt.userChoice; if (outcome === 'accepted') setBannerInstalar(false) }}>
               Instalar
             </button>
           ) : null}
           <button style={{background:'none', border:'none', color:'#ccc', fontSize:16, cursor:'pointer', padding:4, flexShrink:0}}
-            onClick={() => { localStorage.setItem('fielty_banner_instalar_ok', '1'); setBannerInstalar(false) }}>
+            onClick={() => setBannerInstalar(false)}>
             ✕
           </button>
         </div>
@@ -253,7 +252,7 @@ export default function Tarjeta({ params }) {
               </div>
             ))}
             <button style={{width:'100%', padding:16, background:'#0e0e0e', border:'none', borderRadius:14, color:'white', fontSize:15, fontWeight:800, cursor:'pointer', fontFamily:'inherit', marginTop:8}}
-              onClick={() => { setModalIOSAbierto(false); localStorage.setItem('fielty_banner_instalar_ok', '1'); setBannerInstalar(false) }}>
+              onClick={() => setModalIOSAbierto(false)}>
               Entendido
             </button>
           </div>
