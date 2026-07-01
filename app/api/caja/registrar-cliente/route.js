@@ -9,7 +9,7 @@ const supabaseAdmin = createClient(
 
 export async function POST(request) {
   try {
-    const { negocioId, nombre, dni, email, monto, pin } = await request.json()
+    const { negocioId, nombre, dni, email, telefono, monto, pin } = await request.json()
 
     if (!negocioId || !nombre || !dni || !pin) {
       return NextResponse.json({ error: 'Faltan datos obligatorios' }, { status: 400 })
@@ -57,6 +57,7 @@ export async function POST(request) {
         nombre,
         dni: String(dni),
         email: email || null,
+        telefono: telefono || null,
         negocio_id: negocioId,
         puntos: puntosIniciales,
         puntos_historicos: puntosIniciales,

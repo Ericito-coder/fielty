@@ -25,6 +25,7 @@ export default function CajaSlug({ params }) {
   const [regNombre, setRegNombre] = useState('')
   const [regDni, setRegDni] = useState('')
   const [regEmail, setRegEmail] = useState('')
+  const [regTelefono, setRegTelefono] = useState('')
   const [regMonto, setRegMonto] = useState('')
   const [regCargando, setRegCargando] = useState(false)
   const [regError, setRegError] = useState('')
@@ -145,7 +146,7 @@ export default function CajaSlug({ params }) {
   }
 
   function abrirRegModal() {
-    setRegNombre(''); setRegDni(''); setRegEmail(''); setRegMonto(''); setRegError('')
+    setRegNombre(''); setRegDni(''); setRegEmail(''); setRegTelefono(''); setRegMonto(''); setRegError('')
     setRegModal(true)
   }
 
@@ -157,7 +158,7 @@ export default function CajaSlug({ params }) {
     const res = await fetch('/api/caja/registrar-cliente', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ negocioId: negocio.id, nombre: regNombre.trim(), dni: regDni.trim(), email: regEmail.trim() || null, monto: regMonto ? parseInt(regMonto) : null, pin: pinVerificado }),
+      body: JSON.stringify({ negocioId: negocio.id, nombre: regNombre.trim(), dni: regDni.trim(), email: regEmail.trim() || null, telefono: regTelefono.trim() || null, monto: regMonto ? parseInt(regMonto) : null, pin: pinVerificado }),
     })
     const data = await res.json()
     setRegCargando(false)
@@ -225,6 +226,11 @@ export default function CajaSlug({ params }) {
           <div style={{fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.08em', color:'#555', marginBottom:6}}>Email <span style={{color:'#444', fontWeight:400, textTransform:'none'}}>(opcional)</span></div>
           <input style={{width:'100%', padding:'12px 14px', background:'#1a1a1a', border:'1px solid #2a2a2a', borderRadius:12, color:'white', fontSize:15, fontFamily:'inherit', outline:'none', boxSizing:'border-box'}}
             placeholder="cliente@email.com" type="email" value={regEmail} onChange={e => setRegEmail(e.target.value)} />
+        </div>
+        <div style={{marginBottom:12}}>
+          <div style={{fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.08em', color:'#555', marginBottom:6}}>Teléfono <span style={{color:'#444', fontWeight:400, textTransform:'none'}}>(opcional)</span></div>
+          <input style={{width:'100%', padding:'12px 14px', background:'#1a1a1a', border:'1px solid #2a2a2a', borderRadius:12, color:'white', fontSize:15, fontFamily:'monospace', outline:'none', boxSizing:'border-box'}}
+            placeholder="Ej: 1134567890" inputMode="numeric" value={regTelefono} onChange={e => setRegTelefono(e.target.value.replace(/\D/g, ''))} />
         </div>
         <div style={{marginBottom:16}}>
           <div style={{fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.08em', color:'#555', marginBottom:6}}>Consumo de hoy <span style={{color:'#444', fontWeight:400, textTransform:'none'}}>(opcional)</span></div>

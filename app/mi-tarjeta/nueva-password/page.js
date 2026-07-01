@@ -7,6 +7,7 @@ export default function NuevaPassword() {
   const [password, setPassword] = useState('')
   const [confirmar, setConfirmar] = useState('')
   const [email, setEmail] = useState('')
+  const [telefono, setTelefono] = useState('')
   const [error, setError] = useState('')
   const [cargando, setCargando] = useState(false)
 
@@ -33,7 +34,7 @@ export default function NuevaPassword() {
     const res = await fetch('/api/cliente/cambiar-password', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ clienteId, dni, nuevaPassword: password, email: email || undefined }),
+      body: JSON.stringify({ clienteId, dni, nuevaPassword: password, email: email || undefined, telefono: telefono || undefined }),
     })
     const data = await res.json()
     setCargando(false)
@@ -57,6 +58,11 @@ export default function NuevaPassword() {
           <label style={s.label}>Email <span style={{color:'#bbb', fontWeight:400, textTransform:'none', letterSpacing:0}}>(opcional)</span></label>
           <input style={s.input} type="email" placeholder="tu@email.com"
             value={email} onChange={e => setEmail(e.target.value)} autoFocus />
+        </div>
+        <div style={s.field}>
+          <label style={s.label}>Teléfono <span style={{color:'#bbb', fontWeight:400, textTransform:'none', letterSpacing:0}}>(opcional)</span></label>
+          <input style={s.input} type="tel" inputMode="numeric" placeholder="Ej: 1134567890"
+            value={telefono} onChange={e => setTelefono(e.target.value.replace(/\D/g, ''))} />
         </div>
 
         <div style={s.field}>

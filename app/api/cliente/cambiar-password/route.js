@@ -9,7 +9,7 @@ const supabaseAdmin = createClient(
 
 export async function POST(request) {
   try {
-    const { clienteId, dni, nuevaPassword, email } = await request.json()
+    const { clienteId, dni, nuevaPassword, email, telefono } = await request.json()
 
     if (!clienteId || !dni || !nuevaPassword) {
       return NextResponse.json({ error: 'Faltan datos' }, { status: 400 })
@@ -31,6 +31,7 @@ export async function POST(request) {
     const nuevoHash = await bcrypt.hash(nuevaPassword, 10)
     const update = { password_hash: nuevoHash, debe_cambiar_password: false }
     if (email) update.email = email
+    if (telefono) update.telefono = telefono
 
     await supabaseAdmin
       .from('clientes')
