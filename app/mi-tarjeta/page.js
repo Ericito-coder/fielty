@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 export default function MiTarjeta() {
   const [dni, setDni] = useState('')
@@ -7,6 +7,15 @@ export default function MiTarjeta() {
   const [error, setError] = useState('')
   const [cargando, setCargando] = useState(false)
   const [tarjetas, setTarjetas] = useState(null)
+
+  useEffect(() => {
+    try {
+      const guardadas = JSON.parse(localStorage.getItem('fielty_tarjetas') || '{}')
+      const lista = Object.values(guardadas)
+      if (lista.length === 1) { window.location.href = `/tarjeta/${lista[0].id}`; return }
+      if (lista.length > 1) setTarjetas(lista)
+    } catch {}
+  }, [])
 
   async function ingresar() {
     if (!dni) { setError('Ingresá tu DNI'); return }
@@ -50,6 +59,12 @@ export default function MiTarjeta() {
               </div>
             </button>
           ))}
+        </div>
+        <div style={{ textAlign: 'center', marginTop: 20 }}>
+          <button style={{ fontSize: 13, color: '#888', background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'inherit' }}
+            onClick={() => { localStorage.removeItem('fielty_tarjetas'); setTarjetas(null) }}>
+            No soy yo — ingresar con otra cuenta
+          </button>
         </div>
       </div>
     </div>

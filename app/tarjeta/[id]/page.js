@@ -77,6 +77,16 @@ export default function Tarjeta({ params }) {
     setCliente(clienteData)
     setRecompensas(recompensasData || [])
     setCargando(false)
+
+    try {
+      const guardadas = JSON.parse(localStorage.getItem('fielty_tarjetas') || '{}')
+      guardadas[clienteData.negocio_id] = {
+        id: clienteData.id,
+        negocioNombre: clienteData.negocio.nombre,
+        negocioColor: clienteData.negocio.color,
+      }
+      localStorage.setItem('fielty_tarjetas', JSON.stringify(guardadas))
+    } catch {}
   }
 
   async function canjear(recompensa) {
