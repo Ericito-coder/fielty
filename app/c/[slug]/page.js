@@ -207,8 +207,8 @@ export default function CajaSlug({ params }) {
   )
 
   const regModalJsx = regModal && (
-    <div onClick={() => setRegModal(false)} style={{position:'fixed', inset:0, background:'rgba(0,0,0,0.88)', display:'flex', alignItems:'center', justifyContent:'center', zIndex:9999, padding:24}}>
-      <div onClick={e => e.stopPropagation()} style={{background:'#111', border:'1px solid #2a2a2a', borderRadius:24, padding:'28px 24px', maxWidth:360, width:'100%'}}>
+    <div onClick={() => setRegModal(false)} style={{position:'fixed', inset:0, background:'rgba(0,0,0,0.88)', display:'flex', alignItems:'flex-start', justifyContent:'center', zIndex:9999, padding:'20px 16px', overflowY:'auto'}}>
+      <div onClick={e => e.stopPropagation()} style={{background:'#111', border:'1px solid #2a2a2a', borderRadius:24, padding:'28px 24px', maxWidth:360, width:'100%', marginTop:'auto', marginBottom:'auto'}}>
         <div style={{fontSize:17, fontWeight:800, color:'white', marginBottom:4}}>Registrar nuevo cliente</div>
         <div style={{fontSize:13, color:'#666', marginBottom:20}}>La contraseña inicial será su DNI.</div>
 
