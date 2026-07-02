@@ -14,6 +14,9 @@ export default function Admin() {
   const [busqueda, setBusqueda] = useState('')
   const [token, setToken] = useState(null)
   const [cambiandoPlan, setCambiandoPlan] = useState(null)
+  const [negocioDetalle, setNegocioDetalle] = useState(null)
+  const [detalleData, setDetalleData] = useState(null)
+  const [cargandoDetalle, setCargandoDetalle] = useState(false)
 
   useEffect(() => {
     supabase.auth.getSession().then(async ({ data: { session } }) => {
@@ -31,6 +34,15 @@ export default function Admin() {
     const json = await res.json()
     setData(json)
     setCargando(false)
+  }
+
+  async function abrirDetalle(negocio) {
+    setNegocioDetalle(negocio)
+    setDetalleData(null)
+    setCargandoDetalle(true)
+    const res = await fetch(`/api/admin/negocio/${negocio.id}`, { headers: { Authorization: `Bearer ${token}` } })
+    if (res.ok) setDetalleData(await res.json())
+    setCargandoDetalle(false)
   }
 
   async function cambiarPlan(negocioId, plan) {
@@ -60,6 +72,106 @@ export default function Admin() {
 
   return (
     <div style={s.wrap}>
+
+      {/* PANEL DE DETALLE */}
+      {negocioDetalle && (
+        <div style={{position:'fixed', inset:0, zIndex:200, display:'flex'}}>
+          <div style={{flex:1, background:'rgba(0,0,0,0.6)'}} onClick={() => { setNegocioDetalle(null); setDetalleData(null) }} />
+          <div style={{width:520, background:'#0e0e0e', borderLeft:'1px solid #1e1e1e', overflowY:'auto', display:'flex', flexDirection:'column'}}>
+            {/* Header */}
+            <div style={{padding:'24px 24px 20px', borderBottom:'1px solid #1e1e1e', display:'flex', alignItems:'center', gap:14}}>
+              <div style={{width:44, height:44, borderRadius:12, background: negocioDetalle.color || '#333', display:'flex', alignItems:'center', justifyContent:'center', fontSize:15, fontWeight:900, color:'white', flexShrink:0}}>
+                {negocioDetalle.nombre?.slice(0,2).toUpperCase()}
+              </div>
+              <div style={{flex:1}}>
+                <div style={{fontSize:17, fontWeight:800, color:'white'}}>{negocioDetalle.nombre}</div>
+                <div style={{fontSize:12, color:'#555', marginTop:2}}>{negocioDetalle.email} · desde {new Date(negocioDetalle.created_at).toLocaleDateString('es-AR')}</div>
+              </div>
+              <div style={{display:'flex', alignItems:'center', gap:10}}>
+                <span style={{fontSize:12, fontWeight:700, color: PLAN_COLORES[negocioDetalle.plan || 'gratis'], background:'#1a1a1a', padding:'4px 10px', borderRadius:100}}>{PLAN_LABELS[negocioDetalle.plan || 'gratis']}</span>
+                <button onClick={() => { setNegocioDetalle(null); setDetalleData(null) }} style={{background:'#1a1a1a', border:'none', borderRadius:8, color:'#666', cursor:'pointer', fontSize:18, width:32, height:32, display:'flex', alignItems:'center', justifyContent:'center'}}>×</button>
+              </div>
+            </div>
+
+            <div style={{padding:24, flex:1}}>
+              {cargandoDetalle && <div style={{color:'#555', textAlign:'center', padding:40}}>Cargando...</div>}
+
+              {detalleData && (
+                <>
+                  {/* Stats rápidos */}
+                  <div style={{display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:10, marginBottom:24}}>
+                    {[
+                      { label:'Clientes', value: detalleData.totalClientes },
+                      { label:'Activos 30d', value: detalleData.activos },
+                      { label:'Nuevos mes', value: detalleData.nuevosEsteMes },
+                      { label:'Canjes', value: negocioDetalle.totalCanjesNegocio },
+                      { label:'Pts circ.', value: (negocioDetalle.totalPuntosNegocio || 0).toLocaleString('es-AR') },
+                      { label:'Última act.', value: negocioDetalle.ultimaActividad ? new Date(negocioDetalle.ultimaActividad).toLocaleDateString('es-AR') : '—' },
+                    ].map((item, i) => (
+                      <div key={i} style={{background:'#1a1a1a', borderRadius:12, padding:'12px 14px', textAlign:'center'}}>
+                        <div style={{fontSize:18, fontWeight:800, color:'white', fontFamily:'monospace'}}>{item.value}</div>
+                        <div style={{fontSize:10, color:'#555', marginTop:3}}>{item.label}</div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Top clientes */}
+                  <div style={{fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.08em', color:'#555', marginBottom:10}}>Top clientes</div>
+                  <div style={{background:'#111', borderRadius:14, overflow:'hidden', marginBottom:24}}>
+                    {detalleData.topClientes.length === 0 && <div style={{padding:20, textAlign:'center', color:'#555', fontSize:13}}>Sin clientes</div>}
+                    {detalleData.topClientes.map((c, i) => {
+                      const nivel = (c.puntos_historicos || 0) >= 5000 ? '🥇' : (c.puntos_historicos || 0) >= 1000 ? '🥈' : '🥉'
+                      return (
+                        <div key={i} style={{display:'flex', alignItems:'center', gap:12, padding:'12px 16px', borderBottom:'1px solid #1a1a1a'}}>
+                          <div style={{fontSize:12, fontWeight:800, color:'#333', width:20, textAlign:'center', flexShrink:0}}>#{i+1}</div>
+                          <div style={{flex:1}}>
+                            <div style={{fontSize:13, fontWeight:700, color:'white'}}>{c.nombre}</div>
+                            <div style={{fontSize:11, color:'#555'}}>DNI {c.dni} · {nivel} {(c.puntos_historicos||0).toLocaleString('es-AR')} hist.</div>
+                          </div>
+                          <div style={{fontSize:15, fontWeight:800, color:'#f0a500', fontFamily:'monospace'}}>{(c.puntos||0).toLocaleString('es-AR')}</div>
+                        </div>
+                      )
+                    })}
+                  </div>
+
+                  {/* Canjes recientes */}
+                  <div style={{fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.08em', color:'#555', marginBottom:10}}>Últimos canjes</div>
+                  <div style={{background:'#111', borderRadius:14, overflow:'hidden', marginBottom:24}}>
+                    {detalleData.canjesRecientes.length === 0 && <div style={{padding:20, textAlign:'center', color:'#555', fontSize:13}}>Sin canjes</div>}
+                    {detalleData.canjesRecientes.map((c, i) => (
+                      <div key={i} style={{display:'flex', alignItems:'center', gap:12, padding:'12px 16px', borderBottom:'1px solid #1a1a1a'}}>
+                        <div style={{flex:1}}>
+                          <div style={{fontSize:13, fontWeight:700, color:'white'}}>{c.recompensas?.nombre || '—'}</div>
+                          <div style={{fontSize:11, color:'#555'}}>{c.clientes?.nombre || '—'}</div>
+                        </div>
+                        <div style={{fontSize:11, color:'#555', fontFamily:'monospace'}}>{c.usado_at ? new Date(c.usado_at).toLocaleDateString('es-AR') : '—'}</div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Últimas transacciones */}
+                  <div style={{fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.08em', color:'#555', marginBottom:10}}>Últimas transacciones</div>
+                  <div style={{background:'#111', borderRadius:14, overflow:'hidden'}}>
+                    {detalleData.transacciones.length === 0 && <div style={{padding:20, textAlign:'center', color:'#555', fontSize:13}}>Sin transacciones</div>}
+                    {detalleData.transacciones.map((t, i) => (
+                      <div key={i} style={{display:'flex', alignItems:'center', gap:12, padding:'12px 16px', borderBottom:'1px solid #1a1a1a'}}>
+                        <div style={{flex:1}}>
+                          <div style={{fontSize:13, color:'white'}}>{t.descripcion}</div>
+                          <div style={{fontSize:11, color:'#555'}}>{new Date(t.created_at).toLocaleDateString('es-AR')}</div>
+                        </div>
+                        <div style={{fontSize:13, fontWeight:800, fontFamily:'monospace', color: t.tipo === 'suma' || t.tipo === 'referido' || t.tipo === 'cumpleanos' ? '#00b96b' : '#e0001b'}}>
+                          +{t.puntos} pts
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
       <div style={s.inner}>
 
         {/* Header */}
@@ -191,14 +303,15 @@ export default function Admin() {
           <table style={{width:'100%', borderCollapse:'collapse'}}>
             <thead>
               <tr style={{borderBottom:'1px solid #1e1e1e'}}>
-                {['Negocio', 'Contacto', 'Plan', 'Clientes', 'Última actividad', 'Registrado'].map(h => (
+                {['Negocio', 'Contacto', 'Plan', 'Clientes', 'Canjes', 'Pts circ.', 'Última act.', 'Registrado'].map(h => (
                   <th key={h} style={{padding:'14px 16px', textAlign:'left', fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.06em', color:'#555'}}>{h}</th>
                 ))}
               </tr>
             </thead>
             <tbody>
               {negociosFiltrados.map(n => (
-                <tr key={n.id} style={{borderBottom:'1px solid #151515'}}>
+                <tr key={n.id} style={{borderBottom:'1px solid #151515', cursor:'pointer'}}
+                  onClick={() => abrirDetalle(n)}>
                   <td style={{padding:'14px 16px'}}>
                     <div style={{display:'flex', alignItems:'center', gap:10}}>
                       <div style={{width:32, height:32, borderRadius:8, background: n.color || '#333', display:'flex', alignItems:'center', justifyContent:'center', fontSize:12, fontWeight:900, color:'white', flexShrink:0}}>
@@ -211,7 +324,7 @@ export default function Admin() {
                     <div style={{fontSize:12, color:'#888'}}>{n.email}</div>
                     <div style={{fontSize:12, color:'#555'}}>{n.telefono || '—'}</div>
                   </td>
-                  <td style={{padding:'14px 16px'}}>
+                  <td style={{padding:'14px 16px'}} onClick={e => e.stopPropagation()}>
                     <select
                       value={n.plan || 'gratis'}
                       disabled={cambiandoPlan === n.id}
@@ -224,6 +337,8 @@ export default function Admin() {
                     </select>
                   </td>
                   <td style={{padding:'14px 16px', fontSize:13, fontWeight:700, color:'white', fontFamily:'monospace'}}>{n.totalClientes}</td>
+                  <td style={{padding:'14px 16px', fontSize:13, fontWeight:700, color:'#7c3aed', fontFamily:'monospace'}}>{n.totalCanjesNegocio}</td>
+                  <td style={{padding:'14px 16px', fontSize:13, color:'#f0a500', fontFamily:'monospace'}}>{(n.totalPuntosNegocio || 0).toLocaleString('es-AR')}</td>
                   <td style={{padding:'14px 16px', fontSize:12, color:'#555'}}>
                     {n.ultimaActividad ? new Date(n.ultimaActividad).toLocaleDateString('es-AR') : '—'}
                   </td>

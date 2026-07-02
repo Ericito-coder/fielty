@@ -42,16 +42,23 @@ export async function GET(request) {
 
     const clientesPorNegocio = {}
     const ultimaActividadPorNegocio = {}
+    const puntosPorNegocio = {}
     const puntosTotal = clientes?.reduce((sum, c) => sum + (c.puntos || 0), 0) || 0
 
     clientes?.forEach(c => {
       clientesPorNegocio[c.negocio_id] = (clientesPorNegocio[c.negocio_id] || 0) + 1
+      puntosPorNegocio[c.negocio_id] = (puntosPorNegocio[c.negocio_id] || 0) + (c.puntos || 0)
       if (c.ultima_visita) {
         const fecha = new Date(c.ultima_visita)
         if (!ultimaActividadPorNegocio[c.negocio_id] || fecha > ultimaActividadPorNegocio[c.negocio_id]) {
           ultimaActividadPorNegocio[c.negocio_id] = fecha
         }
       }
+    })
+
+    const canjesPorNegocio = {}
+    canjes?.forEach(c => {
+      canjesPorNegocio[c.negocio_id] = (canjesPorNegocio[c.negocio_id] || 0) + 1
     })
 
     // Métricas generales
@@ -99,6 +106,8 @@ export async function GET(request) {
       ...n,
       email: emailPorUserId[n.user_id] || '—',
       totalClientes: clientesPorNegocio[n.id] || 0,
+      totalCanjesNegocio: canjesPorNegocio[n.id] || 0,
+      totalPuntosNegocio: puntosPorNegocio[n.id] || 0,
       ultimaActividad: ultimaActividadPorNegocio[n.id] || null,
     })) || []
 
