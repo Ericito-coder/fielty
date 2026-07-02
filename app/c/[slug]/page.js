@@ -479,10 +479,12 @@ export default function CajaSlug({ params }) {
             <button style={{width:'100%', padding:16, background:'#1a1a1a', border:'1px solid #2a2a2a', borderRadius:14, color:'white', fontSize:15, fontWeight:700, cursor:'pointer', fontFamily:'inherit', textAlign:'left', marginBottom:10}}
               onClick={() => setPantalla('validar')}>🎁 Validar canje de recompensa</button>
             <button style={{width:'100%', padding:16, background:'#1a1a1a', border:'1px solid #2a2a2a', borderRadius:14, color:'#aaa', fontSize:15, fontWeight:600, cursor:'pointer', fontFamily:'inherit', textAlign:'left', marginBottom:10}}
-              onClick={abrirQrModal}>📱 Mostrar QR al cliente</button>
-            <button style={{width:'100%', padding:16, background:'#1a1a1a', border:'1px solid #2a2a2a', borderRadius:14, color:'#aaa', fontSize:15, fontWeight:600, cursor:'pointer', fontFamily:'inherit', textAlign:'left', marginBottom:10}}
               onClick={abrirRegModal}>➕ Registrar cliente nuevo</button>
-            <TarjetaClienteInfo />
+            <button style={{width:'100%', padding:16, background:'#1a1a1a', border:'1px solid #2a2a2a', borderRadius:14, color:'#aaa', fontSize:14, fontWeight:600, cursor:'pointer', fontFamily:'inherit', textAlign:'left', display:'flex', alignItems:'center', justifyContent:'space-between'}}
+              onClick={abrirQrModal}>
+              <span>❓ ¿El cliente no sabe cómo ver su tarjeta?</span>
+              <span style={{fontSize:18, color:'#555'}}>→</span>
+            </button>
           </div>
         )}
       </div>
