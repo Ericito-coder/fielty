@@ -54,18 +54,42 @@ export default function Dashboard() {
 
   async function cargarMetricas(negocioId) {
     try {
-      const { data: clientes } = await supabase.from('clientes').select('*').eq('negocio_id', negocioId)
-      const { data: canjes } = await supabase.from('canjes').select('*').eq('negocio_id', negocioId).eq('estado', 'usado')
-      const { data: transacciones } = await supabase.from('transacciones').select('*').eq('negocio_id', negocioId).order('created_at', { ascending: false }).limit(10)
+      const hace30dias = new Date(); hace30dias.setDate(hace30dias.getDate() - 30)
+
+      const [
+        { data: clientes },
+        { data: todosCanjes },
+        { data: transacciones },
+      ] = await Promise.all([
+        supabase.from('clientes').select('*').eq('negocio_id', negocioId).order('puntos_historicos', { ascending: false }),
+        supabase.from('canjes').select('*, recompensas(nombre)').eq('negocio_id', negocioId),
+        supabase.from('transacciones').select('*').eq('negocio_id', negocioId).order('created_at', { ascending: false }).limit(10),
+      ])
 
       const totalClientes = clientes?.length || 0
+      const nuevosEsteMes = clientes?.filter(c => new Date(c.created_at) > hace30dias).length || 0
       const totalPuntos = clientes?.reduce((a, c) => a + (c.puntos || 0), 0) || 0
-      const totalCanjes = canjes?.length || 0
-      const hace30dias = new Date(); hace30dias.setDate(hace30dias.getDate() - 30)
       const clientesActivos = clientes?.filter(c => c.ultima_visita && new Date(c.ultima_visita) > hace30dias).length || 0
       const referidos = clientes?.filter(c => c.referido_por).length || 0
+      const topClientes = clientes?.slice(0, 5) || []
 
-      setMetricas({ totalClientes, totalPuntos, totalCanjes, clientesActivos, referidos, transacciones: transacciones || [] })
+      const canjesUsados = todosCanjes?.filter(c => c.estado === 'usado') || []
+      const totalCanjes = canjesUsados.length
+      const canjesEsteMes = canjesUsados.filter(c => new Date(c.usado_at || c.created_at) > hace30dias).length
+      const canjesPendientes = todosCanjes?.filter(c => c.estado === 'pendiente').length || 0
+
+      const conteos = {}
+      canjesUsados.forEach(c => {
+        const nombre = c.recompensas?.nombre
+        if (nombre) conteos[nombre] = (conteos[nombre] || 0) + 1
+      })
+      const recompensaMasCanjeada = Object.entries(conteos).sort((a, b) => b[1] - a[1])[0] || null
+
+      setMetricas({
+        totalClientes, nuevosEsteMes, totalPuntos, totalCanjes, canjesEsteMes,
+        canjesPendientes, clientesActivos, referidos, topClientes, recompensaMasCanjeada,
+        transacciones: transacciones || [],
+      })
       setCargando(false)
     } catch {
       setErrorCarga('No se pudieron cargar las métricas. Recargá la página.')
@@ -332,10 +356,10 @@ function InicioSection({ negocio, metricas, isDesktop }) {
       <div style={{display:'grid', gridTemplateColumns: isDesktop ? 'repeat(6,1fr)' : 'repeat(3,1fr)', gap:12, marginBottom:24}}>
         {[
           { icon:'👥', value: metricas.totalClientes, label:'Clientes totales' },
+          { icon:'🆕', value: metricas.nuevosEsteMes, label:'Nuevos este mes' },
           { icon:'🔥', value: metricas.clientesActivos, label:'Activos (30 días)' },
-          { icon:'⭐', value: metricas.totalPuntos, label:'Puntos circulación' },
+          { icon:'⭐', value: metricas.totalPuntos.toLocaleString('es-AR'), label:'Puntos circulación' },
           { icon:'🎁', value: metricas.totalCanjes, label:'Canjes realizados' },
-          { icon:'🤝', value: metricas.referidos, label:'Referidos' },
           { icon:'📈', value: metricas.totalClientes > 0 ? Math.round((metricas.clientesActivos / metricas.totalClientes) * 100) + '%' : '0%', label:'Tasa de retorno' },
         ].map((m, i) => (
           <div key={i} style={{background:'white', borderRadius:16, padding:'20px 16px', textAlign:'center', boxShadow:'0 2px 8px rgba(0,0,0,0.06)'}}>
@@ -401,6 +425,68 @@ function InicioSection({ negocio, metricas, isDesktop }) {
           </div>
         </div>
       </div>
+      <div style={{display: isDesktop ? 'grid' : 'block', gridTemplateColumns:'1fr 1fr', gap:20, marginBottom:8}}>
+        {/* CANJES */}
+        <div>
+          <div style={s.sectionTitle}>Resumen de canjes</div>
+          <div style={s.card}>
+            <div style={{display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:10, marginBottom: metricas.recompensaMasCanjeada ? 16 : 0}}>
+              {[
+                { label:'Este mes', value: metricas.canjesEsteMes, color:'#00b96b' },
+                { label:'Total', value: metricas.totalCanjes, color:'#0e0e0e' },
+                { label:'Pendientes', value: metricas.canjesPendientes, color:'#f0a500' },
+              ].map((item, i) => (
+                <div key={i} style={{textAlign:'center', background:'#f8f9fc', borderRadius:14, padding:'14px 8px'}}>
+                  <div style={{fontSize:24, fontWeight:800, color:item.color, fontFamily:'monospace'}}>{item.value}</div>
+                  <div style={{fontSize:11, color:'#888', marginTop:4}}>{item.label}</div>
+                </div>
+              ))}
+            </div>
+            {metricas.recompensaMasCanjeada && (
+              <div style={{background:'#f0f2f7', borderRadius:12, padding:'12px 14px', display:'flex', alignItems:'center', justifyContent:'space-between'}}>
+                <div>
+                  <div style={{fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.06em', color:'#888', marginBottom:2}}>Más popular</div>
+                  <div style={{fontSize:14, fontWeight:700, color:'#0e0e0e'}}>{metricas.recompensaMasCanjeada[0]}</div>
+                </div>
+                <div style={{textAlign:'right'}}>
+                  <div style={{fontSize:22, fontWeight:800, color:'#e0001b', fontFamily:'monospace'}}>{metricas.recompensaMasCanjeada[1]}</div>
+                  <div style={{fontSize:10, color:'#888'}}>canjes</div>
+                </div>
+              </div>
+            )}
+            {metricas.totalCanjes === 0 && (
+              <div style={{textAlign:'center', color:'#bbb', fontSize:13, padding:'8px 0'}}>Todavía no hay canjes realizados</div>
+            )}
+          </div>
+        </div>
+
+        {/* TOP CLIENTES */}
+        <div>
+          <div style={s.sectionTitle}>Top clientes</div>
+          <div style={s.card}>
+            {metricas.topClientes.length === 0 && (
+              <div style={{textAlign:'center', color:'#bbb', fontSize:13, padding:'8px 0'}}>Todavía no hay clientes</div>
+            )}
+            {metricas.topClientes.map((c, i) => {
+              const nivel = (c.puntos_historicos || 0) >= 5000 ? '🥇' : (c.puntos_historicos || 0) >= 1000 ? '🥈' : '🥉'
+              return (
+                <div key={i} style={{display:'flex', alignItems:'center', gap:12, padding:'10px 0', borderBottom: i < metricas.topClientes.length - 1 ? '1px solid #f0f2f7' : 'none'}}>
+                  <div style={{fontSize:13, fontWeight:800, color:'#bbb', width:18, textAlign:'center', flexShrink:0}}>#{i+1}</div>
+                  <div style={{width:36, height:36, borderRadius:10, background: negocio.color, display:'flex', alignItems:'center', justifyContent:'center', fontSize:12, fontWeight:800, color:'white', flexShrink:0}}>
+                    {c.nombre.slice(0,2).toUpperCase()}
+                  </div>
+                  <div style={{flex:1, minWidth:0}}>
+                    <div style={{fontSize:14, fontWeight:700, color:'#0e0e0e', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap'}}>{c.nombre}</div>
+                    <div style={{fontSize:11, color:'#888', marginTop:1}}>{nivel} {(c.puntos_historicos || 0).toLocaleString('es-AR')} pts históricos</div>
+                  </div>
+                  <div style={{fontSize:16, fontWeight:800, color:'#f0a500', fontFamily:'monospace', flexShrink:0}}>{(c.puntos || 0).toLocaleString('es-AR')}</div>
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      </div>
+
       <MetricasSucursales negocioId={negocio.id} isDesktop={isDesktop} />
     </>
   )
