@@ -116,7 +116,8 @@ export default function CajaSlug({ params }) {
     mostrarMensaje(`✅ +${result.pts} puntos a ${clienteSeleccionado.nombre.split(' ')[0]}`, 'success')
     if (busqueda.length >= 2) buscarCliente(busqueda)
     if (clienteSeleccionado.telefono) {
-      const texto = `¡Hola ${clienteSeleccionado.nombre.split(' ')[0]}! Sumaste ${result.pts} puntos en ${negocio.nombre} 🎉 Ya tenés ${result.nuevosPuntos} pts. Mirá tu tarjeta: https://www.fielty.app/mi-tarjeta`
+      // Solo emojis del plano básico (✨): los de 4 bytes se rompen en WhatsApp Desktop vía wa.me
+      const texto = `¡Hola ${clienteSeleccionado.nombre.split(' ')[0]}! Sumaste ${result.pts} puntos en ${negocio.nombre} ✨ Ya tenés ${result.nuevosPuntos} pts. Mirá tu tarjeta: https://www.fielty.app/mi-tarjeta`
       setAvisoWa(linkWhatsApp(clienteSeleccionado.telefono, texto))
     }
   }

@@ -503,9 +503,11 @@ function ClientesSection({ negocioId, color, plan, nombreNegocio, isDesktop }) {
   const [busqueda, setBusqueda] = useState('')
 
   function waCliente(c, esInactivo) {
+    // Solo emojis del plano básico (✨☆✓): los de 4 bytes (🎁🎉) se
+    // rompen en WhatsApp Desktop cuando van por link wa.me
     const texto = esInactivo
-      ? `¡Hola ${c.nombre.split(' ')[0]}! 👋 Hace tiempo no te vemos por ${nombreNegocio}. Tenés ${c.puntos} puntos esperándote 🎁 Mirá tu tarjeta: https://www.fielty.app/mi-tarjeta`
-      : `¡Hola ${c.nombre.split(' ')[0]}! Tenés ${c.puntos} puntos en ${nombreNegocio} 🎁 Mirá tu tarjeta: https://www.fielty.app/mi-tarjeta`
+      ? `¡Hola ${c.nombre.split(' ')[0]}! Hace tiempo no te vemos por ${nombreNegocio}. Tenés ${c.puntos} puntos esperándote ✨ Mirá tu tarjeta: https://www.fielty.app/mi-tarjeta`
+      : `¡Hola ${c.nombre.split(' ')[0]}! Tenés ${c.puntos} puntos en ${nombreNegocio} ✨ Mirá tu tarjeta: https://www.fielty.app/mi-tarjeta`
     return linkWhatsApp(c.telefono, texto)
   }
 
