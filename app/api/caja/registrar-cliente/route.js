@@ -63,11 +63,11 @@ export async function POST(request) {
     }
 
     // Solo los campos que la caja necesita (nunca password_hash)
-    const { id, nombre: nombreCliente, dni: dniCliente, puntos, puntos_historicos } = data[0]
+    const { id, nombre: nombreCliente, dni: dniCliente, telefono: telCliente, puntos, puntos_historicos } = data[0]
 
     return NextResponse.json({
       ok: true,
-      cliente: { id, nombre: nombreCliente, dni: dniCliente, puntos, puntos_historicos },
+      cliente: { id, nombre: nombreCliente, dni: dniCliente, telefono: telCliente, puntos, puntos_historicos },
       puntosBienvenida,
       ptsConsumo,
       puntosIniciales,

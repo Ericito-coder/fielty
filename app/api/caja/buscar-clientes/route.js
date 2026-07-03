@@ -18,7 +18,7 @@ export async function POST(request) {
 
     const { data: clientes } = await supabaseAdmin
       .from('clientes')
-      .select('id, nombre, dni, puntos, puntos_historicos')
+      .select('id, nombre, dni, telefono, puntos, puntos_historicos')
       .eq('negocio_id', negocioId)
       .or(`nombre.ilike.%${termino}%,dni.ilike.%${termino}%`)
       .limit(8)

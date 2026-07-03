@@ -1,6 +1,7 @@
 'use client'
 import { useState, useEffect } from 'react'
 import QRCode from 'qrcode'
+import { linkWhatsApp } from '@/lib/wa'
 
 export default function CajaSlugSucursal({ params }) {
   const [slugNegocio, setSlugNegocio] = useState(null)
@@ -30,6 +31,7 @@ export default function CajaSlugSucursal({ params }) {
   const [regMonto, setRegMonto] = useState('')
   const [regCargando, setRegCargando] = useState(false)
   const [regError, setRegError] = useState('')
+  const [avisoWa, setAvisoWa] = useState(null)
 
   useEffect(() => {
     params.then(p => { setSlugNegocio(p.slug); setSlugSucursal(p.sucursal) })
@@ -89,6 +91,7 @@ export default function CajaSlugSucursal({ params }) {
     setMonto('')
     setCodigo('')
     setCanjeResult(null)
+    setAvisoWa(null)
     setTabDesktop('puntos')
     if (isMobile) setPantalla('cliente')
   }
@@ -114,6 +117,10 @@ export default function CajaSlugSucursal({ params }) {
     setMonto('')
     mostrarMensaje(`✅ +${result.pts} puntos a ${clienteSeleccionado.nombre.split(' ')[0]}`, 'success')
     if (busqueda.length >= 2) buscarCliente(busqueda)
+    if (clienteSeleccionado.telefono) {
+      const texto = `¡Hola ${clienteSeleccionado.nombre.split(' ')[0]}! Sumaste ${result.pts} puntos en ${negocio.nombre} 🎉 Ya tenés ${result.nuevosPuntos} pts. Mirá tu tarjeta: https://www.fielty.app/mi-tarjeta`
+      setAvisoWa(linkWhatsApp(clienteSeleccionado.telefono, texto))
+    }
   }
 
   async function validarCanje() {
@@ -432,6 +439,12 @@ export default function CajaSlugSucursal({ params }) {
                       onClick={acreditarPuntos} disabled={cargando || !monto || parseInt(monto)<100}>
                       {cargando ? 'Acreditando...' : `Sumar ${ptsPreview} puntos a ${clienteSeleccionado.nombre.split(' ')[0]}`}
                     </button>
+                    {avisoWa && (
+                      <a href={avisoWa} target="_blank" rel="noreferrer" onClick={() => setAvisoWa(null)}
+                        style={{display:'flex', alignItems:'center', justifyContent:'center', gap:8, width:'100%', padding:16, background:'#00a884', borderRadius:16, color:'white', fontSize:15, fontWeight:800, textDecoration:'none', marginTop:12, boxSizing:'border-box'}}>
+                        📲 Avisarle por WhatsApp
+                      </a>
+                    )}
                   </>
                 )}
                 {tabDesktop === 'canje' && (
@@ -546,6 +559,12 @@ export default function CajaSlugSucursal({ params }) {
             onClick={acreditarPuntos} disabled={cargando || !monto || parseInt(monto)<100}>
             {cargando ? 'Acreditando...' : 'Sumar puntos al cliente'}
           </button>
+          {avisoWa && (
+            <a href={avisoWa} target="_blank" rel="noreferrer" onClick={() => setAvisoWa(null)}
+              style={{display:'flex', alignItems:'center', justifyContent:'center', gap:8, width:'100%', padding:16, background:'#00a884', borderRadius:14, color:'white', fontSize:15, fontWeight:800, textDecoration:'none', marginTop:10, boxSizing:'border-box'}}>
+              📲 Avisarle por WhatsApp
+            </a>
+          )}
           <button style={{width:'100%', padding:16, background:'#1a1a1a', border:'1px solid #2a2a2a', borderRadius:14, color:'white', fontSize:15, fontWeight:700, cursor:'pointer', fontFamily:'inherit', marginTop:10}}
             onClick={() => setPantalla('validar')}>🎁 Validar canje de recompensa</button>
         </div>

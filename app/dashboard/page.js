@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
 import { storage } from '@/lib/storage'
+import { linkWhatsApp } from '@/lib/wa'
 
 const NAV_ITEMS = [
   { id:'inicio', label:'Inicio', icon:'📊' },
@@ -263,7 +264,7 @@ export default function Dashboard() {
 
 function SeccionContenido({ seccion, negocio, metricas, setNegocio, isDesktop }) {
   if (seccion === 'inicio') return <InicioSection negocio={negocio} metricas={metricas} isDesktop={isDesktop} />
-  if (seccion === 'clientes') return <ClientesSection negocioId={negocio.id} color={negocio.color} plan={negocio.plan} isDesktop={isDesktop} />
+  if (seccion === 'clientes') return <ClientesSection negocioId={negocio.id} color={negocio.color} plan={negocio.plan} nombreNegocio={negocio.nombre} isDesktop={isDesktop} />
   if (seccion === 'recompensas') return <RecompensasSection negocioId={negocio.id} isDesktop={isDesktop} />
   if (seccion === 'sucursales') return <SucursalesSection negocio={negocio} />
   if (seccion === 'config') return <ConfigSection negocio={negocio} setNegocio={setNegocio} />
@@ -493,10 +494,17 @@ function InicioSection({ negocio, metricas, isDesktop }) {
 }
 
 // ===== CLIENTES =====
-function ClientesSection({ negocioId, color, plan, isDesktop }) {
+function ClientesSection({ negocioId, color, plan, nombreNegocio, isDesktop }) {
   const [clientes, setClientes] = useState([])
   const [filtro, setFiltro] = useState('todos')
   const [busqueda, setBusqueda] = useState('')
+
+  function waCliente(c, esInactivo) {
+    const texto = esInactivo
+      ? `¡Hola ${c.nombre.split(' ')[0]}! 👋 Hace tiempo no te vemos por ${nombreNegocio}. Tenés ${c.puntos} puntos esperándote 🎁 Mirá tu tarjeta: https://www.fielty.app/mi-tarjeta`
+      : `¡Hola ${c.nombre.split(' ')[0]}! Tenés ${c.puntos} puntos en ${nombreNegocio} 🎁 Mirá tu tarjeta: https://www.fielty.app/mi-tarjeta`
+    return linkWhatsApp(c.telefono, texto)
+  }
 
   useEffect(() => {
     supabase.from('clientes').select('*').eq('negocio_id', negocioId)
@@ -563,8 +571,8 @@ function ClientesSection({ negocioId, color, plan, isDesktop }) {
           <table style={{width:'100%', borderCollapse:'collapse'}}>
             <thead>
               <tr style={{borderBottom:'2px solid #f0f2f7'}}>
-                {['Cliente', 'DNI', 'Nivel', 'Puntos', 'Visitas', 'Última visita'].map(h => (
-                  <th key={h} style={{textAlign:'left', padding:'8px 12px', fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.06em', color:'#888'}}>{h}</th>
+                {['Cliente', 'DNI', 'Nivel', 'Puntos', 'Visitas', 'Última visita', ''].map((h, i) => (
+                  <th key={i} style={{textAlign:'left', padding:'8px 12px', fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.06em', color:'#888'}}>{h}</th>
                 ))}
               </tr>
             </thead>
@@ -584,6 +592,14 @@ function ClientesSection({ negocioId, color, plan, isDesktop }) {
                   <td style={{padding:'14px 12px', fontSize:16, fontWeight:800, color:'#f0a500', fontFamily:'monospace'}}>{c.puntos}</td>
                   <td style={{padding:'14px 12px', fontSize:13, color:'#888'}}>{c.visitas || 0}</td>
                   <td style={{padding:'14px 12px', fontSize:13, color:'#888'}}>{c.ultima_visita ? new Date(c.ultima_visita).toLocaleDateString('es-AR') : '—'}</td>
+                  <td style={{padding:'14px 12px'}}>
+                    {c.telefono && (
+                      <a href={waCliente(c, !c.ultima_visita || new Date(c.ultima_visita) <= hace30dias)} target="_blank" rel="noreferrer" title="Enviar WhatsApp"
+                        style={{display:'inline-flex', alignItems:'center', gap:6, padding:'7px 12px', background:'#e7f9ef', borderRadius:10, color:'#00a884', fontSize:12, fontWeight:700, textDecoration:'none', whiteSpace:'nowrap'}}>
+                        📲 WhatsApp
+                      </a>
+                    )}
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -602,6 +618,12 @@ function ClientesSection({ negocioId, color, plan, isDesktop }) {
                 <div style={{fontSize:16, fontWeight:800, color:'#f0a500', fontFamily:'monospace'}}>{c.puntos}</div>
                 <div style={{fontSize:10, color:'#888'}}>pts</div>
               </div>
+              {c.telefono && (
+                <a href={waCliente(c, !c.ultima_visita || new Date(c.ultima_visita) <= hace30dias)} target="_blank" rel="noreferrer" title="Enviar WhatsApp"
+                  style={{display:'flex', alignItems:'center', justifyContent:'center', width:36, height:36, background:'#e7f9ef', borderRadius:10, textDecoration:'none', fontSize:16, flexShrink:0}}>
+                  📲
+                </a>
+              )}
             </div>
           ))
         )}
