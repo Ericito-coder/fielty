@@ -395,7 +395,7 @@ function InicioSection({ negocio, metricas, isDesktop }) {
               </div>
               <div style={{display:'flex', gap:8}}>
                 <button style={{...s.btnRed, padding:10, fontSize:13, flex:1}} onClick={() => navigator.clipboard.writeText(`${window.location.origin}/mi-tarjeta`)}>📋 Copiar link</button>
-                <button style={{...s.btnRed, padding:10, fontSize:13, flex:1, background:'#0e0e0e'}} onClick={() => window.open('/qr/mi-tarjeta', '_blank')}>🖨️ Ver QR</button>
+                <button style={{...s.btnRed, padding:10, fontSize:13, flex:1, background:'#0e0e0e'}} onClick={() => window.open('/qr/mi-tarjeta', '_blank')}>🖨️ Imprimir cartel</button>
               </div>
             </div>
             <div>
@@ -506,8 +506,8 @@ function ClientesSection({ negocioId, color, plan, nombreNegocio, isDesktop }) {
     // Solo emojis del plano básico (✨☆✓): los de 4 bytes (🎁🎉) se
     // rompen en WhatsApp Desktop cuando van por link wa.me
     const texto = esInactivo
-      ? `¡Hola ${c.nombre.split(' ')[0]}! Hace tiempo no te vemos por ${nombreNegocio}. Tenés ${c.puntos} puntos esperándote ✨ Mirá tu tarjeta: https://www.fielty.app/mi-tarjeta`
-      : `¡Hola ${c.nombre.split(' ')[0]}! Tenés ${c.puntos} puntos en ${nombreNegocio} ✨ Mirá tu tarjeta: https://www.fielty.app/mi-tarjeta`
+      ? `¡Hola ${c.nombre.split(' ')[0]}! Hace tiempo no te vemos por ${nombreNegocio}. Tenés ${c.puntos} puntos esperándote ✨ Mirá tu tarjeta: https://www.fielty.app/tarjeta/${c.id}`
+      : `¡Hola ${c.nombre.split(' ')[0]}! Tenés ${c.puntos} puntos en ${nombreNegocio} ✨ Mirá tu tarjeta: https://www.fielty.app/tarjeta/${c.id}`
     return linkWhatsApp(c.telefono, texto)
   }
 
