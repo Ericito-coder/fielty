@@ -17,16 +17,22 @@ export default function Listo() {
       .select('*')
       .eq('id', id)
       .single()
-      .then(({ data }) => {
+      .then(async ({ data }) => {
         setNegocio(data)
         const yaEnviado = storage.get('fielty_bienvenida_enviada')
         if (!yaEnviado) {
-          fetch('/api/bienvenida', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ negocioId: data.id }),
-          }).catch(() => {})
-          storage.set('fielty_bienvenida_enviada', '1')
+          const { data: { session } } = await supabase.auth.getSession()
+          if (session?.access_token) {
+            fetch('/api/bienvenida', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${session.access_token}`,
+              },
+              body: JSON.stringify({ negocioId: data.id }),
+            }).catch(() => {})
+            storage.set('fielty_bienvenida_enviada', '1')
+          }
         }
       })
   }, [])

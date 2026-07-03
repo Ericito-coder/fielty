@@ -11,6 +11,13 @@ const supabaseAdmin = createClient(
 
 export async function POST(request) {
   try {
+    // Solo el dueño autenticado puede disparar su email de bienvenida
+    const token = request.headers.get('Authorization')?.replace('Bearer ', '')
+    if (!token) return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
+
+    const { data: { user } } = await supabaseAdmin.auth.getUser(token)
+    if (!user) return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
+
     const { negocioId } = await request.json()
 
     const { data: negocio } = await supabaseAdmin
@@ -20,9 +27,11 @@ export async function POST(request) {
       .single()
 
     if (!negocio) return NextResponse.json({ ok: true })
+    if (negocio.user_id !== user.id) {
+      return NextResponse.json({ error: 'No autorizado' }, { status: 403 })
+    }
 
-    const { data: { user } } = await supabaseAdmin.auth.admin.getUserById(negocio.user_id)
-    if (!user?.email) return NextResponse.json({ ok: true })
+    if (!user.email) return NextResponse.json({ ok: true })
 
     const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://www.fielty.app'
     const registroUrl = `${appUrl}/registro/${negocio.slug}`

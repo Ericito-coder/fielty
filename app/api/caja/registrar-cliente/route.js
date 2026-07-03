@@ -1,30 +1,21 @@
 import { NextResponse } from 'next/server'
 import bcrypt from 'bcryptjs'
-import { createClient } from '@supabase/supabase-js'
-
-const supabaseAdmin = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_ROLE_KEY
-)
+import { getSupabaseAdmin, validarPinCaja } from '@/lib/server'
 
 export async function POST(request) {
   try {
-    const { negocioId, nombre, dni, email, telefono, monto, pin } = await request.json()
+    const { negocioId, sucursalId, nombre, dni, email, telefono, monto, pin } = await request.json()
 
     if (!negocioId || !nombre || !dni || !pin) {
       return NextResponse.json({ error: 'Faltan datos obligatorios' }, { status: 400 })
     }
 
-    const { data: negocio } = await supabaseAdmin
-      .from('negocios').select('*').eq('id', negocioId).single()
+    const supabaseAdmin = getSupabaseAdmin()
 
-    if (!negocio) return NextResponse.json({ error: 'Negocio no encontrado' }, { status: 404 })
-
-    // Verificar PIN
-    const pinReal = negocio.pin_caja
-    if (!pinReal || pin !== pinReal) {
-      return NextResponse.json({ error: 'PIN incorrecto' }, { status: 401 })
-    }
+    // Valida el PIN del negocio o de la sucursal (puede tener PIN propio)
+    const auth = await validarPinCaja(supabaseAdmin, { negocioId, sucursalId, pin })
+    if (auth.error) return NextResponse.json({ error: auth.error }, { status: auth.status })
+    const { negocio } = auth
 
     // Verificar límite del plan
     const { count } = await supabaseAdmin
@@ -71,9 +62,12 @@ export async function POST(request) {
       return NextResponse.json({ error: 'Error al registrar, intentá de nuevo' }, { status: 500 })
     }
 
+    // Solo los campos que la caja necesita (nunca password_hash)
+    const { id, nombre: nombreCliente, dni: dniCliente, puntos, puntos_historicos } = data[0]
+
     return NextResponse.json({
       ok: true,
-      cliente: data[0],
+      cliente: { id, nombre: nombreCliente, dni: dniCliente, puntos, puntos_historicos },
       puntosBienvenida,
       ptsConsumo,
       puntosIniciales,

@@ -1,6 +1,5 @@
 'use client'
 import { useState, useEffect, useRef } from 'react'
-import { supabase } from '@/lib/supabase'
 import QRCode from 'qrcode'
 
 export default function QRPage({ params }) {
@@ -10,8 +9,10 @@ export default function QRPage({ params }) {
 
   useEffect(() => {
     params.then(p => {
-      supabase.from('negocios').select('*').eq('slug', p.slug).single()
-        .then(({ data }) => setNegocio(data))
+      fetch(`/api/negocio-publico?slug=${encodeURIComponent(p.slug)}`)
+        .then(res => res.ok ? res.json() : { negocio: null })
+        .then(({ negocio: data }) => setNegocio(data))
+        .catch(() => {})
     })
   }, [params])
 

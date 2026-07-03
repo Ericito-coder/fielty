@@ -1,10 +1,11 @@
 'use client'
 import { useEffect, useState } from 'react'
-import { supabase } from '@/lib/supabase'
 
 export default function Tarjeta({ params }) {
   const [cliente, setCliente] = useState(null)
   const [recompensas, setRecompensas] = useState([])
+  const [transacciones, setTransacciones] = useState([])
+  const [cargandoHistorial, setCargandoHistorial] = useState(true)
   const [cargando, setCargando] = useState(true)
   const [id, setId] = useState(null)
   const [canjeando, setCanjeando] = useState(null)
@@ -43,30 +44,18 @@ export default function Tarjeta({ params }) {
   }, [codigoCanje])
 
   async function cargarDatos() {
-    const { data: clienteData } = await supabase
-      .from('clientes')
-      .select('*, negocio:negocios(nombre, color, pesos_por_punto, puntos_por_tramo, logo_url, slug, puntos_referido_receptor, puntos_referido_emisor)')
-      .eq('id', id)
-      .single()
+    let data
+    try {
+      const res = await fetch(`/api/tarjeta/${id}`)
+      if (!res.ok) { setCargando(false); setCargandoHistorial(false); return }
+      data = await res.json()
+    } catch {
+      setCargando(false)
+      setCargandoHistorial(false)
+      return
+    }
 
-    if (!clienteData) { setCargando(false); return }
-
-    const { data: recompensasData } = await supabase
-      .from('recompensas')
-      .select('*')
-      .eq('negocio_id', clienteData.negocio_id)
-      .eq('activa', true)
-      .order('puntos_necesarios', { ascending: true })
-
-    const { data: canjeActivo } = await supabase
-      .from('canjes')
-      .select('*, recompensas(nombre)')
-      .eq('cliente_id', id)
-      .eq('estado', 'pendiente')
-      .gt('expira_at', new Date().toISOString())
-      .order('created_at', { ascending: false })
-      .limit(1)
-      .maybeSingle()
+    const { cliente: clienteData, recompensas: recompensasData, canjeActivo, transacciones: transaccionesData } = data
 
     if (canjeActivo) {
       const segsRestantes = Math.floor((new Date(canjeActivo.expira_at) - new Date()) / 1000)
@@ -76,7 +65,9 @@ export default function Tarjeta({ params }) {
 
     setCliente(clienteData)
     setRecompensas(recompensasData || [])
+    setTransacciones(transaccionesData || [])
     setCargando(false)
+    setCargandoHistorial(false)
 
     try {
       const guardadas = JSON.parse(localStorage.getItem('fielty_tarjetas') || '{}')
@@ -93,37 +84,20 @@ export default function Tarjeta({ params }) {
     if (cliente.puntos < recompensa.puntos_necesarios) return
     setCanjeando(recompensa.id)
 
-    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'
-    const randomValues = new Uint8Array(6)
-    crypto.getRandomValues(randomValues)
-    let codigo = ''
-    for (let i = 0; i < 3; i++) codigo += chars[randomValues[i] % chars.length]
-    codigo += '-'
-    for (let i = 3; i < 6; i++) codigo += chars[randomValues[i] % chars.length]
+    try {
+      const res = await fetch('/api/tarjeta/canjear', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ clienteId: cliente.id, recompensaId: recompensa.id }),
+      })
+      const data = await res.json()
+      if (!res.ok) { setCanjeando(null); return }
 
-    const expira_at = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()
-
-    const { error } = await supabase
-      .from('canjes')
-      .insert([{
-        cliente_id: cliente.id,
-        negocio_id: cliente.negocio_id,
-        recompensa_id: recompensa.id,
-        codigo,
-        estado: 'pendiente',
-        puntos_descontados: recompensa.puntos_necesarios,
-        expira_at
-      }])
-
-    if (error) { setCanjeando(null); return }
-
-    const nuevosPuntos = cliente.puntos - recompensa.puntos_necesarios
-    await supabase.from('clientes').update({ puntos: nuevosPuntos }).eq('id', cliente.id)
-
-    setCliente({ ...cliente, puntos: nuevosPuntos })
-    setCodigoCanje({ codigo, recompensa })
+      setCliente({ ...cliente, puntos: data.puntos ?? cliente.puntos - recompensa.puntos_necesarios })
+      setCodigoCanje({ codigo: data.codigo, recompensa })
+      setSegundos(Math.floor((new Date(data.expira_at) - new Date()) / 1000))
+    } catch {}
     setCanjeando(null)
-    setSegundos(86399)
   }
 
   function formatTime(s) {
@@ -332,7 +306,7 @@ export default function Tarjeta({ params }) {
         </div>
       </div>
 
-      <HistorialSection clienteId={id} />
+      <HistorialSection transacciones={transacciones} cargando={cargandoHistorial} />
 
       <div style={{ textAlign: 'center', padding: '8px 0 32px' }}>
         <a href="/mi-tarjeta" style={{ fontSize: 13, color: 'rgba(255,255,255,0.3)', textDecoration: 'none' }}>
@@ -344,29 +318,13 @@ export default function Tarjeta({ params }) {
   )
 }
 
-function HistorialSection({ clienteId }) {
-  const [transacciones, setTransacciones] = useState([])
-  const [cargando, setCargando] = useState(true)
-
-  useEffect(() => {
-    if (!clienteId) return
-    supabase
-      .from('transacciones')
-      .select('*, sucursal:sucursales(nombre)')
-      .eq('cliente_id', clienteId)
-      .order('created_at', { ascending: false })
-      .limit(20)
-      .then(({ data }) => {
-        setTransacciones(data || [])
-        setCargando(false)
-      })
-  }, [clienteId])
-
+function HistorialSection({ transacciones, cargando }) {
   const getIcono = (tipo) => {
     if (tipo === 'suma') return '⭐'
     if (tipo === 'cumpleanos') return '🎂'
     if (tipo === 'referido') return '🤝'
     if (tipo === 'canje') return '🎁'
+    if (tipo === 'devolucion') return '↩️'
     return '✨'
   }
 

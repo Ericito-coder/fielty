@@ -11,7 +11,7 @@ const supabaseAdmin = createClient(
 export async function POST(request) {
   try {
     const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown'
-    const { ok: rateLimitOk } = rateLimit({ key: `login:${ip}`, maxAttempts: 5, windowMs: 15 * 60 * 1000 })
+    const { ok: rateLimitOk } = await rateLimit({ key: `login:${ip}`, maxAttempts: 5, windowMs: 15 * 60 * 1000 })
     if (!rateLimitOk) {
       return NextResponse.json({ error: 'Demasiados intentos. Esperá 15 minutos e intentá de nuevo.' }, { status: 429 })
     }

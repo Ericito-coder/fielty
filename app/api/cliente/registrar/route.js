@@ -97,7 +97,10 @@ export async function POST(request) {
     if (negocio.plan === 'gratis') {
       fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/notificar-limite`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'x-internal-secret': process.env.WEBHOOK_SECRET || '',
+        },
         body: JSON.stringify({ negocioId: negocio.id }),
       }).catch(() => {})
     }

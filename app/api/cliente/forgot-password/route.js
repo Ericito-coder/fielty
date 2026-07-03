@@ -14,7 +14,7 @@ const supabaseAdmin = createClient(
 export async function POST(request) {
   try {
     const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown'
-    const { ok: rateLimitOk } = rateLimit({ key: `forgot:${ip}`, maxAttempts: 3, windowMs: 60 * 60 * 1000 })
+    const { ok: rateLimitOk } = await rateLimit({ key: `forgot:${ip}`, maxAttempts: 3, windowMs: 60 * 60 * 1000 })
     if (!rateLimitOk) {
       return NextResponse.json({ ok: true }) // Respuesta genérica para no revelar el bloqueo
     }

@@ -1,6 +1,5 @@
 'use client'
 import { useState, useEffect } from 'react'
-import { supabase } from '@/lib/supabase'
 import QRCode from 'qrcode'
 
 export default function CajaSlugSucursal({ params }) {
@@ -42,34 +41,47 @@ export default function CajaSlugSucursal({ params }) {
 
   useEffect(() => {
     if (!slugNegocio || !slugSucursal) return
-    supabase.from('negocios').select('*').eq('slug', slugNegocio).single()
-      .then(({ data: neg }) => {
-        setNegocio(neg)
-        if (neg) {
-          supabase.from('sucursales').select('*')
-            .eq('negocio_id', neg.id).eq('slug', slugSucursal).single()
-            .then(({ data: suc }) => setSucursal(suc))
-        }
-      })
+    fetch(`/api/caja/info?slug=${encodeURIComponent(slugNegocio)}&sucursal=${encodeURIComponent(slugSucursal)}`)
+      .then(res => res.ok ? res.json() : { negocio: null, sucursal: null })
+      .then(({ negocio: neg, sucursal: suc }) => { setNegocio(neg); setSucursal(suc) })
+      .catch(() => {})
   }, [slugNegocio, slugSucursal])
 
-  function ingresarPin() {
-    const pinReal = sucursal?.pin_caja || negocio?.pin_caja
-    if (!pinReal) { mostrarMensaje('❌ PIN no configurado. Contacte al administrador', 'error'); return }
-    if (pin === pinReal) { setPinVerificado(pin); setPantalla('buscar'); setPin('') }
-    else { mostrarMensaje('❌ PIN incorrecto', 'error'); setPin('') }
+  async function ingresarPin() {
+    if (!pin) return
+    setCargando(true)
+    try {
+      const res = await fetch('/api/caja/verificar-pin', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ slug: slugNegocio, sucursalSlug: slugSucursal, pin }),
+      })
+      const data = await res.json()
+      setCargando(false)
+      if (!res.ok) { mostrarMensaje(`❌ ${data.error || 'PIN incorrecto'}`, 'error'); setPin(''); return }
+      setPinVerificado(pin)
+      setPantalla('buscar')
+      setPin('')
+    } catch {
+      setCargando(false)
+      mostrarMensaje('❌ Error de conexión', 'error')
+    }
   }
 
   async function buscarCliente(valor) {
     setBusqueda(valor)
     if (valor.length < 2) { setClientes([]); return }
-    const { data } = await supabase
-      .from('clientes')
-      .select('*, negocio:negocios(pesos_por_punto, puntos_por_tramo, color, nombre)')
-      .eq('negocio_id', negocio.id)
-      .or(`nombre.ilike.%${valor}%,dni.ilike.%${valor}%`)
-      .limit(8)
-    setClientes(data || [])
+    try {
+      const res = await fetch('/api/caja/buscar-clientes', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ negocioId: negocio.id, sucursalId: sucursal.id, pin: pinVerificado, q: valor }),
+      })
+      const data = await res.json()
+      setClientes(res.ok ? (data.clientes || []) : [])
+    } catch {
+      setClientes([])
+    }
   }
 
   function seleccionarCliente(c) {
@@ -108,30 +120,45 @@ export default function CajaSlugSucursal({ params }) {
     if (codigo.length < 7) { mostrarMensaje('⚠️ Ingresá el código completo', 'error'); return }
     setCargando(true)
     setCanjeResult(null)
-    const { data: canje } = await supabase
-      .from('canjes')
-      .select('*, clientes(id, nombre, puntos), recompensas(nombre, puntos_necesarios)')
-      .eq('codigo', codigo.toUpperCase()).eq('negocio_id', negocio.id).eq('estado', 'pendiente').single()
-    setCargando(false)
-    if (!canje) { mostrarMensaje('❌ Código inválido o ya usado', 'error'); setCodigo(''); return }
-    if (new Date() > new Date(canje.expira_at)) {
-      await supabase.from('canjes').update({ estado: 'expirado' }).eq('id', canje.id)
-      const { data: ca } = await supabase.from('clientes').select('puntos').eq('id', canje.clientes.id).single()
-      await supabase.from('clientes').update({ puntos: (ca?.puntos || 0) + canje.puntos_descontados }).eq('id', canje.clientes.id)
-      mostrarMensaje(`⏱️ Código expirado — se devolvieron ${canje.puntos_descontados} pts`, 'error')
-      setCodigo(''); return
+    try {
+      const res = await fetch('/api/caja/validar-canje', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ negocioId: negocio.id, sucursalId: sucursal.id, pin: pinVerificado, codigo }),
+      })
+      const data = await res.json()
+      setCargando(false)
+      if (!res.ok) {
+        mostrarMensaje(`${data.expirado ? '⏱️' : '❌'} ${data.error || 'Código inválido o ya usado'}`, 'error')
+        setCodigo('')
+        return
+      }
+      setCanjeResult(data.canje)
+    } catch {
+      setCargando(false)
+      mostrarMensaje('❌ Error de conexión', 'error')
     }
-    setCanjeResult(canje)
   }
 
   async function confirmarCanje() {
     if (!canjeResult) return
     setCargando(true)
-    await supabase.from('canjes').update({ estado: 'usado', usado_at: new Date().toISOString(), sucursal_id: sucursal.id }).eq('id', canjeResult.id)
-    setCargando(false)
-    setCanjeResult(null)
-    setCodigo('')
-    mostrarMensaje(`✅ Canje confirmado: ${canjeResult.recompensas.nombre}`, 'success')
+    try {
+      const res = await fetch('/api/caja/confirmar-canje', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ negocioId: negocio.id, sucursalId: sucursal.id, pin: pinVerificado, canjeId: canjeResult.id }),
+      })
+      const data = await res.json()
+      setCargando(false)
+      if (!res.ok) { mostrarMensaje(`❌ ${data.error || 'Error al confirmar'}`, 'error'); setCanjeResult(null); setCodigo(''); return }
+      setCanjeResult(null)
+      setCodigo('')
+      mostrarMensaje(`✅ Canje confirmado: ${canjeResult.recompensas.nombre}`, 'success')
+    } catch {
+      setCargando(false)
+      mostrarMensaje('❌ Error de conexión', 'error')
+    }
   }
 
   function mostrarMensaje(texto, tipo) {
@@ -139,8 +166,8 @@ export default function CajaSlugSucursal({ params }) {
     setTimeout(() => setMensaje(null), 3500)
   }
 
-  const pesosPorPunto = clienteSeleccionado?.negocio?.pesos_por_punto || 100
-  const puntosPorTramo = clienteSeleccionado?.negocio?.puntos_por_tramo || 1
+  const pesosPorPunto = negocio?.pesos_por_punto || 100
+  const puntosPorTramo = negocio?.puntos_por_tramo || 1
   const ptsPreview = Math.round((parseInt(monto) || 0) / pesosPorPunto * puntosPorTramo)
 
   const getNivel = (pts) => {
@@ -162,7 +189,7 @@ export default function CajaSlugSucursal({ params }) {
     const res = await fetch('/api/caja/registrar-cliente', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ negocioId: negocio.id, nombre: regNombre.trim(), dni: regDni.trim(), email: regEmail.trim() || null, telefono: regTelefono.trim() || null, monto: regMonto ? parseInt(regMonto) : null, pin: pinVerificado }),
+      body: JSON.stringify({ negocioId: negocio.id, sucursalId: sucursal.id, nombre: regNombre.trim(), dni: regDni.trim(), email: regEmail.trim() || null, telefono: regTelefono.trim() || null, monto: regMonto ? parseInt(regMonto) : null, pin: pinVerificado }),
     })
     const data = await res.json()
     setRegCargando(false)

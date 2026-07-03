@@ -11,6 +11,12 @@ const supabaseAdmin = createClient(
 
 export async function POST(request) {
   try {
+    // Endpoint interno: solo lo llama /api/cliente/registrar
+    const secret = request.headers.get('x-internal-secret')
+    if (!process.env.WEBHOOK_SECRET || secret !== process.env.WEBHOOK_SECRET) {
+      return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
+    }
+
     const { negocioId } = await request.json()
 
     // Contar clientes del negocio

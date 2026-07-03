@@ -1,6 +1,5 @@
 'use client'
 import { useState, useEffect } from 'react'
-import { supabase } from '@/lib/supabase'
 
 export const dynamic = 'force-dynamic'
 
@@ -21,8 +20,10 @@ export default function RegistroSlug({ params }) {
 
   useEffect(() => {
     params.then(p => {
-      supabase.from('negocios').select('*').eq('slug', p.slug).single()
-        .then(({ data }) => setNegocio(data))
+      fetch(`/api/negocio-publico?slug=${encodeURIComponent(p.slug)}`)
+        .then(res => res.ok ? res.json() : { negocio: null })
+        .then(({ negocio: data }) => setNegocio(data))
+        .catch(() => {})
     })
     const searchParams = new URLSearchParams(window.location.search)
     setReferidoPor(searchParams.get('ref') || null)

@@ -1,0 +1,12 @@
+{
+  "crons": [
+    {
+      "path": "/api/cron/expirar-canjes",
+      "schedule": "30 3 * * *"
+    },
+    {
+      "path": "/api/cron/cumpleanos",
+      "schedule": "0 12 * * *"
+    }
+  ]
+}
