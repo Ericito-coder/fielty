@@ -7,6 +7,7 @@ import { linkWhatsApp } from '@/lib/wa'
 const NAV_ITEMS = [
   { id:'inicio', label:'Inicio', icon:'📊' },
   { id:'clientes', label:'Clientes', icon:'👥' },
+  { id:'campanas', label:'Campañas', icon:'📣' },
   { id:'recompensas', label:'Recompensas', icon:'🎁' },
   { id:'sucursales', label:'Sucursales', icon:'🏪' },
   { id:'config', label:'Config', icon:'⚙️' },
@@ -253,6 +254,7 @@ export default function Dashboard() {
             {seccion === 'clientes' && 'Todos los clientes registrados'}
             {seccion === 'recompensas' && 'Gestión de recompensas y canjes'}
             {seccion === 'sucursales' && 'Tus locales y URLs de caja'}
+            {seccion === 'campanas' && 'Traé de vuelta a tus clientes'}
             {seccion === 'config' && 'Configuración de tu programa'}
           </div>
         </div>
@@ -265,6 +267,7 @@ export default function Dashboard() {
 function SeccionContenido({ seccion, negocio, metricas, setNegocio, isDesktop }) {
   if (seccion === 'inicio') return <InicioSection negocio={negocio} metricas={metricas} isDesktop={isDesktop} />
   if (seccion === 'clientes') return <ClientesSection negocioId={negocio.id} color={negocio.color} plan={negocio.plan} nombreNegocio={negocio.nombre} isDesktop={isDesktop} />
+  if (seccion === 'campanas') return <CampanasSection negocio={negocio} isDesktop={isDesktop} />
   if (seccion === 'recompensas') return <RecompensasSection negocioId={negocio.id} isDesktop={isDesktop} />
   if (seccion === 'sucursales') return <SucursalesSection negocio={negocio} />
   if (seccion === 'config') return <ConfigSection negocio={negocio} setNegocio={setNegocio} />
@@ -628,6 +631,170 @@ function ClientesSection({ negocioId, color, plan, nombreNegocio, isDesktop }) {
           ))
         )}
         {filtrados.length === 0 && <div style={{textAlign:'center', padding:24, color:'#888', fontSize:14}}>No hay clientes en este filtro</div>}
+      </div>
+    </>
+  )
+}
+
+// ===== CAMPAÑAS =====
+const PLANTILLA_REACTIVACION = {
+  asunto: '¡Te extrañamos en {negocio}! 🎁',
+  mensaje: '¡Hola {nombre}!\nHace tiempo que no te vemos por {negocio} y tenés {puntos} puntos esperándote.\nVení a visitarnos y seguí sumando para canjear tus premios.',
+}
+
+function CampanasSection({ negocio, isDesktop }) {
+  const [segmento, setSegmento] = useState('inactivos30')
+  const [asunto, setAsunto] = useState(PLANTILLA_REACTIVACION.asunto)
+  const [mensaje, setMensaje] = useState(PLANTILLA_REACTIVACION.mensaje)
+  const [enviando, setEnviando] = useState(false)
+  const [confirmar, setConfirmar] = useState(false)
+  const [resultado, setResultado] = useState(null)
+  const [clientes, setClientes] = useState([])
+  const [campanas, setCampanas] = useState([])
+
+  useEffect(() => { cargar() }, [negocio.id])
+
+  async function cargar() {
+    const [{ data: cls }, { data: cams }, { data: envios }] = await Promise.all([
+      supabase.from('clientes').select('id, email, acepta_marketing, ultima_visita, ultima_campana_at').eq('negocio_id', negocio.id),
+      supabase.from('campanas').select('*').eq('negocio_id', negocio.id).order('created_at', { ascending: false }).limit(10),
+      supabase.from('campana_envios').select('campana_id, cliente_id').eq('negocio_id', negocio.id),
+    ])
+    setClientes(cls || [])
+    const visitaPorCliente = {}
+    ;(cls || []).forEach(c => { visitaPorCliente[c.id] = c.ultima_visita })
+    setCampanas((cams || []).map(cam => ({
+      ...cam,
+      volvieron: (envios || []).filter(e =>
+        e.campana_id === cam.id &&
+        visitaPorCliente[e.cliente_id] &&
+        new Date(visitaPorCliente[e.cliente_id]) > new Date(cam.created_at)
+      ).length,
+    })))
+  }
+
+  const hace30 = Date.now() - 30 * 86400000
+  const hace60 = Date.now() - 60 * 86400000
+  const destinatarios = clientes.filter(c => {
+    if (!c.email || c.acepta_marketing === false) return false
+    if (c.ultima_campana_at && new Date(c.ultima_campana_at).getTime() > hace30) return false
+    if (segmento === 'todos') return true
+    const limite = segmento === 'inactivos60' ? hace60 : hace30
+    return !c.ultima_visita || new Date(c.ultima_visita).getTime() <= limite
+  }).length
+
+  async function enviar() {
+    setEnviando(true)
+    setResultado(null)
+    setConfirmar(false)
+    try {
+      const { data: { session } } = await supabase.auth.getSession()
+      const res = await fetch('/api/campanas/enviar', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${session?.access_token}` },
+        body: JSON.stringify({ negocioId: negocio.id, segmento, asunto, mensaje }),
+      })
+      const data = await res.json()
+      setResultado(res.ok ? { ok: true, enviados: data.enviados } : { error: data.error || 'Error al enviar' })
+      if (res.ok) cargar()
+    } catch {
+      setResultado({ error: 'Error de conexión' })
+    }
+    setEnviando(false)
+  }
+
+  const SEGMENTOS = [
+    { id: 'inactivos30', label: 'Inactivos +30 días' },
+    { id: 'inactivos60', label: 'Inactivos +60 días' },
+    { id: 'todos', label: 'Todos' },
+  ]
+
+  return (
+    <>
+      <div style={s.card}>
+        <div style={{fontSize:15, fontWeight:800, color:'#0e0e0e', marginBottom:4}}>📣 Nueva campaña</div>
+        <div style={{fontSize:13, color:'#888', marginBottom:20}}>
+          Enviá un email a un grupo de clientes. Cada cliente se contacta como máximo una vez cada 30 días.
+        </div>
+
+        <div style={{fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.06em', color:'#888', marginBottom:8}}>¿A quiénes?</div>
+        <div style={{display:'flex', gap:8, flexWrap:'wrap', marginBottom:16}}>
+          {SEGMENTOS.map(seg => (
+            <button key={seg.id} onClick={() => setSegmento(seg.id)}
+              style={{...s.filtroBtn, background: segmento === seg.id ? '#0e0e0e' : '#f0f2f7', color: segmento === seg.id ? 'white' : '#888'}}>
+              {seg.label}
+            </button>
+          ))}
+        </div>
+
+        <div style={{fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.06em', color:'#888', marginBottom:8}}>Asunto</div>
+        <input value={asunto} onChange={e => setAsunto(e.target.value)}
+          style={{width:'100%', padding:'12px 14px', border:'2px solid #e8eaf0', borderRadius:12, fontSize:14, fontFamily:'inherit', outline:'none', boxSizing:'border-box', marginBottom:16}} />
+
+        <div style={{fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.06em', color:'#888', marginBottom:8}}>Mensaje</div>
+        <textarea value={mensaje} onChange={e => setMensaje(e.target.value)} rows={5}
+          style={{width:'100%', padding:'12px 14px', border:'2px solid #e8eaf0', borderRadius:12, fontSize:14, fontFamily:'inherit', outline:'none', boxSizing:'border-box', resize:'vertical', lineHeight:1.5}} />
+        <div style={{fontSize:12, color:'#aaa', marginTop:6, marginBottom:20}}>
+          Variables: <code style={{background:'#f0f2f7', padding:'2px 6px', borderRadius:6}}>{'{nombre}'}</code>{' '}
+          <code style={{background:'#f0f2f7', padding:'2px 6px', borderRadius:6}}>{'{puntos}'}</code>{' '}
+          <code style={{background:'#f0f2f7', padding:'2px 6px', borderRadius:6}}>{'{negocio}'}</code>
+          {' '}· El email incluye el botón "Ver mi tarjeta" y el link de baja automáticamente.
+        </div>
+
+        {resultado?.ok && (
+          <div style={{background:'#e7f9ef', color:'#00a884', padding:'12px 16px', borderRadius:12, fontSize:14, fontWeight:700, marginBottom:12}}>
+            ✅ Campaña enviada a {resultado.enviados} cliente{resultado.enviados === 1 ? '' : 's'}
+          </div>
+        )}
+        {resultado?.error && (
+          <div style={{background:'#fff0f0', color:'#e0001b', padding:'12px 16px', borderRadius:12, fontSize:13, marginBottom:12}}>
+            {resultado.error}
+          </div>
+        )}
+
+        {!confirmar ? (
+          <button onClick={() => destinatarios > 0 && setConfirmar(true)} disabled={enviando || destinatarios === 0}
+            style={{padding:'14px 24px', background: destinatarios > 0 ? '#0e0e0e' : '#f0f2f7', border:'none', borderRadius:12, color: destinatarios > 0 ? 'white' : '#aaa', fontSize:14, fontWeight:800, cursor: destinatarios > 0 ? 'pointer' : 'default', fontFamily:'inherit'}}>
+            {destinatarios === 0 ? 'No hay clientes para contactar en este segmento' : `Enviar a ${destinatarios} cliente${destinatarios === 1 ? '' : 's'} →`}
+          </button>
+        ) : (
+          <div style={{display:'flex', gap:10, alignItems:'center', flexWrap:'wrap'}}>
+            <button onClick={enviar} disabled={enviando}
+              style={{padding:'14px 24px', background:'#00a884', border:'none', borderRadius:12, color:'white', fontSize:14, fontWeight:800, cursor:'pointer', fontFamily:'inherit'}}>
+              {enviando ? 'Enviando...' : `✓ Confirmar envío a ${destinatarios}`}
+            </button>
+            <button onClick={() => setConfirmar(false)} disabled={enviando}
+              style={{padding:'14px 20px', background:'#f0f2f7', border:'none', borderRadius:12, color:'#888', fontSize:14, fontWeight:700, cursor:'pointer', fontFamily:'inherit'}}>
+              Cancelar
+            </button>
+          </div>
+        )}
+      </div>
+
+      <div style={s.card}>
+        <div style={{fontSize:15, fontWeight:800, color:'#0e0e0e', marginBottom:16}}>Historial</div>
+        {campanas.length === 0 && (
+          <div style={{textAlign:'center', padding:24, color:'#888', fontSize:14}}>Todavía no enviaste ninguna campaña</div>
+        )}
+        {campanas.map(cam => (
+          <div key={cam.id} style={{display:'flex', alignItems:'center', gap:12, padding:'14px 0', borderBottom:'1px solid #f0f2f7', flexWrap:'wrap'}}>
+            <div style={{flex:1, minWidth:180}}>
+              <div style={{fontSize:14, fontWeight:700, color:'#0e0e0e'}}>{cam.asunto}</div>
+              <div style={{fontSize:12, color:'#888', marginTop:2}}>
+                {new Date(cam.created_at).toLocaleDateString('es-AR', { day:'numeric', month:'short' })}
+                {' · '}{SEGMENTOS.find(x => x.id === cam.segmento)?.label || cam.segmento}
+              </div>
+            </div>
+            <div style={{textAlign:'center'}}>
+              <div style={{fontSize:16, fontWeight:800, color:'#0e0e0e', fontFamily:'monospace'}}>{cam.enviados}</div>
+              <div style={{fontSize:10, color:'#888'}}>enviados</div>
+            </div>
+            <div style={{textAlign:'center', background: cam.volvieron > 0 ? '#e7f9ef' : '#f8f9fc', borderRadius:10, padding:'6px 14px'}}>
+              <div style={{fontSize:16, fontWeight:800, color: cam.volvieron > 0 ? '#00a884' : '#aaa', fontFamily:'monospace'}}>{cam.volvieron}</div>
+              <div style={{fontSize:10, color: cam.volvieron > 0 ? '#00a884' : '#aaa'}}>volvieron</div>
+            </div>
+          </div>
+        ))}
       </div>
     </>
   )
