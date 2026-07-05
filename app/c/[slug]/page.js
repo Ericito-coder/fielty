@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react'
 import QRCode from 'qrcode'
 import { linkWhatsApp } from '@/lib/wa'
+import EscanerQR from '@/app/components/EscanerQR'
 
 export default function CajaSlug({ params }) {
   const [slug, setSlug] = useState(null)
@@ -30,6 +31,7 @@ export default function CajaSlug({ params }) {
   const [regCargando, setRegCargando] = useState(false)
   const [regError, setRegError] = useState('')
   const [avisoWa, setAvisoWa] = useState(null)
+  const [escanerAbierto, setEscanerAbierto] = useState(false)
 
   useEffect(() => {
     params.then(p => setSlug(p.slug))
@@ -182,6 +184,27 @@ export default function CajaSlug({ params }) {
     return { nombre:'Bronce', emoji:'🥉' }
   }
 
+  async function manejarEscaneo(clienteId) {
+    setEscanerAbierto(false)
+    setCargando(true)
+    try {
+      const res = await fetch('/api/caja/cliente-por-qr', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ negocioId: negocio.id, pin: pinVerificado, clienteId }),
+      })
+      const data = await res.json()
+      setCargando(false)
+      if (!res.ok) { mostrarMensaje(`❌ ${data.error || 'No se pudo leer la tarjeta'}`, 'error'); return }
+      setBusqueda('')
+      setClientes([])
+      seleccionarCliente(data.cliente)
+    } catch {
+      setCargando(false)
+      mostrarMensaje('❌ Error de conexión', 'error')
+    }
+  }
+
   function abrirRegModal() {
     setRegNombre(''); setRegDni(''); setRegEmail(''); setRegTelefono(''); setRegMonto(''); setRegError('')
     setRegModal(true)
@@ -304,11 +327,16 @@ export default function CajaSlug({ params }) {
     </div>
   )
 
+  const escanerJsx = escanerAbierto && (
+    <EscanerQR onDetectar={manejarEscaneo} onCerrar={() => setEscanerAbierto(false)} />
+  )
+
   // ===== DESKTOP LAYOUT =====
   if (!isMobile) return (
     <div style={{minHeight:'100vh', background:'#0e0e0e', color:'white', display:'flex', flexDirection:'column'}}>
       {regModalJsx}
       {qrModalJsx}
+      {escanerJsx}
       {mensaje && <div style={s.toast(mensaje.tipo)}>{mensaje.texto}</div>}
 
       {/* TOPBAR */}
@@ -367,6 +395,10 @@ export default function CajaSlug({ params }) {
 
           {/* Botones fondo panel izquierdo */}
           <div style={{padding:16, borderTop:'1px solid #1e1e1e', display:'flex', flexDirection:'column', gap:8}}>
+            <button style={{width:'100%', padding:14, background: negocio.color, border:'none', borderRadius:14, color:'white', fontSize:14, fontWeight:700, cursor:'pointer', fontFamily:'inherit'}}
+              onClick={() => setEscanerAbierto(true)}>
+              📷 Escanear tarjeta del cliente
+            </button>
             <button style={{width:'100%', padding:14, background:'#1a1a1a', border:'1px solid #2a2a2a', borderRadius:14, color:'white', fontSize:14, fontWeight:700, cursor:'pointer', fontFamily:'inherit'}}
               onClick={() => { setClienteSeleccionado(null); setTabDesktop('canje') }}>
               🎁 Validar canje de recompensa
@@ -478,6 +510,7 @@ export default function CajaSlug({ params }) {
     <div style={s.mobileWrap}>
       {regModalJsx}
       {qrModalJsx}
+      {escanerJsx}
       {mensaje && <div style={s.toast(mensaje.tipo)}>{mensaje.texto}</div>}
       <div style={s.mobileTopbar}>
         <div style={{display:'flex', alignItems:'center', gap:10, flex:1}}>
@@ -519,6 +552,8 @@ export default function CajaSlug({ params }) {
         {busqueda.length < 2 && (
           <div style={{marginTop:24}}>
             <div style={s.mobileLabel}>Accesos rápidos</div>
+            <button style={{width:'100%', padding:16, background: negocio.color, border:'none', borderRadius:14, color:'white', fontSize:15, fontWeight:700, cursor:'pointer', fontFamily:'inherit', textAlign:'left', marginBottom:10}}
+              onClick={() => setEscanerAbierto(true)}>📷 Escanear tarjeta del cliente</button>
             <button style={{width:'100%', padding:16, background:'#1a1a1a', border:'1px solid #2a2a2a', borderRadius:14, color:'white', fontSize:15, fontWeight:700, cursor:'pointer', fontFamily:'inherit', textAlign:'left', marginBottom:10}}
               onClick={() => setPantalla('validar')}>🎁 Validar canje de recompensa</button>
             <button style={{width:'100%', padding:16, background:'#1a1a1a', border:'1px solid #2a2a2a', borderRadius:14, color:'#aaa', fontSize:15, fontWeight:600, cursor:'pointer', fontFamily:'inherit', textAlign:'left', marginBottom:10}}

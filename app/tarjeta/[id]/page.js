@@ -1,5 +1,6 @@
 'use client'
 import { useEffect, useState } from 'react'
+import QRCode from 'qrcode'
 
 export default function Tarjeta({ params }) {
   const [cliente, setCliente] = useState(null)
@@ -14,6 +15,8 @@ export default function Tarjeta({ params }) {
   const [bannerInstalar, setBannerInstalar] = useState(false)
   const [walletOk, setWalletOk] = useState(false)
   const [walletCargando, setWalletCargando] = useState(false)
+  const [qrAbierto, setQrAbierto] = useState(false)
+  const [qrDataUrl, setQrDataUrl] = useState('')
   const [esIOS, setEsIOS] = useState(false)
   const [deferredPrompt, setDeferredPrompt] = useState(null)
   const [modalIOSAbierto, setModalIOSAbierto] = useState(false)
@@ -101,6 +104,15 @@ export default function Tarjeta({ params }) {
       setSegundos(Math.floor((new Date(data.expira_at) - new Date()) / 1000))
     } catch {}
     setCanjeando(null)
+  }
+
+  async function mostrarMiCodigo() {
+    if (!qrDataUrl) {
+      const url = `${window.location.origin}/tarjeta/${id}`
+      const data = await QRCode.toDataURL(url, { width: 320, margin: 2, color: { dark: '#0e0e0e', light: '#ffffff' } })
+      setQrDataUrl(data)
+    }
+    setQrAbierto(true)
   }
 
   async function agregarAWallet() {
@@ -207,12 +219,34 @@ export default function Tarjeta({ params }) {
         </div>
       </div>
 
+      <button onClick={mostrarMiCodigo}
+        style={{width:'100%', display:'flex', alignItems:'center', justifyContent:'center', gap:10, padding:'14px 18px', background:'white', border:'none', borderRadius:16, color:'#0e0e0e', fontSize:15, fontWeight:700, cursor:'pointer', fontFamily:'inherit', marginBottom:16, boxShadow:'0 4px 20px rgba(0,0,0,0.06)'}}>
+        <span style={{fontSize:18}}>📷</span>
+        Mostrar mi código en la caja
+      </button>
+
       {walletOk && (
         <button onClick={agregarAWallet} disabled={walletCargando}
           style={{width:'100%', display:'flex', alignItems:'center', justifyContent:'center', gap:10, padding:'14px 18px', background:'#0e0e0e', border:'none', borderRadius:16, color:'white', fontSize:15, fontWeight:700, cursor:'pointer', fontFamily:'inherit', marginBottom:16}}>
           <span style={{fontSize:18}}>👛</span>
           {walletCargando ? 'Generando tu pase...' : 'Agregar a Google Wallet'}
         </button>
+      )}
+
+      {qrAbierto && (
+        <div onClick={() => setQrAbierto(false)}
+          style={{position:'fixed', inset:0, background:'rgba(0,0,0,0.92)', zIndex:200, display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', padding:24}}>
+          <div style={{background:'white', borderRadius:28, padding:'32px 28px', textAlign:'center', maxWidth:340, width:'100%'}} onClick={e => e.stopPropagation()}>
+            <div style={{fontSize:17, fontWeight:800, color:'#0e0e0e', marginBottom:6}}>Mostrale este código al negocio</div>
+            <div style={{fontSize:13, color:'#888', marginBottom:20, lineHeight:1.5}}>El empleado lo escanea desde la caja para sumarte puntos al instante.</div>
+            {qrDataUrl && <img src={qrDataUrl} alt="Mi código" style={{width:'100%', maxWidth:260, height:'auto'}} />}
+            <div style={{fontFamily:'monospace', fontSize:13, color:'#bbb', marginTop:12}}>FLT-{cliente.id.slice(0,5).toUpperCase()}</div>
+            <button onClick={() => setQrAbierto(false)}
+              style={{marginTop:20, padding:'12px 32px', background:'#0e0e0e', border:'none', borderRadius:14, color:'white', fontSize:15, fontWeight:700, cursor:'pointer', fontFamily:'inherit'}}>
+              Cerrar
+            </button>
+          </div>
+        </div>
       )}
 
       {bannerInstalar && (
