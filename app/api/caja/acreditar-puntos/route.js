@@ -69,7 +69,7 @@ export async function POST(request) {
     if (cliente.email) {
       enviarEmailPuntos({ cliente, negocio, pts, nuevosPuntos, montoNum }).catch(() => {})
     }
-    actualizarPuntosWallet(clienteId, nuevosPuntos).catch(() => {})
+    actualizarPuntosWallet(clienteId).catch(() => {})
 
     return NextResponse.json({ ok: true, pts, nuevosPuntos, nuevosHistoricos })
 

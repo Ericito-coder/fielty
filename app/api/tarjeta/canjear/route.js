@@ -53,9 +53,7 @@ export async function POST(request) {
       return NextResponse.json({ error: 'No se pudo generar el canje, intentá de nuevo' }, { status: 500 })
     }
 
-    if (typeof data?.puntos === 'number') {
-      actualizarPuntosWallet(clienteId, data.puntos).catch(() => {})
-    }
+    actualizarPuntosWallet(clienteId).catch(() => {})
 
     return NextResponse.json({ ok: true, codigo, expira_at: expiraAt, puntos: data?.puntos })
   } catch (error) {

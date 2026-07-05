@@ -19,13 +19,19 @@ export async function GET(request) {
     const supabaseAdmin = getSupabaseAdmin()
     const { data: cliente } = await supabaseAdmin
       .from('clientes')
-      .select(`id, nombre, puntos, negocio:negocios(${NEGOCIO_CAMPOS_PUBLICOS})`)
+      .select(`id, nombre, puntos, puntos_historicos, negocio_id, negocio:negocios(${NEGOCIO_CAMPOS_PUBLICOS})`)
       .eq('id', clienteId)
       .single()
 
     if (!cliente) return NextResponse.json({ error: 'Cliente no encontrado' }, { status: 404 })
 
-    const url = await generarLinkWallet(cliente, cliente.negocio)
+    const { data: recompensas } = await supabaseAdmin
+      .from('recompensas')
+      .select('nombre, puntos_necesarios')
+      .eq('negocio_id', cliente.negocio_id)
+      .eq('activa', true)
+
+    const url = await generarLinkWallet(cliente, cliente.negocio, recompensas || [])
     return NextResponse.json({ ok: true, url })
   } catch (error) {
     console.error('wallet save-link error:', error?.message)
