@@ -12,6 +12,8 @@ export default function Tarjeta({ params }) {
   const [codigoCanje, setCodigoCanje] = useState(null)
   const [segundos, setSegundos] = useState(86399)
   const [bannerInstalar, setBannerInstalar] = useState(false)
+  const [walletOk, setWalletOk] = useState(false)
+  const [walletCargando, setWalletCargando] = useState(false)
   const [esIOS, setEsIOS] = useState(false)
   const [deferredPrompt, setDeferredPrompt] = useState(null)
   const [modalIOSAbierto, setModalIOSAbierto] = useState(false)
@@ -55,7 +57,8 @@ export default function Tarjeta({ params }) {
       return
     }
 
-    const { cliente: clienteData, recompensas: recompensasData, canjeActivo, transacciones: transaccionesData } = data
+    const { cliente: clienteData, recompensas: recompensasData, canjeActivo, transacciones: transaccionesData, wallet } = data
+    setWalletOk(!!wallet)
 
     if (canjeActivo) {
       const segsRestantes = Math.floor((new Date(canjeActivo.expira_at) - new Date()) / 1000)
@@ -98,6 +101,18 @@ export default function Tarjeta({ params }) {
       setSegundos(Math.floor((new Date(data.expira_at) - new Date()) / 1000))
     } catch {}
     setCanjeando(null)
+  }
+
+  async function agregarAWallet() {
+    setWalletCargando(true)
+    try {
+      const res = await fetch(`/api/wallet/save-link?cliente=${id}`)
+      const data = await res.json()
+      if (res.ok && data.url) {
+        window.location.href = data.url
+      }
+    } catch {}
+    setWalletCargando(false)
   }
 
   function formatTime(s) {
@@ -191,6 +206,14 @@ export default function Tarjeta({ params }) {
           <span style={st.cardId}>FLT-{cliente.id.slice(0,5).toUpperCase()}</span>
         </div>
       </div>
+
+      {walletOk && (
+        <button onClick={agregarAWallet} disabled={walletCargando}
+          style={{width:'100%', display:'flex', alignItems:'center', justifyContent:'center', gap:10, padding:'14px 18px', background:'#0e0e0e', border:'none', borderRadius:16, color:'white', fontSize:15, fontWeight:700, cursor:'pointer', fontFamily:'inherit', marginBottom:16}}>
+          <span style={{fontSize:18}}>👛</span>
+          {walletCargando ? 'Generando tu pase...' : 'Agregar a Google Wallet'}
+        </button>
+      )}
 
       {bannerInstalar && (
         <div style={{background:'white', borderRadius:20, padding:'16px 18px', marginBottom:16, display:'flex', alignItems:'center', gap:12, boxShadow:'0 4px 20px rgba(0,0,0,0.06)'}}>

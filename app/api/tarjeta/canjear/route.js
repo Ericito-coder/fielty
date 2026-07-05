@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import crypto from 'crypto'
 import { getSupabaseAdmin } from '@/lib/server'
+import { actualizarPuntosWallet } from '@/lib/googleWallet'
 import { rateLimit } from '@/lib/rateLimit'
 
 const CHARS = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'
@@ -50,6 +51,10 @@ export async function POST(request) {
       }
       console.error('fn_canjear error:', error)
       return NextResponse.json({ error: 'No se pudo generar el canje, intentá de nuevo' }, { status: 500 })
+    }
+
+    if (typeof data?.puntos === 'number') {
+      actualizarPuntosWallet(clienteId, data.puntos).catch(() => {})
     }
 
     return NextResponse.json({ ok: true, codigo, expira_at: expiraAt, puntos: data?.puntos })

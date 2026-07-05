@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { Resend } from 'resend'
 import { getSupabaseAdmin, validarPinCaja } from '@/lib/server'
+import { actualizarPuntosWallet } from '@/lib/googleWallet'
 
 const resend = new Resend(process.env.RESEND_API_KEY)
 
@@ -64,10 +65,11 @@ export async function POST(request) {
         descripcion
       }])
 
-    // Email al cliente (fire-and-forget, no bloquea la respuesta)
+    // Email y pase de Google Wallet (fire-and-forget, no bloquean la respuesta)
     if (cliente.email) {
       enviarEmailPuntos({ cliente, negocio, pts, nuevosPuntos, montoNum }).catch(() => {})
     }
+    actualizarPuntosWallet(clienteId, nuevosPuntos).catch(() => {})
 
     return NextResponse.json({ ok: true, pts, nuevosPuntos, nuevosHistoricos })
 

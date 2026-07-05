@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { getSupabaseAdmin, NEGOCIO_CAMPOS_PUBLICOS } from '@/lib/server'
+import { walletDisponible } from '@/lib/googleWallet'
 
 // Datos completos de la tarjeta del cliente: datos propios (sin
 // password_hash ni otros campos sensibles), recompensas activas,
@@ -68,6 +69,7 @@ export async function GET(request, { params }) {
       recompensas: recompensas || [],
       canjeActivo: canjeActivo || null,
       transacciones: transacciones || [],
+      wallet: walletDisponible(),
     })
   } catch (error) {
     console.error('tarjeta error:', error)
