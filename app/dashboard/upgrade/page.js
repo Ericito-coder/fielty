@@ -14,9 +14,9 @@ const PLANES = {
     features: [
       'Clientes ilimitados',
       'Hasta 3 sucursales',
-      'Métricas por sucursal',
-      'Puntos de cumpleaños',
-      'Sistema de referidos',
+      'Campañas de email a inactivos',
+      'Logo personalizado en tu tarjeta',
+      'Exportar clientes a CSV',
       'Soporte por WhatsApp',
     ],
     destacado: true,
@@ -29,7 +29,8 @@ const PLANES = {
     features: [
       'Todo lo de Pro',
       'Sucursales ilimitadas',
-      'Integraciones (próximamente)',
+      'Tu tarjeta en Google Wallet',
+      'WhatsApp automático (próximamente)',
       'Soporte prioritario',
     ],
     destacado: false,

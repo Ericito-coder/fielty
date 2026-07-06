@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { getSupabaseAdmin, NEGOCIO_CAMPOS_PUBLICOS } from '@/lib/server'
 import { generarLinkWallet, walletDisponible } from '@/lib/googleWallet'
+import { puedeUsarWallet } from '@/lib/planes'
 import { rateLimit } from '@/lib/rateLimit'
 
 // Devuelve el link "Agregar a Google Wallet" del cliente.
@@ -24,6 +25,15 @@ export async function GET(request) {
       .single()
 
     if (!cliente) return NextResponse.json({ error: 'Cliente no encontrado' }, { status: 404 })
+
+    const { data: planNegocio } = await supabaseAdmin
+      .from('negocios')
+      .select('plan')
+      .eq('id', cliente.negocio_id)
+      .single()
+    if (!puedeUsarWallet(planNegocio?.plan)) {
+      return NextResponse.json({ error: 'Google Wallet está disponible en el plan Business' }, { status: 403 })
+    }
 
     const { data: recompensas } = await supabaseAdmin
       .from('recompensas')

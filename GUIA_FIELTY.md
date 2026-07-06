@@ -22,8 +22,13 @@ Ideal para: peluquerías, cafeterías, veterinarias, restaurantes, tiendas de ro
 |---|---|---|---|
 | Clientes | Hasta 50 | Ilimitados | Ilimitados |
 | Sucursales | 1 | Hasta 3 | Ilimitadas |
-| Logo personalizado | ✗ | ✗ | ✓ |
-| Exportación CSV | ✗ | ✗ | ✓ |
+| Puntos, niveles, referidos, cumpleaños | ✓ | ✓ | ✓ |
+| Caja con escáner QR | ✓ | ✓ | ✓ |
+| Logo personalizado | ✗ | ✓ | ✓ |
+| Campañas de email a inactivos | ✗ | ✓ | ✓ |
+| Exportación CSV | ✗ | ✓ | ✓ |
+| Tarjeta en Google Wallet | ✗ | ✗ | ✓ |
+| WhatsApp automático (próximamente) | ✗ | ✗ | ✓ |
 | Precio | $0 | $10.000/mes* | $35.000/mes |
 
 *Precio especial para los primeros 100 negocios. Precio regular: $20.000/mes.

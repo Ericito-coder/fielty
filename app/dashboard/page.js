@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
 import { storage } from '@/lib/storage'
 import { linkWhatsApp } from '@/lib/wa'
+import { esPago } from '@/lib/planes'
 
 const NAV_ITEMS = [
   { id:'inicio', label:'Inicio', icon:'📊' },
@@ -558,12 +559,12 @@ function ClientesSection({ negocioId, color, plan, nombreNegocio, isDesktop }) {
           <div style={{display:'flex', gap:8, alignItems:'center'}}>
             <input placeholder="🔍 Buscar por nombre o DNI..." value={busqueda} onChange={e => setBusqueda(e.target.value)}
               style={{padding:'10px 16px', border:'2px solid #e8eaf0', borderRadius:12, fontSize:14, fontFamily:'inherit', outline:'none', width:280}} />
-            {plan === 'business' ? (
+            {esPago(plan) ? (
               <button onClick={exportarCSV} style={{padding:'10px 16px', background:'#0e0e0e', border:'none', borderRadius:12, color:'white', fontSize:13, fontWeight:700, cursor:'pointer', fontFamily:'inherit', whiteSpace:'nowrap'}}>
                 ↓ Exportar CSV
               </button>
             ) : (
-              <button onClick={() => window.location.href = '/dashboard/upgrade'} title="Función exclusiva del plan Business" style={{padding:'10px 16px', background:'#f5f6fa', border:'1px dashed #ccc', borderRadius:12, color:'#aaa', fontSize:13, fontWeight:700, cursor:'pointer', fontFamily:'inherit', whiteSpace:'nowrap'}}>
+              <button onClick={() => window.location.href = '/dashboard/upgrade'} title="Disponible en los planes Pro y Business" style={{padding:'10px 16px', background:'#f5f6fa', border:'1px dashed #ccc', borderRadius:12, color:'#aaa', fontSize:13, fontWeight:700, cursor:'pointer', fontFamily:'inherit', whiteSpace:'nowrap'}}>
                 🔒 Exportar CSV
               </button>
             )}
@@ -710,6 +711,28 @@ function CampanasSection({ negocio, isDesktop }) {
     { id: 'inactivos60', label: 'Inactivos +60 días' },
     { id: 'todos', label: 'Todos' },
   ]
+
+  if (!esPago(negocio.plan)) {
+    const inactivos = clientes.filter(c => !c.ultima_visita || new Date(c.ultima_visita).getTime() <= hace30).length
+    return (
+      <div style={{...s.card, textAlign:'center', padding:'48px 32px', maxWidth:520}}>
+        <div style={{fontSize:44, marginBottom:16}}>📣</div>
+        <div style={{fontSize:19, fontWeight:800, color:'#0e0e0e', marginBottom:8}}>Traé de vuelta a tus clientes inactivos</div>
+        <div style={{fontSize:14, color:'#888', lineHeight:1.6, marginBottom:8}}>
+          Mandá campañas de email a los clientes que dejaron de venir y mirá cuántos vuelven a comprar.
+        </div>
+        {inactivos > 0 && (
+          <div style={{fontSize:14, color:'#0e0e0e', fontWeight:700, marginBottom:20}}>
+            Tenés {inactivos} cliente{inactivos === 1 ? '' : 's'} inactivo{inactivos === 1 ? '' : 's'} esperando volver.
+          </div>
+        )}
+        <button onClick={() => window.location.href = '/dashboard/upgrade'}
+          style={{padding:'14px 28px', background:'#e0001b', border:'none', borderRadius:14, color:'white', fontSize:15, fontWeight:800, cursor:'pointer', fontFamily:'inherit'}}>
+          Desbloquear con el plan Pro →
+        </button>
+      </div>
+    )
+  }
 
   return (
     <>
@@ -1028,7 +1051,7 @@ function ConfigSection({ negocio, setNegocio }) {
         {/* Logo */}
         <div style={s.configField}>
           <label style={s.configLabel}>Logo del negocio</label>
-          {negocio.plan === 'business' ? (
+          {esPago(negocio.plan) ? (
             <div style={{display:'flex', alignItems:'center', gap:16}}>
               {negocio.logo_url
                 ? <img src={negocio.logo_url} style={{width:56, height:56, borderRadius:12, objectFit:'cover', border:'2px solid #e8eaf0'}} />
@@ -1047,8 +1070,8 @@ function ConfigSection({ negocio, setNegocio }) {
             <div style={{display:'flex', alignItems:'center', gap:12}}>
               <div style={{width:56, height:56, borderRadius:12, background:'#f0f2f7', display:'flex', alignItems:'center', justifyContent:'center', fontSize:18}}>🔒</div>
               <div>
-                <div style={{fontSize:13, color:'#aaa'}}>Disponible en el plan Business</div>
-                <button onClick={() => window.location.href = '/dashboard/upgrade'} style={{marginTop:4, padding:'5px 12px', background:'#f0a500', border:'none', borderRadius:8, color:'white', fontSize:12, fontWeight:700, cursor:'pointer', fontFamily:'inherit'}}>Mejorar →</button>
+                <div style={{fontSize:13, color:'#aaa'}}>Disponible en los planes Pro y Business</div>
+                <button onClick={() => window.location.href = '/dashboard/upgrade'} style={{marginTop:4, padding:'5px 12px', background:'#e0001b', border:'none', borderRadius:8, color:'white', fontSize:12, fontWeight:700, cursor:'pointer', fontFamily:'inherit'}}>Mejorar →</button>
               </div>
             </div>
           )}

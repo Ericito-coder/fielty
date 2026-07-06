@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { Resend } from 'resend'
 import { getSupabaseAdmin } from '@/lib/server'
+import { puedeUsarCampanas } from '@/lib/planes'
 import { rateLimit } from '@/lib/rateLimit'
 
 const resend = new Resend(process.env.RESEND_API_KEY)
@@ -29,11 +30,15 @@ export async function POST(request) {
 
     const { data: negocio } = await supabaseAdmin
       .from('negocios')
-      .select('id, nombre, color, user_id')
+      .select('id, nombre, color, user_id, plan')
       .eq('id', negocioId)
       .single()
     if (!negocio || negocio.user_id !== user.id) {
       return NextResponse.json({ error: 'No autorizado' }, { status: 403 })
+    }
+
+    if (!puedeUsarCampanas(negocio.plan)) {
+      return NextResponse.json({ error: 'Las campañas están disponibles en los planes Pro y Business.' }, { status: 403 })
     }
 
     const { ok } = await rateLimit({ key: `campana:${negocioId}`, maxAttempts: 3, windowMs: 60 * 60 * 1000 })

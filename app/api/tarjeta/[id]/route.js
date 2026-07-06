@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { getSupabaseAdmin, NEGOCIO_CAMPOS_PUBLICOS } from '@/lib/server'
 import { walletDisponible } from '@/lib/googleWallet'
+import { puedeUsarWallet } from '@/lib/planes'
 
 // Datos completos de la tarjeta del cliente: datos propios (sin
 // password_hash ni otros campos sensibles), recompensas activas,
@@ -64,12 +65,18 @@ export async function GET(request, { params }) {
         .limit(20),
     ])
 
+    const { data: planNegocio } = await supabaseAdmin
+      .from('negocios')
+      .select('plan')
+      .eq('id', cliente.negocio_id)
+      .single()
+
     return NextResponse.json({
       cliente,
       recompensas: recompensas || [],
       canjeActivo: canjeActivo || null,
       transacciones: transacciones || [],
-      wallet: walletDisponible(),
+      wallet: walletDisponible() && puedeUsarWallet(planNegocio?.plan),
     })
   } catch (error) {
     console.error('tarjeta error:', error)
