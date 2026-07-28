@@ -1,3 +1,9 @@
+export const metadata = {
+  title: 'Términos y condiciones | Fielty',
+  description: 'Términos y condiciones de uso de Fielty, la plataforma de fidelización de clientes para negocios.',
+  alternates: { canonical: '/terminos' },
+}
+
 export default function Terminos() {
   return (
     <div style={{ minHeight: '100vh', background: '#0e0e0e', fontFamily: 'sans-serif' }}>

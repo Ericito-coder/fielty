@@ -13,8 +13,22 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "fielty — Fidelización simple para tu negocio",
-  description: "Creá tu programa de puntos en minutos. Sin app, sin complicaciones.",
+  metadataBase: new URL('https://fielty.app'),
+  title: {
+    default: 'Fielty — Programa de fidelización y puntos para negocios sin app',
+    template: '%s',
+  },
+  description: 'Creá un programa de puntos para tu negocio en 5 minutos. Sin app, sin complicaciones.',
+  keywords: ['programa de fidelización', 'programa de puntos', 'fidelización de clientes', 'tarjeta de puntos digital', 'software para negocios Argentina'],
+  robots: {
+    index: true,
+    follow: true,
+  },
+  openGraph: {
+    siteName: 'Fielty',
+    locale: 'es_AR',
+    type: 'website',
+  },
 };
 
 export default function RootLayout({ children }) {

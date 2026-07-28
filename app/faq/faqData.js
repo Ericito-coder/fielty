@@ -1,0 +1,95 @@
+export const FAQS = [
+  {
+    categoria: 'Sobre Fielty',
+    preguntas: [
+      {
+        q: '¿Qué es Fielty?',
+        a: 'Fielty es un sistema de fidelización de clientes para negocios. Tus clientes acumulan puntos en cada compra y los canjean por premios que vos definís. Sin app, sin complicaciones — todo funciona desde el celular con un link o QR.',
+      },
+      {
+        q: '¿Mis clientes necesitan descargar una app?',
+        a: 'No. Todo funciona desde el navegador. Tus clientes escanean el QR o entran al link y listo — ven su tarjeta, sus puntos y sus premios sin instalar nada.',
+      },
+      {
+        q: '¿Funciona para cualquier tipo de negocio?',
+        a: 'Sí. Fielty funciona para peluquerías, cafeterías, veterinarias, restaurantes, tiendas de ropa, farmacias y cualquier negocio que quiera fidelizar clientes.',
+      },
+    ],
+  },
+  {
+    categoria: 'Registro y clientes',
+    preguntas: [
+      {
+        q: '¿Cómo se registran mis clientes?',
+        a: 'Mostrales el QR o compartiles el link de registro de tu negocio. Ellos completan su nombre, DNI y email en menos de un minuto y ya tienen su tarjeta digital. Los clientes que se registran de forma orgánica reciben los puntos de bienvenida que vos configurás. Los que llegan por referido de otro cliente reciben los puntos de referido en su lugar.',
+      },
+      {
+        q: '¿Qué datos se piden al registrarse?',
+        a: 'Nombre, DNI y WhatsApp son obligatorios. Email y fecha de nacimiento son opcionales. La fecha de nacimiento sirve para que tus clientes reciban puntos extra en su cumpleaños.',
+      },
+      {
+        q: '¿Un cliente puede registrarse en varios negocios?',
+        a: 'Sí. Cada negocio tiene su propio programa independiente. Un cliente puede tener tarjeta en todos los negocios que quiera.',
+      },
+    ],
+  },
+  {
+    categoria: 'Puntos y recompensas',
+    preguntas: [
+      {
+        q: '¿Cómo acredito puntos a un cliente?',
+        a: 'Desde la URL de caja de tu negocio (fielty.app/c/tu-negocio). Buscás al cliente por nombre o DNI, ingresás el monto de la compra y confirmás. Los puntos se acreditan al instante.',
+      },
+      {
+        q: '¿Puedo personalizar cuántos puntos da cada compra?',
+        a: 'Sí. Desde la configuración del panel podés definir la regla de puntos. Por ejemplo: 1 punto por cada $100 de compra.',
+      },
+      {
+        q: '¿Cómo canjean premios mis clientes?',
+        a: 'Desde la tarjeta digital del cliente. Ellos ven las recompensas disponibles, aprietan "Canjear" y se genera un código que vos validás desde la caja antes de entregar el premio.',
+      },
+      {
+        q: '¿Puedo cambiar las recompensas cuando quiero?',
+        a: 'Sí, podés agregar, editar o desactivar recompensas en cualquier momento desde la sección Recompensas de tu panel.',
+      },
+    ],
+  },
+  {
+    categoria: 'Planes y pagos',
+    preguntas: [
+      {
+        q: '¿Cuánto cuesta Fielty?',
+        a: 'Hay un plan Gratis que permite hasta 50 clientes sin costo. El plan Pro cuesta $10.000/mes para los primeros 100 negocios (precio regular $20.000/mes) e incluye clientes ilimitados, hasta 3 sucursales y soporte prioritario. El plan Business cuesta $35.000/mes y agrega exportación CSV, logo personalizado y sucursales ilimitadas.',
+      },
+      {
+        q: '¿Puedo cancelar en cualquier momento?',
+        a: 'Sí. No hay contratos ni permanencia mínima. Podés cancelar tu suscripción cuando quieras desde Mercado Pago.',
+      },
+      {
+        q: '¿Cómo se cobra la suscripción?',
+        a: 'El pago es mensual y se procesa automáticamente a través de Mercado Pago. Podés pagar con tarjeta de crédito, débito o dinero en cuenta de MP.',
+      },
+      {
+        q: '¿Qué pasa cuando llego al límite de 50 clientes en el plan Gratis?',
+        a: 'Te avisamos por email cuando llegás a 45 clientes para que tengas tiempo de decidir. Al llegar a 50, los nuevos clientes no pueden registrarse hasta que mejorés el plan.',
+      },
+    ],
+  },
+  {
+    categoria: 'Técnico y seguridad',
+    preguntas: [
+      {
+        q: '¿Es seguro guardar los datos de mis clientes en Fielty?',
+        a: 'Sí. Los datos se almacenan en Supabase con encriptación y acceso protegido. Cumplimos con la Ley 25.326 de Protección de Datos Personales de Argentina.',
+      },
+      {
+        q: '¿Qué pasa si Fielty tiene un problema técnico?',
+        a: 'Ante cualquier inconveniente podés escribirnos a hola@fielty.app y te respondemos a la brevedad.',
+      },
+      {
+        q: '¿Puedo usar Fielty desde el celular?',
+        a: 'Sí. El panel del dueño y la caja están optimizados para mobile. Podés gestionar todo desde tu celular sin necesidad de una computadora.',
+      },
+    ],
+  },
+]

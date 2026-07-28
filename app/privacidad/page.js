@@ -1,3 +1,9 @@
+export const metadata = {
+  title: 'Política de privacidad | Fielty',
+  description: 'Cómo trata Fielty los datos personales de dueños de negocios y clientes, de acuerdo a la Ley 25.326 de Protección de Datos Personales de Argentina.',
+  alternates: { canonical: '/privacidad' },
+}
+
 export default function Privacidad() {
   return (
     <div style={{ minHeight: '100vh', background: '#0e0e0e', fontFamily: 'sans-serif' }}>

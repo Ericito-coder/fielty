@@ -1,3 +1,9 @@
+export const metadata = {
+  title: 'Guía completa de Fielty | Cómo fidelizar clientes sin app',
+  description: 'Guía de producto de Fielty: cómo crear tu programa de puntos, registrar clientes por QR, configurar recompensas, niveles de lealtad, referidos, campañas de reactivación por email y Google Wallet para negocios físicos en Argentina.',
+  alternates: { canonical: '/guia' },
+}
+
 export default function Guia() {
   return (
     <div style={{ fontFamily: 'Georgia, serif', maxWidth: 800, margin: '0 auto', padding: '60px 40px', color: '#0e0e0e', lineHeight: 1.7 }}>
@@ -5,9 +11,9 @@ export default function Guia() {
       {/* Portada */}
       <div style={{ textAlign: 'center', marginBottom: 80, paddingBottom: 60, borderBottom: '3px solid #e0001b' }}>
         <div style={{ fontSize: 48, fontWeight: 900, letterSpacing: -2, marginBottom: 8 }}>● fielty</div>
-        <div style={{ fontSize: 28, fontWeight: 300, color: '#555', marginBottom: 24 }}>Guía completa de producto</div>
+        <h1 style={{ fontSize: 28, fontWeight: 300, color: '#555', marginBottom: 24 }}>Guía completa de Fielty</h1>
         <div style={{ display: 'inline-block', background: '#f5f5f5', borderRadius: 12, padding: '10px 24px', fontSize: 14, color: '#888' }}>
-          MVP · Abril 2026 · fielty.app
+          Actualizada · Julio 2026 · fielty.app
         </div>
       </div>
 
@@ -33,8 +39,10 @@ export default function Guia() {
             {[
               ['Clientes', 'Hasta 50', 'Ilimitados', 'Ilimitados'],
               ['Sucursales', '1', 'Hasta 3', 'Ilimitadas'],
+              ['Campañas de email', '✗', '✓', '✓'],
               ['Logo personalizado', '✗', '✗', '✓'],
               ['Exportación CSV', '✗', '✗', '✓'],
+              ['Google Wallet', '✗', '✗', '✓'],
               ['Precio', '$0', '$10.000/mes*', '$35.000/mes'],
             ].map(([label, ...vals], i) => (
               <tr key={i} style={{ background: i % 2 === 0 ? '#f9f9f9' : 'white' }}>
@@ -52,12 +60,12 @@ export default function Guia() {
       {/* PARTE 1 */}
       <PartTitle number="1" title="Flujo del dueño de negocio" />
 
-      <Section title="Paso 1 — Registro del negocio">
+      <Section title="Paso 1 — Registro del negocio" level={3}>
         <SubTitle>1.1 Elegir plan</SubTitle>
         <P>El dueño entra a <strong>fielty.app</strong> y elige su plan. Si elige Gratis va directo al onboarding. Si elige Pro o Business, al final del onboarding es redirigido a Mercado Pago.</P>
 
         <SubTitle>1.2 Crear cuenta — <Code>fielty.app/onboarding/registro</Code></SubTitle>
-        <List items={['Email', 'Contraseña (mínimo 6 caracteres)', 'Nombre del dueño o responsable', 'Teléfono de contacto']} />
+        <List items={['Email', 'Contraseña (mínimo 8 caracteres)', 'Nombre del dueño o responsable', 'Teléfono de contacto']} />
 
         <SubTitle>1.3 Configurar el negocio — <Code>fielty.app/onboarding/negocio</Code></SubTitle>
         <List items={['Nombre del negocio (ej: "Pet Point")', 'Rubro (ej: "Veterinaria")', 'Color de marca — aparece en la tarjeta del cliente']} />
@@ -72,7 +80,7 @@ export default function Guia() {
         <Highlight>Email de bienvenida automático: se envía al email del dueño con el link de registro, los primeros pasos y el acceso al panel.</Highlight>
       </Section>
 
-      <Section title="Paso 2 — El panel del dueño">
+      <Section title="Paso 2 — El panel del dueño" level={3}>
         <P>URL: <Code>fielty.app/dashboard</Code> — disponible en mobile y desktop.</P>
 
         <SubTitle>📊 Inicio</SubTitle>
@@ -89,22 +97,32 @@ export default function Guia() {
         <SubTitle>🎁 Recompensas</SubTitle>
         <P>El dueño crea recompensas con nombre, descripción y puntos necesarios. Puede activarlas, desactivarlas o eliminarlas en cualquier momento.</P>
 
+        <SubTitle>📣 Campañas (Pro y Business)</SubTitle>
+        <P>Reactivación de clientes por email. El dueño elige un segmento (inactivos hace 30 o 60 días, o todos), escribe el asunto y el mensaje con variables como <Code>{'{nombre}'}</Code>, <Code>{'{puntos}'}</Code> y <Code>{'{negocio}'}</Code>, y confirma el envío.</P>
+        <List items={[
+          'Hasta 100 destinatarios por campaña y 3 campañas por hora',
+          'Cada cliente recibe como máximo una campaña cada 30 días',
+          'Cada email incluye un link para darse de baja',
+          'El dashboard muestra cuántos clientes volvieron después de una campaña',
+        ]} />
+
         <SubTitle>🏪 Sucursales</SubTitle>
         <P>Cada sucursal tiene su URL de caja propia y PIN de acceso para empleados. Límites: 1 (Gratis), 3 (Pro), ilimitadas (Business).</P>
+        <P>El PIN es alfanumérico, de longitud libre (mínimo 4 caracteres) y no puede ser uno de los PINs más comunes (como <Code>1234</Code>). La caja queda bloqueada hasta que se configura un PIN — no hay PIN por defecto. Si el PIN no está configurado o es débil, el dashboard muestra un aviso.</P>
 
         <SubTitle>⚙️ Configuración</SubTitle>
         <List items={[
           'Nombre del negocio',
           'Color de marca',
           'Logo personalizado (solo Business — PNG, JPG, WebP, máx 2MB)',
-          'Regla de puntos: cuántos puntos por cada peso de compra',
+          'Regla de puntos: pesos por punto y puntos por tramo. El cálculo es proporcional al monto exacto de la compra, redondeado al entero más cercano',
           'Puntos de bienvenida al registrarse de forma orgánica (default: 10)',
           'Puntos por referido para el que invita (default: 100)',
           'Puntos por referido para el nuevo cliente (default: 50)',
         ]} />
       </Section>
 
-      <Section title="Paso 3 — Pagos y suscripción">
+      <Section title="Paso 3 — Pagos y suscripción" level={3}>
         <P>URL: <Code>fielty.app/dashboard/upgrade</Code></P>
         <List items={[
           'El dueño elige el plan y es redirigido a Mercado Pago',
@@ -114,7 +132,7 @@ export default function Guia() {
         ]} />
       </Section>
 
-      <Section title="Notificaciones automáticas al dueño">
+      <Section title="Notificaciones automáticas al dueño" level={3}>
         <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 14 }}>
           <thead>
             <tr style={{ background: '#0e0e0e', color: 'white' }}>
@@ -142,17 +160,26 @@ export default function Guia() {
       {/* PARTE 2 */}
       <PartTitle number="2" title="Flujo del empleado — La caja" />
 
-      <Section title="La caja">
+      <Section title="La caja" level={3}>
         <P>URL: <Code>fielty.app/c/[slug]</Code> (sin sucursal) o <Code>fielty.app/c/[slug]/[sucursal]</Code> (con sucursal)</P>
         <P>Pantalla que usan los empleados en el punto de venta. Protegida por PIN.</P>
 
+        <SubTitle>Buscar o escanear al cliente</SubTitle>
+        <List items={[
+          'Buscarlo por nombre o DNI, o',
+          'Escanear su tarjeta con la cámara del celular (botón "Escanear tarjeta") — sirve tanto el código de la tarjeta web como el del pase de Google Wallet',
+        ]} />
+
+        <SubTitle>Registrar un cliente nuevo desde la caja</SubTitle>
+        <P>El empleado puede registrar a un cliente en el momento sin que use su propio celular: solo pide nombre y DNI (email y teléfono son opcionales) e ingresa el PIN de la caja. Fielty crea la cuenta con una contraseña provisoria y, la primera vez que el cliente entra a ver su tarjeta, tiene que elegir una contraseña propia.</P>
+
         <SubTitle>Acreditar puntos</SubTitle>
         <List items={[
-          'Buscar al cliente por nombre o DNI',
-          'Seleccionarlo — ve nombre, DNI, puntos actuales y nivel',
+          'Seleccionar al cliente — ve nombre, DNI, puntos actuales y nivel',
           'Ingresar el monto de la compra (botones rápidos o manual)',
           'Ver preview de cuántos puntos va a recibir',
           'Confirmar — puntos acreditados al instante',
+          'Botón "Avisarle por WhatsApp" para mandarle un mensaje prearmado desde el WhatsApp del empleado',
         ]} />
 
         <SubTitle>Validar canje de recompensa</SubTitle>
@@ -172,7 +199,7 @@ export default function Guia() {
       {/* PARTE 3 */}
       <PartTitle number="3" title="Flujo del cliente" />
 
-      <Section title="Paso 1 — Registro del cliente">
+      <Section title="Paso 1 — Registro del cliente" level={3}>
         <P>URL: <Code>fielty.app/registro/[slug-del-negocio]</Code></P>
         <P>El cliente llega escaneando el QR del negocio o con el link que le compartieron.</P>
 
@@ -181,10 +208,11 @@ export default function Guia() {
           'Nombre — obligatorio',
           'DNI — obligatorio',
           'Email — obligatorio (para recuperar contraseña)',
-          'Contraseña — obligatorio (mínimo 6 caracteres)',
+          'Contraseña — obligatorio (mínimo 8 caracteres)',
           'WhatsApp — opcional',
           'Fecha de nacimiento — opcional (recibe puntos extra en su cumpleaños)',
         ]} />
+        <P style={{ fontSize: 13, color: '#888' }}>Si en cambio lo registra un empleado desde la caja, los campos pedidos son distintos — ver "Registrar un cliente nuevo desde la caja" en la Parte 2.</P>
 
         <SubTitle>Al registrarse recibe automáticamente</SubTitle>
         <List items={[
@@ -195,7 +223,7 @@ export default function Guia() {
         <Highlight>Si el negocio tiene logo (plan Business), aparece el logo en la página de registro en lugar de las iniciales.</Highlight>
       </Section>
 
-      <Section title="Paso 2 — La tarjeta digital">
+      <Section title="Paso 2 — La tarjeta digital" level={3}>
         <P>URL: <Code>fielty.app/tarjeta/[id-del-cliente]</Code></P>
 
         <SubTitle>Lo que ve el cliente</SubTitle>
@@ -208,15 +236,24 @@ export default function Guia() {
           'Canje activo con código y cuenta regresiva de 24hs (si tiene uno)',
           'Lista de recompensas disponibles con botón para canjear',
           'Botón para compartir su link de referido',
+          'Botón "Mostrar mi código" para que el empleado lo escanee en la caja en vez de buscarlo por nombre o DNI',
           'Historial de las últimas 20 transacciones',
         ]} />
+
+        <SubTitle>Agregar a Google Wallet (negocios Business)</SubTitle>
+        <P>Si el negocio está en el plan Business, la tarjeta tiene un botón para agregarla a Google Wallet como un pase más. El pase muestra los puntos, el nivel y cuánto le falta para la próxima recompensa, y se actualiza solo cada vez que acredita puntos o canjea un premio.</P>
+
+        <SubTitle>Instalar la tarjeta en la pantalla de inicio</SubTitle>
+        <P>Aparece un banner para agregar la tarjeta a la pantalla de inicio del celular (Android o iOS), con instrucciones según el navegador. Una vez agregada, se abre como si fuera una app, sin pasar por ninguna tienda de aplicaciones.</P>
       </Section>
 
-      <Section title="Paso 3 — Cómo vuelve el cliente a su tarjeta">
-        <P>El cliente entra a <Code>fielty.app/mi-tarjeta</Code> e ingresa con su DNI y contraseña.</P>
+      <Section title="Paso 3 — Cómo vuelve el cliente a su tarjeta" level={3}>
+        <P>El cliente entra a <Code>fielty.app/mi-tarjeta</Code>. El navegador recuerda su tarjeta, así que la mayoría de las veces no tiene que volver a loguearse:</P>
         <List items={[
-          'Si está en un solo negocio → va directo a su tarjeta',
-          'Si está en varios negocios → elige cuál ver',
+          'Si ya tiene una tarjeta guardada en ese celular → entra directo, sin pedir DNI ni contraseña',
+          'Si tiene tarjetas guardadas de varios negocios → elige cuál ver',
+          'Si es la primera vez en ese dispositivo → ingresa con su DNI y contraseña',
+          'Botón "No soy yo" para borrar la tarjeta guardada y volver a loguearse con otro usuario',
         ]} />
 
         <SubTitle>Si olvidó la contraseña</SubTitle>
@@ -228,7 +265,7 @@ export default function Guia() {
         ]} />
       </Section>
 
-      <Section title="Sistema de niveles">
+      <Section title="Sistema de niveles" level={3}>
         <P>Los niveles se calculan en base a <strong>puntos históricos</strong> (todos los puntos que ganó, incluso los ya canjeados):</P>
         <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 14 }}>
           <thead>
@@ -248,12 +285,12 @@ export default function Guia() {
         </table>
       </Section>
 
-      <Section title="Sistema de referidos">
+      <Section title="Sistema de referidos" level={3}>
         <P>Cada cliente tiene un link único: <Code>fielty.app/registro/[slug]?ref=[id]</Code></P>
         <P>Cuando alguien se registra con ese link, ambos reciben puntos (configurable por el dueño). La transacción queda registrada en el historial de ambos con el ícono 🤝.</P>
       </Section>
 
-      <Section title="Cumpleaños automático">
+      <Section title="Cumpleaños automático" level={3}>
         <P>Si el cliente cargó su fecha de nacimiento, el día de su cumpleaños recibe puntos extra automáticamente. La transacción aparece con el ícono 🎂.</P>
       </Section>
 
@@ -301,7 +338,7 @@ export default function Guia() {
       {/* Footer */}
       <div style={{ marginTop: 80, paddingTop: 32, borderTop: '2px solid #e0001b', textAlign: 'center', color: '#888', fontSize: 13 }}>
         <div style={{ fontSize: 20, fontWeight: 900, color: '#0e0e0e', marginBottom: 8 }}>● fielty</div>
-        <div>fielty.app · eric.bohl10@gmail.com · Abril 2026</div>
+        <div>fielty.app · hola@fielty.app · Julio 2026</div>
       </div>
 
       {/* Print styles */}
@@ -317,7 +354,7 @@ export default function Guia() {
 
 // Componentes auxiliares
 const P = ({ children, style }) => <p style={{ fontSize: 15, marginBottom: 12, ...style }}>{children}</p>
-const SubTitle = ({ children }) => <div style={{ fontSize: 15, fontWeight: 700, marginTop: 20, marginBottom: 8, color: '#0e0e0e' }}>{children}</div>
+const SubTitle = ({ children }) => <h4 style={{ fontSize: 15, fontWeight: 700, marginTop: 20, marginBottom: 8, color: '#0e0e0e' }}>{children}</h4>
 const Highlight = ({ children }) => (
   <div style={{ background: '#fff8e6', borderLeft: '4px solid #f0a500', padding: '12px 16px', borderRadius: '0 10px 10px 0', marginBottom: 16, fontSize: 14, color: '#555' }}>
     {children}
@@ -333,14 +370,17 @@ const PageBreak = () => <div style={{ pageBreakAfter: 'always', marginTop: 60, m
 const PartTitle = ({ number, title }) => (
   <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 40 }}>
     <div style={{ width: 48, height: 48, borderRadius: '50%', background: '#e0001b', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20, fontWeight: 900, flexShrink: 0 }}>{number}</div>
-    <div style={{ fontSize: 26, fontWeight: 800, color: '#0e0e0e' }}>{title}</div>
+    <h2 style={{ fontSize: 26, fontWeight: 800, color: '#0e0e0e', margin: 0 }}>{title}</h2>
   </div>
 )
-const Section = ({ title, children }) => (
-  <div style={{ marginBottom: 40 }}>
-    {title && <h2 style={{ fontSize: 20, fontWeight: 800, color: '#0e0e0e', marginBottom: 20, paddingBottom: 10, borderBottom: '2px solid #f0f2f7' }}>{title}</h2>}
-    {children}
-  </div>
-)
+const Section = ({ title, children, level = 2 }) => {
+  const Heading = level === 3 ? 'h3' : 'h2'
+  return (
+    <div style={{ marginBottom: 40 }}>
+      {title && <Heading style={{ fontSize: 20, fontWeight: 800, color: '#0e0e0e', marginBottom: 20, paddingBottom: 10, borderBottom: '2px solid #f0f2f7' }}>{title}</Heading>}
+      {children}
+    </div>
+  )
+}
 const th = { padding: '10px 14px', textAlign: 'left', fontSize: 13, fontWeight: 700 }
 const td = { padding: '10px 14px', fontSize: 13, borderBottom: '1px solid #f0f2f7' }
