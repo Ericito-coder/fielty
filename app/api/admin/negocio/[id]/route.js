@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import { getRequestIp } from '@/lib/server'
+import { rateLimit } from '@/lib/rateLimit'
 
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL
 
@@ -10,6 +12,9 @@ const supabaseAdmin = createClient(
 
 export async function GET(request, { params }) {
   try {
+    const { ok } = await rateLimit({ key: `admin-auth:${getRequestIp(request)}`, maxAttempts: 30, windowMs: 15 * 60 * 1000 })
+    if (!ok) return NextResponse.json({ error: 'Demasiados intentos. Esperá un momento.' }, { status: 429 })
+
     const token = request.headers.get('Authorization')?.replace('Bearer ', '')
     if (!token) return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
 
