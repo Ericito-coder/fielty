@@ -6,7 +6,7 @@ export const metadata = {
 
 export default function Guia() {
   return (
-    <div style={{ fontFamily: 'Georgia, serif', maxWidth: 800, margin: '0 auto', padding: '60px 40px', color: '#0e0e0e', lineHeight: 1.7 }}>
+    <div style={{ fontFamily: 'inherit', maxWidth: 800, margin: '0 auto', padding: '60px 40px', color: '#0e0e0e', lineHeight: 1.7 }}>
 
       {/* Portada */}
       <div style={{ textAlign: 'center', marginBottom: 80, paddingBottom: 60, borderBottom: '3px solid #e0001b' }}>
@@ -100,15 +100,14 @@ export default function Guia() {
         <SubTitle>📣 Campañas (Pro y Business)</SubTitle>
         <P>Reactivación de clientes por email. El dueño elige un segmento (inactivos hace 30 o 60 días, o todos), escribe el asunto y el mensaje con variables como <Code>{'{nombre}'}</Code>, <Code>{'{puntos}'}</Code> y <Code>{'{negocio}'}</Code>, y confirma el envío.</P>
         <List items={[
-          'Hasta 100 destinatarios por campaña y 3 campañas por hora',
-          'Cada cliente recibe como máximo una campaña cada 30 días',
+          'Tiene límites de envío pensados para evitar spam y cuidar la reputación del email del negocio',
           'Cada email incluye un link para darse de baja',
           'El dashboard muestra cuántos clientes volvieron después de una campaña',
         ]} />
 
         <SubTitle>🏪 Sucursales</SubTitle>
         <P>Cada sucursal tiene su URL de caja propia y PIN de acceso para empleados. Límites: 1 (Gratis), 3 (Pro), ilimitadas (Business).</P>
-        <P>El PIN es alfanumérico, de longitud libre (mínimo 4 caracteres) y no puede ser uno de los PINs más comunes (como <Code>1234</Code>). La caja queda bloqueada hasta que se configura un PIN — no hay PIN por defecto. Si el PIN no está configurado o es débil, el dashboard muestra un aviso.</P>
+        <P>El PIN es alfanumérico, de longitud libre (mínimo 4 caracteres) y no puede ser uno de los PINs débiles más habituales. La caja queda bloqueada hasta que se configura un PIN — no hay PIN por defecto. Si el PIN no está configurado o es débil, el dashboard muestra un aviso.</P>
 
         <SubTitle>⚙️ Configuración</SubTitle>
         <List items={[

@@ -6,7 +6,7 @@ export const metadata = {
 
 export default function Privacidad() {
   return (
-    <div style={{ minHeight: '100vh', background: '#0e0e0e', fontFamily: 'sans-serif' }}>
+    <div style={{ minHeight: '100vh', background: '#0e0e0e', fontFamily: 'inherit' }}>
 
       <nav style={{ borderBottom: '1px solid #1a1a1a', padding: '0 32px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: 64 }}>
         <a href="/" style={{ display: 'flex', alignItems: 'center', gap: 8, textDecoration: 'none' }}>
