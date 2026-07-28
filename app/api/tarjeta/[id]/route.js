@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { getSupabaseAdmin, NEGOCIO_CAMPOS_PUBLICOS } from '@/lib/server'
 import { walletDisponible } from '@/lib/googleWallet'
 import { puedeUsarWallet } from '@/lib/planes'
+import { rateLimit } from '@/lib/rateLimit'
 
 // Datos completos de la tarjeta del cliente: datos propios (sin
 // password_hash ni otros campos sensibles), recompensas activas,
@@ -10,6 +11,10 @@ import { puedeUsarWallet } from '@/lib/planes'
 export async function GET(request, { params }) {
   try {
     const { id } = await params
+
+    const { ok } = await rateLimit({ key: `tarjeta:${id}`, maxAttempts: 20, windowMs: 60 * 1000 })
+    if (!ok) return NextResponse.json({ error: 'Demasiados intentos. Esperá un momento.' }, { status: 429 })
+
     const supabaseAdmin = getSupabaseAdmin()
 
     const { data: cliente } = await supabaseAdmin

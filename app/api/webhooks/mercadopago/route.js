@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { MercadoPagoConfig, PreApproval } from 'mercadopago'
 import { createClient } from '@supabase/supabase-js'
+import crypto from 'crypto'
 
 const client = new MercadoPagoConfig({
   accessToken: process.env.MP_ACCESS_TOKEN
@@ -10,6 +11,36 @@ const supabaseAdmin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL,
   process.env.SUPABASE_SERVICE_ROLE_KEY
 )
+
+// Valida el header x-signature que manda MP (HMAC-SHA256 sobre
+// "id:{dataId};request-id:{x-request-id};ts:{ts};" con la "Firma
+// secreta" del webhook, no con el access token). Se activa solo si
+// MP_WEBHOOK_SECRET está configurado (Tus integraciones → Webhooks
+// en el dashboard de MP); si no está seteado, no bloquea — así no
+// rompe el webhook mientras tanto y solo suma una capa extra al
+// secreto por query que ya se valida siempre.
+function firmaMpValida(request, searchParams, dataId) {
+  const secret = process.env.MP_WEBHOOK_SECRET
+  if (!secret) return true
+
+  const xSignature = request.headers.get('x-signature')
+  const xRequestId = request.headers.get('x-request-id')
+  if (!xSignature || !xRequestId || !dataId) return false
+
+  const partes = Object.fromEntries(
+    xSignature.split(',').map(p => p.trim().split('=').map(s => s.trim()))
+  )
+  const { ts, v1 } = partes
+  if (!ts || !v1) return false
+
+  const idParaManifest = (searchParams.get('data.id') || String(dataId)).toLowerCase()
+  const manifest = `id:${idParaManifest};request-id:${xRequestId};ts:${ts};`
+  const hash = crypto.createHmac('sha256', secret).update(manifest).digest('hex')
+
+  const a = Buffer.from(hash)
+  const b = Buffer.from(v1)
+  return a.length === b.length && crypto.timingSafeEqual(a, b)
+}
 
 export async function POST(request) {
   try {
@@ -22,6 +53,10 @@ export async function POST(request) {
 
     const body = await request.json()
     const { type, data } = body
+
+    if (!firmaMpValida(request, searchParams, data?.id)) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
 
     // Solo procesamos eventos de suscripciones
     if (type !== 'subscription_preapproval') {
