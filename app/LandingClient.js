@@ -59,7 +59,7 @@ const [isMobile, setIsMobile] = useState(false)
             <span style={s.heroGradient}>Hacelos volver.</span>
           </h1>
           <p style={s.heroSub}>
-            Pegás un QR en el mostrador. Cada cliente que compra escanea, suma puntos y los ve en el celular sin instalar nada. Vos elegís cuánto vale cada compra y qué se puede canjear, no un algoritmo.
+            Mostrás un QR en el mostrador. Cada cliente que compra escanea, suma puntos y los ve en el celular sin instalar nada. Vos elegís cuánto vale cada compra y qué se puede canjear.
           </p>
           <div style={s.heroCtas}>
             <a href="/onboarding/registro" style={s.ctaPrimary}>Empezá gratis →</a>
