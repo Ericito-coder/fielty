@@ -13,7 +13,7 @@ export const metadata = {
     type: 'website',
   },
   twitter: {
-    card: 'summary',
+    card: 'summary_large_image',
     title: 'Fielty — Fidelización de clientes sin app',
     description: 'Programa de puntos con QR, niveles y referidos para negocios físicos en Argentina.',
   },

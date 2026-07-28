@@ -40,8 +40,8 @@ export default function Guia() {
               ['Clientes', 'Hasta 50', 'Ilimitados', 'Ilimitados'],
               ['Sucursales', '1', 'Hasta 3', 'Ilimitadas'],
               ['Campañas de email', '✗', '✓', '✓'],
-              ['Logo personalizado', '✗', '✗', '✓'],
-              ['Exportación CSV', '✗', '✗', '✓'],
+              ['Logo personalizado', '✗', '✓', '✓'],
+              ['Exportación CSV', '✗', '✓', '✓'],
               ['Google Wallet', '✗', '✗', '✓'],
               ['Precio', '$0', '$10.000/mes*', '$35.000/mes'],
             ].map(([label, ...vals], i) => (
@@ -92,7 +92,7 @@ export default function Guia() {
 
         <SubTitle>👥 Clientes</SubTitle>
         <P>Lista completa con nombre, DNI, puntos, nivel (🥉 Bronce / 🥈 Plata / 🥇 Oro), última visita y fecha de registro. Filtros: todos, activos, inactivos, referidos. Buscador por nombre o DNI.</P>
-        <P><strong>Exportación CSV</strong> (solo Business): descarga todos los clientes filtrados, compatible con Excel.</P>
+        <P><strong>Exportación CSV</strong> (Pro y Business): descarga todos los clientes filtrados, compatible con Excel.</P>
 
         <SubTitle>🎁 Recompensas</SubTitle>
         <P>El dueño crea recompensas con nombre, descripción y puntos necesarios. Puede activarlas, desactivarlas o eliminarlas en cualquier momento.</P>
@@ -113,7 +113,7 @@ export default function Guia() {
         <List items={[
           'Nombre del negocio',
           'Color de marca',
-          'Logo personalizado (solo Business — PNG, JPG, WebP, máx 2MB)',
+          'Logo personalizado (Pro y Business — PNG, JPG, WebP, máx 2MB)',
           'Regla de puntos: pesos por punto y puntos por tramo. El cálculo es proporcional al monto exacto de la compra, redondeado al entero más cercano',
           'Puntos de bienvenida al registrarse de forma orgánica (default: 10)',
           'Puntos por referido para el que invita (default: 100)',
@@ -219,7 +219,7 @@ export default function Guia() {
           'Puntos de referido si se registró con el link de otro cliente — en ese caso NO recibe puntos de bienvenida',
         ]} />
 
-        <Highlight>Si el negocio tiene logo (plan Business), aparece el logo en la página de registro en lugar de las iniciales.</Highlight>
+        <Highlight>Si el negocio tiene logo (plan Pro o Business), aparece el logo en la página de registro en lugar de las iniciales.</Highlight>
       </Section>
 
       <Section title="Paso 2 — La tarjeta digital" level={3}>
