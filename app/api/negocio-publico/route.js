@@ -17,7 +17,13 @@ export async function GET(request) {
 
     if (!negocio) return NextResponse.json({ error: 'Negocio no encontrado' }, { status: 404 })
 
-    return NextResponse.json({ negocio })
+    const { count } = await supabaseAdmin
+      .from('recompensas')
+      .select('id', { count: 'exact', head: true })
+      .eq('negocio_id', negocio.id)
+      .eq('activa', true)
+
+    return NextResponse.json({ negocio: { ...negocio, tieneRecompensas: (count || 0) > 0 } })
   } catch (error) {
     console.error('negocio-publico error:', error)
     return NextResponse.json({ error: 'Error interno' }, { status: 500 })

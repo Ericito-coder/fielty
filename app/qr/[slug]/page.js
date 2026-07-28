@@ -82,8 +82,8 @@ export default function QRPage({ params }) {
 
             {/* Beneficios */}
             <div style={s.benefits}>
-              <div style={s.benefit}>🎁 Canjeá recompensas exclusivas</div>
-              <div style={s.benefit}>🎂 Puntos de regalo en tu cumpleaños</div>
+              {negocio.tieneRecompensas && <div style={s.benefit}>🎁 Canjeá recompensas exclusivas</div>}
+              {negocio.puntos_cumpleanos > 0 && <div style={s.benefit}>🎂 Puntos de regalo en tu cumpleaños</div>}
               <div style={s.benefit}>🤝 Invitá amigos y ganás más puntos</div>
             </div>
 
