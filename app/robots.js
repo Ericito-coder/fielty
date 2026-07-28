@@ -5,6 +5,7 @@ export default function robots() {
       allow: '/',
       disallow: [
         '/admin',
+        '/email-preview',
         '/dashboard',
         '/api/',
         '/login',

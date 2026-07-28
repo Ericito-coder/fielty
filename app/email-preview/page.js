@@ -1,4 +1,22 @@
+'use client'
+import { useEffect, useState } from 'react'
+import { supabase } from '@/lib/supabase'
+
+const ADMIN_EMAIL = process.env.NEXT_PUBLIC_ADMIN_EMAIL
+
 export default function EmailPreview() {
+  const [autorizado, setAutorizado] = useState(false)
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (!session) { window.location.href = '/login'; return }
+      if (session.user.email !== ADMIN_EMAIL) { window.location.href = '/dashboard'; return }
+      setAutorizado(true)
+    })
+  }, [])
+
+  if (!autorizado) return null
+
   const appUrl = 'https://www.fielty.app'
   const negocio = { nombre: 'Pet Point', slug: 'pet-point' }
   const registroUrl = `${appUrl}/registro/${negocio.slug}`

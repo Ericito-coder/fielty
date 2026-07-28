@@ -11,7 +11,7 @@ export default function ResetPassword() {
 
   async function cambiarPassword() {
     if (!password) { setError('Ingresá una contraseña'); return }
-    if (password.length < 6) { setError('Mínimo 6 caracteres'); return }
+    if (password.length < 8) { setError('Mínimo 8 caracteres'); return }
     if (password !== confirmar) { setError('Las contraseñas no coinciden'); return }
     setError('')
     setCargando(true)
@@ -47,7 +47,7 @@ export default function ResetPassword() {
 
         <div style={s.field}>
           <label style={s.label}>Nueva contraseña</label>
-          <input style={s.input} type="password" placeholder="Mínimo 6 caracteres"
+          <input style={s.input} type="password" placeholder="Mínimo 8 caracteres"
             value={password} onChange={e => setPassword(e.target.value)} />
         </div>
         <div style={s.field}>

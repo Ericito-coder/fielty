@@ -68,14 +68,23 @@ export default function Guia() {
         <List items={['Email', 'Contraseña (mínimo 8 caracteres)', 'Nombre del dueño o responsable', 'Teléfono de contacto']} />
 
         <SubTitle>1.3 Configurar el negocio — <Code>fielty.app/onboarding/negocio</Code></SubTitle>
-        <List items={['Nombre del negocio (ej: "Pet Point")', 'Rubro (ej: "Veterinaria")', 'Color de marca — aparece en la tarjeta del cliente']} />
+        <List items={[
+          'Nombre del negocio (ej: "Pet Point")',
+          'Color de marca — aparece en la tarjeta del cliente',
+          'Regla de puntos (ej: 1 punto cada $100)',
+          'Puntos por cumpleaños (default: 50)',
+          'Puntos por referir amigos, para quien invita y para quien se suma (default: 100 y 50)',
+        ]} />
         <P>Fielty genera automáticamente un <strong>slug único</strong> para el negocio (ej: <code>pet-point</code>) que se usa en todas las URLs.</P>
 
-        <SubTitle>1.4 Pantalla "¡Todo listo!" — <Code>fielty.app/onboarding/listo</Code></SubTitle>
+        <SubTitle>1.4 Crear tus recompensas — <Code>fielty.app/onboarding/recompensa</Code></SubTitle>
+        <P>Hace falta cargar al menos una recompensa (nombre y puntos necesarios, ej: "Café gratis" por 200 puntos) para poder continuar. Se pueden agregar más adelante desde el panel.</P>
+
+        <SubTitle>1.5 Pantalla "¡Todo listo!" — <Code>fielty.app/onboarding/listo</Code></SubTitle>
         <List items={[
           'Link de registro para clientes: fielty.app/registro/[slug]',
           'QR para imprimir y poner en el mostrador',
-          'Los 3 primeros pasos recomendados',
+          'Próximos pasos: imprimir el QR, pedirles a los empleados que usen la caja para acreditar puntos, y mirar las métricas desde el panel',
         ]} />
         <Highlight>Email de bienvenida automático: se envía al email del dueño con el link de registro, los primeros pasos y el acceso al panel.</Highlight>
       </Section>
@@ -87,6 +96,7 @@ export default function Guia() {
         <P><strong>Métricas:</strong> clientes totales, activos en los últimos 30 días, puntos en circulación, canjes realizados, referidos y tasa de retorno.</P>
         <P><strong>Links del negocio:</strong> link de registro de clientes y link de caja con botones para copiar y ver el QR.</P>
         <P><strong>Últimas transacciones:</strong> las últimas 10 en tiempo real con ícono, descripción, fecha y puntos.</P>
+        <P><strong>Top clientes:</strong> ranking de los 5 clientes con más puntos históricos, con nombre y nivel.</P>
         <P><strong>Métricas por sucursal:</strong> clientes, puntos y canjes por sucursal con barra comparativa.</P>
         <P><strong>Guía de primeros pasos:</strong> checklist con 5 pasos que se tachan automáticamente. Al completar todo desaparece. Se puede cerrar manualmente (pide confirmación).</P>
 
@@ -310,7 +320,11 @@ export default function Guia() {
           <tbody>
             {[
               ['Landing / Precios', 'fielty.app', 'Dueños de negocio'],
-              ['Registro negocio', 'fielty.app/onboarding/registro', 'Dueños de negocio'],
+              ['Registro negocio (paso 1 de 3)', 'fielty.app/onboarding/registro', 'Dueños de negocio'],
+              ['Configurar negocio (paso 2 de 3)', 'fielty.app/onboarding/negocio', 'Dueños de negocio'],
+              ['Crear recompensas (paso 3 de 3)', 'fielty.app/onboarding/recompensa', 'Dueños de negocio'],
+              ['Pantalla "¡Todo listo!"', 'fielty.app/onboarding/listo', 'Dueños de negocio'],
+              ['Ingresar', 'fielty.app/login', 'Dueños de negocio'],
               ['Panel del dueño', 'fielty.app/dashboard', 'Dueños de negocio'],
               ['Upgrade de plan', 'fielty.app/dashboard/upgrade', 'Dueños de negocio'],
               ['Caja (sin sucursal)', 'fielty.app/c/[slug]', 'Empleados'],
@@ -319,8 +333,12 @@ export default function Guia() {
               ['Tarjeta del cliente', 'fielty.app/tarjeta/[id]', 'Clientes'],
               ['Ver mi tarjeta', 'fielty.app/mi-tarjeta', 'Clientes'],
               ['Recuperar contraseña', 'fielty.app/mi-tarjeta/reset', 'Clientes'],
+              ['Elegir contraseña (primer login)', 'fielty.app/mi-tarjeta/nueva-password', 'Clientes'],
+              ['Restablecer contraseña', 'fielty.app/reset-password', 'Dueños de negocio'],
               ['QR del negocio', 'fielty.app/qr/[slug]', 'Dueños de negocio'],
+              ['QR de mi tarjeta', 'fielty.app/qr/mi-tarjeta', 'Clientes'],
               ['Preguntas frecuentes', 'fielty.app/faq', 'Todos'],
+              ['Guía completa', 'fielty.app/guia', 'Todos'],
               ['Términos y condiciones', 'fielty.app/terminos', 'Todos'],
               ['Política de privacidad', 'fielty.app/privacidad', 'Todos'],
             ].map(([nombre, url, para], i) => (
