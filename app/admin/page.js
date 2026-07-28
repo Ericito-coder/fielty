@@ -1,6 +1,7 @@
 'use client'
 import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
+import { linkWhatsApp } from '@/lib/wa'
 
 const ADMIN_EMAIL = process.env.NEXT_PUBLIC_ADMIN_EMAIL
 const PLAN_COLORES = { gratis: '#888', pro_early: '#e0001b', pro: '#e0001b', business: '#f0a500' }
@@ -322,7 +323,19 @@ export default function Admin() {
                   </td>
                   <td style={{padding:'14px 16px'}}>
                     <div style={{fontSize:12, color:'#888'}}>{n.email}</div>
-                    <div style={{fontSize:12, color:'#555'}}>{n.telefono || '—'}</div>
+                    {n.telefono ? (
+                      <a
+                        href={linkWhatsApp(n.telefono, `Hola ${n.nombre}! Te escribo de Fielty.`)}
+                        target="_blank"
+                        rel="noreferrer"
+                        onClick={e => e.stopPropagation()}
+                        style={{fontSize:12, color:'#00b96b', textDecoration:'none'}}
+                      >
+                        📱 {n.telefono}
+                      </a>
+                    ) : (
+                      <div style={{fontSize:12, color:'#555'}}>—</div>
+                    )}
                   </td>
                   <td style={{padding:'14px 16px'}} onClick={e => e.stopPropagation()}>
                     <select

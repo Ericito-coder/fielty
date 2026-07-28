@@ -24,6 +24,7 @@ export default function Registro() {
   async function registrar() {
     if (!nombre) { setError('Ingresá tu nombre'); return }
     if (!telefono) { setError('Ingresá tu teléfono'); return }
+    if (telefono.replace(/\D/g, '').length < 10) { setError('Ingresá tu teléfono completo, con código de área (ej: 1123456789)'); return }
     if (!email) { setError('Ingresá tu email'); return }
     if (password.length < 8) { setError('La contraseña tiene que tener al menos 8 caracteres'); return }
     setError('')
