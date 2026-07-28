@@ -340,7 +340,7 @@ export default function Tarjeta({ params }) {
           </div>
           <div style={{fontSize:13, color:'#888', marginBottom:20, lineHeight:1.5}}>
             Cuando un amigo se registra con tu link, vos ganás{' '}
-            <strong style={{color:'#0e0e0e'}}>{cliente.negocio?.puntos_referido_emisor || 50} pts</strong>{' '}
+            <strong style={{color:'#0e0e0e'}}>{cliente.negocio?.puntos_referido_emisor || 100} pts</strong>{' '}
             y tu amigo gana{' '}
             <strong style={{color:'#0e0e0e'}}>{cliente.negocio?.puntos_referido_receptor || 50} pts</strong>.
           </div>
