@@ -25,7 +25,7 @@ export const FAQS = [
       },
       {
         q: '¿Qué datos se piden al registrarse?',
-        a: 'Nombre, DNI y WhatsApp son obligatorios. Email y fecha de nacimiento son opcionales. La fecha de nacimiento sirve para que tus clientes reciban puntos extra en su cumpleaños.',
+        a: 'Nombre, DNI, email y contraseña son obligatorios. WhatsApp y fecha de nacimiento son opcionales. La fecha de nacimiento sirve para que tus clientes reciban puntos extra en su cumpleaños.',
       },
       {
         q: '¿Un cliente puede registrarse en varios negocios?',

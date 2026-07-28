@@ -22,7 +22,7 @@ export default function Privacidad() {
       <div style={{ maxWidth: 720, margin: '0 auto', padding: '64px 24px 48px' }}>
         <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', color: '#e0001b', marginBottom: 16 }}>Legal</div>
         <h1 style={{ fontSize: 40, fontWeight: 900, color: 'white', marginBottom: 16, letterSpacing: -1, lineHeight: 1.1 }}>Política de privacidad</h1>
-        <p style={{ fontSize: 14, color: '#555', lineHeight: 1.7 }}>Última actualización: mayo de 2026</p>
+        <p style={{ fontSize: 14, color: '#555', lineHeight: 1.7 }}>Última actualización: julio de 2026</p>
       </div>
 
       <div style={{ maxWidth: 720, margin: '0 auto', padding: '0 24px 80px' }}>
@@ -40,7 +40,7 @@ export default function Privacidad() {
         </Section>
 
         <Section title="3. Para qué usamos los datos">
-          Los datos se utilizan exclusivamente para: prestar el servicio de fidelización, enviar notificaciones transaccionales relacionadas con el programa de puntos (acreditación de puntos, recupero de contraseña, cumpleaños), gestionar la suscripción y el cobro del servicio, y mejorar la plataforma. No vendemos ni cedemos datos personales a terceros con fines comerciales.
+          Los datos se utilizan exclusivamente para: prestar el servicio de fidelización, enviar notificaciones transaccionales relacionadas con el programa de puntos (acreditación de puntos, recupero de contraseña, cumpleaños), enviar campañas de reactivación por email en nombre del negocio a clientes inactivos (planes Pro y Business, con link de baja en cada envío), gestionar la suscripción y el cobro del servicio, y mejorar la plataforma. No vendemos ni cedemos datos personales a terceros con fines comerciales.
         </Section>
 
         <Section title="4. Almacenamiento y seguridad">
@@ -48,7 +48,7 @@ export default function Privacidad() {
         </Section>
 
         <Section title="5. Servicios de terceros">
-          Fielty utiliza los siguientes servicios de terceros para operar: Supabase (base de datos y autenticación), Vercel (hosting), Resend (envío de emails transaccionales) y Mercado Pago (procesamiento de pagos). Cada uno de estos servicios cuenta con su propia política de privacidad.
+          Fielty utiliza los siguientes servicios de terceros para operar: Supabase (base de datos y autenticación), Vercel (hosting), Resend (envío de emails transaccionales), Mercado Pago (procesamiento de pagos) y Google Wallet (para los negocios en plan Business que ofrecen la tarjeta como pase de Google Wallet, se comparten los puntos y el nivel del cliente con la API de Google). Cada uno de estos servicios cuenta con su propia política de privacidad.
         </Section>
 
         <Section title="6. Retención de datos">
