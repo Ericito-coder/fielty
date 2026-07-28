@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { getSupabaseAdmin, validarPinCaja } from '@/lib/server'
+import { getSupabaseAdmin, validarPinCaja, getRequestIp } from '@/lib/server'
 
 // Marca un canje como usado. fn_confirmar_canje solo lo hace si
 // sigue pendiente y no venció, así dos cajas no pueden confirmar
@@ -10,7 +10,7 @@ export async function POST(request) {
     if (!negocioId || !canjeId) return NextResponse.json({ error: 'Faltan datos' }, { status: 400 })
 
     const supabaseAdmin = getSupabaseAdmin()
-    const auth = await validarPinCaja(supabaseAdmin, { negocioId, sucursalId, pin })
+    const auth = await validarPinCaja(supabaseAdmin, { negocioId, sucursalId, pin, ip: getRequestIp(request) })
     if (auth.error) return NextResponse.json({ error: auth.error }, { status: auth.status })
 
     // El canje debe ser de este negocio

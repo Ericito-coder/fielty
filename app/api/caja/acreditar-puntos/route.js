@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { Resend } from 'resend'
-import { getSupabaseAdmin, validarPinCaja } from '@/lib/server'
+import { getSupabaseAdmin, validarPinCaja, getRequestIp } from '@/lib/server'
 import { actualizarPuntosWallet } from '@/lib/googleWallet'
 
 const resend = new Resend(process.env.RESEND_API_KEY)
@@ -21,7 +21,7 @@ export async function POST(request) {
     const supabaseAdmin = getSupabaseAdmin()
 
     // Valida el PIN del negocio o de la sucursal (puede tener PIN propio)
-    const auth = await validarPinCaja(supabaseAdmin, { negocioId, sucursalId, pin })
+    const auth = await validarPinCaja(supabaseAdmin, { negocioId, sucursalId, pin, ip: getRequestIp(request) })
     if (auth.error) return NextResponse.json({ error: auth.error }, { status: auth.status })
     const { negocio, sucursal } = auth
 

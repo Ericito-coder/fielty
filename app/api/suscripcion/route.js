@@ -13,6 +13,13 @@ const supabaseAdmin = createClient(
 
 export async function POST(request) {
   try {
+    // Solo el dueño autenticado puede contratar una suscripción para SU negocio
+    const token = request.headers.get('Authorization')?.replace('Bearer ', '')
+    if (!token) return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
+
+    const { data: { user } } = await supabaseAdmin.auth.getUser(token)
+    if (!user) return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
+
     const { negocioId, plan, email } = await request.json()
 
     const precioMap = {
@@ -21,7 +28,21 @@ export async function POST(request) {
       business: 35000,
     }
 
-    const precio = precioMap[plan] || 20000
+    if (!negocioId || !precioMap[plan]) {
+      return NextResponse.json({ error: 'Datos inválidos' }, { status: 400 })
+    }
+
+    const { data: negocio } = await supabaseAdmin
+      .from('negocios')
+      .select('id, user_id')
+      .eq('id', negocioId)
+      .single()
+
+    if (!negocio || negocio.user_id !== user.id) {
+      return NextResponse.json({ error: 'No autorizado' }, { status: 403 })
+    }
+
+    const precio = precioMap[plan]
 
     const preApprovalPlan = new PreApprovalPlan(client)
 

@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { getSupabaseAdmin, validarPinCaja } from '@/lib/server'
+import { getSupabaseAdmin, validarPinCaja, getRequestIp } from '@/lib/server'
 
 // Identifica a un cliente por su ID (escaneado del QR de su tarjeta
 // o pase de Wallet) desde la caja. Valida el PIN y que el cliente
@@ -10,7 +10,7 @@ export async function POST(request) {
     if (!negocioId || !clienteId) return NextResponse.json({ error: 'Faltan datos' }, { status: 400 })
 
     const supabaseAdmin = getSupabaseAdmin()
-    const auth = await validarPinCaja(supabaseAdmin, { negocioId, sucursalId, pin })
+    const auth = await validarPinCaja(supabaseAdmin, { negocioId, sucursalId, pin, ip: getRequestIp(request) })
     if (auth.error) return NextResponse.json({ error: auth.error }, { status: auth.status })
 
     const { data: cliente } = await supabaseAdmin

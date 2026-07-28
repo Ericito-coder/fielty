@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import bcrypt from 'bcryptjs'
 import { createClient } from '@supabase/supabase-js'
+import { rateLimit } from '@/lib/rateLimit'
 
 const supabaseAdmin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL,
@@ -16,6 +17,14 @@ export async function POST(request) {
     }
     if (nuevaPassword.length < 8) {
       return NextResponse.json({ error: 'La contraseña debe tener al menos 8 caracteres' }, { status: 400 })
+    }
+
+    // La "contraseña actual" acá es el DNI (password por defecto hasta
+    // que el cliente la cambia): sin este límite se podría fuerza-bruta
+    // el DNI de una cuenta puntual conociendo su clienteId.
+    const { ok: rateLimitOk } = await rateLimit({ key: `cambiar-password:${clienteId}`, maxAttempts: 5, windowMs: 15 * 60 * 1000 })
+    if (!rateLimitOk) {
+      return NextResponse.json({ error: 'Demasiados intentos. Esperá 15 minutos e intentá de nuevo.' }, { status: 429 })
     }
 
     // Verificar que el cliente existe y que la contraseña actual es el DNI

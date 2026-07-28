@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { getSupabaseAdmin, validarPinCaja } from '@/lib/server'
+import { getSupabaseAdmin, validarPinCaja, getRequestIp } from '@/lib/server'
 
 // Búsqueda de clientes desde la caja. Requiere el PIN en cada
 // request y devuelve solo los campos que la caja necesita.
@@ -9,7 +9,7 @@ export async function POST(request) {
     if (!negocioId || !q) return NextResponse.json({ error: 'Faltan datos' }, { status: 400 })
 
     const supabaseAdmin = getSupabaseAdmin()
-    const auth = await validarPinCaja(supabaseAdmin, { negocioId, sucursalId, pin })
+    const auth = await validarPinCaja(supabaseAdmin, { negocioId, sucursalId, pin, ip: getRequestIp(request) })
     if (auth.error) return NextResponse.json({ error: auth.error }, { status: auth.status })
 
     // Sin comas/paréntesis/porcentajes: son sintaxis de filtro PostgREST
