@@ -66,6 +66,22 @@ export default function FaqClient() {
           </div>
         ))}
 
+        {/* Por rubro */}
+        <div style={{ border: '1px solid #1a1a1a', borderRadius: 20, padding: '32px', marginBottom: 16 }}>
+          <div style={{ fontSize: 17, fontWeight: 800, color: 'white', marginBottom: 8 }}>Cómo funciona en tu rubro</div>
+          <p style={{ fontSize: 14, color: '#666', marginBottom: 20, lineHeight: 1.6 }}>
+            Armamos una guía específica según el tipo de negocio, con la regla de puntos que mejor le calza a cada uno.
+          </p>
+          <div style={{ display: 'flex', gap: 20, flexWrap: 'wrap' }}>
+            <a href="/para/barberias" style={{ fontSize: 14, color: '#e0001b', fontWeight: 700, textDecoration: 'none' }}>
+              Barberías →
+            </a>
+            <a href="/para/cafeterias" style={{ fontSize: 14, color: '#e0001b', fontWeight: 700, textDecoration: 'none' }}>
+              Cafeterías y pastelerías →
+            </a>
+          </div>
+        </div>
+
         {/* Empezá gratis */}
         <div style={{ border: '1px solid #1a1a1a', borderRadius: 20, padding: '40px 32px', textAlign: 'center', marginBottom: 16 }}>
           <div style={{ fontSize: 22, fontWeight: 800, color: 'white', marginBottom: 10 }}>¿Listo para fidelizar tus clientes?</div>
@@ -90,6 +106,8 @@ export default function FaqClient() {
         <a href="/terminos" style={{ color: '#444', textDecoration: 'none', marginRight: 20 }}>Términos</a>
         <a href="/privacidad" style={{ color: '#444', textDecoration: 'none', marginRight: 20 }}>Privacidad</a>
         <a href="/guia" style={{ color: '#444', textDecoration: 'none', marginRight: 20 }}>Guía completa</a>
+        <a href="/para/barberias" style={{ color: '#444', textDecoration: 'none', marginRight: 20 }}>Para barberías</a>
+        <a href="/para/cafeterias" style={{ color: '#444', textDecoration: 'none', marginRight: 20 }}>Para cafeterías</a>
         <a href="/" style={{ color: '#444', textDecoration: 'none' }}>fielty.app</a>
       </div>
     </div>

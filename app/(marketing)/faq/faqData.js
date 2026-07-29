@@ -12,7 +12,15 @@ export const FAQS = [
       },
       {
         q: '¿Funciona para cualquier tipo de negocio?',
-        a: 'Sí. Fielty funciona para peluquerías, cafeterías, veterinarias, restaurantes, tiendas de ropa, farmacias y cualquier negocio que quiera fidelizar clientes.',
+        a: 'Sí. Fielty funciona para peluquerías, barberías, cafeterías, pastelerías, veterinarias, restaurantes, tiendas de ropa, farmacias y cualquier negocio que quiera fidelizar clientes.',
+      },
+      {
+        q: '¿En qué se diferencia de la tarjeta de sellos de papel?',
+        a: 'La lógica es la misma, pero la tarjeta vive en el celular del cliente: no se pierde ni se olvida en casa. Además el cliente ve en todo momento cuántos puntos tiene y cuánto le falta para el premio, y vos ves desde el panel quiénes son tus clientes más fieles, cuántos volvieron y quiénes hace tiempo que no aparecen. Con la tarjeta de papel esa información no queda registrada en ningún lado.',
+      },
+      {
+        q: '¿Sirve si tengo más de un local?',
+        a: 'Sí. Cada sucursal tiene su propia pantalla de caja con su PIN, pero el cliente acumula y canjea puntos en cualquiera de tus locales con la misma tarjeta. El plan Gratis incluye 1 sucursal, el plan Pro hasta 3 y el plan Business sucursales ilimitadas.',
       },
     ],
   },
@@ -30,6 +38,10 @@ export const FAQS = [
       {
         q: '¿Un cliente puede registrarse en varios negocios?',
         a: 'Sí. Cada negocio tiene su propio programa independiente. Un cliente puede tener tarjeta en todos los negocios que quiera.',
+      },
+      {
+        q: '¿Qué pasa si mi cliente pierde el celular o se compra uno nuevo?',
+        a: 'No pierde nada. Los puntos están guardados en su cuenta, no en el teléfono. Desde el celular nuevo entra a fielty.app/mi-tarjeta con su DNI y contraseña y vuelve a ver su tarjeta como siempre. Si no se acuerda la contraseña, puede recuperarla por email.',
       },
     ],
   },
@@ -51,6 +63,10 @@ export const FAQS = [
       {
         q: '¿Puedo cambiar las recompensas cuando quiero?',
         a: 'Sí, podés agregar, editar o desactivar recompensas en cualquier momento desde la sección Recompensas de tu panel.',
+      },
+      {
+        q: '¿Los puntos vencen?',
+        a: 'No. Los puntos que acumula un cliente no tienen fecha de vencimiento y quedan disponibles hasta que los canjee. Lo único que tiene tiempo límite es el código de canje: cuando el cliente canjea un premio se genera un código válido por 24 horas, y si no lo usa en ese plazo los puntos vuelven automáticamente a su cuenta.',
       },
     ],
   },
@@ -89,6 +105,10 @@ export const FAQS = [
       {
         q: '¿Puedo usar Fielty desde el celular?',
         a: 'Sí. El panel del dueño y la caja están optimizados para mobile. Podés gestionar todo desde tu celular sin necesidad de una computadora.',
+      },
+      {
+        q: '¿Necesito comprar algún aparato, lector o terminal?',
+        a: 'No. Fielty funciona desde el navegador del celular, la tablet o la computadora que ya tenés. Para leer el código QR de la tarjeta de un cliente se usa la cámara del mismo celular, así que no hace falta ningún lector especial. Lo único que conviene imprimir es el cartel con el QR de tu negocio para el mostrador, y te lo generamos listo desde el panel.',
       },
     ],
   },

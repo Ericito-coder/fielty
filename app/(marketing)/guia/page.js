@@ -22,6 +22,11 @@ export default function Guia() {
         <P>Fielty es un sistema de fidelización de clientes para negocios físicos argentinos. Permite que tus clientes acumulen puntos en cada compra y los canjeen por premios que vos definís.</P>
         <Highlight>Sin app. Sin descarga. Todo desde el navegador del celular.</Highlight>
         <P>Ideal para: peluquerías, cafeterías, veterinarias, restaurantes, tiendas de ropa, farmacias y cualquier negocio que quiera hacer volver a sus clientes.</P>
+        <P style={{ fontSize: 14 }}>
+          Si querés ver cómo se aplica a un rubro puntual, tenemos guías específicas para{' '}
+          <a href="/para/barberias" style={{ color: '#e0001b', textDecoration: 'none', fontWeight: 600 }}>barberías</a>{' '}y para{' '}
+          <a href="/para/cafeterias" style={{ color: '#e0001b', textDecoration: 'none', fontWeight: 600 }}>cafeterías y pastelerías</a>.
+        </P>
       </Section>
 
       {/* Planes */}

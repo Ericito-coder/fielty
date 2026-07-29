@@ -162,6 +162,16 @@ export default function ParaCafeterias() {
         </div>
       </section>
 
+      {/* OTRO RUBRO */}
+      <section style={{ padding: '0 32px 60px', textAlign: 'center' }}>
+        <div style={{ fontSize: 15, color: '#666' }}>
+          ¿Tenés otro tipo de negocio?{' '}
+          <a href="/para/barberias" style={{ color: '#e0001b', fontWeight: 700, textDecoration: 'none' }}>
+            Mirá cómo funciona en barberías →
+          </a>
+        </div>
+      </section>
+
       {/* FOOTER */}
       <footer style={s.footer}>
         <a href="/terminos" style={s.footerLink}>Términos</a>
