@@ -1,5 +1,5 @@
 export default function sitemap() {
-  const base = 'https://fielty.app'
+  const base = 'https://www.fielty.app'
   const now = new Date()
 
   const routes = [

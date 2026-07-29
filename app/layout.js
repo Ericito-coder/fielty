@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  metadataBase: new URL('https://fielty.app'),
+  metadataBase: new URL('https://www.fielty.app'),
   title: {
     default: 'Fielty — Programa de fidelización y puntos para negocios sin app',
     template: '%s',

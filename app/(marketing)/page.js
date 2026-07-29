@@ -25,7 +25,7 @@ const jsonLd = {
   name: 'Fielty',
   applicationCategory: 'BusinessApplication',
   operatingSystem: 'Web',
-  url: 'https://fielty.app',
+  url: 'https://www.fielty.app',
   description: 'Sistema de fidelización de clientes con programa de puntos, niveles y referidos para negocios físicos. Sin app, funciona desde el navegador vía QR.',
   offers: [
     { '@type': 'Offer', name: 'Gratis', price: '0', priceCurrency: 'ARS', description: 'Hasta 50 clientes, 1 sucursal, puntos, niveles y referidos.' },
@@ -35,7 +35,7 @@ const jsonLd = {
   provider: {
     '@type': 'Organization',
     name: 'Fielty',
-    url: 'https://fielty.app',
+    url: 'https://www.fielty.app',
     email: 'hola@fielty.app',
   },
 }

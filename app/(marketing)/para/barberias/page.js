@@ -16,8 +16,8 @@ const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
   itemListElement: [
-    { '@type': 'ListItem', position: 1, name: 'Fielty', item: 'https://fielty.app' },
-    { '@type': 'ListItem', position: 2, name: 'Barberías', item: 'https://fielty.app/para/barberias' },
+    { '@type': 'ListItem', position: 1, name: 'Fielty', item: 'https://www.fielty.app' },
+    { '@type': 'ListItem', position: 2, name: 'Barberías', item: 'https://www.fielty.app/para/barberias' },
   ],
 }
 
