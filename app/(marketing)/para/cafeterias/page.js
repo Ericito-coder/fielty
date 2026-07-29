@@ -1,11 +1,11 @@
 export const metadata = {
-  title: 'Programa de puntos para barberías | Fielty',
-  description: 'Sistema de fidelización para barberías: tus clientes escanean un QR, suman puntos en cada corte y vuelven más seguido. Sin app y sin tarjetitas que se pierden. Empezá gratis.',
-  alternates: { canonical: '/para/barberias' },
+  title: 'Programa de puntos para cafeterías y pastelerías | Fielty',
+  description: 'Sistema de fidelización para cafeterías y pastelerías: tus clientes escanean un QR, suman puntos en cada compra y eligen tu mostrador en vez del de la esquina. Sin app. Empezá gratis.',
+  alternates: { canonical: '/para/cafeterias' },
   openGraph: {
-    title: 'Programa de puntos para barberías | Fielty',
-    description: 'Que tus clientes vuelvan cada mes, no cuando se acuerdan. Programa de puntos con QR para barberías, sin app.',
-    url: '/para/barberias',
+    title: 'Programa de puntos para cafeterías y pastelerías | Fielty',
+    description: 'Que el café de todos los días sea el tuyo. Programa de puntos con QR para cafeterías, sin app.',
+    url: '/para/cafeterias',
     siteName: 'Fielty',
     locale: 'es_AR',
     type: 'website',
@@ -17,11 +17,11 @@ const jsonLd = {
   '@type': 'BreadcrumbList',
   itemListElement: [
     { '@type': 'ListItem', position: 1, name: 'Fielty', item: 'https://www.fielty.app' },
-    { '@type': 'ListItem', position: 2, name: 'Barberías', item: 'https://www.fielty.app/para/barberias' },
+    { '@type': 'ListItem', position: 2, name: 'Cafeterías', item: 'https://www.fielty.app/para/cafeterias' },
   ],
 }
 
-export default function ParaBarberias() {
+export default function ParaCafeterias() {
   return (
     <div style={s.page}>
       <script
@@ -44,13 +44,13 @@ export default function ParaBarberias() {
       {/* HERO */}
       <section style={s.heroWrap}>
         <div style={s.hero}>
-          <div style={s.badge}>Para barberías</div>
+          <div style={s.badge}>Para cafeterías y pastelerías</div>
           <h1 style={s.h1}>
             Programa de puntos<br />
-            <span style={s.gradient}>para tu barbería.</span>
+            <span style={s.gradient}>para tu cafetería.</span>
           </h1>
           <p style={s.heroSub}>
-            Tus clientes ya vuelven cada tres o cuatro semanas. Fielty hace que ese ritmo no dependa de que se acuerden de vos: suman puntos en cada corte y los ven en el celular, sin instalar ninguna app.
+            Nadie piensa mucho dónde toma el café: pasa por el que tiene más a mano. Fielty le da a tu cliente una razón concreta para que ese lugar sea el tuyo, sin que tenga que instalar ninguna app.
           </p>
           <div style={s.ctaRow}>
             <a href="/onboarding/registro" style={s.ctaPrimary}>Empezá gratis →</a>
@@ -62,24 +62,24 @@ export default function ParaBarberias() {
       {/* POR QUÉ */}
       <section style={s.section}>
         <div style={s.inner}>
-          <h2 style={s.h2}>Por qué funciona en una barbería</h2>
+          <h2 style={s.h2}>Por qué funciona en una cafetería</h2>
           <div style={s.grid}>
             <div style={s.card}>
-              <div style={s.cardTitle}>El cliente ya es recurrente</div>
+              <div style={s.cardTitle}>La competencia está a media cuadra</div>
               <p style={s.cardText}>
-                El pelo crece igual para todos: quien se corta con vos vuelve cada tres o cuatro semanas. No tenés que crear el hábito, solo asegurarte de que esa vuelta sea con vos y no con el que le queda más cerca ese día.
+                Para el cliente, dos cafeterías parecidas son casi intercambiables. Tener puntos acumulados con vos es lo que lo hace pasar de largo la otra esquina.
               </p>
             </div>
             <div style={s.card}>
-              <div style={s.cardTitle}>Cada visita vale bastante</div>
+              <div style={s.cardTitle}>Vienen seguido y deciden rápido</div>
               <p style={s.cardText}>
-                Un corte no es una compra chica: cuando alguien deja de venir, se nota en la caja del mes. Recuperar a un cliente que se estaba yendo justifica de sobra el premio que le des.
+                No es una compra que se piensa: es un hábito de treinta segundos, muchas veces por semana. Cuantas más veces te compran, más rápido se les acumula y más difícil es que arranquen de cero en otro lado.
               </p>
             </div>
             <div style={s.card}>
-              <div style={s.cardTitle}>Ya tenés la relación</div>
+              <div style={s.cardTitle}>No todos gastan lo mismo</div>
               <p style={s.cardText}>
-                Los conocés por el nombre y sabés cómo les gusta el corte. Un programa de puntos le pone números a algo que ya hacés: reconocer al que siempre vuelve.
+                Un café para llevar no es un desayuno para dos, ni una torta encargada. Los puntos van por monto, así el que gasta más suma más sin que tengas que llevar cuentas aparte.
               </p>
             </div>
           </div>
@@ -99,7 +99,7 @@ export default function ParaBarberias() {
               <div style={s.stepNum}>1</div>
               <div>
                 <div style={s.stepTitle}>Ponés el QR en el mostrador</div>
-                <p style={s.stepText}>Te lo generamos listo para imprimir. El cliente lo escanea con la cámara mientras te paga y se registra en 30 segundos.</p>
+                <p style={s.stepText}>Te lo generamos listo para imprimir. El cliente lo escanea con la cámara mientras espera el pedido y se registra en 30 segundos.</p>
               </div>
             </div>
             <div style={s.step}>
@@ -107,14 +107,14 @@ export default function ParaBarberias() {
               <div>
                 <div style={s.stepTitle}>Definís la regla de puntos</div>
                 <p style={s.stepText}>
-                  Si querés replicar la lógica de la tarjeta de sellos, poné el precio de un corte como regla: así cada corte suma un punto y ponés el premio en diez. Si preferís algo más fino, configurás puntos proporcionales al monto y también suman la barba, los productos o el combo.
+                  Acá conviene que los puntos vayan por monto y no por visita, porque lo que se lleva cada uno cambia mucho. Elegís cada cuántos pesos se suman puntos y listo.
                 </p>
               </div>
             </div>
             <div style={s.step}>
               <div style={s.stepNum}>3</div>
               <div>
-                <div style={s.stepTitle}>Cargás el corte y listo</div>
+                <div style={s.stepTitle}>Cargás la venta y listo</div>
                 <p style={s.stepText}>Buscás al cliente por nombre o DNI desde la caja, o escaneás el código de su tarjeta. Cuando llega al premio, te muestra un código que validás antes de dárselo.</p>
               </div>
             </div>
@@ -128,21 +128,21 @@ export default function ParaBarberias() {
           <h2 style={s.h2}>Lo que más se usa en este rubro</h2>
           <div style={s.grid}>
             <div style={s.card}>
-              <div style={s.cardTitle}>Referidos</div>
-              <p style={s.cardText}>
-                Una barbería crece porque alguien le pregunta a un amigo dónde se corta. Cada cliente tiene su propio link para pasarle: si el amigo se registra desde ahí, los dos suman puntos.
-              </p>
-            </div>
-            <div style={s.card}>
               <div style={s.cardTitle}>Puntos de cumpleaños</div>
               <p style={s.cardText}>
-                El día del cumpleaños le entran puntos de regalo automáticamente. Es una excusa para que aparezca sin que vos tengas que acordarte de nada.
+                El día del cumpleaños le entran puntos de regalo automáticamente. En una pastelería es el mejor momento posible: justo cuando va a necesitar la torta.
               </p>
             </div>
             <div style={s.card}>
-              <div style={s.cardTitle}>Varios sillones, varias sucursales</div>
+              <div style={s.cardTitle}>Ver quién dejó de venir</div>
               <p style={s.cardText}>
-                Si tenés más de un local, cada uno entra con su propio PIN, pero el cliente suma puntos en cualquiera de los dos.
+                Con mucha gente entrando y saliendo es imposible darte cuenta de que el de todas las mañanas hace tres semanas que no aparece. El panel te lo muestra, y en los planes Pro y Business podés mandarle un mail para invitarlo a volver.
+              </p>
+            </div>
+            <div style={s.card}>
+              <div style={s.cardTitle}>Referidos</div>
+              <p style={s.cardText}>
+                Cada cliente tiene su propio link para compartir. Si alguien se registra desde ese link, los dos suman puntos: el que recomendó y el que llega.
               </p>
             </div>
           </div>
@@ -152,7 +152,7 @@ export default function ParaBarberias() {
       {/* CTA FINAL */}
       <section style={{ ...s.section, background: '#0a0a0a', textAlign: 'center' }}>
         <div style={{ ...s.inner, maxWidth: 600 }}>
-          <h2 style={{ ...s.h2, marginBottom: 16 }}>Probalo con tu barbería</h2>
+          <h2 style={{ ...s.h2, marginBottom: 16 }}>Probalo con tu cafetería</h2>
           <p style={{ ...s.sectionSub, marginBottom: 32 }}>
             El plan gratis te sirve hasta 50 clientes, sin tarjeta de crédito. Se configura en cinco minutos.
           </p>

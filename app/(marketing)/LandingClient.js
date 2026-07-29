@@ -197,10 +197,13 @@ const [isMobile, setIsMobile] = useState(false)
 
       {/* POR RUBRO */}
       <section style={{padding:'0 32px 40px', textAlign:'center'}}>
-        <div style={{fontSize:15, color:'#666'}}>
-          ¿Tenés una barbería?{' '}
-          <a href="/para/barberias" style={{color:'#e0001b', fontWeight:700, textDecoration:'none'}}>
-            Mirá cómo funciona para tu rubro →
+        <div style={{fontSize:15, color:'#666', marginBottom:12}}>Mirá cómo funciona en tu rubro</div>
+        <div style={{display:'flex', gap:20, justifyContent:'center', flexWrap:'wrap'}}>
+          <a href="/para/barberias" style={{color:'#e0001b', fontWeight:700, textDecoration:'none', fontSize:15}}>
+            Barberías →
+          </a>
+          <a href="/para/cafeterias" style={{color:'#e0001b', fontWeight:700, textDecoration:'none', fontSize:15}}>
+            Cafeterías y pastelerías →
           </a>
         </div>
       </section>
@@ -233,6 +236,7 @@ const [isMobile, setIsMobile] = useState(false)
             <a href="/faq" style={{fontSize:13, color:'#333', textDecoration:'none'}}>FAQ</a>
             <a href="/guia" style={{fontSize:13, color:'#333', textDecoration:'none'}}>Guía completa</a>
             <a href="/para/barberias" style={{fontSize:13, color:'#333', textDecoration:'none'}}>Para barberías</a>
+            <a href="/para/cafeterias" style={{fontSize:13, color:'#333', textDecoration:'none'}}>Para cafeterías</a>
             <a href="/login" style={{fontSize:13, color:'#333', textDecoration:'none'}}>Ingresar</a>
             <a href="/onboarding/registro" style={{fontSize:13, color:'#333', textDecoration:'none'}}>Registrarse</a>
           </div>
