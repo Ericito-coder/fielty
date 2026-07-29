@@ -195,6 +195,16 @@ const [isMobile, setIsMobile] = useState(false)
         </div>
       </section>
 
+      {/* POR RUBRO */}
+      <section style={{padding:'0 32px 40px', textAlign:'center'}}>
+        <div style={{fontSize:15, color:'#666'}}>
+          ¿Tenés una barbería?{' '}
+          <a href="/para/barberias" style={{color:'#e0001b', fontWeight:700, textDecoration:'none'}}>
+            Mirá cómo funciona para tu rubro →
+          </a>
+        </div>
+      </section>
+
       {/* CTA FINAL */}
       <section style={{...s.section, background:'#0a0a0a', textAlign:'center'}}>
         <div style={{...s.sectionInner, maxWidth:600}}>
@@ -222,6 +232,7 @@ const [isMobile, setIsMobile] = useState(false)
             <a href="/privacidad" style={{fontSize:13, color:'#333', textDecoration:'none'}}>Política de privacidad</a>
             <a href="/faq" style={{fontSize:13, color:'#333', textDecoration:'none'}}>FAQ</a>
             <a href="/guia" style={{fontSize:13, color:'#333', textDecoration:'none'}}>Guía completa</a>
+            <a href="/para/barberias" style={{fontSize:13, color:'#333', textDecoration:'none'}}>Para barberías</a>
             <a href="/login" style={{fontSize:13, color:'#333', textDecoration:'none'}}>Ingresar</a>
             <a href="/onboarding/registro" style={{fontSize:13, color:'#333', textDecoration:'none'}}>Registrarse</a>
           </div>
