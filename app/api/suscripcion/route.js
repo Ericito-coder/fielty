@@ -49,6 +49,9 @@ export async function POST(request) {
     const resultado = await preApprovalPlan.create({
       body: {
         reason: `Fielty ${plan === 'pro_early' ? 'Pro (Early Adopter)' : plan === 'pro' ? 'Pro' : 'Business'}`,
+        // Clave para poder asociar el pago al negocio desde el webhook
+        // o desde la verificación activa, sin depender de mp_plan_id.
+        external_reference: negocioId,
         auto_recurring: {
           frequency: 1,
           frequency_type: 'months',
@@ -62,7 +65,13 @@ export async function POST(request) {
       }
     })
 
-    // Guardar el plan ID de MP en el negocio para poder resolverlo desde el webhook
+    // Historial de intentos: nunca se sobreescribe, así un pago hecho
+    // con un link anterior sigue siendo atribuible a este negocio.
+    await supabaseAdmin
+      .from('suscripciones')
+      .insert([{ negocio_id: negocioId, mp_plan_id: resultado.id, plan_tipo: plan, estado: 'pendiente' }])
+
+    // Campo legacy: sigue apuntando al último intento
     await supabaseAdmin
       .from('negocios')
       .update({ mp_plan_id: resultado.id, mp_plan_tipo: plan })

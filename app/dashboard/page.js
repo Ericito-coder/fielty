@@ -25,15 +25,6 @@ export default function Dashboard() {
   const [menuAbierto, setMenuAbierto] = useState(false)
 
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search)
-    if (params.get('suscripcion') === 'ok') {
-      setMostrarExito(true)
-      window.history.replaceState({}, '', '/dashboard')
-      setTimeout(() => setMostrarExito(false), 8000)
-    }
-  }, [])
-
-  useEffect(() => {
     verificarAuth()
     const check = () => setIsMobile(window.innerWidth < 768)
     check()
@@ -45,8 +36,21 @@ export default function Dashboard() {
     try {
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) { window.location.href = '/login'; return }
-      const { data: negocioData } = await supabase.from('negocios').select('*').eq('user_id', user.id).single()
+      let { data: negocioData } = await supabase.from('negocios').select('*').eq('user_id', user.id).single()
       if (!negocioData) { window.location.href = '/onboarding/registro'; return }
+
+      // Al volver del checkout de Mercado Pago, verificamos el pago
+      // contra la API de MP en vez de esperar el webhook: así el plan
+      // queda activo aunque la notificación no llegue.
+      const params = new URLSearchParams(window.location.search)
+      if (params.get('suscripcion') === 'ok') {
+        window.history.replaceState({}, '', '/dashboard')
+        const actualizado = await verificarPago(negocioData.id)
+        if (actualizado) negocioData = { ...negocioData, plan: actualizado }
+        setMostrarExito(true)
+        setTimeout(() => setMostrarExito(false), 8000)
+      }
+
       setNegocio(negocioData)
       await cargarMetricas(negocioData.id)
     } catch {
@@ -97,6 +101,24 @@ export default function Dashboard() {
     } catch {
       setErrorCarga('No se pudieron cargar las métricas. Recargá la página.')
       setCargando(false)
+    }
+  }
+
+  // Consulta Mercado Pago y activa el plan si hay un pago autorizado.
+  // Devuelve el plan resultante, o null si no pudo verificar.
+  async function verificarPago(negocioId) {
+    try {
+      const { data: { session } } = await supabase.auth.getSession()
+      const res = await fetch('/api/suscripcion/verificar', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${session?.access_token}` },
+        body: JSON.stringify({ negocioId }),
+      })
+      if (!res.ok) return null
+      const data = await res.json()
+      return data.plan || null
+    } catch {
+      return null
     }
   }
 
@@ -939,6 +961,37 @@ function PinActualDisplay({ pinActual, esDebil }) {
 function ConfigSection({ negocio, setNegocio }) {
   const [subiendoLogo, setSubiendoLogo] = useState(false)
   const [errorLogo, setErrorLogo] = useState('')
+  const [verificando, setVerificando] = useState(false)
+  const [avisoPago, setAvisoPago] = useState('')
+
+  // Para el dueño que pagó y no vio el plano activarse: consulta
+  // Mercado Pago en el momento y activa el plan si el pago existe.
+  async function verificarPago() {
+    setVerificando(true)
+    setAvisoPago('')
+    try {
+      const { data: { session } } = await supabase.auth.getSession()
+      const res = await fetch('/api/suscripcion/verificar', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${session?.access_token}` },
+        body: JSON.stringify({ negocioId: negocio.id }),
+      })
+      const data = await res.json()
+      if (!res.ok) {
+        setAvisoPago('No se pudo verificar. Intentá de nuevo en un rato.')
+      } else if (data.cambio) {
+        setNegocio({ ...negocio, plan: data.plan })
+        setAvisoPago('¡Listo! Tu plan quedó activo.')
+      } else if (data.encontradas === 0) {
+        setAvisoPago('Todavía no encontramos un pago para este negocio. Si acabás de pagar, esperá unos minutos.')
+      } else {
+        setAvisoPago('Tu plan ya está al día.')
+      }
+    } catch {
+      setAvisoPago('Error de conexión. Intentá de nuevo.')
+    }
+    setVerificando(false)
+  }
 
   async function subirLogo(e) {
     const file = e.target.files[0]
@@ -1024,10 +1077,21 @@ function ConfigSection({ negocio, setNegocio }) {
             <div style={{fontSize:12, color:'#888', marginTop:2}}>{pi.desc}</div>
           </div>
         </div>
-        {(!negocio.plan || negocio.plan === 'gratis') && (
-          <button onClick={() => window.location.href = '/dashboard/upgrade'} style={{padding:'10px 20px', background:'#e0001b', border:'none', borderRadius:12, color:'white', fontSize:13, fontWeight:800, cursor:'pointer', fontFamily:'inherit'}}>
-            Mejorar plan →
-          </button>
+        <div style={{display:'flex', gap:8, alignItems:'center', flexWrap:'wrap'}}>
+          {negocio.mp_plan_id && (
+            <button onClick={verificarPago} disabled={verificando}
+              style={{padding:'10px 16px', background:'#f0f2f7', border:'none', borderRadius:12, color:'#555', fontSize:13, fontWeight:700, cursor:'pointer', fontFamily:'inherit'}}>
+              {verificando ? 'Verificando...' : '↻ Ya pagué, verificar'}
+            </button>
+          )}
+          {(!negocio.plan || negocio.plan === 'gratis') && (
+            <button onClick={() => window.location.href = '/dashboard/upgrade'} style={{padding:'10px 20px', background:'#e0001b', border:'none', borderRadius:12, color:'white', fontSize:13, fontWeight:800, cursor:'pointer', fontFamily:'inherit'}}>
+              Mejorar plan →
+            </button>
+          )}
+        </div>
+        {avisoPago && (
+          <div style={{width:'100%', fontSize:13, color:'#555', background:'#f8f9fc', borderRadius:10, padding:'10px 14px'}}>{avisoPago}</div>
         )}
       </div>
       <div style={s.card}>

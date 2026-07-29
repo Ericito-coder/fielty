@@ -1,24 +1,17 @@
 import { NextResponse } from 'next/server'
 import { MercadoPagoConfig, PreApproval } from 'mercadopago'
-import { createClient } from '@supabase/supabase-js'
 import crypto from 'crypto'
+import { Resend } from 'resend'
+import { getSupabaseAdmin } from '@/lib/server'
+import { resolverNegocio, sincronizarSuscripcion } from '@/lib/mp'
 
-const client = new MercadoPagoConfig({
-  accessToken: process.env.MP_ACCESS_TOKEN
-})
-
-const supabaseAdmin = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_ROLE_KEY
-)
+const client = new MercadoPagoConfig({ accessToken: process.env.MP_ACCESS_TOKEN })
+const resend = new Resend(process.env.RESEND_API_KEY)
 
 // Valida el header x-signature que manda MP (HMAC-SHA256 sobre
 // "id:{dataId};request-id:{x-request-id};ts:{ts};" con la "Firma
-// secreta" del webhook, no con el access token). Se activa solo si
-// MP_WEBHOOK_SECRET está configurado (Tus integraciones → Webhooks
-// en el dashboard de MP); si no está seteado, no bloquea — así no
-// rompe el webhook mientras tanto y solo suma una capa extra al
-// secreto por query que ya se valida siempre.
+// secreta" del webhook). Se activa solo si MP_WEBHOOK_SECRET está
+// configurado; si no, no bloquea.
 function firmaMpValida(request, searchParams, dataId) {
   const secret = process.env.MP_WEBHOOK_SECRET
   if (!secret) return true
@@ -42,65 +35,98 @@ function firmaMpValida(request, searchParams, dataId) {
   return a.length === b.length && crypto.timingSafeEqual(a, b)
 }
 
+// Tipos de evento de suscripción que manda MP según la versión de la API
+const TIPOS_SUSCRIPCION = ['subscription_preapproval', 'preapproval', 'subscription_authorized_payment']
+
 export async function POST(request) {
+  const supabaseAdmin = getSupabaseAdmin()
+  let body = null
+
   try {
-    // Validar secret para que solo MP pueda disparar este webhook
     const { searchParams } = new URL(request.url)
+
+    // Autenticación: alcanza con el secreto por query O con una firma
+    // válida de MP. Así el webhook sigue funcionando si el secreto de
+    // la URL configurada en MP quedó desactualizado.
     const secret = searchParams.get('secret')
-    if (!process.env.WEBHOOK_SECRET || secret !== process.env.WEBHOOK_SECRET) {
+    const secretOk = !!process.env.WEBHOOK_SECRET && secret === process.env.WEBHOOK_SECRET
+
+    body = await request.json().catch(() => null)
+    const { type, action, data } = body || {}
+    const firmaOk = !!process.env.MP_WEBHOOK_SECRET && firmaMpValida(request, searchParams, data?.id)
+
+    if (!secretOk && !firmaOk) {
+      // Se registra igual: si MP está pegando y rebota, queda rastro
+      await supabaseAdmin.from('mp_eventos').insert([{
+        tipo: type || 'desconocido', data_id: data?.id ? String(data.id) : null,
+        estado: 'rechazado_auth', resuelto: false, payload: body,
+      }]).catch(() => {})
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const body = await request.json()
-    const { type, data } = body
-
-    if (!firmaMpValida(request, searchParams, data?.id)) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
-    // Solo procesamos eventos de suscripciones
-    if (type !== 'subscription_preapproval') {
+    const tipoEvento = type || action?.split('.')?.[0]
+    if (!TIPOS_SUSCRIPCION.includes(tipoEvento)) {
       return NextResponse.json({ ok: true })
     }
+
+    if (!data?.id) return NextResponse.json({ ok: true })
 
     // Traer los detalles de la suscripción desde MP
     const preApproval = new PreApproval(client)
     const suscripcion = await preApproval.get({ id: data.id })
+    const estado = suscripcion?.status
 
-    const { preapproval_plan_id, status } = suscripcion
+    const resuelto = await resolverNegocio(supabaseAdmin, suscripcion)
 
-    // Buscar el negocio por el plan ID que guardamos al crear
-    const { data: negocio, error } = await supabaseAdmin
-      .from('negocios')
-      .select('id, mp_plan_tipo')
-      .eq('mp_plan_id', preapproval_plan_id)
-      .single()
+    await supabaseAdmin.from('mp_eventos').insert([{
+      tipo: tipoEvento,
+      data_id: String(data.id),
+      estado,
+      negocio_id: resuelto?.negocioId || null,
+      resuelto: !!resuelto,
+      payload: { external_reference: suscripcion?.external_reference, preapproval_plan_id: suscripcion?.preapproval_plan_id, status: estado, via: resuelto?.via },
+    }]).catch(() => {})
 
-    if (error || !negocio) {
-      console.error('Webhook MP: negocio no encontrado para plan', preapproval_plan_id)
-      return NextResponse.json({ ok: true }) // Devolvemos 200 igual para que MP no reintente
+    if (!resuelto) {
+      // Pago que no se puede asociar a ningún negocio: avisar para
+      // resolverlo a mano antes de que el cliente reclame.
+      console.error('Webhook MP: no se pudo asociar la suscripción', data.id, suscripcion?.preapproval_plan_id)
+      avisarHuerfano({ dataId: data.id, planId: suscripcion?.preapproval_plan_id, estado }).catch(() => {})
+      return NextResponse.json({ ok: true })
     }
 
-    if (status === 'authorized') {
-      // Pago aprobado: activar el plan
-      await supabaseAdmin
-        .from('negocios')
-        .update({ plan: negocio.mp_plan_tipo })
-        .eq('id', negocio.id)
-
-    } else if (status === 'cancelled' || status === 'paused') {
-      // Suscripción cancelada o pausada: volver a gratis
-      await supabaseAdmin
-        .from('negocios')
-        .update({ plan: 'gratis' })
-        .eq('id', negocio.id)
-    }
+    // La sincronización consulta MP y deja el plan igual a la realidad
+    // (más confiable que actuar solo sobre el estado de este evento).
+    await sincronizarSuscripcion(supabaseAdmin, resuelto.negocioId)
 
     return NextResponse.json({ ok: true })
 
   } catch (error) {
     console.error('Error webhook MP:', error)
-    // Devolvemos 200 para evitar reintentos de MP ante errores internos nuestros
+    await supabaseAdmin.from('mp_eventos').insert([{
+      tipo: 'error', estado: String(error?.message || error).slice(0, 200), resuelto: false, payload: body,
+    }]).catch(() => {})
+    // 200 para evitar reintentos infinitos de MP ante errores nuestros
     return NextResponse.json({ ok: true })
   }
+}
+
+async function avisarHuerfano({ dataId, planId, estado }) {
+  const admin = process.env.ADMIN_EMAIL
+  if (!admin) return
+  await resend.emails.send({
+    from: 'Fielty <hola@fielty.app>',
+    to: admin,
+    subject: '⚠️ Pago de Mercado Pago sin negocio asociado',
+    html: `
+      <div style="font-family: sans-serif; max-width: 520px; padding: 24px;">
+        <h2 style="font-size:18px;">Un pago no se pudo asociar a ningún negocio</h2>
+        <p style="font-size:14px; color:#555; line-height:1.7;">
+          Suscripción <strong>${dataId}</strong> (estado: ${estado})<br/>
+          Plan de MP: <strong>${planId || 'sin plan'}</strong>
+        </p>
+        <p style="font-size:14px; color:#555;">Revisalo en el panel de admin para activar el plan a mano.</p>
+      </div>
+    `,
+  })
 }
