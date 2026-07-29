@@ -4,9 +4,22 @@ export const metadata = {
   alternates: { canonical: '/guia' },
 }
 
+const breadcrumbLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Fielty', item: 'https://www.fielty.app' },
+    { '@type': 'ListItem', position: 2, name: 'Guía completa', item: 'https://www.fielty.app/guia' },
+  ],
+}
+
 export default function Guia() {
   return (
     <div style={{ fontFamily: 'inherit', maxWidth: 800, margin: '0 auto', padding: '60px 40px', color: '#0e0e0e', lineHeight: 1.7 }}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
+      />
 
       {/* Portada */}
       <div style={{ textAlign: 'center', marginBottom: 80, paddingBottom: 60, borderBottom: '3px solid #e0001b' }}>

@@ -30,12 +30,25 @@ const jsonLd = {
   ),
 }
 
+const breadcrumbLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Fielty', item: 'https://www.fielty.app' },
+    { '@type': 'ListItem', position: 2, name: 'Preguntas frecuentes', item: 'https://www.fielty.app/faq' },
+  ],
+}
+
 export default function Page() {
   return (
     <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
       />
       <FaqClient />
     </>
