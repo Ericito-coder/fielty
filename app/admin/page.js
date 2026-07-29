@@ -65,6 +65,7 @@ export default function Admin() {
 
   const negociosFiltrados = negocios.filter(n =>
     n.nombre?.toLowerCase().includes(busqueda.toLowerCase()) ||
+    n.nombreDueno?.toLowerCase().includes(busqueda.toLowerCase()) ||
     n.email?.toLowerCase().includes(busqueda.toLowerCase()) ||
     n.telefono?.includes(busqueda)
   )
@@ -322,10 +323,11 @@ export default function Admin() {
                     </div>
                   </td>
                   <td style={{padding:'14px 16px'}}>
+                    {n.nombreDueno && <div style={{fontSize:12, color:'white', fontWeight:600}}>{n.nombreDueno}</div>}
                     <div style={{fontSize:12, color:'#888'}}>{n.email}</div>
                     {n.telefono ? (
                       <a
-                        href={linkWhatsApp(n.telefono, `Hola ${n.nombre}! Te escribo de Fielty.`)}
+                        href={linkWhatsApp(n.telefono, `Hola ${n.nombreDueno || n.nombre}! Te escribo de Fielty.`)}
                         target="_blank"
                         rel="noreferrer"
                         onClick={e => e.stopPropagation()}

@@ -39,7 +39,11 @@ export async function GET(request) {
 
     const usuarios = usersData?.users || []
     const emailPorUserId = {}
-    usuarios.forEach(u => { emailPorUserId[u.id] = u.email })
+    const nombrePorUserId = {}
+    usuarios.forEach(u => {
+      emailPorUserId[u.id] = u.email
+      nombrePorUserId[u.id] = u.user_metadata?.nombre || null
+    })
 
     // Agregar datos por negocio
     const hace30dias = new Date()
@@ -110,6 +114,7 @@ export async function GET(request) {
     const negociosConDatos = negocios?.map(n => ({
       ...n,
       email: emailPorUserId[n.user_id] || '—',
+      nombreDueno: nombrePorUserId[n.user_id] || null,
       totalClientes: clientesPorNegocio[n.id] || 0,
       totalCanjesNegocio: canjesPorNegocio[n.id] || 0,
       totalPuntosNegocio: puntosPorNegocio[n.id] || 0,
@@ -126,8 +131,8 @@ export async function GET(request) {
       },
       facturacion: { porPlan, mrr, nuevosEsteMes },
       alertas: {
-        cercaDelLimite: cercaDelLimite.map(n => ({ ...n, email: emailPorUserId[n.user_id] || '—', totalClientes: clientesPorNegocio[n.id] || 0 })),
-        inactivos: negociosInactivos30.slice(0, 10).map(n => ({ ...n, email: emailPorUserId[n.user_id] || '—', totalClientes: clientesPorNegocio[n.id] || 0 })),
+        cercaDelLimite: cercaDelLimite.map(n => ({ ...n, email: emailPorUserId[n.user_id] || '—', nombreDueno: nombrePorUserId[n.user_id] || null, totalClientes: clientesPorNegocio[n.id] || 0 })),
+        inactivos: negociosInactivos30.slice(0, 10).map(n => ({ ...n, email: emailPorUserId[n.user_id] || '—', nombreDueno: nombrePorUserId[n.user_id] || null, totalClientes: clientesPorNegocio[n.id] || 0 })),
       },
       crecimiento,
       negocios: negociosConDatos,
