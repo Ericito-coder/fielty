@@ -34,7 +34,7 @@ export async function POST(request) {
 
     const { data: negocio } = await supabaseAdmin
       .from('negocios')
-      .select('id, user_id')
+      .select('id, user_id, nombre')
       .eq('id', negocioId)
       .single()
 
@@ -48,7 +48,10 @@ export async function POST(request) {
 
     const resultado = await preApprovalPlan.create({
       body: {
-        reason: `Fielty ${plan === 'pro_early' ? 'Pro (Early Adopter)' : plan === 'pro' ? 'Pro' : 'Business'}`,
+        // El nombre del negocio va en el reason: si el mismo dueño paga
+        // por varios negocios, en Mercado Pago se distingue cuál es cuál
+        // (antes las tres suscripciones se veían idénticas).
+        reason: `Fielty ${plan === 'business' ? 'Business' : 'Pro'} — ${(negocio.nombre || '').slice(0, 60)}`.trim(),
         // Clave para poder asociar el pago al negocio desde el webhook
         // o desde la verificación activa, sin depender de mp_plan_id.
         external_reference: negocioId,
