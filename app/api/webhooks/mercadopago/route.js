@@ -38,6 +38,16 @@ function firmaMpValida(request, searchParams, dataId) {
 // Tipos de evento de suscripción que manda MP según la versión de la API
 const TIPOS_SUSCRIPCION = ['subscription_preapproval', 'preapproval', 'subscription_authorized_payment']
 
+// El query builder de Supabase es un thenable, no una Promise: no
+// tiene .catch(). Loguear nunca debe tumbar la respuesta al webhook.
+async function logEvento(supabaseAdmin, fila) {
+  try {
+    await supabaseAdmin.from('mp_eventos').insert([fila])
+  } catch (error) {
+    console.error('log mp_eventos falló:', error?.message)
+  }
+}
+
 export async function POST(request) {
   const supabaseAdmin = getSupabaseAdmin()
   let body = null
@@ -57,10 +67,10 @@ export async function POST(request) {
 
     if (!secretOk && !firmaOk) {
       // Se registra igual: si MP está pegando y rebota, queda rastro
-      await supabaseAdmin.from('mp_eventos').insert([{
+      await logEvento(supabaseAdmin, {
         tipo: type || 'desconocido', data_id: data?.id ? String(data.id) : null,
         estado: 'rechazado_auth', resuelto: false, payload: body,
-      }]).catch(() => {})
+      })
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
@@ -78,14 +88,14 @@ export async function POST(request) {
 
     const resuelto = await resolverNegocio(supabaseAdmin, suscripcion)
 
-    await supabaseAdmin.from('mp_eventos').insert([{
+    await logEvento(supabaseAdmin, {
       tipo: tipoEvento,
       data_id: String(data.id),
       estado,
       negocio_id: resuelto?.negocioId || null,
       resuelto: !!resuelto,
       payload: { external_reference: suscripcion?.external_reference, preapproval_plan_id: suscripcion?.preapproval_plan_id, status: estado, via: resuelto?.via },
-    }]).catch(() => {})
+    })
 
     if (!resuelto) {
       // Pago que no se puede asociar a ningún negocio: avisar para
@@ -103,9 +113,9 @@ export async function POST(request) {
 
   } catch (error) {
     console.error('Error webhook MP:', error)
-    await supabaseAdmin.from('mp_eventos').insert([{
+    await logEvento(supabaseAdmin, {
       tipo: 'error', estado: String(error?.message || error).slice(0, 200), resuelto: false, payload: body,
-    }]).catch(() => {})
+    })
     // 200 para evitar reintentos infinitos de MP ante errores nuestros
     return NextResponse.json({ ok: true })
   }
