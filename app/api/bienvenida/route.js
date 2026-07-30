@@ -89,7 +89,7 @@ export async function POST(request) {
                   <div style="width: 26px; height: 26px; border-radius: 50%; background: #e0001b; text-align: center; line-height: 26px; font-size: 13px; font-weight: 800; color: white;">3</div>
                 </td>
                 <td style="vertical-align: top; padding-left: 12px;">
-                  <p style="font-size: 14px; color: #555; margin: 0; line-height: 1.7; padding-top: 3px;">Segui las metricas desde tu panel y ajusta las recompensas cuando quieras.</p>
+                  <p style="font-size: 14px; color: #555; margin: 0; line-height: 1.7; padding-top: 3px;">Seguí las métricas desde tu panel y ajustá las recompensas cuando quieras.</p>
                 </td>
               </tr>
             </table>

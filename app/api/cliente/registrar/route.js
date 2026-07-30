@@ -153,7 +153,7 @@ export async function POST(request) {
       resend.emails.send({
         from: 'Fielty <hola@fielty.app>',
         to: nuevoCliente.email,
-        subject: `Bienvenido a ${negocio.nombre} — tu tarjeta esta lista`,
+        subject: `Bienvenido a ${negocio.nombre} — tu tarjeta está lista`,
         html: `
           <div style="font-family: sans-serif; max-width: 520px; margin: 0 auto; padding: 32px 24px; background: #ffffff;">
             <div style="margin-bottom: 28px;">
@@ -163,7 +163,7 @@ export async function POST(request) {
               Bienvenido a ${negocio.nombre}
             </h1>
             <p style="font-size: 15px; color: #555; line-height: 1.7; margin-bottom: 28px;">
-              Hola <strong>${nuevoCliente.nombre.split(' ')[0]}</strong>, tu tarjeta de puntos fue creada con <strong>${puntosRecibidos} puntos de regalo</strong>. Empeza a acumular en cada compra y canjealos por premios.
+              Hola <strong>${nuevoCliente.nombre.split(' ')[0]}</strong>, tu tarjeta de puntos fue creada con <strong>${puntosRecibidos} puntos de regalo</strong>. Empezá a acumular en cada compra y canjealos por premios.
             </p>
             <a href="${appUrl}/mi-tarjeta" style="display: inline-block; background: #e0001b; color: white; padding: 14px 28px; border-radius: 12px; font-size: 15px; font-weight: 800; text-decoration: none; margin-bottom: 32px;">
               Ver mi tarjeta

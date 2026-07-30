@@ -17,14 +17,17 @@ export default function ConfigNegocio() {
   const [error, setError] = useState('')
 
   async function guardar() {
-    if (!nombre) { setError('Ingresá el nombre del negocio'); return }
+    // Sin trim, un espacio al final se cuela en los emails y en la tarjeta
+    // del cliente (queda "Pizza city  — tu tarjeta...", con doble espacio).
+    const nombreLimpio = nombre.trim()
+    if (!nombreLimpio) { setError('Ingresá el nombre del negocio'); return }
     setError('')
     setCargando(true)
 
     const userId = storage.get('fielty_user_id')
     const telefonoDueno = storage.get('fielty_telefono_dueno') || ''
 
-    const slug = nombre.toLowerCase()
+    const slug = nombreLimpio.toLowerCase()
       .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
       .replace(/[^a-z0-9]+/g, '-')
       .replace(/^-|-$/g, '')
@@ -32,7 +35,7 @@ export default function ConfigNegocio() {
     const { data, error: dbError } = await supabase
       .from('negocios')
       .insert([{
-        nombre,
+        nombre: nombreLimpio,
         telefono: telefonoDueno,
         color,
         slug,

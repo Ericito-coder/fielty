@@ -1048,6 +1048,9 @@ function ConfigSection({ negocio, setNegocio }) {
     setErrorPin('')
     setGuardando(true)
     const payload = { ...form }
+    // Sin trim, un espacio al final se cuela en los emails y en la tarjeta
+    // del cliente (queda "Pizza city  — tu tarjeta...", con doble espacio).
+    payload.nombre = payload.nombre.trim()
     delete payload.pin_confirmar
     if (!payload.pin_caja) delete payload.pin_caja // No sobreescribir si no cambió
     const { data } = await supabase.from('negocios').update(payload).eq('id', negocio.id).select().single()
