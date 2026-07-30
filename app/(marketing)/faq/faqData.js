@@ -12,7 +12,7 @@ export const FAQS = [
       },
       {
         q: '¿Funciona para cualquier tipo de negocio?',
-        a: 'Sí. Fielty funciona para peluquerías, barberías, cafeterías, pastelerías, veterinarias, restaurantes, tiendas de ropa, farmacias y cualquier negocio que quiera fidelizar clientes.',
+        a: 'Sí. Fielty funciona para peluquerías, barberías, cafeterías, pastelerías, veterinarias, pet shops, gimnasios, restaurantes, tiendas de ropa, farmacias y cualquier negocio que quiera fidelizar clientes.',
       },
       {
         q: '¿En qué se diferencia de la tarjeta de sellos de papel?',

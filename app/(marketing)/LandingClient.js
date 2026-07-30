@@ -203,7 +203,7 @@ const [isMobile, setIsMobile] = useState(false)
             ['/para/barberias', 'Barberías'],
             ['/para/cafeterias', 'Cafeterías'],
             ['/para/peluquerias', 'Peluquerías'],
-            ['/para/veterinarias', 'Veterinarias'],
+            ['/para/veterinarias', 'Veterinarias y pet shops'],
             ['/para/gimnasios', 'Gimnasios'],
           ].map(([href, nombre]) => (
             <a key={href} href={href} style={{color:'#e0001b', fontWeight:700, textDecoration:'none', fontSize:15}}>

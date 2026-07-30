@@ -2,7 +2,7 @@ import LandingClient from './LandingClient'
 
 export const metadata = {
   title: 'Fielty — Programa de fidelización y puntos para negocios sin app',
-  description: 'Creá un programa de puntos para tu negocio en 5 minutos. Tus clientes escanean un QR, suman puntos y canjean premios desde el celular, sin instalar nada. Ideal para peluquerías, cafeterías, veterinarias y comercios en Argentina.',
+  description: 'Creá un programa de puntos para tu negocio en 5 minutos. Tus clientes escanean un QR, suman puntos y canjean premios desde el celular, sin instalar nada. Ideal para barberías, peluquerías, cafeterías, veterinarias, pet shops y gimnasios en Argentina.',
   alternates: { canonical: '/' },
   openGraph: {
     title: 'Fielty — Fidelización de clientes sin app',

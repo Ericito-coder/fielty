@@ -19,7 +19,7 @@ const jsonLd = {
   '@type': 'BreadcrumbList',
   itemListElement: [
     { '@type': 'ListItem', position: 1, name: 'Fielty', item: 'https://www.fielty.app' },
-    { '@type': 'ListItem', position: 2, name: 'Veterinarias', item: 'https://www.fielty.app/para/veterinarias' },
+    { '@type': 'ListItem', position: 2, name: 'Veterinarias y pet shops', item: 'https://www.fielty.app/para/veterinarias' },
   ],
 }
 
@@ -73,9 +73,9 @@ export default function ParaVeterinarias() {
               </p>
             </div>
             <div style={s.card}>
-              <div style={s.cardTitle}>Hay visitas que ya son previsibles</div>
+              <div style={s.cardTitle}>Hay compras que ya son previsibles</div>
               <p style={s.cardText}>
-                Vacunas, antiparasitarios y controles tienen fecha. Ya sabés que va a volver por eso; el programa hace que además de la consulta se lleve el alimento, la pipeta y el juguete del mismo mostrador.
+                En una veterinaria son las vacunas, los antiparasitarios y los controles; en un pet shop, la arena, la piedra sanitaria y la reposición de siempre. En los dos casos ya sabés que va a volver: el programa hace que además se lleve el resto del mismo mostrador.
               </p>
             </div>
             <div style={s.card}>
@@ -132,7 +132,7 @@ export default function ParaVeterinarias() {
             <div style={s.card}>
               <div style={s.cardTitle}>Ver quién dejó de venir</div>
               <p style={s.cardText}>
-                Acá es lo más valioso: si alguien no apareció por la vacuna anual o hace tres meses que no repone alimento, es plata que estás perdiendo. El panel te lista los clientes inactivos, y en los planes Pro y Business podés mandarles un mail para que vuelvan.
+                Acá es lo más valioso: si alguien no apareció por la vacuna anual, o hace tres meses que no repone el alimento ni la arena, es plata que estás perdiendo y capaz ya la está comprando en otro lado. El panel te lista los clientes inactivos, y en los planes Pro y Business podés mandarles un mail para que vuelvan.
               </p>
             </div>
             <div style={s.card}>
