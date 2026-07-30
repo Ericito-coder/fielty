@@ -39,9 +39,9 @@ const jsonLd = {
     email: 'hola@fielty.app',
     logo: {
       '@type': 'ImageObject',
-      url: 'https://www.fielty.app/icons/icon-512.png',
-      width: 512,
-      height: 512,
+      url: 'https://www.fielty.app/icons/icon-1024.png',
+      width: 1024,
+      height: 1024,
     },
   },
 }
