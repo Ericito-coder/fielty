@@ -1,13 +1,13 @@
 import { s } from '../estilos'
 
 export const metadata = {
-  title: 'Programa de puntos para barberías | Fielty',
-  description: 'Sistema de fidelización para barberías: tus clientes escanean un QR, suman puntos en cada corte y vuelven más seguido. Sin app y sin tarjetitas que se pierden. Empezá gratis.',
-  alternates: { canonical: '/para/barberias' },
+  title: 'Programa de puntos para veterinarias y pet shops | Fielty',
+  description: 'Sistema de fidelización para veterinarias: que el alimento y los antiparasitarios los compren con vos y no en el pet shop. Puntos con QR, sin app. Empezá gratis.',
+  alternates: { canonical: '/para/veterinarias' },
   openGraph: {
-    title: 'Programa de puntos para barberías | Fielty',
-    description: 'Que tus clientes vuelvan cada mes, no cuando se acuerdan. Programa de puntos con QR para barberías, sin app.',
-    url: '/para/barberias',
+    title: 'Programa de puntos para veterinarias y pet shops | Fielty',
+    description: 'La compra que más se repite es el alimento, y es la que más fácil se te va. Programa de puntos con QR para veterinarias, sin app.',
+    url: '/para/veterinarias',
     siteName: 'Fielty',
     locale: 'es_AR',
     type: 'website',
@@ -19,11 +19,11 @@ const jsonLd = {
   '@type': 'BreadcrumbList',
   itemListElement: [
     { '@type': 'ListItem', position: 1, name: 'Fielty', item: 'https://www.fielty.app' },
-    { '@type': 'ListItem', position: 2, name: 'Barberías', item: 'https://www.fielty.app/para/barberias' },
+    { '@type': 'ListItem', position: 2, name: 'Veterinarias', item: 'https://www.fielty.app/para/veterinarias' },
   ],
 }
 
-export default function ParaBarberias() {
+export default function ParaVeterinarias() {
   return (
     <div style={s.page}>
       <script
@@ -46,13 +46,13 @@ export default function ParaBarberias() {
       {/* HERO */}
       <section style={s.heroWrap}>
         <div style={s.hero}>
-          <div style={s.badge}>Para barberías</div>
+          <div style={s.badge}>Para veterinarias y pet shops</div>
           <h1 style={s.h1}>
             Programa de puntos<br />
-            <span style={s.gradient}>para tu barbería.</span>
+            <span style={s.gradient}>para tu veterinaria o pet shop.</span>
           </h1>
           <p style={s.heroSub}>
-            Tus clientes ya vuelven cada tres o cuatro semanas. Fielty hace que ese ritmo no dependa de que se acuerden de vos: suman puntos en cada corte y los ven en el celular, sin instalar ninguna app.
+            La compra que más se repite es el alimento, y es justo la que más fácil se te va al pet shop o al supermercado. Fielty le da a tu cliente una razón concreta para comprar todo con vos, sin instalar ninguna app.
           </p>
           <div style={s.ctaRow}>
             <a href="/onboarding/registro" style={s.ctaPrimary}>Empezá gratis →</a>
@@ -64,24 +64,24 @@ export default function ParaBarberias() {
       {/* POR QUÉ */}
       <section style={s.section}>
         <div style={s.inner}>
-          <h2 style={s.h2}>Por qué funciona en una barbería</h2>
+          <h2 style={s.h2}>Por qué funciona en una veterinaria o pet shop</h2>
           <div style={s.grid}>
             <div style={s.card}>
-              <div style={s.cardTitle}>El cliente ya es recurrente</div>
+              <div style={s.cardTitle}>El alimento vuelve todos los meses</div>
               <p style={s.cardText}>
-                El pelo crece igual para todos: quien se corta con vos vuelve cada tres o cuatro semanas. No tenés que crear el hábito, solo asegurarte de que esa vuelta sea con vos y no con el que le queda más cerca ese día.
+                Una bolsa se termina y hay que reponerla, siempre. Es la compra más previsible que tenés y también la que más competencia tiene: cualquier pet shop o góndola de supermercado te la puede sacar. Los puntos hacen que reponerla con vos tenga un beneficio acumulado.
               </p>
             </div>
             <div style={s.card}>
-              <div style={s.cardTitle}>Cada visita vale bastante</div>
+              <div style={s.cardTitle}>Hay visitas que ya son previsibles</div>
               <p style={s.cardText}>
-                Un corte no es una compra chica: cuando alguien deja de venir, se nota en la caja del mes. Recuperar a un cliente que se estaba yendo justifica de sobra el premio que le des.
+                Vacunas, antiparasitarios y controles tienen fecha. Ya sabés que va a volver por eso; el programa hace que además de la consulta se lleve el alimento, la pipeta y el juguete del mismo mostrador.
               </p>
             </div>
             <div style={s.card}>
-              <div style={s.cardTitle}>Ya tenés la relación</div>
+              <div style={s.cardTitle}>La decisión no es solo por precio</div>
               <p style={s.cardText}>
-                Los conocés por el nombre y sabés cómo les gusta el corte. Un programa de puntos le pone números a algo que ya hacés: reconocer al que siempre vuelve.
+                Con la mascota de por medio pesa la confianza, no únicamente cuánto sale. Un premio bien elegido — un baño, una bolsa de alimento, un accesorio — se valora bastante más que unos pesos de descuento.
               </p>
             </div>
           </div>
@@ -101,7 +101,7 @@ export default function ParaBarberias() {
               <div style={s.stepNum}>1</div>
               <div>
                 <div style={s.stepTitle}>Ponés el QR en el mostrador</div>
-                <p style={s.stepText}>Te lo generamos listo para imprimir. El cliente lo escanea con la cámara mientras te paga y se registra en 30 segundos.</p>
+                <p style={s.stepText}>Te lo generamos listo para imprimir. El cliente lo escanea con la cámara mientras espera o mientras paga, y el registro toma 30 segundos.</p>
               </div>
             </div>
             <div style={s.step}>
@@ -109,15 +109,15 @@ export default function ParaBarberias() {
               <div>
                 <div style={s.stepTitle}>Definís la regla de puntos</div>
                 <p style={s.stepText}>
-                  Si querés replicar la lógica de la tarjeta de sellos, poné el precio de un corte como regla: así cada corte suma un punto y ponés el premio en diez. Si preferís algo más fino, configurás puntos proporcionales al monto y también suman la barba, los productos o el combo.
+                  Conviene por monto, porque una bolsa grande de alimento y una consulta no tienen nada que ver entre sí. Elegís cada cuántos pesos se suman puntos y aplica igual a lo que se lleve: alimento, medicación, accesorios o el servicio.
                 </p>
               </div>
             </div>
             <div style={s.step}>
               <div style={s.stepNum}>3</div>
               <div>
-                <div style={s.stepTitle}>Cargás el corte y listo</div>
-                <p style={s.stepText}>Buscás al cliente por nombre o DNI desde la caja, o escaneás el código de su tarjeta. Cuando llega al premio, te muestra un código que validás antes de dárselo.</p>
+                <div style={s.stepTitle}>Cargás la venta y listo</div>
+                <p style={s.stepText}>Buscás al cliente por nombre o DNI desde la caja, o escaneás el código de su tarjeta. Cuando llega al premio, te muestra un código que validás antes de entregarlo.</p>
               </div>
             </div>
           </div>
@@ -130,21 +130,21 @@ export default function ParaBarberias() {
           <h2 style={s.h2}>Lo que más se usa en este rubro</h2>
           <div style={s.grid}>
             <div style={s.card}>
-              <div style={s.cardTitle}>Referidos</div>
+              <div style={s.cardTitle}>Ver quién dejó de venir</div>
               <p style={s.cardText}>
-                Una barbería crece porque alguien le pregunta a un amigo dónde se corta. Cada cliente tiene su propio link para pasarle: si el amigo se registra desde ahí, los dos suman puntos.
+                Acá es lo más valioso: si alguien no apareció por la vacuna anual o hace tres meses que no repone alimento, es plata que estás perdiendo. El panel te lista los clientes inactivos, y en los planes Pro y Business podés mandarles un mail para que vuelvan.
               </p>
             </div>
             <div style={s.card}>
-              <div style={s.cardTitle}>Puntos de cumpleaños</div>
+              <div style={s.cardTitle}>Premios de distinto valor</div>
               <p style={s.cardText}>
-                El día del cumpleaños le entran puntos de regalo automáticamente. Es una excusa para que aparezca sin que vos tengas que acordarte de nada.
+                Podés tener varias recompensas activas a la vez con distinto costo en puntos: algo chico que se alcance seguido, como un corte de uñas, y algo grande para el cliente que compra el alimento siempre con vos.
               </p>
             </div>
             <div style={s.card}>
-              <div style={s.cardTitle}>Varios sillones, varias sucursales</div>
+              <div style={s.cardTitle}>Niveles de lealtad</div>
               <p style={s.cardText}>
-                Si tenés más de un local, cada uno entra con su propio PIN, pero el cliente suma puntos en cualquiera de los dos.
+                Bronce, Plata y Oro según los puntos acumulados en total. Te deja distinguir al cliente de años del que entró una vez por una urgencia.
               </p>
             </div>
           </div>
@@ -154,7 +154,7 @@ export default function ParaBarberias() {
       {/* CTA FINAL */}
       <section style={{ ...s.section, background: '#0a0a0a', textAlign: 'center' }}>
         <div style={{ ...s.inner, maxWidth: 600 }}>
-          <h2 style={{ ...s.h2, marginBottom: 16 }}>Probalo con tu barbería</h2>
+          <h2 style={{ ...s.h2, marginBottom: 16 }}>Probalo con tu veterinaria o pet shop</h2>
           <p style={{ ...s.sectionSub, marginBottom: 32 }}>
             El plan gratis te sirve hasta 50 clientes, sin tarjeta de crédito. Se configura en cinco minutos.
           </p>
@@ -168,8 +168,8 @@ export default function ParaBarberias() {
       <section style={s.otros}>
         <div style={s.otrosTexto}>
           ¿Tenés otro tipo de negocio? Mirá cómo funciona en{' '}
-          <a href="/para/peluquerias" style={s.otrosLink}>peluquerías</a>,{' '}
-          <a href="/para/cafeterias" style={s.otrosLink}>cafeterías</a> o{' '}
+          <a href="/para/cafeterias" style={s.otrosLink}>cafeterías</a>,{' '}
+          <a href="/para/peluquerias" style={s.otrosLink}>peluquerías</a> o{' '}
           <a href="/para" style={s.otrosLink}>ver todos los rubros →</a>
         </div>
       </section>

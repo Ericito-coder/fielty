@@ -105,7 +105,7 @@ const [isMobile, setIsMobile] = useState(false)
           <h2 style={s.sectionTitle}>Todo lo que necesitás</h2>
           <div style={s.featuresGrid}>
             {[
-              { icon:'⭐', title:'Puntos por compra', desc:'Vos definís la regla de conversión: 1 punto cada $100, cada $500, o lo que tenga sentido para tu ticket promedio.' },
+              { icon:'⭐', title:'Puntos por compra', desc:'Vos definís cada cuántos pesos se suman puntos: cada $100, cada $500, o lo que tenga sentido para lo que gasta un cliente tuyo.' },
               { icon:'🎂', title:'Puntos de cumpleaños', desc:'El día del cumpleaños de un cliente le acreditamos puntos extra de forma automática. Vos no tenés que acordarte.' },
               { icon:'🤝', title:'Sistema de referidos', desc:'Cuando un cliente invita a un amigo y ese amigo se registra, los dos suman puntos. Clientes nuevos sin gastar en publicidad.' },
               { icon:'🥇', title:'Niveles de lealtad', desc:'Bronce, Plata y Oro. Vos definís cuántos puntos hacen falta para subir de nivel y qué beneficio extra da cada uno.' },
@@ -198,13 +198,18 @@ const [isMobile, setIsMobile] = useState(false)
       {/* POR RUBRO */}
       <section style={{padding:'0 32px 40px', textAlign:'center'}}>
         <div style={{fontSize:15, color:'#666', marginBottom:12}}>Mirá cómo funciona en tu rubro</div>
-        <div style={{display:'flex', gap:20, justifyContent:'center', flexWrap:'wrap'}}>
-          <a href="/para/barberias" style={{color:'#e0001b', fontWeight:700, textDecoration:'none', fontSize:15}}>
-            Barberías →
-          </a>
-          <a href="/para/cafeterias" style={{color:'#e0001b', fontWeight:700, textDecoration:'none', fontSize:15}}>
-            Cafeterías y pastelerías →
-          </a>
+        <div style={{display:'flex', gap:'12px 20px', justifyContent:'center', flexWrap:'wrap'}}>
+          {[
+            ['/para/barberias', 'Barberías'],
+            ['/para/cafeterias', 'Cafeterías'],
+            ['/para/peluquerias', 'Peluquerías'],
+            ['/para/veterinarias', 'Veterinarias'],
+            ['/para/gimnasios', 'Gimnasios'],
+          ].map(([href, nombre]) => (
+            <a key={href} href={href} style={{color:'#e0001b', fontWeight:700, textDecoration:'none', fontSize:15}}>
+              {nombre} →
+            </a>
+          ))}
         </div>
       </section>
 
@@ -235,8 +240,7 @@ const [isMobile, setIsMobile] = useState(false)
             <a href="/privacidad" style={{fontSize:13, color:'#333', textDecoration:'none'}}>Política de privacidad</a>
             <a href="/faq" style={{fontSize:13, color:'#333', textDecoration:'none'}}>FAQ</a>
             <a href="/guia" style={{fontSize:13, color:'#333', textDecoration:'none'}}>Guía completa</a>
-            <a href="/para/barberias" style={{fontSize:13, color:'#333', textDecoration:'none'}}>Para barberías</a>
-            <a href="/para/cafeterias" style={{fontSize:13, color:'#333', textDecoration:'none'}}>Para cafeterías</a>
+            <a href="/para" style={{fontSize:13, color:'#333', textDecoration:'none'}}>Por rubro</a>
             <a href="/login" style={{fontSize:13, color:'#333', textDecoration:'none'}}>Ingresar</a>
             <a href="/onboarding/registro" style={{fontSize:13, color:'#333', textDecoration:'none'}}>Registrarse</a>
           </div>

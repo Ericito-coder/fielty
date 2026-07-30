@@ -1,13 +1,13 @@
 import { s } from '../estilos'
 
 export const metadata = {
-  title: 'Programa de puntos para barberías | Fielty',
-  description: 'Sistema de fidelización para barberías: tus clientes escanean un QR, suman puntos en cada corte y vuelven más seguido. Sin app y sin tarjetitas que se pierden. Empezá gratis.',
-  alternates: { canonical: '/para/barberias' },
+  title: 'Programa de puntos para gimnasios | Fielty',
+  description: 'Sistema de fidelización para gimnasios: premiá al socio que renueva mes a mes y lo que compra en el mostrador. Puntos con QR, sin app. Empezá gratis.',
+  alternates: { canonical: '/para/gimnasios' },
   openGraph: {
-    title: 'Programa de puntos para barberías | Fielty',
-    description: 'Que tus clientes vuelvan cada mes, no cuando se acuerdan. Programa de puntos con QR para barberías, sin app.',
-    url: '/para/barberias',
+    title: 'Programa de puntos para gimnasios | Fielty',
+    description: 'El problema no es que no vengan una vez, es que dejen de renovar. Programa de puntos con QR para gimnasios, sin app.',
+    url: '/para/gimnasios',
     siteName: 'Fielty',
     locale: 'es_AR',
     type: 'website',
@@ -19,11 +19,11 @@ const jsonLd = {
   '@type': 'BreadcrumbList',
   itemListElement: [
     { '@type': 'ListItem', position: 1, name: 'Fielty', item: 'https://www.fielty.app' },
-    { '@type': 'ListItem', position: 2, name: 'Barberías', item: 'https://www.fielty.app/para/barberias' },
+    { '@type': 'ListItem', position: 2, name: 'Gimnasios', item: 'https://www.fielty.app/para/gimnasios' },
   ],
 }
 
-export default function ParaBarberias() {
+export default function ParaGimnasios() {
   return (
     <div style={s.page}>
       <script
@@ -46,13 +46,13 @@ export default function ParaBarberias() {
       {/* HERO */}
       <section style={s.heroWrap}>
         <div style={s.hero}>
-          <div style={s.badge}>Para barberías</div>
+          <div style={s.badge}>Para gimnasios</div>
           <h1 style={s.h1}>
             Programa de puntos<br />
-            <span style={s.gradient}>para tu barbería.</span>
+            <span style={s.gradient}>para tu gimnasio.</span>
           </h1>
           <p style={s.heroSub}>
-            Tus clientes ya vuelven cada tres o cuatro semanas. Fielty hace que ese ritmo no dependa de que se acuerden de vos: suman puntos en cada corte y los ven en el celular, sin instalar ninguna app.
+            En un gimnasio el problema no es que no vuelvan una vez: es que dejen de renovar. Fielty le da al socio algo que acumula mes a mes, y que perdería si se va a otro lado.
           </p>
           <div style={s.ctaRow}>
             <a href="/onboarding/registro" style={s.ctaPrimary}>Empezá gratis →</a>
@@ -64,24 +64,24 @@ export default function ParaBarberias() {
       {/* POR QUÉ */}
       <section style={s.section}>
         <div style={s.inner}>
-          <h2 style={s.h2}>Por qué funciona en una barbería</h2>
+          <h2 style={s.h2}>Por qué funciona en un gimnasio</h2>
           <div style={s.grid}>
             <div style={s.card}>
-              <div style={s.cardTitle}>El cliente ya es recurrente</div>
+              <div style={s.cardTitle}>Lo que duele es la baja</div>
               <p style={s.cardText}>
-                El pelo crece igual para todos: quien se corta con vos vuelve cada tres o cuatro semanas. No tenés que crear el hábito, solo asegurarte de que esa vuelta sea con vos y no con el que le queda más cerca ese día.
+                Un socio que se va no vuelve a los tres meses como en otros rubros: se anota en otro lado y lo perdiste. Que tenga puntos acumulados y un premio a mitad de camino le agrega un costo concreto a irse.
               </p>
             </div>
             <div style={s.card}>
-              <div style={s.cardTitle}>Cada visita vale bastante</div>
+              <div style={s.cardTitle}>Además de la cuota hay mostrador</div>
               <p style={s.cardText}>
-                Un corte no es una compra chica: cuando alguien deja de venir, se nota en la caja del mes. Recuperar a un cliente que se estaba yendo justifica de sobra el premio que le des.
+                Bebidas, suplementos, indumentaria. Son ventas que hoy no dejan ningún registro y son la parte más fácil de premiar: el socio compra la proteína con vos en lugar de encargarla por internet.
               </p>
             </div>
             <div style={s.card}>
-              <div style={s.cardTitle}>Ya tenés la relación</div>
+              <div style={s.cardTitle}>La antigüedad hoy no se reconoce</div>
               <p style={s.cardText}>
-                Los conocés por el nombre y sabés cómo les gusta el corte. Un programa de puntos le pone números a algo que ya hacés: reconocer al que siempre vuelve.
+                El socio de tres años y el que se anotó el mes pasado pagan lo mismo y reciben lo mismo. Los niveles te dan una forma simple de tratarlos distinto sin armar una lista aparte.
               </p>
             </div>
           </div>
@@ -93,15 +93,15 @@ export default function ParaBarberias() {
         <div style={s.inner}>
           <h2 style={s.h2}>Cómo queda armado</h2>
           <p style={s.sectionSub}>
-            La tarjetita de cartón con sellos ya hacía esto. Fielty es lo mismo, pero vive en el celular del cliente.
+            Los puntos se cargan cuando hay un pago: la cuota del mes o una compra en el mostrador. Fielty no cuenta asistencias por sí solo, así que el programa se arma alrededor de la renovación y del consumo, no del ingreso al salón.
           </p>
 
           <div style={s.steps}>
             <div style={s.step}>
               <div style={s.stepNum}>1</div>
               <div>
-                <div style={s.stepTitle}>Ponés el QR en el mostrador</div>
-                <p style={s.stepText}>Te lo generamos listo para imprimir. El cliente lo escanea con la cámara mientras te paga y se registra en 30 segundos.</p>
+                <div style={s.stepTitle}>Ponés el QR en recepción</div>
+                <p style={s.stepText}>Te lo generamos listo para imprimir. El socio lo escanea con la cámara cuando pasa por el mostrador y se registra en 30 segundos.</p>
               </div>
             </div>
             <div style={s.step}>
@@ -109,15 +109,15 @@ export default function ParaBarberias() {
               <div>
                 <div style={s.stepTitle}>Definís la regla de puntos</div>
                 <p style={s.stepText}>
-                  Si querés replicar la lógica de la tarjeta de sellos, poné el precio de un corte como regla: así cada corte suma un punto y ponés el premio en diez. Si preferís algo más fino, configurás puntos proporcionales al monto y también suman la barba, los productos o el combo.
+                  Elegís cada cuántos pesos se suman puntos y aplica parejo: la cuota mensual suma su parte y las compras del mostrador suman la suya. Así el socio que renueva sin faltar un mes acumula solo, sin que tengas que hacer nada.
                 </p>
               </div>
             </div>
             <div style={s.step}>
               <div style={s.stepNum}>3</div>
               <div>
-                <div style={s.stepTitle}>Cargás el corte y listo</div>
-                <p style={s.stepText}>Buscás al cliente por nombre o DNI desde la caja, o escaneás el código de su tarjeta. Cuando llega al premio, te muestra un código que validás antes de dárselo.</p>
+                <div style={s.stepTitle}>Cargás el pago y listo</div>
+                <p style={s.stepText}>Buscás al socio por nombre o DNI desde la caja, o escaneás el código de su tarjeta. Cuando llega al premio, te muestra un código que validás antes de entregarlo.</p>
               </div>
             </div>
           </div>
@@ -130,21 +130,21 @@ export default function ParaBarberias() {
           <h2 style={s.h2}>Lo que más se usa en este rubro</h2>
           <div style={s.grid}>
             <div style={s.card}>
+              <div style={s.cardTitle}>Niveles de lealtad</div>
+              <p style={s.cardText}>
+                Bronce, Plata y Oro según los puntos acumulados en total. En un gimnasio es lo que más se nota, porque premia la continuidad: al año de renovar sin cortes, el socio está en otro nivel que el nuevo.
+              </p>
+            </div>
+            <div style={s.card}>
+              <div style={s.cardTitle}>Ver quién dejó de pagar</div>
+              <p style={s.cardText}>
+                El panel te lista a los socios inactivos, que en este rubro son los que están a un paso de la baja. En los planes Pro y Business podés mandarles un mail para intentar recuperarlos antes de que se anoten en otro lado.
+              </p>
+            </div>
+            <div style={s.card}>
               <div style={s.cardTitle}>Referidos</div>
               <p style={s.cardText}>
-                Una barbería crece porque alguien le pregunta a un amigo dónde se corta. Cada cliente tiene su propio link para pasarle: si el amigo se registra desde ahí, los dos suman puntos.
-              </p>
-            </div>
-            <div style={s.card}>
-              <div style={s.cardTitle}>Puntos de cumpleaños</div>
-              <p style={s.cardText}>
-                El día del cumpleaños le entran puntos de regalo automáticamente. Es una excusa para que aparezca sin que vos tengas que acordarte de nada.
-              </p>
-            </div>
-            <div style={s.card}>
-              <div style={s.cardTitle}>Varios sillones, varias sucursales</div>
-              <p style={s.cardText}>
-                Si tenés más de un local, cada uno entra con su propio PIN, pero el cliente suma puntos en cualquiera de los dos.
+                Al gimnasio se suele entrar de a dos: alguien arrastra a un amigo o a la pareja. Cada socio tiene su propio link, y si la otra persona se registra desde ahí, los dos suman puntos.
               </p>
             </div>
           </div>
@@ -154,9 +154,9 @@ export default function ParaBarberias() {
       {/* CTA FINAL */}
       <section style={{ ...s.section, background: '#0a0a0a', textAlign: 'center' }}>
         <div style={{ ...s.inner, maxWidth: 600 }}>
-          <h2 style={{ ...s.h2, marginBottom: 16 }}>Probalo con tu barbería</h2>
+          <h2 style={{ ...s.h2, marginBottom: 16 }}>Probalo con tu gimnasio</h2>
           <p style={{ ...s.sectionSub, marginBottom: 32 }}>
-            El plan gratis te sirve hasta 50 clientes, sin tarjeta de crédito. Se configura en cinco minutos.
+            El plan gratis te sirve hasta 50 socios, sin tarjeta de crédito. Se configura en cinco minutos.
           </p>
           <a href="/onboarding/registro" style={{ ...s.ctaPrimary, fontSize: 17, padding: '17px 38px' }}>
             Empezá gratis →
@@ -169,7 +169,7 @@ export default function ParaBarberias() {
         <div style={s.otrosTexto}>
           ¿Tenés otro tipo de negocio? Mirá cómo funciona en{' '}
           <a href="/para/peluquerias" style={s.otrosLink}>peluquerías</a>,{' '}
-          <a href="/para/cafeterias" style={s.otrosLink}>cafeterías</a> o{' '}
+          <a href="/para/veterinarias" style={s.otrosLink}>veterinarias</a> o{' '}
           <a href="/para" style={s.otrosLink}>ver todos los rubros →</a>
         </div>
       </section>
