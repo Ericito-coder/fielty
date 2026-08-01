@@ -23,12 +23,41 @@ const jsonLd = {
   ],
 }
 
+const FAQS_RUBRO = [
+  {
+    q: '¿Sirve si cada servicio tiene un precio muy distinto, como corte, color y brushing?',
+    a: 'Sí, para eso conviene ir por monto y no por visita: un color paga más puntos que un brushing sin que tengas que crear categorías.',
+  },
+  {
+    q: '¿Puedo premiar más los servicios de mayor valor, como una coloración?',
+    a: 'De forma indirecta sí: al ir por monto, cuanto más cara la visita, más puntos suma sola, sin que configures nada extra para eso.',
+  },
+  {
+    q: '¿Sirve si trabajo con varias estilistas o varios sillones?',
+    a: 'Sí. Todas cargan desde la misma caja del salón, así que no hace falta un usuario por estilista.',
+  },
+]
+
+const faqJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: FAQS_RUBRO.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+}
+
 export default function ParaPeluquerias() {
   return (
     <div style={s.page}>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
 
       {/* NAV */}
@@ -147,6 +176,21 @@ export default function ParaPeluquerias() {
                 Un salón crece por recomendación entre amigas. Cada clienta tiene su propio link para pasar: si la otra persona se registra desde ahí, las dos suman puntos.
               </p>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ RUBRO */}
+      <section style={s.section}>
+        <div style={s.inner}>
+          <h2 style={s.h2}>Preguntas frecuentes sobre peluquerías</h2>
+          <div style={s.faqList}>
+            {FAQS_RUBRO.map((f) => (
+              <div key={f.q}>
+                <div style={s.faqQ}>{f.q}</div>
+                <p style={s.faqA}>{f.a}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>

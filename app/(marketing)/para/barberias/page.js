@@ -23,12 +23,41 @@ const jsonLd = {
   ],
 }
 
+const FAQS_RUBRO = [
+  {
+    q: '¿Puedo sumar puntos también por productos, no solo por el corte?',
+    a: 'Sí. La regla de puntos aplica a cualquier venta que cargues desde la caja, así que la barba, los productos y el combo suman igual que el corte.',
+  },
+  {
+    q: '¿Qué regla de puntos conviene si quiero replicar la tarjeta de sellos?',
+    a: 'Poné el precio de un corte como el valor que da un punto, y el premio en diez: queda igual que la tarjetita de cartón de siempre, pero sin que se pierda.',
+  },
+  {
+    q: '¿Sirve si tengo varios sillones o varios barberos?',
+    a: 'Sí. Todos cargan desde la misma caja del negocio: no hace falta un usuario por barbero, alcanza con que cada uno cargue el corte cuando cobra.',
+  },
+]
+
+const faqJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: FAQS_RUBRO.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+}
+
 export default function ParaBarberias() {
   return (
     <div style={s.page}>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
 
       {/* NAV */}
@@ -147,6 +176,21 @@ export default function ParaBarberias() {
                 Si tenés más de un local, cada uno entra con su propio PIN, pero el cliente suma puntos en cualquiera de los dos.
               </p>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ RUBRO */}
+      <section style={s.section}>
+        <div style={s.inner}>
+          <h2 style={s.h2}>Preguntas frecuentes sobre barberías</h2>
+          <div style={s.faqList}>
+            {FAQS_RUBRO.map((f) => (
+              <div key={f.q}>
+                <div style={s.faqQ}>{f.q}</div>
+                <p style={s.faqA}>{f.a}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>

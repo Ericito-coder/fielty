@@ -23,12 +23,41 @@ const jsonLd = {
   ],
 }
 
+const FAQS_RUBRO = [
+  {
+    q: '¿Sirve para delivery o pedidos para llevar, no solo para mesas?',
+    a: 'Sí. Cualquier cuenta que cargues desde la caja suma puntos, sea consumo en el salón, take away o delivery propio.',
+  },
+  {
+    q: '¿Puedo dar puntos distintos según el mozo o el turno?',
+    a: 'No, la regla de puntos es una sola para todo el negocio. Lo que varía de una cuenta a otra es el monto, y ese ya se refleja solo.',
+  },
+  {
+    q: '¿La propina también suma puntos?',
+    a: 'No. Cargás el monto de la cuenta de comida y bebida; la propina no forma parte de la base sobre la que se calculan los puntos.',
+  },
+]
+
+const faqJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: FAQS_RUBRO.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+}
+
 export default function ParaRestaurantes() {
   return (
     <div style={s.page}>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
 
       {/* NAV */}
@@ -147,6 +176,21 @@ export default function ParaRestaurantes() {
                 Con las mesas rotando todo el servicio es difícil notar que el habitué de los viernes hace un mes que no aparece. El panel te lo lista, y en los planes Pro y Business podés mandarle un mail para invitarlo a volver.
               </p>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ RUBRO */}
+      <section style={s.section}>
+        <div style={s.inner}>
+          <h2 style={s.h2}>Preguntas frecuentes sobre restaurantes</h2>
+          <div style={s.faqList}>
+            {FAQS_RUBRO.map((f) => (
+              <div key={f.q}>
+                <div style={s.faqQ}>{f.q}</div>
+                <p style={s.faqA}>{f.a}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>

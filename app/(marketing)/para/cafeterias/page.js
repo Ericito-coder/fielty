@@ -23,12 +23,41 @@ const jsonLd = {
   ],
 }
 
+const FAQS_RUBRO = [
+  {
+    q: '¿Puedo tener una regla distinta para la pastelería que para el café de todos los días?',
+    a: 'No hace falta una regla separada: al ir por monto, una torta grande suma más puntos que un café solo, sin que tengas que configurar categorías aparte.',
+  },
+  {
+    q: '¿Sirve para pedidos por encargo, como tortas de cumpleaños?',
+    a: 'Sí. Cualquier venta que cargues desde la caja suma puntos, sea consumo en el local o un pedido para retirar.',
+  },
+  {
+    q: '¿Cómo evito que se forme cola en el mostrador por cargar puntos?',
+    a: 'Buscar al cliente por DNI o nombre toma un par de segundos, y si tiene la tarjeta a mano podés escanear su código directamente, todavía más rápido.',
+  },
+]
+
+const faqJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: FAQS_RUBRO.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+}
+
 export default function ParaCafeterias() {
   return (
     <div style={s.page}>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
 
       {/* NAV */}
@@ -147,6 +176,21 @@ export default function ParaCafeterias() {
                 Cada cliente tiene su propio link para compartir. Si alguien se registra desde ese link, los dos suman puntos: el que recomendó y el que llega.
               </p>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ RUBRO */}
+      <section style={s.section}>
+        <div style={s.inner}>
+          <h2 style={s.h2}>Preguntas frecuentes sobre cafeterías</h2>
+          <div style={s.faqList}>
+            {FAQS_RUBRO.map((f) => (
+              <div key={f.q}>
+                <div style={s.faqQ}>{f.q}</div>
+                <p style={s.faqA}>{f.a}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>

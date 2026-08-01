@@ -23,12 +23,41 @@ const jsonLd = {
   ],
 }
 
+const FAQS_RUBRO = [
+  {
+    q: '¿Los puntos se cargan por asistencia o por el pago de la cuota?',
+    a: 'Por el pago. Fielty no cuenta asistencias por sí solo, así que el programa se arma alrededor de la renovación y del consumo de mostrador.',
+  },
+  {
+    q: '¿Sirve para planes trimestrales o anuales, no solo mensuales?',
+    a: 'Sí. Cualquier pago que cargues desde la caja suma puntos según el monto, sin importar la duración del plan.',
+  },
+  {
+    q: '¿Qué pasa si un socio se da de baja y vuelve más adelante?',
+    a: 'Los puntos quedan en su cuenta esperándolo: no se pierden por una baja temporal.',
+  },
+]
+
+const faqJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: FAQS_RUBRO.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+}
+
 export default function ParaGimnasios() {
   return (
     <div style={s.page}>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
 
       {/* NAV */}
@@ -147,6 +176,21 @@ export default function ParaGimnasios() {
                 Al gimnasio se suele entrar de a dos: alguien arrastra a un amigo o a la pareja. Cada socio tiene su propio link, y si la otra persona se registra desde ahí, los dos suman puntos.
               </p>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ RUBRO */}
+      <section style={s.section}>
+        <div style={s.inner}>
+          <h2 style={s.h2}>Preguntas frecuentes sobre gimnasios</h2>
+          <div style={s.faqList}>
+            {FAQS_RUBRO.map((f) => (
+              <div key={f.q}>
+                <div style={s.faqQ}>{f.q}</div>
+                <p style={s.faqA}>{f.a}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>

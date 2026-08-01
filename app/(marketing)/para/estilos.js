@@ -34,6 +34,10 @@ export const s = {
   stepTitle: { fontSize: 18, fontWeight: 800, color: 'white', marginBottom: 8 },
   stepText: { fontSize: 15, color: '#777', lineHeight: 1.8, margin: 0 },
 
+  faqList: { display: 'flex', flexDirection: 'column', gap: 28 },
+  faqQ: { fontSize: 17, fontWeight: 800, color: 'white', marginBottom: 8 },
+  faqA: { fontSize: 15, color: '#777', lineHeight: 1.8, margin: 0 },
+
   otros: { padding: '0 32px 60px', textAlign: 'center' },
   otrosTexto: { fontSize: 15, color: '#666' },
   otrosLink: { color: '#e0001b', fontWeight: 700, textDecoration: 'none' },

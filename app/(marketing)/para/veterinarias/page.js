@@ -23,12 +23,41 @@ const jsonLd = {
   ],
 }
 
+const FAQS_RUBRO = [
+  {
+    q: '¿Puedo diferenciar puntos entre una consulta veterinaria y la venta de alimento?',
+    a: 'No hace falta. Al ir por monto, cada una suma proporcional a lo que sale, sin que armes reglas separadas.',
+  },
+  {
+    q: '¿Sirve para vacunación y controles, que no son ventas de mostrador tradicionales?',
+    a: 'Sí. Cualquier cobro que cargues desde la caja suma puntos, sea una consulta, una vacuna o una bolsa de alimento.',
+  },
+  {
+    q: '¿Qué pasa si mi cliente tiene más de una mascota?',
+    a: 'Los puntos quedan asociados al cliente, no a la mascota, así que suma todo junto sin importar cuántos animales traiga.',
+  },
+]
+
+const faqJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: FAQS_RUBRO.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+}
+
 export default function ParaVeterinarias() {
   return (
     <div style={s.page}>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
 
       {/* NAV */}
@@ -147,6 +176,21 @@ export default function ParaVeterinarias() {
                 Bronce, Plata y Oro según los puntos acumulados en total. Te deja distinguir al cliente de años del que entró una vez por una urgencia.
               </p>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ RUBRO */}
+      <section style={s.section}>
+        <div style={s.inner}>
+          <h2 style={s.h2}>Preguntas frecuentes sobre veterinarias y pet shops</h2>
+          <div style={s.faqList}>
+            {FAQS_RUBRO.map((f) => (
+              <div key={f.q}>
+                <div style={s.faqQ}>{f.q}</div>
+                <p style={s.faqA}>{f.a}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
