@@ -2,6 +2,7 @@
 import { useState } from 'react'
 import { supabase } from '@/lib/supabase'
 import { storage } from '@/lib/storage'
+import { validarPin } from '@/lib/pin'
 
 const COLORES = ['#e0001b', '#0e76fd', '#00b96b', '#7c3aed', '#f0a500', '#0e0e0e']
 
@@ -13,6 +14,8 @@ export default function ConfigNegocio() {
   const [puntosCumpleanos, setPuntosCumpleanos] = useState('50')
   const [puntosReferidoEmisor, setPuntosReferidoEmisor] = useState('100')
   const [puntosReferidoReceptor, setPuntosReferidoReceptor] = useState('50')
+  const [pinCaja, setPinCaja] = useState('')
+  const [pinConfirmar, setPinConfirmar] = useState('')
   const [cargando, setCargando] = useState(false)
   const [error, setError] = useState('')
 
@@ -21,6 +24,10 @@ export default function ConfigNegocio() {
     // del cliente (queda "Pizza city  — tu tarjeta...", con doble espacio).
     const nombreLimpio = nombre.trim()
     if (!nombreLimpio) { setError('Ingresá el nombre del negocio'); return }
+    // El PIN se elige acá y no después: la URL de la caja es pública, así
+    // que un negocio que nunca lo configura queda abierto a cualquiera.
+    const errorPin = validarPin(pinCaja, pinConfirmar)
+    if (errorPin) { setError(errorPin); return }
     setError('')
     setCargando(true)
 
@@ -45,6 +52,7 @@ export default function ConfigNegocio() {
         puntos_cumpleanos: parseInt(puntosCumpleanos) || 50,
         puntos_referido_emisor: parseInt(puntosReferidoEmisor) || 100,
         puntos_referido_receptor: parseInt(puntosReferidoReceptor) || 50,
+        pin_caja: pinCaja,
         user_id: userId
       }])
       .select()
@@ -159,6 +167,23 @@ export default function ConfigNegocio() {
           </div>
           <div style={{fontSize:12, color:'#aaa', marginTop:8}}>
             Se acreditan automáticamente cuando el amigo se registra 🤝
+          </div>
+        </div>
+
+        <div style={s.field}>
+          <label style={s.label}>PIN de la caja</label>
+          <div style={{fontSize:13, color:'#888', marginBottom:10, lineHeight:1.6}}>
+            Es la clave que van a usar vos y tus empleados para entrar a la caja y cargar las compras.
+            No la compartas con los clientes.
+          </div>
+          <div style={{display:'flex', gap:10, flexWrap:'wrap'}}>
+            <input style={{...s.input, flex:1, minWidth:130}} type="password" placeholder="Mínimo 4 caracteres"
+              value={pinCaja} onChange={e => setPinCaja(e.target.value)} />
+            <input style={{...s.input, flex:1, minWidth:130}} type="password" placeholder="Repetilo"
+              value={pinConfirmar} onChange={e => setPinConfirmar(e.target.value)} />
+          </div>
+          <div style={{fontSize:12, color:'#aaa', marginTop:8}}>
+            Elegí uno que no sea fácil de adivinar 🔒
           </div>
         </div>
 

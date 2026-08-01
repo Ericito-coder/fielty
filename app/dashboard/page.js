@@ -4,6 +4,7 @@ import { supabase } from '@/lib/supabase'
 import { storage } from '@/lib/storage'
 import { linkWhatsApp } from '@/lib/wa'
 import { esPago } from '@/lib/planes'
+import { PINES_COMUNES, validarPin } from '@/lib/pin'
 
 const NAV_ITEMS = [
   { id:'inicio', label:'Inicio', icon:'📊' },
@@ -1200,16 +1201,6 @@ function ConfigSection({ negocio, setNegocio }) {
 
 // ===== SUCURSALES =====
 const LIMITE_SUCURSALES = { gratis: 1, pro_early: 3, pro: 3, business: 999 }
-const PINES_COMUNES = ['1234','0000','1111','1212','4321','1122','9999','0123','2222','3333','4444','5555','6666','7777','8888','0000']
-
-function validarPin(pin, confirmar) {
-  if (!pin) return 'El PIN es obligatorio'
-  if (pin.length < 4) return 'El PIN debe tener al menos 4 caracteres'
-  if (PINES_COMUNES.includes(pin)) return 'Ese PIN es muy común. Elegí uno más seguro'
-  if (confirmar !== undefined && pin !== confirmar) return 'Los PINs no coinciden'
-  return null
-}
-
 function SucursalesSection({ negocio }) {
   const [sucursales, setSucursales] = useState([])
   const [nueva, setNueva] = useState({ nombre: '', direccion: '', pin_caja: '', pin_confirmar: '' })
