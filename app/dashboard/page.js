@@ -527,11 +527,12 @@ function ClientesSection({ negocioId, color, plan, nombreNegocio, isDesktop }) {
   const [busqueda, setBusqueda] = useState('')
 
   function waCliente(c, esInactivo) {
-    // Solo emojis del plano básico (✨☆✓): los de 4 bytes (🎁🎉) se
-    // rompen en WhatsApp Desktop cuando van por link wa.me
+    // Sin emojis: WhatsApp Desktop los rompe cuando van por link wa.me y
+    // llegan como "?". Pasa incluso con los del plano básico como ✨, no
+    // solo con los de 4 bytes. Los acentos sí viajan bien.
     const texto = esInactivo
-      ? `¡Hola ${c.nombre.split(' ')[0]}! Hace tiempo no te vemos por ${nombreNegocio}. Tenés ${c.puntos} puntos esperándote ✨ Mirá tu tarjeta: https://www.fielty.app/tarjeta/${c.id}`
-      : `¡Hola ${c.nombre.split(' ')[0]}! Tenés ${c.puntos} puntos en ${nombreNegocio} ✨ Mirá tu tarjeta: https://www.fielty.app/tarjeta/${c.id}`
+      ? `¡Hola ${c.nombre.split(' ')[0]}! Hace tiempo no te vemos por ${nombreNegocio}. Tenés ${c.puntos} puntos esperándote. Mirá tu tarjeta: https://www.fielty.app/tarjeta/${c.id}`
+      : `¡Hola ${c.nombre.split(' ')[0]}! Tenés ${c.puntos} puntos en ${nombreNegocio}. Mirá tu tarjeta: https://www.fielty.app/tarjeta/${c.id}`
     return linkWhatsApp(c.telefono, texto)
   }
 

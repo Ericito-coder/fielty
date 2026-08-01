@@ -120,8 +120,10 @@ export default function CajaSlugSucursal({ params }) {
     mostrarMensaje(`✅ +${result.pts} puntos a ${clienteSeleccionado.nombre.split(' ')[0]}`, 'success')
     if (busqueda.length >= 2) buscarCliente(busqueda)
     if (clienteSeleccionado.telefono) {
-      // Solo emojis del plano básico (✨): los de 4 bytes se rompen en WhatsApp Desktop vía wa.me
-      const texto = `¡Hola ${clienteSeleccionado.nombre.split(' ')[0]}! Sumaste ${result.pts} puntos en ${negocio.nombre} ✨ Ya tenés ${result.nuevosPuntos} pts. Mirá tu tarjeta: https://www.fielty.app/tarjeta/${clienteSeleccionado.id}`
+      // Sin emojis: WhatsApp Desktop los rompe cuando van por link wa.me y
+      // llegan como "?". Pasa incluso con los del plano básico como ✨, no
+      // solo con los de 4 bytes. Los acentos sí viajan bien.
+      const texto = `¡Hola ${clienteSeleccionado.nombre.split(' ')[0]}! Sumaste ${result.pts} puntos en ${negocio.nombre}. Ya tenés ${result.nuevosPuntos} pts. Mirá tu tarjeta: https://www.fielty.app/tarjeta/${clienteSeleccionado.id}`
       setAvisoWa(linkWhatsApp(clienteSeleccionado.telefono, texto))
     }
   }
