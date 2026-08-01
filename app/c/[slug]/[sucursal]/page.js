@@ -272,7 +272,7 @@ export default function CajaSlugSucursal({ params }) {
 
   const regModalJsx = regModal && (
     <div onClick={() => setRegModal(false)} style={{position:'fixed', inset:0, background:'rgba(0,0,0,0.88)', display:'flex', alignItems:'flex-start', justifyContent:'center', zIndex:9999, padding:'20px 16px', overflowY:'auto'}}>
-      <div onClick={e => e.stopPropagation()} style={{background:'#111', border:'1px solid #2a2a2a', borderRadius:24, padding:'28px 24px', maxWidth:360, width:'100%', marginTop:'auto', marginBottom:'auto'}}>
+      <div data-clarity-mask="True" onClick={e => e.stopPropagation()} style={{background:'#111', border:'1px solid #2a2a2a', borderRadius:24, padding:'28px 24px', maxWidth:360, width:'100%', marginTop:'auto', marginBottom:'auto'}}>
         <div style={{fontSize:17, fontWeight:800, color:'white', marginBottom:4}}>Registrar nuevo cliente</div>
         <div style={{fontSize:13, color:'#666', marginBottom:20}}>La contraseña inicial será su DNI.</div>
 
@@ -362,12 +362,12 @@ export default function CajaSlugSucursal({ params }) {
             <div style={{fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.1em', color:'#444', marginBottom:10}}>Buscar cliente</div>
             <div style={{display:'flex', alignItems:'center', gap:10, background:'#1a1a1a', border:'1px solid #2a2a2a', borderRadius:14, padding:'12px 16px'}}>
               <span style={{color:'#444'}}>🔍</span>
-              <input style={{flex:1, background:'transparent', border:'none', outline:'none', color:'white', fontSize:15, fontFamily:'inherit'}}
+              <input data-clarity-mask="True" style={{flex:1, background:'transparent', border:'none', outline:'none', color:'white', fontSize:15, fontFamily:'inherit'}}
                 placeholder="Nombre o DNI..." value={busqueda}
                 onChange={e => buscarCliente(e.target.value)} autoComplete="off" autoFocus />
             </div>
           </div>
-          <div style={{flex:1, overflowY:'auto', padding:'0 12px'}}>
+          <div data-clarity-mask="True" style={{flex:1, overflowY:'auto', padding:'0 12px'}}>
             {clientes.map(c => {
               const nivel = getNivel(c.puntos_historicos || 0)
               const seleccionado = clienteSeleccionado?.id === c.id
@@ -428,7 +428,7 @@ export default function CajaSlugSucursal({ params }) {
             const nivel = getNivel(clienteSeleccionado.puntos_historicos || 0)
             return (
               <div style={{maxWidth:520}}>
-                <div style={{background:'#1a1a1a', borderRadius:20, padding:24, marginBottom:24, border:'1px solid #2a2a2a'}}>
+                <div data-clarity-mask="True" style={{background:'#1a1a1a', borderRadius:20, padding:24, marginBottom:24, border:'1px solid #2a2a2a'}}>
                   <div style={{display:'flex', alignItems:'center', gap:16}}>
                     <div style={{width:56, height:56, borderRadius:16, background: negocio.color, display:'flex', alignItems:'center', justifyContent:'center', fontSize:18, fontWeight:900}}>{clienteSeleccionado.nombre.slice(0,2).toUpperCase()}</div>
                     <div style={{flex:1}}>
@@ -513,11 +513,11 @@ export default function CajaSlugSucursal({ params }) {
         <div style={s.mobileLabel}>Buscar cliente</div>
         <div style={{display:'flex', alignItems:'center', gap:10, background:'#1a1a1a', border:'1px solid #2a2a2a', borderRadius:16, padding:'14px 16px', marginBottom:12}}>
           <span>🔍</span>
-          <input style={{flex:1, background:'transparent', border:'none', outline:'none', color:'white', fontSize:16, fontFamily:'inherit'}}
+          <input data-clarity-mask="True" style={{flex:1, background:'transparent', border:'none', outline:'none', color:'white', fontSize:16, fontFamily:'inherit'}}
             placeholder="Nombre o DNI..." value={busqueda} onChange={e => buscarCliente(e.target.value)} autoComplete="off" />
         </div>
         {clientes.length > 0 && (
-          <div style={{background:'#1a1a1a', border:'1px solid #2a2a2a', borderRadius:16, overflow:'hidden'}}>
+          <div data-clarity-mask="True" style={{background:'#1a1a1a', border:'1px solid #2a2a2a', borderRadius:16, overflow:'hidden'}}>
             {clientes.map(c => {
               const nivel = getNivel(c.puntos_historicos || 0)
               return (
@@ -563,7 +563,7 @@ export default function CajaSlugSucursal({ params }) {
         {mensaje && <div style={s.toast(mensaje.tipo)}>{mensaje.texto}</div>}
         <div style={s.mobileTopbar}>
           <button style={s.backBtnMobile} onClick={() => setPantalla('buscar')}>←</button>
-          <div style={{flex:1}}>
+          <div data-clarity-mask="True" style={{flex:1}}>
             <div style={{fontSize:15, fontWeight:700}}>{clienteSeleccionado?.nombre}</div>
             <div style={{fontSize:11, color:'#666'}}>DNI {clienteSeleccionado?.dni} · {nivel.emoji} {nivel.nombre}</div>
           </div>
@@ -643,7 +643,7 @@ function ValidarCanjePanel({ negocio, codigo, setCodigo, canjeResult, validarCan
         </button>
       </div>
       {canjeResult && (
-        <div style={{background:'rgba(0,185,107,0.08)', border:'1px solid rgba(0,185,107,0.3)', borderRadius:20, padding:28, textAlign:'center'}}>
+        <div data-clarity-mask="True" style={{background:'rgba(0,185,107,0.08)', border:'1px solid rgba(0,185,107,0.3)', borderRadius:20, padding:28, textAlign:'center'}}>
           <div style={{fontSize:36, marginBottom:12}}>🎁</div>
           <div style={{fontSize:11, color:'#00b96b', fontWeight:700, textTransform:'uppercase', letterSpacing:'0.08em', marginBottom:4}}>Canje válido</div>
           <div style={{fontSize:20, fontWeight:800, marginBottom:4}}>{canjeResult.recompensas.nombre}</div>

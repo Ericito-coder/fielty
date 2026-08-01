@@ -581,7 +581,7 @@ function ClientesSection({ negocioId, color, plan, nombreNegocio, isDesktop }) {
         </div>
         {isDesktop && (
           <div style={{display:'flex', gap:8, alignItems:'center'}}>
-            <input placeholder="🔍 Buscar por nombre o DNI..." value={busqueda} onChange={e => setBusqueda(e.target.value)}
+            <input data-clarity-mask="True" placeholder="🔍 Buscar por nombre o DNI..." value={busqueda} onChange={e => setBusqueda(e.target.value)}
               style={{padding:'10px 16px', border:'2px solid #e8eaf0', borderRadius:12, fontSize:14, fontFamily:'inherit', outline:'none', width:280}} />
             {esPago(plan) ? (
               <button onClick={exportarCSV} style={{padding:'10px 16px', background:'#0e0e0e', border:'none', borderRadius:12, color:'white', fontSize:13, fontWeight:700, cursor:'pointer', fontFamily:'inherit', whiteSpace:'nowrap'}}>
@@ -606,7 +606,7 @@ function ClientesSection({ negocioId, color, plan, nombreNegocio, isDesktop }) {
                 ))}
               </tr>
             </thead>
-            <tbody>
+            <tbody data-clarity-mask="True">
               {filtrados.map((c, i) => (
                 <tr key={i} style={{borderBottom:'1px solid #f0f2f7'}}>
                   <td style={{padding:'14px 12px'}}>
@@ -635,27 +635,29 @@ function ClientesSection({ negocioId, color, plan, nombreNegocio, isDesktop }) {
             </tbody>
           </table>
         ) : (
-          filtrados.map((c, i) => (
-            <div key={i} style={{display:'flex', alignItems:'center', gap:12, padding:'12px 0', borderBottom:'1px solid #f0f2f7'}}>
-              <div style={{width:40, height:40, borderRadius:12, background: color, display:'flex', alignItems:'center', justifyContent:'center', fontSize:13, fontWeight:800, color:'white', flexShrink:0}}>
-                {c.nombre.slice(0,2).toUpperCase()}
+          <div data-clarity-mask="True">
+            {filtrados.map((c, i) => (
+              <div key={i} style={{display:'flex', alignItems:'center', gap:12, padding:'12px 0', borderBottom:'1px solid #f0f2f7'}}>
+                <div style={{width:40, height:40, borderRadius:12, background: color, display:'flex', alignItems:'center', justifyContent:'center', fontSize:13, fontWeight:800, color:'white', flexShrink:0}}>
+                  {c.nombre.slice(0,2).toUpperCase()}
+                </div>
+                <div style={{flex:1}}>
+                  <div style={{fontSize:14, fontWeight:700, color:'#0e0e0e'}}>{c.nombre}</div>
+                  <div style={{fontSize:11, color:'#888', marginTop:2}}>DNI {c.dni} · {getNivel(c.puntos_historicos || 0)}</div>
+                </div>
+                <div style={{textAlign:'right'}}>
+                  <div style={{fontSize:16, fontWeight:800, color:'#f0a500', fontFamily:'monospace'}}>{c.puntos}</div>
+                  <div style={{fontSize:10, color:'#888'}}>pts</div>
+                </div>
+                {c.telefono && (
+                  <a href={waCliente(c, !c.ultima_visita || new Date(c.ultima_visita) <= hace30dias)} target="_blank" rel="noreferrer" title="Enviar WhatsApp"
+                    style={{display:'flex', alignItems:'center', justifyContent:'center', width:36, height:36, background:'#e7f9ef', borderRadius:10, textDecoration:'none', fontSize:16, flexShrink:0}}>
+                    📲
+                  </a>
+                )}
               </div>
-              <div style={{flex:1}}>
-                <div style={{fontSize:14, fontWeight:700, color:'#0e0e0e'}}>{c.nombre}</div>
-                <div style={{fontSize:11, color:'#888', marginTop:2}}>DNI {c.dni} · {getNivel(c.puntos_historicos || 0)}</div>
-              </div>
-              <div style={{textAlign:'right'}}>
-                <div style={{fontSize:16, fontWeight:800, color:'#f0a500', fontFamily:'monospace'}}>{c.puntos}</div>
-                <div style={{fontSize:10, color:'#888'}}>pts</div>
-              </div>
-              {c.telefono && (
-                <a href={waCliente(c, !c.ultima_visita || new Date(c.ultima_visita) <= hace30dias)} target="_blank" rel="noreferrer" title="Enviar WhatsApp"
-                  style={{display:'flex', alignItems:'center', justifyContent:'center', width:36, height:36, background:'#e7f9ef', borderRadius:10, textDecoration:'none', fontSize:16, flexShrink:0}}>
-                  📲
-                </a>
-              )}
-            </div>
-          ))
+            ))}
+          </div>
         )}
         {filtrados.length === 0 && <div style={{textAlign:'center', padding:24, color:'#888', fontSize:14}}>No hay clientes en este filtro</div>}
       </div>

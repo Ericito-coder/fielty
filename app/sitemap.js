@@ -26,7 +26,7 @@ export default function sitemap() {
     { path: '/faq', priority: 0.8, changeFrequency: 'monthly', lastModified: '2026-08-01' },
     { path: '/guia', priority: 0.6, changeFrequency: 'monthly', lastModified: '2026-08-01' },
     { path: '/terminos', priority: 0.3, changeFrequency: 'yearly', lastModified: '2026-05-17' },
-    { path: '/privacidad', priority: 0.3, changeFrequency: 'yearly', lastModified: '2026-07-28' },
+    { path: '/privacidad', priority: 0.3, changeFrequency: 'yearly', lastModified: '2026-08-01' },
   ]
 
   return routes.map((route) => ({

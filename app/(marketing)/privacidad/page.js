@@ -22,7 +22,7 @@ export default function Privacidad() {
       <div style={{ maxWidth: 720, margin: '0 auto', padding: '64px 24px 48px' }}>
         <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', color: '#e0001b', marginBottom: 16 }}>Legal</div>
         <h1 style={{ fontSize: 40, fontWeight: 900, color: 'white', marginBottom: 16, letterSpacing: -1, lineHeight: 1.1 }}>Política de privacidad</h1>
-        <p style={{ fontSize: 14, color: '#555', lineHeight: 1.7 }}>Última actualización: julio de 2026</p>
+        <p style={{ fontSize: 14, color: '#555', lineHeight: 1.7 }}>Última actualización: agosto de 2026</p>
       </div>
 
       <div style={{ maxWidth: 720, margin: '0 auto', padding: '0 24px 80px' }}>
@@ -48,7 +48,7 @@ export default function Privacidad() {
         </Section>
 
         <Section title="5. Servicios de terceros">
-          Fielty utiliza los siguientes servicios de terceros para operar: Supabase (base de datos y autenticación), Vercel (hosting), Resend (envío de emails transaccionales), Mercado Pago (procesamiento de pagos) y Google Wallet (para los negocios en plan Business que ofrecen la tarjeta como pase de Google Wallet, se comparten los puntos y el nivel del cliente con la API de Google). Cada uno de estos servicios cuenta con su propia política de privacidad.
+          Fielty utiliza los siguientes servicios de terceros para operar: Supabase (base de datos y autenticación), Vercel (hosting), Resend (envío de emails transaccionales), Mercado Pago (procesamiento de pagos), Google Wallet (para los negocios en plan Business que ofrecen la tarjeta como pase de Google Wallet, se comparten los puntos y el nivel del cliente con la API de Google), Google Analytics (estadísticas de uso del sitio) y Microsoft Clarity (grabación de sesiones y mapas de calor para entender cómo se usa la plataforma). En el panel del dueño de negocio y en la caja, el nombre, DNI, teléfono y email de tus clientes se excluyen automáticamente de las grabaciones de Microsoft Clarity. Cada uno de estos servicios cuenta con su propia política de privacidad.
         </Section>
 
         <Section title="6. Retención de datos">
@@ -60,7 +60,7 @@ export default function Privacidad() {
         </Section>
 
         <Section title="8. Cookies">
-          Fielty utiliza almacenamiento local del navegador (localStorage) para mantener tu sesión activa y guardar preferencias básicas. No utilizamos cookies de seguimiento ni publicidad de terceros.
+          Fielty utiliza almacenamiento local del navegador (localStorage) para mantener tu sesión activa y guardar preferencias básicas. También usamos Google Analytics y Microsoft Clarity, que pueden usar cookies o almacenamiento similar para medir el uso del sitio y grabar sesiones con fines estadísticos. No usamos esos datos con fines publicitarios ni los compartimos con redes de publicidad de terceros.
         </Section>
 
         <Section title="9. Cambios en esta política">
