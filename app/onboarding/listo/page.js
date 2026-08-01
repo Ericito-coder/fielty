@@ -63,6 +63,7 @@ export default function Listo() {
   )
 
   const registroUrl = `${window.location.origin}/registro/${negocio.slug}`
+  const cajaUrl = `${window.location.origin}/c/${negocio.slug}`
 
   return (
     <div style={s.wrap}>
@@ -105,20 +106,35 @@ export default function Listo() {
           </div>
         </div>
 
-        {/* Próximos pasos */}
+        {/* Probar el circuito antes de abrir */}
         <div style={s.pasos}>
-          <div style={s.pasosTitle}>Próximos pasos</div>
-          <div style={s.pasoItem}>
-            <div style={s.pasoNum}>1</div>
-            <div>Imprimí el QR y ponelo en el mostrador</div>
-          </div>
-          <div style={s.pasoItem}>
-            <div style={s.pasoNum}>2</div>
-            <div>Pedile a tus empleados que usen <strong style={{fontFamily:'monospace', fontSize:12, background:'#e8eaf0', padding:'2px 6px', borderRadius:4}}>{typeof window !== 'undefined' ? `${window.location.origin}/c/${negocio.slug}` : `/c/${negocio.slug}`}</strong> para acreditar puntos</div>
-          </div>
-          <div style={s.pasoItem}>
-            <div style={s.pasoNum}>3</div>
-            <div>Mirá las métricas desde tu panel</div>
+          <div style={s.pasosTitle}>Probalo antes de abrir</div>
+          <p style={s.pasosIntro}>
+            Hacé el circuito completo una vez, con vos mismo de cliente. Son dos minutos
+            y te evita descubrir algo raro con un cliente esperando en el mostrador.
+          </p>
+
+          <a href={registroUrl} target="_blank" rel="noreferrer" style={s.pasoBtn}>
+            <span style={s.pasoNum}>1</span>
+            <span style={s.pasoTexto}>Registrate con tu propio link</span>
+            <span style={s.pasoFlecha}>→</span>
+          </a>
+
+          <a href={cajaUrl} target="_blank" rel="noreferrer" style={s.pasoBtn}>
+            <span style={s.pasoNum}>2</span>
+            <span style={s.pasoTexto}>Cargate una compra desde la caja</span>
+            <span style={s.pasoFlecha}>→</span>
+          </a>
+
+          <a href={`/qr/${negocio.slug}`} target="_blank" rel="noreferrer" style={s.pasoBtn}>
+            <span style={s.pasoNum}>3</span>
+            <span style={s.pasoTexto}>Imprimí el QR para el mostrador</span>
+            <span style={s.pasoFlecha}>→</span>
+          </a>
+
+          <div style={s.pasosNota}>
+            Para entrar a la caja usás el PIN que acabás de elegir. Es la misma
+            dirección que le vas a pasar a tus empleados.
           </div>
         </div>
 
@@ -152,8 +168,12 @@ const s = {
   qrLabel: { fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.06em', color:'#888', marginBottom:12, textAlign:'center' },
   qrBox: { width:160, height:160, background:'#f5f6fa', borderRadius:16, margin:'0 auto 12px', display:'flex', alignItems:'center', justifyContent:'center' },
   pasos: { background:'#f5f6fa', borderRadius:16, padding:20, marginBottom:24 },
-  pasosTitle: { fontSize:13, fontWeight:700, color:'#0e0e0e', marginBottom:14 },
-  pasoItem: { display:'flex', alignItems:'flex-start', gap:12, marginBottom:12, fontSize:13, color:'#555', lineHeight:1.5 },
+  pasosTitle: { fontSize:13, fontWeight:700, color:'#0e0e0e', marginBottom:8 },
+  pasosIntro: { fontSize:13, color:'#666', lineHeight:1.6, margin:'0 0 16px' },
+  pasoBtn: { display:'flex', alignItems:'center', gap:12, background:'white', border:'1px solid #e8eaf0', borderRadius:12, padding:'12px 14px', marginBottom:8, textDecoration:'none' },
+  pasoTexto: { flex:1, fontSize:13, fontWeight:600, color:'#0e0e0e', lineHeight:1.4 },
+  pasoFlecha: { fontSize:14, color:'#e0001b', fontWeight:700, flexShrink:0 },
+  pasosNota: { fontSize:12, color:'#888', lineHeight:1.6, marginTop:12 },
   pasoNum: { width:24, height:24, borderRadius:'50%', background:'#e0001b', color:'white', display:'flex', alignItems:'center', justifyContent:'center', fontSize:12, fontWeight:800, flexShrink:0 },
   btn: { width:'100%', padding:18, background:'#e0001b', border:'none', borderRadius:14, color:'white', fontSize:16, fontWeight:800, cursor:'pointer', fontFamily:'inherit' },
 }
