@@ -29,7 +29,13 @@ export async function POST(request) {
       return NextResponse.json({ error: 'Datos inválidos' }, { status: 400 })
     }
 
-    await supabaseAdmin.from('negocios').update({ plan }).eq('id', negocioId)
+    // Un plan pago puesto a mano es una excepción: se marca para que el cron
+    // que sincroniza con Mercado Pago no lo baje a gratis al no encontrar
+    // ninguna suscripción activa. Volver a gratis quita la excepción.
+    await supabaseAdmin
+      .from('negocios')
+      .update({ plan, plan_manual: plan !== 'gratis' })
+      .eq('id', negocioId)
 
     return NextResponse.json({ ok: true })
   } catch (error) {

@@ -414,6 +414,12 @@ export default function Admin() {
                         <option key={p} value={p}>{PLAN_LABELS[p]}</option>
                       ))}
                     </select>
+                    {n.plan_manual && (
+                      <div title="Plan puesto a mano: el cron de Mercado Pago no lo va a bajar a gratis"
+                        style={{fontSize:10, color:'#666', marginTop:4, whiteSpace:'nowrap'}}>
+                        ✋ a mano
+                      </div>
+                    )}
                   </td>
                   <td style={{padding:'14px 16px', fontSize:13, fontWeight:700, color:'white', fontFamily:'monospace'}}>{n.totalClientes}</td>
                   <td style={{padding:'14px 16px', fontSize:13, fontWeight:700, color:'#7c3aed', fontFamily:'monospace'}}>{n.totalCanjesNegocio}</td>
