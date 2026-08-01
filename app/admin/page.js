@@ -8,6 +8,22 @@ const PLAN_COLORES = { gratis: '#888', pro_early: '#e0001b', pro: '#e0001b', bus
 const PLAN_LABELS = { gratis: 'Gratis', pro_early: 'Pro Early', pro: 'Pro', business: 'Business' }
 const PLANES_OPCIONES = ['gratis', 'pro_early', 'pro', 'business']
 
+// Columnas de la tabla. Las que tienen `campo` se pueden ordenar; Contacto no,
+// porque ordenar por email o teléfono no sirve para nada.
+const COLUMNAS = [
+  { label: 'Negocio', campo: 'nombre', tipo: 'texto' },
+  { label: 'Contacto', campo: null },
+  { label: 'Plan', campo: 'plan', tipo: 'plan' },
+  { label: 'Clientes', campo: 'totalClientes', tipo: 'numero' },
+  { label: 'Canjes', campo: 'totalCanjesNegocio', tipo: 'numero' },
+  { label: 'Pts circ.', campo: 'totalPuntosNegocio', tipo: 'numero' },
+  { label: 'Última act.', campo: 'ultimaActividad', tipo: 'fecha' },
+  { label: 'Registrado', campo: 'created_at', tipo: 'fecha' },
+]
+
+// El plan se ordena por jerarquía, no alfabéticamente
+const RANGO_PLAN = { gratis: 0, pro_early: 1, pro: 2, business: 3 }
+
 export default function Admin() {
   const [data, setData] = useState(null)
   const [cargando, setCargando] = useState(true)
@@ -18,6 +34,7 @@ export default function Admin() {
   const [negocioDetalle, setNegocioDetalle] = useState(null)
   const [detalleData, setDetalleData] = useState(null)
   const [cargandoDetalle, setCargandoDetalle] = useState(false)
+  const [orden, setOrden] = useState({ campo: 'created_at', dir: 'desc' })
 
   useEffect(() => {
     supabase.auth.getSession().then(async ({ data: { session } }) => {
@@ -69,6 +86,38 @@ export default function Admin() {
     n.email?.toLowerCase().includes(busqueda.toLowerCase()) ||
     n.telefono?.includes(busqueda)
   )
+
+  const columnaOrden = COLUMNAS.find(c => c.campo === orden.campo)
+
+  const negociosOrdenados = [...negociosFiltrados].sort((a, b) => {
+    if (!columnaOrden) return 0
+    const { campo, tipo } = columnaOrden
+
+    // Los negocios sin fecha van siempre al final, se ordene como se ordene:
+    // un negocio sin actividad no es "el más reciente" ni "el más viejo".
+    if (tipo === 'fecha') {
+      const ta = a[campo] ? new Date(a[campo]).getTime() : null
+      const tb = b[campo] ? new Date(b[campo]).getTime() : null
+      if (ta === null || tb === null) return ta === tb ? 0 : (ta === null ? 1 : -1)
+      return orden.dir === 'asc' ? ta - tb : tb - ta
+    }
+
+    let base
+    if (tipo === 'numero') base = (a[campo] || 0) - (b[campo] || 0)
+    else if (tipo === 'plan') base = (RANGO_PLAN[a.plan] ?? 0) - (RANGO_PLAN[b.plan] ?? 0)
+    else base = String(a[campo] || '').localeCompare(String(b[campo] || ''), 'es')
+
+    return orden.dir === 'asc' ? base : -base
+  })
+
+  // Los textos arrancan de la A; los números y fechas, de mayor a menor,
+  // que es lo que uno quiere ver primero al hacer clic.
+  function ordenarPor(campo, tipo) {
+    if (!campo) return
+    setOrden(o => o.campo === campo
+      ? { campo, dir: o.dir === 'asc' ? 'desc' : 'asc' }
+      : { campo, dir: tipo === 'texto' ? 'asc' : 'desc' })
+  }
 
   const maxCrecimiento = Math.max(...crecimiento.map(m => Math.max(m.negocios, m.clientes)), 1)
 
@@ -305,13 +354,28 @@ export default function Admin() {
           <table style={{width:'100%', borderCollapse:'collapse'}}>
             <thead>
               <tr style={{borderBottom:'1px solid #1e1e1e'}}>
-                {['Negocio', 'Contacto', 'Plan', 'Clientes', 'Canjes', 'Pts circ.', 'Última act.', 'Registrado'].map(h => (
-                  <th key={h} style={{padding:'14px 16px', textAlign:'left', fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.06em', color:'#555'}}>{h}</th>
-                ))}
+                {COLUMNAS.map(col => {
+                  const activa = col.campo && orden.campo === col.campo
+                  return (
+                    <th key={col.label}
+                      onClick={() => ordenarPor(col.campo, col.tipo)}
+                      title={col.campo ? 'Ordenar por ' + col.label.toLowerCase() : undefined}
+                      style={{
+                        padding:'14px 16px', textAlign:'left', fontSize:11, fontWeight:700,
+                        textTransform:'uppercase', letterSpacing:'0.06em',
+                        color: activa ? '#e0001b' : '#555',
+                        cursor: col.campo ? 'pointer' : 'default',
+                        userSelect:'none', whiteSpace:'nowrap',
+                      }}>
+                      {col.label}
+                      {activa && <span style={{marginLeft:6}}>{orden.dir === 'asc' ? '↑' : '↓'}</span>}
+                    </th>
+                  )
+                })}
               </tr>
             </thead>
             <tbody>
-              {negociosFiltrados.map(n => (
+              {negociosOrdenados.map(n => (
                 <tr key={n.id} style={{borderBottom:'1px solid #151515', cursor:'pointer'}}
                   onClick={() => abrirDetalle(n)}>
                   <td style={{padding:'14px 16px'}}>
@@ -362,8 +426,8 @@ export default function Admin() {
                   </td>
                 </tr>
               ))}
-              {negociosFiltrados.length === 0 && (
-                <tr><td colSpan={6} style={{padding:32, textAlign:'center', color:'#555', fontSize:13}}>Sin resultados</td></tr>
+              {negociosOrdenados.length === 0 && (
+                <tr><td colSpan={COLUMNAS.length} style={{padding:32, textAlign:'center', color:'#555', fontSize:13}}>Sin resultados</td></tr>
               )}
             </tbody>
           </table>
