@@ -2,11 +2,11 @@ import { s } from './estilos'
 
 export const metadata = {
   title: 'Programas de fidelización por rubro | Fielty',
-  description: 'Cómo se arma un programa de puntos según el tipo de negocio: barberías, cafeterías, peluquerías, veterinarias y gimnasios. Cada rubro tiene su propia regla de puntos y sus premios.',
+  description: 'Cómo se arma un programa de puntos según el tipo de negocio: barberías, cafeterías, peluquerías, veterinarias, gimnasios, restaurantes y panaderías. Cada rubro tiene su propia regla de puntos y sus premios.',
   alternates: { canonical: '/para' },
   openGraph: {
     title: 'Programas de fidelización por rubro | Fielty',
-    description: 'Guías por rubro: barberías, cafeterías, peluquerías, veterinarias y gimnasios.',
+    description: 'Guías por rubro: barberías, cafeterías, peluquerías, veterinarias, gimnasios, restaurantes y panaderías.',
     url: '/para',
     siteName: 'Fielty',
     locale: 'es_AR',
@@ -39,6 +39,16 @@ const RUBROS = [
     href: '/para/gimnasios',
     nombre: 'Gimnasios',
     hook: 'El problema no es que no vengan una vez, es que dejen de renovar. Se premia la continuidad y el mostrador.',
+  },
+  {
+    href: '/para/restaurantes',
+    nombre: 'Restaurantes',
+    hook: 'Salir a comer es una elección, no una necesidad. Los puntos son la razón para que esa elección sea vos.',
+  },
+  {
+    href: '/para/panaderias',
+    nombre: 'Panaderías',
+    hook: 'El pan se compra casi todos los días. Se premia esa costumbre para que sea con vos y no con la de la esquina.',
   },
 ]
 
@@ -97,7 +107,7 @@ export default function PorRubro() {
             ))}
           </div>
           <p style={{ ...s.cardText, marginTop: 32 }}>
-            ¿Tu rubro no está en la lista? Fielty funciona igual en cualquier negocio con local a la calle — restaurantes, panaderías, farmacias, kioscos, tiendas de ropa. Escribinos a{' '}
+            ¿Tu rubro no está en la lista? Fielty funciona igual en cualquier negocio con local a la calle — farmacias, kioscos, tiendas de ropa. Escribinos a{' '}
             <a href="mailto:hola@fielty.app" style={s.otrosLink}>hola@fielty.app</a> y te ayudamos a armarlo.
           </p>
         </div>

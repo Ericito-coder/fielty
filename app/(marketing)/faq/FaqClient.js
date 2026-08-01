@@ -79,6 +79,8 @@ export default function FaqClient() {
               ['/para/peluquerias', 'Peluquerías'],
               ['/para/veterinarias', 'Veterinarias y pet shops'],
               ['/para/gimnasios', 'Gimnasios'],
+              ['/para/restaurantes', 'Restaurantes'],
+              ['/para/panaderias', 'Panaderías'],
             ].map(([href, nombre]) => (
               <a key={href} href={href} style={{ fontSize: 14, color: '#e0001b', fontWeight: 700, textDecoration: 'none' }}>
                 {nombre} →

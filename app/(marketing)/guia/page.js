@@ -40,8 +40,10 @@ export default function Guia() {
           <a href="/para/barberias" style={{ color: '#e0001b', textDecoration: 'none', fontWeight: 600 }}>barberías</a>,{' '}
           <a href="/para/cafeterias" style={{ color: '#e0001b', textDecoration: 'none', fontWeight: 600 }}>cafeterías</a>,{' '}
           <a href="/para/peluquerias" style={{ color: '#e0001b', textDecoration: 'none', fontWeight: 600 }}>peluquerías</a>,{' '}
-          <a href="/para/veterinarias" style={{ color: '#e0001b', textDecoration: 'none', fontWeight: 600 }}>veterinarias</a> y{' '}
-          <a href="/para/gimnasios" style={{ color: '#e0001b', textDecoration: 'none', fontWeight: 600 }}>gimnasios</a>.
+          <a href="/para/veterinarias" style={{ color: '#e0001b', textDecoration: 'none', fontWeight: 600 }}>veterinarias</a>,{' '}
+          <a href="/para/gimnasios" style={{ color: '#e0001b', textDecoration: 'none', fontWeight: 600 }}>gimnasios</a>,{' '}
+          <a href="/para/restaurantes" style={{ color: '#e0001b', textDecoration: 'none', fontWeight: 600 }}>restaurantes</a> y{' '}
+          <a href="/para/panaderias" style={{ color: '#e0001b', textDecoration: 'none', fontWeight: 600 }}>panaderías</a>.
         </P>
       </Section>
 
