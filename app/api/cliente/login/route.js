@@ -21,7 +21,7 @@ export async function POST(request) {
 
     const { data: clientes } = await supabaseAdmin
       .from('clientes')
-      .select('id, nombre, negocio_id, password_hash, debe_cambiar_password, negocio:negocios(nombre, color)')
+      .select('id, nombre, negocio_id, password_hash, debe_cambiar_password, via_google, negocio:negocios(nombre, color)')
       .eq('dni', dni)
 
     if (!clientes || clientes.length === 0) {
@@ -31,6 +31,9 @@ export async function POST(request) {
     // Verificar contraseña contra el primer registro que tenga hash
     const conHash = clientes.find(c => c.password_hash)
     if (!conHash) {
+      if (clientes.some(c => c.via_google)) {
+        return NextResponse.json({ error: 'Tu cuenta se creó con Google. Tocá "Continuar con Google" para entrar.' }, { status: 401 })
+      }
       return NextResponse.json({ error: 'Esta cuenta no tiene contraseña configurada. Contactá al negocio.' }, { status: 401 })
     }
 

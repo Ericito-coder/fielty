@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import bcrypt from 'bcryptjs'
 import { createClient } from '@supabase/supabase-js'
 import { Resend } from 'resend'
+import { verificarGoogleToken } from '@/lib/googleToken'
 
 const resend = new Resend(process.env.RESEND_API_KEY)
 
@@ -12,13 +13,35 @@ const supabaseAdmin = createClient(
 
 export async function POST(request) {
   try {
-    const { nombre, dni, telefono, email, password, slug, referidoPor, fechaNacimiento } = await request.json()
+    const body = await request.json()
+    const { nombre, dni, telefono, password, slug, referidoPor, fechaNacimiento, googleToken } = body
 
-    if (!nombre || !dni || !email || !password || !slug) {
-      return NextResponse.json({ error: 'Faltan datos obligatorios' }, { status: 400 })
+    // Con Google el email sale del token verificado (nunca del formulario)
+    // y la cuenta no tiene contraseña. Sin Google, email + contraseña son
+    // obligatorios como siempre.
+    let email = body.email
+    let passwordHash = null
+    let viaGoogle = false
+
+    if (googleToken) {
+      const google = await verificarGoogleToken(googleToken)
+      if (!google) {
+        return NextResponse.json({ error: 'No pudimos verificar tu cuenta de Google. Probá de nuevo o registrate con tu email.' }, { status: 401 })
+      }
+      email = google.email
+      viaGoogle = true
+    } else {
+      if (!email || !password) {
+        return NextResponse.json({ error: 'Faltan datos obligatorios' }, { status: 400 })
+      }
+      if (password.length < 8) {
+        return NextResponse.json({ error: 'La contraseña debe tener al menos 8 caracteres' }, { status: 400 })
+      }
+      passwordHash = await bcrypt.hash(password, 10)
     }
-    if (password.length < 8) {
-      return NextResponse.json({ error: 'La contraseña debe tener al menos 8 caracteres' }, { status: 400 })
+
+    if (!nombre || !dni || !slug) {
+      return NextResponse.json({ error: 'Faltan datos obligatorios' }, { status: 400 })
     }
 
     // Buscar negocio
@@ -66,8 +89,6 @@ export async function POST(request) {
       return NextResponse.json({ error: 'Ya tenés una tarjeta en este negocio registrada con ese email. ¡Pedile al empleado que te busque!' }, { status: 409 })
     }
 
-    // Hash de contraseña + insert (atómico)
-    const passwordHash = await bcrypt.hash(password, 10)
     const puntosIniciales = referidoPorValidado ? 0 : (negocio.puntos_bienvenida || 10)
 
     const { data, error: insertError } = await supabaseAdmin
@@ -83,6 +104,7 @@ export async function POST(request) {
         fecha_nacimiento: fechaNacimiento || null,
         referido_por: referidoPorValidado || null,
         password_hash: passwordHash,
+        via_google: viaGoogle,
       }])
       .select()
 

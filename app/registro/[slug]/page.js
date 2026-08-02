@@ -1,8 +1,17 @@
 'use client'
 import { theme } from '@/lib/theme'
 import { useState, useEffect } from 'react'
+import GoogleSignInButton from '@/components/GoogleSignInButton'
 
 export const dynamic = 'force-dynamic'
+
+// Solo para prellenar el formulario: la verificación real del token la
+// hace el backend contra Google en /api/cliente/registrar.
+function decodificarJwt(token) {
+  try {
+    return JSON.parse(atob(token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')))
+  } catch { return null }
+}
 
 export default function RegistroSlug({ params }) {
   const [nombre, setNombre] = useState('')
@@ -10,6 +19,7 @@ export default function RegistroSlug({ params }) {
   const [telefono, setTelefono] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [google, setGoogle] = useState(null)
   const [fechaNacimiento, setFechaNacimiento] = useState('')
   const [cargando, setCargando] = useState(false)
   const [clienteId, setClienteId] = useState(null)
@@ -32,12 +42,21 @@ export default function RegistroSlug({ params }) {
     setYaInstalada(window.navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches)
   }, [params])
 
+  function conectarGoogle(token) {
+    const payload = decodificarJwt(token)
+    setGoogle({ token, email: payload?.email || '' })
+    if (payload?.name) setNombre(n => n || payload.name)
+    setError('')
+  }
+
   async function registrar() {
     if (!nombre) { setError('Ingresá tu nombre'); return }
     if (!dni) { setError('Ingresá tu DNI'); return }
-    if (!email) { setError('Ingresá tu email'); return }
-    if (!password) { setError('Creá una contraseña'); return }
-    if (password.length < 8) { setError('La contraseña debe tener al menos 8 caracteres'); return }
+    if (!google) {
+      if (!email) { setError('Ingresá tu email'); return }
+      if (!password) { setError('Creá una contraseña'); return }
+      if (password.length < 8) { setError('La contraseña debe tener al menos 8 caracteres'); return }
+    }
     if (!negocio) { setError('Negocio no encontrado'); return }
     setError('')
     setCargando(true)
@@ -50,8 +69,9 @@ export default function RegistroSlug({ params }) {
           nombre,
           dni,
           telefono: telefono || null,
-          email,
-          password,
+          email: google ? null : email,
+          password: google ? null : password,
+          googleToken: google?.token || null,
           slug: negocio.slug,
           referidoPor: REFERIDO_POR || null,
           fechaNacimiento: fechaNacimiento || null,
@@ -128,6 +148,29 @@ export default function RegistroSlug({ params }) {
             : 'Registrate y empezá a acumular en cada compra. Sin app, sin complicaciones.'}
         </p>
 
+        {!google ? (
+          <>
+            <GoogleSignInButton onCredential={conectarGoogle} onError={() => setError('No pudimos conectar con Google. Completá el formulario para registrarte.')} />
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12, margin: '20px 0' }}>
+              <div style={{ flex: 1, height: 1, background: '#e8eaf0' }} />
+              <span style={{ fontSize: 12, color: theme.grayLight }}>o completá tus datos</span>
+              <div style={{ flex: 1, height: 1, background: '#e8eaf0' }} />
+            </div>
+          </>
+        ) : (
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, background: theme.bgMuted2, borderRadius: 12, padding: '12px 14px', marginBottom: 20 }}>
+            <span style={{ fontSize: 16 }}>✓</span>
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{ fontSize: 13, fontWeight: 700, color: theme.black }}>Conectado con Google</div>
+              <div style={{ fontSize: 12, color: theme.gray, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{google.email}</div>
+            </div>
+            <button onClick={() => setGoogle(null)}
+              style={{ fontSize: 12, color: theme.gray, background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'inherit', textDecoration: 'underline', flexShrink: 0, minHeight: 44, padding: '0 4px' }}>
+              Cambiar
+            </button>
+          </div>
+        )}
+
         <div style={styles.field}>
           <label style={styles.label} htmlFor="cliente-nombre">Tu nombre</label>
           <input id="cliente-nombre" style={styles.input} placeholder="Ej: Martina García"
@@ -143,16 +186,20 @@ export default function RegistroSlug({ params }) {
           <input id="cliente-whatsapp" style={styles.input} placeholder="Ej: 11 5555-1234"
             value={telefono} onChange={e => setTelefono(e.target.value)} />
         </div>
-        <div style={styles.field}>
-          <label style={styles.label} htmlFor="cliente-email">Email</label>
-          <input id="cliente-email" style={styles.input} type="email" placeholder="Ej: martina@gmail.com"
-            value={email} onChange={e => setEmail(e.target.value)} />
-        </div>
-        <div style={styles.field}>
-          <label style={styles.label} htmlFor="cliente-password">Contraseña <span style={{color:'#bbb', fontWeight:400}}>(para ver tu tarjeta)</span></label>
-          <input id="cliente-password" style={styles.input} type="password" placeholder="Mínimo 8 caracteres"
-            value={password} onChange={e => setPassword(e.target.value)} />
-        </div>
+        {!google && (
+          <>
+            <div style={styles.field}>
+              <label style={styles.label} htmlFor="cliente-email">Email</label>
+              <input id="cliente-email" style={styles.input} type="email" placeholder="Ej: martina@gmail.com"
+                value={email} onChange={e => setEmail(e.target.value)} />
+            </div>
+            <div style={styles.field}>
+              <label style={styles.label} htmlFor="cliente-password">Contraseña <span style={{color:'#bbb', fontWeight:400}}>(para ver tu tarjeta)</span></label>
+              <input id="cliente-password" style={styles.input} type="password" placeholder="Mínimo 8 caracteres"
+                value={password} onChange={e => setPassword(e.target.value)} />
+            </div>
+          </>
+        )}
         <div style={styles.field}>
           <label style={styles.label} htmlFor="cliente-nacimiento">Fecha de nacimiento <span style={{color:'#bbb', fontWeight:400}}>(opcional)</span></label>
           <input id="cliente-nacimiento" style={{...styles.input, width:'calc(100% - 32px)'}} type="date"

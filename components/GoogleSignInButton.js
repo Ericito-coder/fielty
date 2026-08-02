@@ -20,7 +20,11 @@ async function generarNonce() {
 // en vez de "Fielty"), esto corre del lado del cliente contra los
 // orígenes autorizados en Google Cloud (fielty.app / localhost), así que
 // el usuario ve el dominio propio.
-export default function GoogleSignInButton({ onError }) {
+// Con `onCredential`, el botón entrega el ID token crudo y no toca
+// Supabase Auth — es el modo para el login/registro de clientes finales,
+// donde el token se verifica en nuestro backend (lib/googleToken.js) y no
+// existe usuario de Supabase. Sin `onCredential` corre el flujo del dueño.
+export default function GoogleSignInButton({ onError, onCredential }) {
   const contenedorRef = useRef(null)
 
   async function inicializar() {
@@ -30,6 +34,8 @@ export default function GoogleSignInButton({ onError }) {
     window.google.accounts.id.initialize({
       client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
       callback: async (response) => {
+        if (onCredential) { onCredential(response.credential); return }
+
         const { error: authError } = await supabase.auth.signInWithIdToken({
           provider: 'google',
           token: response.credential,

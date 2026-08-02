@@ -1,6 +1,7 @@
 'use client'
 import { theme } from '@/lib/theme'
 import { useState, useEffect } from 'react'
+import GoogleSignInButton from '@/components/GoogleSignInButton'
 
 export default function MiTarjeta() {
   const [dni, setDni] = useState('')
@@ -39,6 +40,26 @@ export default function MiTarjeta() {
       window.location.href = '/mi-tarjeta/nueva-password'
       return
     }
+
+    if (data.tarjetas.length === 1) {
+      window.location.href = `/tarjeta/${data.tarjetas[0].id}`
+    } else {
+      setTarjetas(data.tarjetas)
+    }
+  }
+
+  async function ingresarConGoogle(googleToken) {
+    setError('')
+    setCargando(true)
+    const res = await fetch('/api/cliente/login-google', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ googleToken }),
+    })
+    const data = await res.json()
+    setCargando(false)
+
+    if (!res.ok) { setError(data.error); return }
 
     if (data.tarjetas.length === 1) {
       window.location.href = `/tarjeta/${data.tarjetas[0].id}`
@@ -100,6 +121,14 @@ export default function MiTarjeta() {
         <button style={s.btn} onClick={ingresar} disabled={cargando}>
           {cargando ? 'Ingresando...' : 'Ver mi tarjeta →'}
         </button>
+
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12, margin: '20px 0' }}>
+          <div style={{ flex: 1, height: 1, background: '#e8eaf0' }} />
+          <span style={{ fontSize: 12, color: theme.grayLight }}>o</span>
+          <div style={{ flex: 1, height: 1, background: '#e8eaf0' }} />
+        </div>
+
+        <GoogleSignInButton onCredential={ingresarConGoogle} onError={() => setError('No pudimos conectar con Google. Ingresá con tu DNI.')} />
 
         <div style={{ textAlign: 'center', marginTop: 20 }}>
           <a href="/mi-tarjeta/reset" style={{ fontSize: 13, color: theme.gray, textDecoration: 'none', display: 'inline-block', padding: '14px 4px' }}>
