@@ -39,24 +39,31 @@ export default function ConfigNegocio() {
       .replace(/[^a-z0-9]+/g, '-')
       .replace(/^-|-$/g, '')
 
-    const { data, error: dbError } = await supabase
-      .from('negocios')
-      .insert([{
-        nombre: nombreLimpio,
-        telefono: telefonoDueno,
-        color,
-        slug,
-        tipo: 'puntos',
-        pesos_por_punto: parseInt(pesosPorTramo) || 100,
-        puntos_por_tramo: parseInt(puntosPorTramo) || 1,
-        puntos_cumpleanos: parseInt(puntosCumpleanos) || 50,
-        puntos_referido_emisor: parseInt(puntosReferidoEmisor) || 100,
-        puntos_referido_receptor: parseInt(puntosReferidoReceptor) || 50,
-        pin_caja: pinCaja,
-        user_id: userId
-      }])
-      .select()
-      .single()
+    const payload = {
+      nombre: nombreLimpio,
+      telefono: telefonoDueno,
+      color,
+      slug,
+      tipo: 'puntos',
+      pesos_por_punto: parseInt(pesosPorTramo) || 100,
+      puntos_por_tramo: parseInt(puntosPorTramo) || 1,
+      puntos_cumpleanos: parseInt(puntosCumpleanos) || 50,
+      puntos_referido_emisor: parseInt(puntosReferidoEmisor) || 100,
+      puntos_referido_receptor: parseInt(puntosReferidoReceptor) || 50,
+      pin_caja: pinCaja,
+      user_id: userId
+    }
+
+    // Si el usuario vuelve a este paso (por ejemplo con el bot\u00f3n atr\u00e1s
+    // para corregir un typo en el nombre) y reenv\u00eda el formulario, no
+    // creamos un segundo negocio hu\u00e9rfano: actualizamos el que ya existe
+    // para ese user_id en vez de insertar uno nuevo.
+    const { data: existente } = await supabase
+      .from('negocios').select('id').eq('user_id', userId).maybeSingle()
+
+    const { data, error: dbError } = existente
+      ? await supabase.from('negocios').update(payload).eq('id', existente.id).select().single()
+      : await supabase.from('negocios').insert([payload]).select().single()
 
     setCargando(false)
     if (dbError) { setError('Hubo un error, intentá de nuevo'); return }
