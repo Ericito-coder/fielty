@@ -35,7 +35,7 @@ const [isMobile, setIsMobile] = useState(false)
           </div>
           {isMobile ? (
             <div style={{display:'flex', gap:8, alignItems:'center'}}>
-              <a href="/login" style={{fontSize:13, color:'#888', textDecoration:'none', fontWeight:500, padding:'8px 12px'}}>Ingresar</a>
+              <a href="/login" style={{fontSize:13, color:'#666', textDecoration:'none', fontWeight:500, padding:'8px 12px'}}>Ingresar</a>
               <a href="/onboarding/registro" style={{fontSize:13, color:'white', textDecoration:'none', fontWeight:700, background:'#e0001b', padding:'9px 16px', borderRadius:10}}>Empezá →</a>
             </div>
           ) : (
@@ -178,7 +178,7 @@ const [isMobile, setIsMobile] = useState(false)
                 <div style={{fontSize:13, color:'#555', marginBottom:24}}>{plan.periodo}</div>
                 <div style={{display:'flex', flexDirection:'column', gap:10, marginBottom:28}}>
                   {plan.features.map((f, j) => (
-                    <div key={j} style={{display:'flex', alignItems:'center', gap:8, fontSize:14, color:'#888'}}>
+                    <div key={j} style={{display:'flex', alignItems:'center', gap:8, fontSize:14, color:'#666'}}>
                       <span style={{color: plan.color, fontWeight:700}}>✓</span> {f}
                     </div>
                   ))}
@@ -190,7 +190,7 @@ const [isMobile, setIsMobile] = useState(false)
             ))}
           </div>
           <div style={{textAlign:'center', marginTop:32, fontSize:14, color:'#555'}}>
-            🎁 <strong style={{color:'#888'}}>Por ser de los primeros:</strong> 50% de descuento en el plan Pro por un año. <a href="/onboarding/registro" style={{color:'#e0001b', fontWeight:700}}>Registrate ahora →</a>
+            🎁 <strong style={{color:'#666'}}>Por ser de los primeros:</strong> 50% de descuento en el plan Pro por un año. <a href="/onboarding/registro" style={{color:'#e0001b', fontWeight:700}}>Registrate ahora →</a>
           </div>
         </div>
       </section>
@@ -261,11 +261,11 @@ const s = {
   logoDot: { width:10, height:10, borderRadius:'50%', background:'#e0001b', boxShadow:'0 0 10px #e0001b' },
   logoText: { fontSize:20, fontWeight:800, color:'white', letterSpacing:-0.5 },
   navLinks: { display:'flex', alignItems:'center', gap:28 },
-  navLink: { fontSize:14, color:'#888', textDecoration:'none', fontWeight:500 },
+  navLink: { fontSize:14, color:'#666', textDecoration:'none', fontWeight:500 },
   navCta: { fontSize:14, color:'white', textDecoration:'none', fontWeight:700, background:'#e0001b', padding:'10px 20px', borderRadius:10 },
   hero: { minHeight:'100vh', display:'flex', alignItems:'center', justifyContent:'center', padding:'120px 32px 80px', position:'relative' },
   heroInner: { maxWidth:800, textAlign:'center' },
-  heroBadge: { display:'inline-block', background:'#1a1a1a', border:'1px solid #2a2a2a', borderRadius:100, padding:'8px 20px', fontSize:13, color:'#888', marginBottom:32, fontWeight:500 },
+  heroBadge: { display:'inline-block', background:'#1a1a1a', border:'1px solid #2a2a2a', borderRadius:100, padding:'8px 20px', fontSize:13, color:'#666', marginBottom:32, fontWeight:500 },
   heroTitle: { fontSize:'clamp(36px, 8vw, 72px)', fontWeight:900, lineHeight:1.05, letterSpacing:-2, marginBottom:24, color:'white' },
   heroGradient: { background:'linear-gradient(135deg, #e0001b, #f0a500)', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent' },
   heroSub: { fontSize:20, color:'#666', lineHeight:1.7, marginBottom:40, maxWidth:580, margin:'0 auto 40px' },
@@ -279,7 +279,7 @@ const s = {
   statDivider: { width:1, height:40, background:'#2a2a2a' },
   section: { padding:'100px 32px' },
   sectionInner: { maxWidth:1100, margin:'0 auto' },
-  sectionBadge: { display:'inline-block', background:'#1a1a1a', border:'1px solid #2a2a2a', borderRadius:100, padding:'6px 16px', fontSize:12, color:'#888', marginBottom:20, fontWeight:600, textTransform:'uppercase', letterSpacing:'0.08em' },
+  sectionBadge: { display:'inline-block', background:'#1a1a1a', border:'1px solid #2a2a2a', borderRadius:100, padding:'6px 16px', fontSize:12, color:'#666', marginBottom:20, fontWeight:600, textTransform:'uppercase', letterSpacing:'0.08em' },
   sectionTitle: { fontSize:'clamp(28px, 5vw, 48px)', fontWeight:900, color:'white', marginBottom:16, letterSpacing:-1 },
   sectionSub: { fontSize:18, color:'#555', lineHeight:1.7, marginBottom:60 },
   stepsGrid: { display:'grid', gridTemplateColumns:'repeat(auto-fit, minmax(280px, 1fr))', gap:24 },

@@ -24,3 +24,17 @@ body {
   color: var(--foreground);
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
 }
+
+/* Foco visible para navegación por teclado. Los estilos inline de los
+   inputs traen outline:none, así que hace falta !important para
+   ganarles. :focus-visible (no :focus) para no mostrar el anillo en
+   clicks de mouse, solo al navegar con Tab. */
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible,
+button:focus-visible,
+a:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid #0e76fd !important;
+  outline-offset: 2px !important;
+}

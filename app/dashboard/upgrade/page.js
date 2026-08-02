@@ -91,7 +91,7 @@ export default function Upgrade() {
   }
 
   if (!negocio) return (
-    <div style={s.wrap}><div style={{color:'#888'}}>Cargando...</div></div>
+    <div style={s.wrap}><div style={{color:'#666'}}>Cargando...</div></div>
   )
 
   // Opciones según plan actual
@@ -139,7 +139,7 @@ export default function Upgrade() {
                     </div>
                     <div>
                       <div style={{fontSize:16, fontWeight:800, color:'#0e0e0e'}}>{info.nombre}</div>
-                      <div style={{fontSize:12, color:'#888'}}>{info.periodo}</div>
+                      <div style={{fontSize:12, color:'#666'}}>{info.periodo}</div>
                     </div>
                   </div>
                   <div style={{textAlign:'right'}}>
@@ -186,8 +186,8 @@ const s = {
   logoDot: { width:10, height:10, borderRadius:'50%', background:'#e0001b', boxShadow:'0 0 10px #e0001b' },
   logoText: { fontSize:22, fontWeight:800, color:'#0e0e0e', letterSpacing:-0.5 },
   title: { fontSize:28, fontWeight:800, color:'#0e0e0e', marginBottom:8 },
-  sub: { fontSize:14, color:'#888', marginBottom:24, lineHeight:1.6 },
+  sub: { fontSize:14, color:'#666', marginBottom:24, lineHeight:1.6 },
   error: { background:'#fff0f0', color:'#e0001b', padding:'10px 14px', borderRadius:10, fontSize:13, marginBottom:16 },
   btn: { width:'100%', padding:18, border:'none', borderRadius:14, color:'white', fontSize:16, fontWeight:800, cursor:'pointer', fontFamily:'inherit', marginBottom:12 },
-  btnSecondary: { width:'100%', padding:14, background:'transparent', border:'none', borderRadius:14, color:'#888', fontSize:14, fontWeight:600, cursor:'pointer', fontFamily:'inherit' },
+  btnSecondary: { width:'100%', padding:14, background:'transparent', border:'none', borderRadius:14, color:'#666', fontSize:14, fontWeight:600, cursor:'pointer', fontFamily:'inherit' },
 }

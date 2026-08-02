@@ -321,7 +321,7 @@ export default function CajaSlug({ params }) {
     <div onClick={() => setQrModal(false)} style={{position:'fixed', inset:0, background:'rgba(0,0,0,0.88)', display:'flex', alignItems:'center', justifyContent:'center', zIndex:9999, padding:24}}>
       <div onClick={e => e.stopPropagation()} style={{background:'white', borderRadius:24, padding:'32px 28px', maxWidth:340, width:'100%', textAlign:'center'}}>
         <div style={{fontSize:18, fontWeight:800, color:'#0e0e0e', marginBottom:4}}>Tarjeta de clientes</div>
-        <div style={{fontSize:13, color:'#888', marginBottom:24, lineHeight:1.5}}>Mostrá este QR al cliente para que acceda a su tarjeta de puntos</div>
+        <div style={{fontSize:13, color:'#666', marginBottom:24, lineHeight:1.5}}>Mostrá este QR al cliente para que acceda a su tarjeta de puntos</div>
         {qrDataUrl && <img src={qrDataUrl} style={{width:220, height:220}} alt="QR mi tarjeta" />}
         <div style={{fontSize:12, color:'#bbb', marginTop:12, marginBottom:20, fontFamily:'monospace'}}>{typeof window !== 'undefined' ? window.location.origin : ''}/mi-tarjeta</div>
         <button onClick={() => setQrModal(false)} style={{padding:'12px 32px', background:'#0e0e0e', border:'none', borderRadius:12, color:'white', fontSize:15, fontWeight:700, cursor:'pointer', fontFamily:'inherit'}}>Cerrar</button>
@@ -654,13 +654,13 @@ function TarjetaClienteInfo() {
     <div>
       <button
         onClick={() => setAbierto(!abierto)}
-        style={{width:'100%', padding:16, background:'#1a1a1a', border:'1px solid #2a2a2a', borderRadius:14, color:'#888', fontSize:14, fontWeight:600, cursor:'pointer', fontFamily:'inherit', textAlign:'left', display:'flex', alignItems:'center', justifyContent:'space-between'}}>
+        style={{width:'100%', padding:16, background:'#1a1a1a', border:'1px solid #2a2a2a', borderRadius:14, color:'#666', fontSize:14, fontWeight:600, cursor:'pointer', fontFamily:'inherit', textAlign:'left', display:'flex', alignItems:'center', justifyContent:'space-between'}}>
         <span>❓ ¿El cliente no sabe cómo ver su tarjeta?</span>
         <span style={{fontSize:18, color:'#555', transform: abierto ? 'rotate(45deg)' : 'none', transition:'transform 0.2s'}}>+</span>
       </button>
       {abierto && (
         <div style={{background:'#111', border:'1px solid #2a2a2a', borderTop:'none', borderRadius:'0 0 14px 14px', padding:'16px 18px'}}>
-          <p style={{fontSize:14, color:'#888', margin:'0 0 10px', lineHeight:1.6}}>
+          <p style={{fontSize:14, color:'#666', margin:'0 0 10px', lineHeight:1.6}}>
             Indicale que tiene que ingresar a este link desde su celular:
           </p>
           <div style={{background:'#1a1a1a', borderRadius:10, padding:'10px 14px', fontSize:13, fontFamily:'monospace', color:'white', wordBreak:'break-all', marginBottom:12}}>
@@ -699,7 +699,7 @@ function ValidarCanjePanel({ negocio, codigo, setCodigo, canjeResult, validarCan
           <div style={{fontSize:36, marginBottom:12}}>🎁</div>
           <div style={{fontSize:11, color:'#00b96b', fontWeight:700, textTransform:'uppercase', letterSpacing:'0.08em', marginBottom:4}}>Canje válido</div>
           <div style={{fontSize:20, fontWeight:800, marginBottom:4}}>{canjeResult.recompensas.nombre}</div>
-          <div style={{fontSize:14, color:'#888', marginBottom:24}}>Cliente: {canjeResult.clientes.nombre} · {canjeResult.recompensas.puntos_necesarios} pts</div>
+          <div style={{fontSize:14, color:'#666', marginBottom:24}}>Cliente: {canjeResult.clientes.nombre} · {canjeResult.recompensas.puntos_necesarios} pts</div>
           <button style={{width:'100%', padding:18, background:'#00b96b', border:'none', borderRadius:14, color:'white', fontSize:17, fontWeight:800, cursor:'pointer', fontFamily:'inherit', boxShadow:'0 8px 24px rgba(0,185,107,0.3)'}}
             onClick={confirmarCanje} disabled={cargando}>
             {cargando ? 'Confirmando...' : '✓ Confirmar canje'}

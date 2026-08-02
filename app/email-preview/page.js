@@ -44,7 +44,7 @@ export default function EmailPreview() {
           </p>
 
           <div style={{ background: '#f5f6fa', borderRadius: 16, padding: '20px 24px', marginBottom: 24 }}>
-            <p style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#888', margin: '0 0 8px' }}>Link de registro para tus clientes</p>
+            <p style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#666', margin: '0 0 8px' }}>Link de registro para tus clientes</p>
             <p style={{ fontSize: 14, color: '#0e0e0e', fontFamily: 'monospace', wordBreak: 'break-all', margin: '0 0 12px' }}>{registroUrl}</p>
             <a href={registroUrl} style={{ display: 'inline-block', background: '#0e0e0e', color: 'white', padding: '10px 18px', borderRadius: 10, fontSize: 13, fontWeight: 700, textDecoration: 'none' }}>
               Ver página de registro
@@ -71,7 +71,7 @@ export default function EmailPreview() {
             Ir a mi panel →
           </a>
 
-          <p style={{ fontSize: 13, color: '#888', lineHeight: 1.6, marginBottom: 4 }}>
+          <p style={{ fontSize: 13, color: '#666', lineHeight: 1.6, marginBottom: 4 }}>
             ¿Tenés alguna duda? Respondé este email y te ayudamos.
           </p>
           <p style={{ fontSize: 12, color: '#aaa', marginTop: 24, paddingTop: 24, borderTop: '1px solid #e8eaf0' }}>

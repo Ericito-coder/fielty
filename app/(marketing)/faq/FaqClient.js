@@ -17,9 +17,9 @@ export default function FaqClient() {
           <span style={{ fontSize: 18, fontWeight: 800, color: 'white', letterSpacing: -0.5 }}>fielty</span>
         </a>
         <div style={{ display: 'flex', gap: 24, alignItems: 'center' }}>
-          <a href="/#como-funciona" style={{ fontSize: 13, color: '#888', textDecoration: 'none', fontWeight: 500 }}>Cómo funciona</a>
-          <a href="/#precios" style={{ fontSize: 13, color: '#888', textDecoration: 'none', fontWeight: 500 }}>Precios</a>
-          <a href="/login" style={{ fontSize: 13, color: '#888', textDecoration: 'none', fontWeight: 500 }}>Ingresar</a>
+          <a href="/#como-funciona" style={{ fontSize: 13, color: '#666', textDecoration: 'none', fontWeight: 500 }}>Cómo funciona</a>
+          <a href="/#precios" style={{ fontSize: 13, color: '#666', textDecoration: 'none', fontWeight: 500 }}>Precios</a>
+          <a href="/login" style={{ fontSize: 13, color: '#666', textDecoration: 'none', fontWeight: 500 }}>Ingresar</a>
           <a href="/onboarding/registro" style={{ fontSize: 13, color: 'white', textDecoration: 'none', fontWeight: 700, background: '#e0001b', padding: '9px 16px', borderRadius: 10 }}>Empezá →</a>
         </div>
       </nav>
@@ -55,7 +55,7 @@ export default function FaqClient() {
                       <span style={{ fontSize: 20, color: '#e0001b', flexShrink: 0, transform: abierto ? 'rotate(45deg)' : 'none', transition: 'transform 0.2s', lineHeight: 1, fontWeight: 300 }}>+</span>
                     </button>
                     {abierto && (
-                      <div style={{ padding: '0 24px 20px', fontSize: 14, color: '#888', lineHeight: 1.8, background: '#111' }}>
+                      <div style={{ padding: '0 24px 20px', fontSize: 14, color: '#666', lineHeight: 1.8, background: '#111' }}>
                         {item.a}
                       </div>
                     )}

@@ -73,23 +73,23 @@ export default function Registro() {
         </p>
 
         <div style={s.field}>
-          <label style={s.label}>Tu nombre</label>
-          <input style={s.input} placeholder="Ej: Marcos Pérez"
+          <label style={s.label} htmlFor="registro-nombre">Tu nombre</label>
+          <input id="registro-nombre" style={s.input} placeholder="Ej: Marcos Pérez"
             value={nombre} onChange={e => setNombre(e.target.value)} />
         </div>
         <div style={s.field}>
-          <label style={s.label}>Tu teléfono</label>
-          <input style={s.input} type="tel" placeholder="Ej: 1123456789"
+          <label style={s.label} htmlFor="registro-telefono">Tu teléfono</label>
+          <input id="registro-telefono" style={s.input} type="tel" placeholder="Ej: 1123456789"
             value={telefono} onChange={e => setTelefono(e.target.value.replace(/[^0-9+\s()-]/g, ''))} />
         </div>
         <div style={s.field}>
-          <label style={s.label}>Email</label>
-          <input style={s.input} type="email" placeholder="Ej: marcos@gmail.com"
+          <label style={s.label} htmlFor="registro-email">Email</label>
+          <input id="registro-email" style={s.input} type="email" placeholder="Ej: marcos@gmail.com"
             value={email} onChange={e => setEmail(e.target.value)} />
         </div>
         <div style={s.field}>
-          <label style={s.label}>Contraseña</label>
-          <input style={s.input} type="password" placeholder="Mínimo 8 caracteres"
+          <label style={s.label} htmlFor="registro-password">Contraseña</label>
+          <input id="registro-password" style={s.input} type="password" placeholder="Mínimo 8 caracteres"
             value={password} onChange={e => setPassword(e.target.value)} />
         </div>
 
@@ -123,13 +123,13 @@ const s = {
   logoText: { fontSize:22, fontWeight:800, color:'#0e0e0e', letterSpacing:-0.5 },
   step: { fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.1em', color:'#e0001b', marginBottom:8 },
   title: { fontSize:28, fontWeight:800, color:'#0e0e0e', marginBottom:8 },
-  sub: { fontSize:14, color:'#888', marginBottom:28, lineHeight:1.6 },
+  sub: { fontSize:14, color:'#666', marginBottom:28, lineHeight:1.6 },
   field: { marginBottom:16 },
-  label: { display:'block', fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.06em', color:'#888', marginBottom:8 },
+  label: { display:'block', fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.06em', color:'#666', marginBottom:8 },
   input: { width:'100%', padding:'14px 16px', border:'2px solid #e8eaf0', borderRadius:12, fontSize:16, fontFamily:'inherit', outline:'none', boxSizing:'border-box', transition:'border-color 0.2s' },
   btn: { width:'100%', padding:18, background:'#e0001b', border:'none', borderRadius:14, color:'white', fontSize:16, fontWeight:800, cursor:'pointer', marginTop:8, fontFamily:'inherit' },
   error: { background:'#fff0f0', color:'#e0001b', padding:'10px 14px', borderRadius:10, fontSize:13, marginBottom:12 },
-  login: { textAlign:'center', marginTop:20, fontSize:13, color:'#888' },
+  login: { textAlign:'center', marginTop:20, fontSize:13, color:'#666' },
   link: { color:'#e0001b', fontWeight:600, textDecoration:'none' },
   divider: { display:'flex', alignItems:'center', gap:12, margin:'20px 0 12px' },
   dividerLine: { flex:1, height:1, background:'#e8eaf0' },

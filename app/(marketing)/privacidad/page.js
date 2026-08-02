@@ -14,7 +14,7 @@ export default function Privacidad() {
           <span style={{ fontSize: 18, fontWeight: 800, color: 'white', letterSpacing: -0.5 }}>fielty</span>
         </a>
         <div style={{ display: 'flex', gap: 24, alignItems: 'center' }}>
-          <a href="/login" style={{ fontSize: 13, color: '#888', textDecoration: 'none', fontWeight: 500 }}>Ingresar</a>
+          <a href="/login" style={{ fontSize: 13, color: '#666', textDecoration: 'none', fontWeight: 500 }}>Ingresar</a>
           <a href="/onboarding/registro" style={{ fontSize: 13, color: 'white', textDecoration: 'none', fontWeight: 700, background: '#e0001b', padding: '9px 16px', borderRadius: 10 }}>Empezá →</a>
         </div>
       </nav>
@@ -76,7 +76,7 @@ export default function Privacidad() {
 
       <div style={{ borderTop: '1px solid #1a1a1a', textAlign: 'center', padding: '24px 20px 40px', fontSize: 13, color: '#444' }}>
         <a href="/terminos" style={{ color: '#444', textDecoration: 'none', marginRight: 20 }}>Términos</a>
-        <a href="/privacidad" style={{ color: '#888', textDecoration: 'none', marginRight: 20 }}>Privacidad</a>
+        <a href="/privacidad" style={{ color: '#666', textDecoration: 'none', marginRight: 20 }}>Privacidad</a>
         <a href="/" style={{ color: '#444', textDecoration: 'none' }}>fielty.app</a>
       </div>
 
@@ -88,7 +88,7 @@ function Section({ title, children }) {
   return (
     <div style={{ marginBottom: 40 }}>
       <h2 style={{ fontSize: 17, fontWeight: 800, color: 'white', marginBottom: 12 }}>{title}</h2>
-      <p style={{ fontSize: 14, color: '#888', lineHeight: 1.9 }}>{children}</p>
+      <p style={{ fontSize: 14, color: '#666', lineHeight: 1.9 }}>{children}</p>
     </div>
   )
 }

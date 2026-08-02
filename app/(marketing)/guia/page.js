@@ -25,7 +25,7 @@ export default function Guia() {
       <div style={{ textAlign: 'center', marginBottom: 80, paddingBottom: 60, borderBottom: '3px solid #e0001b' }}>
         <div style={{ fontSize: 48, fontWeight: 900, letterSpacing: -2, marginBottom: 8 }}>● fielty</div>
         <h1 style={{ fontSize: 28, fontWeight: 300, color: '#555', marginBottom: 24 }}>Guía completa de Fielty</h1>
-        <div style={{ display: 'inline-block', background: '#f5f5f5', borderRadius: 12, padding: '10px 24px', fontSize: 14, color: '#888' }}>
+        <div style={{ display: 'inline-block', background: '#f5f5f5', borderRadius: 12, padding: '10px 24px', fontSize: 14, color: '#666' }}>
           Actualizada · Julio 2026 · fielty.app
         </div>
       </div>
@@ -75,7 +75,7 @@ export default function Guia() {
             ))}
           </tbody>
         </table>
-        <P style={{ fontSize: 12, color: '#888' }}>* Precio especial para los primeros 100 negocios. Precio regular: $20.000/mes.</P>
+        <P style={{ fontSize: 12, color: '#666' }}>* Precio especial para los primeros 100 negocios. Precio regular: $20.000/mes.</P>
       </Section>
 
       <PageBreak />
@@ -244,7 +244,7 @@ export default function Guia() {
           'WhatsApp — opcional',
           'Fecha de nacimiento — opcional (recibe puntos extra en su cumpleaños)',
         ]} />
-        <P style={{ fontSize: 13, color: '#888' }}>Si en cambio lo registra un empleado desde la caja, los campos pedidos son distintos — ver "Registrar un cliente nuevo desde la caja" en la Parte 2.</P>
+        <P style={{ fontSize: 13, color: '#666' }}>Si en cambio lo registra un empleado desde la caja, los campos pedidos son distintos — ver "Registrar un cliente nuevo desde la caja" en la Parte 2.</P>
 
         <SubTitle>Al registrarse recibe automáticamente</SubTitle>
         <List items={[
@@ -376,7 +376,7 @@ export default function Guia() {
       </Section>
 
       {/* Footer */}
-      <div style={{ marginTop: 80, paddingTop: 32, borderTop: '2px solid #e0001b', textAlign: 'center', color: '#888', fontSize: 13 }}>
+      <div style={{ marginTop: 80, paddingTop: 32, borderTop: '2px solid #e0001b', textAlign: 'center', color: '#666', fontSize: 13 }}>
         <div style={{ fontSize: 20, fontWeight: 900, color: '#0e0e0e', marginBottom: 8 }}>● fielty</div>
         <div>fielty.app · hola@fielty.app · Julio 2026</div>
       </div>

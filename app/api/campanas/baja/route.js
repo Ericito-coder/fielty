@@ -29,7 +29,7 @@ export async function GET(request) {
   <div style="background: white; border-radius: 24px; padding: 40px 32px; max-width: 380px; text-align: center;">
     <div style="font-size: 40px; margin-bottom: 16px;">✅</div>
     <div style="font-size: 16px; font-weight: 700; color: #0e0e0e; margin-bottom: 8px;">${mensaje}</div>
-    <a href="https://www.fielty.app/mi-tarjeta" style="font-size: 13px; color: #888;">Ver mi tarjeta</a>
+    <a href="https://www.fielty.app/mi-tarjeta" style="font-size: 13px; color: #666;">Ver mi tarjeta</a>
   </div>
 </body></html>`, { headers: { 'Content-Type': 'text/html; charset=utf-8' } })
 }

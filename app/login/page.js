@@ -56,8 +56,8 @@ export default function Login() {
         ) : (
           <>
             <div style={s.field}>
-              <label style={s.label}>Email</label>
-              <input style={s.input} type="email" placeholder="tu@email.com"
+              <label style={s.label} htmlFor="reset-email">Email</label>
+              <input id="reset-email" style={s.input} type="email" placeholder="tu@email.com"
                 value={email} onChange={e => setEmail(e.target.value)} />
             </div>
 
@@ -88,13 +88,13 @@ export default function Login() {
         <p style={s.sub}>Ingresá a tu panel de fidelización.</p>
 
         <div style={s.field}>
-          <label style={s.label}>Email</label>
-          <input style={s.input} type="email" placeholder="tu@email.com"
+          <label style={s.label} htmlFor="login-email">Email</label>
+          <input id="login-email" style={s.input} type="email" placeholder="tu@email.com"
             value={email} onChange={e => setEmail(e.target.value)} />
         </div>
         <div style={s.field}>
-          <label style={s.label}>Contraseña</label>
-          <input style={s.input} type="password" placeholder="••••••••"
+          <label style={s.label} htmlFor="login-password">Contraseña</label>
+          <input id="login-password" style={s.input} type="password" placeholder="••••••••"
             value={password} onChange={e => setPassword(e.target.value)}
             onKeyDown={e => e.key === 'Enter' && iniciarSesion()} />
         </div>
@@ -132,15 +132,15 @@ const s = {
   logoDot: { width:10, height:10, borderRadius:'50%', background:'#e0001b', boxShadow:'0 0 10px #e0001b' },
   logoText: { fontSize:22, fontWeight:800, color:'#0e0e0e', letterSpacing:-0.5 },
   title: { fontSize:28, fontWeight:800, color:'#0e0e0e', marginBottom:8 },
-  sub: { fontSize:14, color:'#888', marginBottom:28, lineHeight:1.6 },
+  sub: { fontSize:14, color:'#666', marginBottom:28, lineHeight:1.6 },
   field: { marginBottom:16 },
-  label: { display:'block', fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.06em', color:'#888', marginBottom:8 },
+  label: { display:'block', fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.06em', color:'#666', marginBottom:8 },
   input: { width:'100%', padding:'14px 16px', border:'2px solid #e8eaf0', borderRadius:12, fontSize:16, fontFamily:'inherit', outline:'none', boxSizing:'border-box' },
   btn: { width:'100%', padding:18, background:'#e0001b', border:'none', borderRadius:14, color:'white', fontSize:16, fontWeight:800, cursor:'pointer', marginTop:8, fontFamily:'inherit' },
-  linkBtn: { width:'100%', padding:12, background:'transparent', border:'none', color:'#888', fontSize:13, cursor:'pointer', fontFamily:'inherit', marginTop:8 },
+  linkBtn: { width:'100%', padding:12, background:'transparent', border:'none', color:'#666', fontSize:13, cursor:'pointer', fontFamily:'inherit', marginTop:8 },
   error: { background:'#fff0f0', color:'#e0001b', padding:'10px 14px', borderRadius:10, fontSize:13, marginBottom:12 },
   successBox: { background:'#e8faf2', color:'#00b96b', padding:'14px 16px', borderRadius:12, fontSize:14, lineHeight:1.6, marginBottom:20 },
-  register: { textAlign:'center', marginTop:8, fontSize:13, color:'#888' },
+  register: { textAlign:'center', marginTop:8, fontSize:13, color:'#666' },
   link: { color:'#e0001b', fontWeight:600, textDecoration:'none' },
   divider: { display:'flex', alignItems:'center', gap:12, margin:'20px 0 12px' },
   dividerLine: { flex:1, height:1, background:'#e8eaf0' },

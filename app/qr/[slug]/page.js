@@ -106,7 +106,7 @@ export default function QRPage({ params }) {
           </div>
           <div style={{padding:20, textAlign:'center'}}>
             <div style={{fontSize:15, fontWeight:800, color:'#0e0e0e', marginBottom:4}}>¡Sumate y ganá puntos!</div>
-            <div style={{fontSize:12, color:'#888', marginBottom:16}}>Escaneá con tu celular</div>
+            <div style={{fontSize:12, color:'#666', marginBottom:16}}>Escaneá con tu celular</div>
             {qrUrl && <img src={qrUrl} style={{width:150, height:150}} alt="QR" />}
             <div style={{fontSize:11, color:'#aaa', marginTop:12}}>Powered by fielty</div>
           </div>
@@ -127,13 +127,13 @@ const s = {
   bizSub: { fontSize:13, opacity:0.75 },
   content: { padding:'32px 28px' },
   headline: { fontSize:26, fontWeight:900, color:'#0e0e0e', textAlign:'center', marginBottom:8 },
-  sub: { fontSize:14, color:'#888', textAlign:'center', lineHeight:1.6, marginBottom:28 },
+  sub: { fontSize:14, color:'#666', textAlign:'center', lineHeight:1.6, marginBottom:28 },
   qrWrap: { display:'flex', justifyContent:'center', marginBottom:28, padding:16, background:'#f8f9fc', borderRadius:20 },
   qrImg: { width:200, height:200 },
   steps: { display:'flex', alignItems:'center', justifyContent:'center', gap:8, marginBottom:24 },
   step: { display:'flex', flexDirection:'column', alignItems:'center', gap:6 },
   stepNum: { width:32, height:32, borderRadius:'50%', display:'flex', alignItems:'center', justifyContent:'center', color:'white', fontSize:14, fontWeight:800 },
-  stepText: { fontSize:11, fontWeight:600, color:'#888', textAlign:'center' },
+  stepText: { fontSize:11, fontWeight:600, color:'#666', textAlign:'center' },
   stepArrow: { fontSize:18, color:'#ccc', marginBottom:16 },
   benefits: { background:'#f8f9fc', borderRadius:16, padding:'16px 20px', marginBottom:24, display:'flex', flexDirection:'column', gap:10 },
   benefit: { fontSize:13, color:'#555', fontWeight:500 },

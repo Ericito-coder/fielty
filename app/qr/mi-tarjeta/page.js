@@ -71,7 +71,7 @@ export default function QRMiTarjeta() {
           </div>
           <div style={{padding:20, textAlign:'center'}}>
             <div style={{fontSize:15, fontWeight:800, color:'#0e0e0e', marginBottom:4}}>¿Ya sos cliente?</div>
-            <div style={{fontSize:12, color:'#888', marginBottom:16}}>Escaneá para ver tu tarjeta</div>
+            <div style={{fontSize:12, color:'#666', marginBottom:16}}>Escaneá para ver tu tarjeta</div>
             {qrUrl && <img src={qrUrl} style={{width:150, height:150}} alt="QR" />}
             <div style={{fontSize:11, color:'#aaa', marginTop:12}}>Powered by fielty</div>
           </div>
@@ -90,13 +90,13 @@ const s = {
   logoText: { fontSize:22, fontWeight:900, color:'white', letterSpacing:-0.5 },
   content: { padding:'32px 28px' },
   headline: { fontSize:26, fontWeight:900, color:'#0e0e0e', textAlign:'center', marginBottom:8 },
-  sub: { fontSize:14, color:'#888', textAlign:'center', lineHeight:1.6, marginBottom:28 },
+  sub: { fontSize:14, color:'#666', textAlign:'center', lineHeight:1.6, marginBottom:28 },
   qrWrap: { display:'flex', justifyContent:'center', marginBottom:28, padding:16, background:'#f8f9fc', borderRadius:20 },
   qrImg: { width:200, height:200 },
   steps: { display:'flex', alignItems:'flex-start', justifyContent:'center', gap:16, marginBottom:28 },
   step: { display:'flex', flexDirection:'column', alignItems:'center', gap:6, flex:1 },
   stepNum: { width:32, height:32, borderRadius:'50%', background:'#0e0e0e', display:'flex', alignItems:'center', justifyContent:'center', color:'white', fontSize:14, fontWeight:800 },
-  stepText: { fontSize:11, fontWeight:600, color:'#888', textAlign:'center' },
+  stepText: { fontSize:11, fontWeight:600, color:'#666', textAlign:'center' },
   footer: { display:'flex', alignItems:'center', justifyContent:'center', gap:6 },
   footerDot: { width:8, height:8, borderRadius:'50%', background:'#e0001b', boxShadow:'0 0 6px #e0001b' },
   footerText: { fontSize:12, color:'#aaa', fontWeight:600 },

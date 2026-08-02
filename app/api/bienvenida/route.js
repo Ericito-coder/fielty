@@ -57,7 +57,7 @@ export async function POST(request) {
 
           <!-- Link de registro -->
           <div style="background: #f5f6fa; border-radius: 16px; padding: 20px 24px; margin-bottom: 24px;">
-            <p style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #888; margin: 0 0 8px;">Link de registro para tus clientes</p>
+            <p style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #666; margin: 0 0 8px;">Link de registro para tus clientes</p>
             <p style="font-size: 14px; color: #0e0e0e; font-family: monospace; word-break: break-all; margin: 0 0 12px;">${registroUrl}</p>
             <a href="${registroUrl}" style="display: inline-block; background: #0e0e0e; color: white; padding: 10px 18px; border-radius: 10px; font-size: 13px; font-weight: 700; text-decoration: none;">
               Ver pagina de registro
@@ -106,7 +106,7 @@ export async function POST(request) {
             Ir a mi panel
           </a>
 
-          <p style="font-size: 13px; color: #888; line-height: 1.6; margin-bottom: 4px;">
+          <p style="font-size: 13px; color: #666; line-height: 1.6; margin-bottom: 4px;">
             ¿Tenés alguna duda? Respondé este email y te ayudamos.
           </p>
           <p style="font-size: 12px; color: #aaa; margin-top: 24px; padding-top: 24px; border-top: 1px solid #e8eaf0;">

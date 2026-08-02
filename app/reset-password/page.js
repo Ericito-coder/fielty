@@ -46,13 +46,13 @@ export default function ResetPassword() {
         <p style={s.sub}>Elegí una contraseña nueva para tu cuenta.</p>
 
         <div style={s.field}>
-          <label style={s.label}>Nueva contraseña</label>
-          <input style={s.input} type="password" placeholder="Mínimo 8 caracteres"
+          <label style={s.label} htmlFor="reset-nueva-password">Nueva contraseña</label>
+          <input id="reset-nueva-password" style={s.input} type="password" placeholder="Mínimo 8 caracteres"
             value={password} onChange={e => setPassword(e.target.value)} />
         </div>
         <div style={s.field}>
-          <label style={s.label}>Confirmar contraseña</label>
-          <input style={s.input} type="password" placeholder="Repetí la contraseña"
+          <label style={s.label} htmlFor="reset-confirmar-password">Confirmar contraseña</label>
+          <input id="reset-confirmar-password" style={s.input} type="password" placeholder="Repetí la contraseña"
             value={confirmar} onChange={e => setConfirmar(e.target.value)}
             onKeyDown={e => e.key === 'Enter' && cambiarPassword()} />
         </div>
@@ -74,9 +74,9 @@ const s = {
   logoDot: { width:10, height:10, borderRadius:'50%', background:'#e0001b', boxShadow:'0 0 10px #e0001b' },
   logoText: { fontSize:22, fontWeight:800, color:'#0e0e0e', letterSpacing:-0.5 },
   title: { fontSize:28, fontWeight:800, color:'#0e0e0e', marginBottom:8 },
-  sub: { fontSize:14, color:'#888', marginBottom:28, lineHeight:1.6 },
+  sub: { fontSize:14, color:'#666', marginBottom:28, lineHeight:1.6 },
   field: { marginBottom:16, textAlign:'left' },
-  label: { display:'block', fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.06em', color:'#888', marginBottom:8 },
+  label: { display:'block', fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.06em', color:'#666', marginBottom:8 },
   input: { width:'100%', padding:'14px 16px', border:'2px solid #e8eaf0', borderRadius:12, fontSize:16, fontFamily:'inherit', outline:'none', boxSizing:'border-box' },
   btn: { width:'100%', padding:18, background:'#e0001b', border:'none', borderRadius:14, color:'white', fontSize:16, fontWeight:800, cursor:'pointer', marginTop:8, fontFamily:'inherit' },
   error: { background:'#fff0f0', color:'#e0001b', padding:'10px 14px', borderRadius:10, fontSize:13, marginBottom:12 },

@@ -61,7 +61,7 @@ export async function POST(request) {
           <a href="${resetUrl}" style="display: inline-block; background: #e0001b; color: white; padding: 14px 28px; border-radius: 12px; font-size: 15px; font-weight: 800; text-decoration: none; margin-bottom: 32px;">
             Resetear contraseña →
           </a>
-          <p style="font-size: 13px; color: #888; line-height: 1.6;">
+          <p style="font-size: 13px; color: #666; line-height: 1.6;">
             Este link expira en 1 hora. Si no pediste este email, ignoralo.
           </p>
           <p style="font-size: 12px; color: #aaa; margin-top: 24px; padding-top: 24px; border-top: 1px solid #e8eaf0;">

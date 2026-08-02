@@ -62,13 +62,13 @@ export default function PrimeraRecompensa() {
         {recompensas.map((r, i) => (
           <div key={i} style={s.recompensaRow}>
             <div style={{flex:2}}>
-              <label style={s.label}>Recompensa</label>
-              <input style={s.input} placeholder="Ej: Café gratis"
+              <label style={s.label} htmlFor={`recompensa-nombre-${i}`}>Recompensa</label>
+              <input id={`recompensa-nombre-${i}`} style={s.input} placeholder="Ej: Café gratis"
                 value={r.nombre} onChange={e => actualizar(i, 'nombre', e.target.value)} />
             </div>
             <div style={{flex:1}}>
-              <label style={s.label}>Puntos</label>
-              <input style={s.input} type="number" placeholder="50"
+              <label style={s.label} htmlFor={`recompensa-puntos-${i}`}>Puntos</label>
+              <input id={`recompensa-puntos-${i}`} style={s.input} type="number" placeholder="50"
                 value={r.puntos} onChange={e => actualizar(i, 'puntos', e.target.value)} />
             </div>
             {recompensas.length > 1 && (
@@ -97,12 +97,12 @@ const s = {
   logoText: { fontSize:22, fontWeight:800, color:'#0e0e0e', letterSpacing:-0.5 },
   step: { fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.1em', color:'#e0001b', marginBottom:8 },
   title: { fontSize:28, fontWeight:800, color:'#0e0e0e', marginBottom:8 },
-  sub: { fontSize:14, color:'#888', marginBottom:28, lineHeight:1.6 },
-  label: { display:'block', fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.06em', color:'#888', marginBottom:8 },
+  sub: { fontSize:14, color:'#666', marginBottom:28, lineHeight:1.6 },
+  label: { display:'block', fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.06em', color:'#666', marginBottom:8 },
   input: { width:'100%', padding:'14px 16px', border:'2px solid #e8eaf0', borderRadius:12, fontSize:16, fontFamily:'inherit', outline:'none', boxSizing:'border-box' },
   recompensaRow: { display:'flex', gap:10, alignItems:'flex-end', marginBottom:12 },
   deleteBtn: { padding:'14px 12px', background:'#fff0f0', border:'none', borderRadius:12, color:'#e0001b', cursor:'pointer', fontSize:14, fontWeight:700, marginBottom:0, alignSelf:'flex-end' },
-  addBtn: { width:'100%', padding:14, background:'#f5f6fa', border:'2px dashed #e8eaf0', borderRadius:12, fontSize:14, fontWeight:700, cursor:'pointer', color:'#888', fontFamily:'inherit', marginBottom:20 },
+  addBtn: { width:'100%', padding:14, background:'#f5f6fa', border:'2px dashed #e8eaf0', borderRadius:12, fontSize:14, fontWeight:700, cursor:'pointer', color:'#666', fontFamily:'inherit', marginBottom:20 },
   btn: { width:'100%', padding:18, background:'#e0001b', border:'none', borderRadius:14, color:'white', fontSize:16, fontWeight:800, cursor:'pointer', fontFamily:'inherit' },
   error: { background:'#fff0f0', color:'#e0001b', padding:'10px 14px', borderRadius:10, fontSize:13, marginBottom:12 },
 }

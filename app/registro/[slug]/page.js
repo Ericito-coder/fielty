@@ -128,36 +128,36 @@ export default function RegistroSlug({ params }) {
         </p>
 
         <div style={styles.field}>
-          <label style={styles.label}>Tu nombre</label>
-          <input style={styles.input} placeholder="Ej: Martina García"
+          <label style={styles.label} htmlFor="cliente-nombre">Tu nombre</label>
+          <input id="cliente-nombre" style={styles.input} placeholder="Ej: Martina García"
             value={nombre} onChange={e => setNombre(e.target.value)} />
         </div>
         <div style={styles.field}>
-          <label style={styles.label}>DNI</label>
-          <input style={styles.input} placeholder="Ej: 38.452.100"
+          <label style={styles.label} htmlFor="cliente-dni">DNI</label>
+          <input id="cliente-dni" style={styles.input} placeholder="Ej: 38.452.100"
             value={dni} onChange={e => setDni(e.target.value)} />
         </div>
         <div style={styles.field}>
-          <label style={styles.label}>WhatsApp <span style={{color:'#bbb', fontWeight:400}}>(opcional)</span></label>
-          <input style={styles.input} placeholder="Ej: 11 5555-1234"
+          <label style={styles.label} htmlFor="cliente-whatsapp">WhatsApp <span style={{color:'#bbb', fontWeight:400}}>(opcional)</span></label>
+          <input id="cliente-whatsapp" style={styles.input} placeholder="Ej: 11 5555-1234"
             value={telefono} onChange={e => setTelefono(e.target.value)} />
         </div>
         <div style={styles.field}>
-          <label style={styles.label}>Email</label>
-          <input style={styles.input} type="email" placeholder="Ej: martina@gmail.com"
+          <label style={styles.label} htmlFor="cliente-email">Email</label>
+          <input id="cliente-email" style={styles.input} type="email" placeholder="Ej: martina@gmail.com"
             value={email} onChange={e => setEmail(e.target.value)} />
         </div>
         <div style={styles.field}>
-          <label style={styles.label}>Contraseña <span style={{color:'#bbb', fontWeight:400}}>(para ver tu tarjeta)</span></label>
-          <input style={styles.input} type="password" placeholder="Mínimo 8 caracteres"
+          <label style={styles.label} htmlFor="cliente-password">Contraseña <span style={{color:'#bbb', fontWeight:400}}>(para ver tu tarjeta)</span></label>
+          <input id="cliente-password" style={styles.input} type="password" placeholder="Mínimo 8 caracteres"
             value={password} onChange={e => setPassword(e.target.value)} />
         </div>
         <div style={styles.field}>
-          <label style={styles.label}>Fecha de nacimiento <span style={{color:'#bbb', fontWeight:400}}>(opcional)</span></label>
-          <input style={{...styles.input, width:'calc(100% - 32px)'}} type="date"
+          <label style={styles.label} htmlFor="cliente-nacimiento">Fecha de nacimiento <span style={{color:'#bbb', fontWeight:400}}>(opcional)</span></label>
+          <input id="cliente-nacimiento" style={{...styles.input, width:'calc(100% - 32px)'}} type="date"
             value={fechaNacimiento} onChange={e => setFechaNacimiento(e.target.value)} />
           {negocio.puntos_cumpleanos > 0 && (
-            <div style={{fontSize:12, color:'#888', marginTop:6}}>🎂 Si la cargás, podés recibir puntos de regalo en tu cumpleaños.</div>
+            <div style={{fontSize:12, color:'#666', marginTop:6}}>🎂 Si la cargás, podés recibir puntos de regalo en tu cumpleaños.</div>
           )}
         </div>
 
@@ -175,9 +175,9 @@ const styles = {
   wrap: { minHeight:'100vh', background:'#0e0e0e', display:'flex', alignItems:'center', justifyContent:'center', padding:20 },
   card: { background:'white', borderRadius:28, padding:'36px 28px', width:'100%', maxWidth:400 },
   title: { fontSize:28, fontWeight:800, color:'#0e0e0e', lineHeight:1.2, marginBottom:10 },
-  sub: { fontSize:14, color:'#888', marginBottom:28, lineHeight:1.6 },
+  sub: { fontSize:14, color:'#666', marginBottom:28, lineHeight:1.6 },
   field: { marginBottom:16 },
-  label: { display:'block', fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.06em', color:'#888', marginBottom:8 },
+  label: { display:'block', fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.06em', color:'#666', marginBottom:8 },
   input: { width:'100%', padding:'14px 16px', border:'2px solid #e8eaf0', borderRadius:12, fontSize:16, fontFamily:'inherit', outline:'none', boxSizing:'border-box', maxWidth:'100%' },
   btn: { width:'100%', padding:18, border:'none', borderRadius:14, color:'white', fontSize:16, fontWeight:800, cursor:'pointer', marginTop:8, fontFamily:'inherit' },
   error: { background:'#fff0f0', color:'#e0001b', padding:'10px 14px', borderRadius:10, fontSize:13, marginBottom:12 }

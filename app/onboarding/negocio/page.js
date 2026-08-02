@@ -85,13 +85,13 @@ export default function ConfigNegocio() {
         <p style={s.sub}>Así va a aparecer en la tarjeta de tus clientes.</p>
 
         <div style={s.field}>
-          <label style={s.label}>Nombre del negocio</label>
-          <input style={s.input} placeholder="Ej: La Buena Mesa"
+          <label style={s.label} htmlFor="negocio-nombre">Nombre del negocio</label>
+          <input id="negocio-nombre" style={s.input} placeholder="Ej: La Buena Mesa"
             value={nombre} onChange={e => setNombre(e.target.value)} />
         </div>
 
         <div style={s.field}>
-          <label style={s.label}>Color de marca</label>
+          <label style={s.label} id="negocio-color-label">Color de marca</label>
           <div style={s.colorRow}>
             {COLORES.map(c => (
               <div key={c} onClick={() => setColor(c)} style={{
@@ -107,7 +107,7 @@ export default function ConfigNegocio() {
                 background: 'conic-gradient(red, yellow, lime, cyan, blue, magenta, red)',
                 border: '3px solid transparent', overflow:'hidden'
               }}>
-                <input type="color" value={color} onChange={e => setColor(e.target.value)}
+                <input type="color" aria-labelledby="negocio-color-label" value={color} onChange={e => setColor(e.target.value)}
                   style={{position:'absolute', inset:0, width:'100%', height:'100%', opacity:0, cursor:'pointer', border:'none', padding:0}} />
               </div>
             </div>
@@ -115,9 +115,9 @@ export default function ConfigNegocio() {
           <div style={{display:'flex', alignItems:'center', gap:10, marginTop:12}}>
             <div style={{width:32, height:32, borderRadius:8, background:color, border:'1px solid #e8eaf0', flexShrink:0}}/>
             <div style={{position:'relative', flex:1}}>
-              <span style={{position:'absolute', left:12, top:'50%', transform:'translateY(-50%)', fontSize:14, color:'#888', fontFamily:'monospace'}}>#</span>
+              <span style={{position:'absolute', left:12, top:'50%', transform:'translateY(-50%)', fontSize:14, color:'#666', fontFamily:'monospace'}}>#</span>
               <input style={{...s.input, paddingLeft:28, fontFamily:'monospace', fontSize:14}}
-                placeholder="e0001b" maxLength={6}
+                aria-labelledby="negocio-color-label" placeholder="e0001b" maxLength={6}
                 value={color.replace('#', '')}
                 onChange={e => {
                   const val = e.target.value.replace(/[^0-9a-fA-F]/g, '')
@@ -128,18 +128,18 @@ export default function ConfigNegocio() {
         </div>
 
         <div style={s.field}>
-          <label style={s.label}>Regla de puntos</label>
+          <div style={s.label}>Regla de puntos</div>
           <div style={{display:'flex', alignItems:'center', gap:10, flexWrap:'wrap'}}>
-            <span style={{fontSize:14, color:'#888'}}>Cada</span>
+            <span style={{fontSize:14, color:'#666'}}>Cada</span>
             <div style={{position:'relative'}}>
-              <span style={{position:'absolute', left:12, top:'50%', transform:'translateY(-50%)', fontSize:14, color:'#888'}}>$</span>
-              <input style={{...s.input, width:100, paddingLeft:24}} type="number" placeholder="100"
+              <span style={{position:'absolute', left:12, top:'50%', transform:'translateY(-50%)', fontSize:14, color:'#666'}}>$</span>
+              <input style={{...s.input, width:100, paddingLeft:24}} type="number" aria-label="Pesos gastados por tramo" placeholder="100"
                 value={pesosPorTramo} onChange={e => setPesosPorTramo(e.target.value)} />
             </div>
-            <span style={{fontSize:14, color:'#888'}}>gastados →</span>
-            <input style={{...s.input, width:80}} type="number" placeholder="1"
+            <span style={{fontSize:14, color:'#666'}}>gastados →</span>
+            <input style={{...s.input, width:80}} type="number" aria-label="Puntos otorgados por tramo" placeholder="1"
               value={puntosPorTramo} onChange={e => setPuntosPorTramo(e.target.value)} />
-            <span style={{fontSize:14, color:'#888'}}>punto{puntosPorTramo != 1 ? 's' : ''}</span>
+            <span style={{fontSize:14, color:'#666'}}>punto{puntosPorTramo != 1 ? 's' : ''}</span>
           </div>
           <div style={{fontSize:12, color:'#aaa', marginTop:8}}>
             Ej: compra de ${(parseInt(pesosPorTramo)||100) * 5} → {(parseInt(puntosPorTramo)||1) * 5} puntos
@@ -147,11 +147,11 @@ export default function ConfigNegocio() {
         </div>
 
         <div style={s.field}>
-          <label style={s.label}>Puntos por cumpleaños</label>
+          <label style={s.label} htmlFor="negocio-puntos-cumple">Puntos por cumpleaños</label>
           <div style={{display:'flex', alignItems:'center', gap:10}}>
-            <input style={{...s.input, width:100}} type="number" placeholder="50"
+            <input id="negocio-puntos-cumple" style={{...s.input, width:100}} type="number" placeholder="50"
               value={puntosCumpleanos} onChange={e => setPuntosCumpleanos(e.target.value)} />
-            <span style={{fontSize:14, color:'#888'}}>puntos de regalo el día del cumpleaños</span>
+            <span style={{fontSize:14, color:'#666'}}>puntos de regalo el día del cumpleaños</span>
           </div>
           <div style={{fontSize:12, color:'#aaa', marginTop:8}}>
             Se acreditan automáticamente cada año 🎂
@@ -159,17 +159,17 @@ export default function ConfigNegocio() {
         </div>
 
         <div style={s.field}>
-          <label style={s.label}>Puntos por referir amigos</label>
+          <div style={s.label}>Puntos por referir amigos</div>
           <div style={{display:'flex', flexDirection:'column', gap:10}}>
             <div style={{display:'flex', alignItems:'center', gap:10}}>
-              <input style={{...s.input, width:100}} type="number" placeholder="100"
+              <input style={{...s.input, width:100}} type="number" aria-label="Puntos para el que invita" placeholder="100"
                 value={puntosReferidoEmisor} onChange={e => setPuntosReferidoEmisor(e.target.value)} />
-              <span style={{fontSize:14, color:'#888'}}>puntos para el que invita</span>
+              <span style={{fontSize:14, color:'#666'}}>puntos para el que invita</span>
             </div>
             <div style={{display:'flex', alignItems:'center', gap:10}}>
-              <input style={{...s.input, width:100}} type="number" placeholder="50"
+              <input style={{...s.input, width:100}} type="number" aria-label="Puntos para el nuevo cliente" placeholder="50"
                 value={puntosReferidoReceptor} onChange={e => setPuntosReferidoReceptor(e.target.value)} />
-              <span style={{fontSize:14, color:'#888'}}>puntos para el nuevo cliente</span>
+              <span style={{fontSize:14, color:'#666'}}>puntos para el nuevo cliente</span>
             </div>
           </div>
           <div style={{fontSize:12, color:'#aaa', marginTop:8}}>
@@ -178,15 +178,15 @@ export default function ConfigNegocio() {
         </div>
 
         <div style={s.field}>
-          <label style={s.label}>PIN de la caja</label>
-          <div style={{fontSize:13, color:'#888', marginBottom:10, lineHeight:1.6}}>
+          <div style={s.label}>PIN de la caja</div>
+          <div style={{fontSize:13, color:'#666', marginBottom:10, lineHeight:1.6}}>
             Es la clave que van a usar vos y tus empleados para entrar a la caja y cargar las compras.
             No la compartas con los clientes.
           </div>
           <div style={{display:'flex', gap:10, flexWrap:'wrap'}}>
-            <input style={{...s.input, flex:1, minWidth:130}} type="password" placeholder="Mínimo 4 caracteres"
+            <input style={{...s.input, flex:1, minWidth:130}} type="password" aria-label="PIN de la caja" placeholder="Mínimo 4 caracteres"
               value={pinCaja} onChange={e => setPinCaja(e.target.value)} />
-            <input style={{...s.input, flex:1, minWidth:130}} type="password" placeholder="Repetilo"
+            <input style={{...s.input, flex:1, minWidth:130}} type="password" aria-label="Repetir PIN de la caja" placeholder="Repetilo"
               value={pinConfirmar} onChange={e => setPinConfirmar(e.target.value)} />
           </div>
           <div style={{fontSize:12, color:'#aaa', marginTop:8}}>
@@ -226,9 +226,9 @@ const s = {
   logoText: { fontSize:22, fontWeight:800, color:'#0e0e0e', letterSpacing:-0.5 },
   step: { fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.1em', color:'#e0001b', marginBottom:8 },
   title: { fontSize:28, fontWeight:800, color:'#0e0e0e', marginBottom:8 },
-  sub: { fontSize:14, color:'#888', marginBottom:28, lineHeight:1.6 },
+  sub: { fontSize:14, color:'#666', marginBottom:28, lineHeight:1.6 },
   field: { marginBottom:20 },
-  label: { display:'block', fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.06em', color:'#888', marginBottom:8 },
+  label: { display:'block', fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.06em', color:'#666', marginBottom:8 },
   input: { width:'100%', padding:'14px 16px', border:'2px solid #e8eaf0', borderRadius:12, fontSize:16, fontFamily:'inherit', outline:'none', boxSizing:'border-box' },
   colorRow: { display:'flex', gap:12, alignItems:'center' },
   swatch: { width:36, height:36, borderRadius:10, cursor:'pointer', transition:'all 0.15s' },

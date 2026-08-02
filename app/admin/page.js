@@ -4,7 +4,7 @@ import { supabase } from '@/lib/supabase'
 import { linkWhatsApp } from '@/lib/wa'
 
 const ADMIN_EMAIL = process.env.NEXT_PUBLIC_ADMIN_EMAIL
-const PLAN_COLORES = { gratis: '#888', pro_early: '#e0001b', pro: '#e0001b', business: '#f0a500' }
+const PLAN_COLORES = { gratis: '#666', pro_early: '#e0001b', pro: '#e0001b', business: '#f0a500' }
 const PLAN_LABELS = { gratis: 'Gratis', pro_early: 'Pro Early', pro: 'Pro', business: 'Business' }
 const PLANES_OPCIONES = ['gratis', 'pro_early', 'pro', 'business']
 
@@ -74,7 +74,7 @@ export default function Admin() {
     setCambiandoPlan(null)
   }
 
-  if (cargando) return <div style={s.wrap}><div style={{color:'#888'}}>Cargando panel de admin...</div></div>
+  if (cargando) return <div style={s.wrap}><div style={{color:'#666'}}>Cargando panel de admin...</div></div>
   if (error) return <div style={s.wrap}><div style={{color:'#e0001b'}}>{error}</div></div>
   if (!data) return null
 
@@ -233,7 +233,7 @@ export default function Admin() {
             <span style={{fontSize:13, color:'#555', marginLeft:4}}>/ admin</span>
           </div>
           <button onClick={() => supabase.auth.signOut().then(() => window.location.href = '/login')}
-            style={{padding:'8px 16px', background:'#1a1a1a', border:'none', borderRadius:10, color:'#888', fontSize:13, fontWeight:600, cursor:'pointer', fontFamily:'inherit'}}>
+            style={{padding:'8px 16px', background:'#1a1a1a', border:'none', borderRadius:10, color:'#666', fontSize:13, fontWeight:600, cursor:'pointer', fontFamily:'inherit'}}>
             Salir
           </button>
         </div>
@@ -269,7 +269,7 @@ export default function Admin() {
               <div key={p} style={{display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:8}}>
                 <div style={{display:'flex', alignItems:'center', gap:8}}>
                   <div style={{width:8, height:8, borderRadius:'50%', background: PLAN_COLORES[p]}} />
-                  <span style={{fontSize:13, color:'#888'}}>{PLAN_LABELS[p]}</span>
+                  <span style={{fontSize:13, color:'#666'}}>{PLAN_LABELS[p]}</span>
                 </div>
                 <span style={{fontSize:15, fontWeight:800, color:'white', fontFamily:'monospace'}}>{facturacion.porPlan[p] || 0}</span>
               </div>
@@ -388,7 +388,7 @@ export default function Admin() {
                   </td>
                   <td style={{padding:'14px 16px'}}>
                     {n.nombreDueno && <div style={{fontSize:12, color:'white', fontWeight:600}}>{n.nombreDueno}</div>}
-                    <div style={{fontSize:12, color:'#888'}}>{n.email}</div>
+                    <div style={{fontSize:12, color:'#666'}}>{n.email}</div>
                     {n.telefono ? (
                       <a
                         href={linkWhatsApp(n.telefono, `Hola ${n.nombreDueno || n.nombre}! Te escribo de Fielty.`)}
