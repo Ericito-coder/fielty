@@ -1,3 +1,4 @@
+import { theme } from '@/lib/theme'
 import { NextResponse } from 'next/server'
 import { Resend } from 'resend'
 import { getSupabaseAdmin } from '@/lib/server'
@@ -139,11 +140,11 @@ function armarHtml({ cuerpo, negocio, clienteId, appUrl }) {
   return `
     <div style="font-family: sans-serif; max-width: 520px; margin: 0 auto; padding: 32px 24px; background: #ffffff;">
       <div style="margin-bottom: 28px; display: flex; align-items: center; gap: 10px;">
-        <span style="display: inline-block; width: 34px; height: 34px; border-radius: 10px; background: ${negocio.color || '#e0001b'}; color: white; text-align: center; line-height: 34px; font-weight: 900; font-size: 13px;">${escaparHtml(negocio.nombre.slice(0, 2).toUpperCase())}</span>
+        <span style="display: inline-block; width: 34px; height: 34px; border-radius: 10px; background: ${negocio.color || theme.red}; color: white; text-align: center; line-height: 34px; font-weight: 900; font-size: 13px;">${escaparHtml(negocio.nombre.slice(0, 2).toUpperCase())}</span>
       </div>
       <h1 style="font-size: 22px; font-weight: 800; color: #0e0e0e; margin: 0 0 16px;">${escaparHtml(negocio.nombre)}</h1>
       ${parrafos}
-      <a href="${appUrl}/tarjeta/${clienteId}" style="display: inline-block; background: ${negocio.color || '#e0001b'}; color: white; padding: 14px 28px; border-radius: 12px; font-size: 15px; font-weight: 800; text-decoration: none; margin: 12px 0 32px;">
+      <a href="${appUrl}/tarjeta/${clienteId}" style="display: inline-block; background: ${negocio.color || theme.red}; color: white; padding: 14px 28px; border-radius: 12px; font-size: 15px; font-weight: 800; text-decoration: none; margin: 12px 0 32px;">
         Ver mi tarjeta →
       </a>
       <p style="font-size: 12px; color: #aaa; padding-top: 20px; border-top: 1px solid #e8eaf0; margin: 0;">

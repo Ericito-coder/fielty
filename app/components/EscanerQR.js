@@ -1,4 +1,5 @@
 'use client'
+import { theme } from '@/lib/theme'
 import { useEffect, useRef, useState } from 'react'
 import jsQR from 'jsqr'
 
@@ -85,7 +86,7 @@ export default function EscanerQR({ onDetectar, onCerrar }) {
         )}
       </div>
 
-      <div style={{padding:'20px', textAlign:'center', color:'#666', fontSize:13}}>
+      <div style={{padding:'20px', textAlign:'center', color:theme.gray, fontSize:13}}>
         Pedile al cliente que abra su tarjeta o su pase de Google Wallet y apuntá la cámara al código.
       </div>
     </div>

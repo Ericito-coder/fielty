@@ -1,4 +1,5 @@
 'use client'
+import { theme } from '@/lib/theme'
 import { useEffect, useState } from 'react'
 import QRCode from 'qrcode'
 
@@ -109,7 +110,7 @@ export default function Tarjeta({ params }) {
   async function mostrarMiCodigo() {
     if (!qrDataUrl) {
       const url = `${window.location.origin}/tarjeta/${id}`
-      const data = await QRCode.toDataURL(url, { width: 320, margin: 2, color: { dark: '#0e0e0e', light: '#ffffff' } })
+      const data = await QRCode.toDataURL(url, { width: 320, margin: 2, color: { dark: theme.black, light: '#ffffff' } })
       setQrDataUrl(data)
     }
     setQrAbierto(true)
@@ -138,7 +139,7 @@ export default function Tarjeta({ params }) {
   if (!cliente) return <div style={st.wrap}><div style={{textAlign:'center', padding:60}}>😕 Cliente no encontrado</div></div>
 
   const nivel = cliente.puntos_historicos >= 5000 ? { nombre:'Oro', emoji:'🥇', color:'#f5c842' }
-    : cliente.puntos_historicos >= 1000 ? { nombre:'Plata', emoji:'🥈', color:'#aaa' }
+    : cliente.puntos_historicos >= 1000 ? { nombre:'Plata', emoji:'🥈', color:theme.grayLight }
     : { nombre:'Bronce', emoji:'🥉', color:'#cd7f32' }
 
   const proxima = recompensas.find(r => r.puntos_necesarios > cliente.puntos)
@@ -146,31 +147,31 @@ export default function Tarjeta({ params }) {
   const pct = Math.min((cliente.puntos / meta) * 100, 100)
 
   return (
-    <div style={st.wrap}>
+    <main style={st.wrap}>
 
       {/* CANJE ACTIVO */}
       {codigoCanje && (
         <div style={{background:'linear-gradient(135deg, #0e0e0e, #1a1a2e)', borderRadius:24, padding:24, marginBottom:16, textAlign:'center', boxShadow:'0 8px 32px rgba(0,0,0,0.2)'}}>
           {segundos <= 0 ? (
             <>
-              <div style={{fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.1em', color:'#e0001b', marginBottom:8}}>⏱ Código vencido</div>
+              <div style={{fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.1em', color:theme.red, marginBottom:8}}>⏱ Código vencido</div>
               <div style={{fontSize:18, fontWeight:800, color:'white', marginBottom:8}}>{codigoCanje.recompensa.nombre}</div>
-              <div style={{fontSize:13, color:'#666', marginBottom:16, lineHeight:1.5}}>
+              <div style={{fontSize:13, color:theme.gray, marginBottom:16, lineHeight:1.5}}>
                 Tu código expiró. Los puntos volvieron a tu saldo. Podés generar uno nuevo cuando quieras.
               </div>
             </>
           ) : (
             <>
-              <div style={{fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.1em', color:'#00b96b', marginBottom:8}}>🎁 Canje activo</div>
+              <div style={{fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.1em', color:theme.green, marginBottom:8}}>🎁 Canje activo</div>
               <div style={{fontSize:18, fontWeight:800, color:'white', marginBottom:4}}>{codigoCanje.recompensa.nombre}</div>
               <div style={{fontFamily:'monospace', fontSize:32, fontWeight:700, letterSpacing:6, color:'white', marginBottom:8}}>{codigoCanje.codigo}</div>
-              <div style={{fontSize:13, color:'#666', marginBottom:16}}>
-                Expira en <span style={{color: segundos < 3600 ? '#e0001b' : '#00b96b', fontWeight:700}}>{formatTime(segundos)}</span>
+              <div style={{fontSize:13, color:theme.gray, marginBottom:16}}>
+                Expira en <span style={{color: segundos < 3600 ? theme.red : theme.green, fontWeight:700}}>{formatTime(segundos)}</span>
               </div>
-              <div style={{fontSize:12, color:'#555', marginBottom:16}}>📌 Mostrá este código al empleado para canjear tu recompensa.</div>
+              <div style={{fontSize:12, color:theme.grayMid, marginBottom:16}}>📌 Mostrá este código al empleado para canjear tu recompensa.</div>
             </>
           )}
-          <button style={{padding:'10px 20px', background:'#1e1e1e', border:'1px solid #2a2a2a', borderRadius:12, color:'#666', fontSize:13, fontWeight:600, cursor:'pointer', fontFamily:'inherit'}}
+          <button style={{padding:'10px 20px', background:'#1e1e1e', border:'1px solid #2a2a2a', borderRadius:12, color:theme.gray, fontSize:13, fontWeight:600, cursor:'pointer', fontFamily:'inherit'}}
             onClick={() => setCodigoCanje(null)}>
             Cerrar
           </button>
@@ -180,8 +181,8 @@ export default function Tarjeta({ params }) {
       <div style={st.loyaltyCard}>
         <div style={st.cardTop}>
           {cliente.negocio?.logo_url
-            ? <img src={cliente.negocio.logo_url} style={{...st.bizLogo, objectFit:'cover', padding:0}} />
-            : <div style={{...st.bizLogo, background: cliente.negocio?.color || '#e0001b'}}>
+            ? <img src={cliente.negocio.logo_url} alt={`Logo de ${cliente.negocio.nombre}`} style={{...st.bizLogo, objectFit:'cover', padding:0}} />
+            : <div style={{...st.bizLogo, background: cliente.negocio?.color || theme.red}}>
                 {cliente.negocio?.nombre?.slice(0,2).toUpperCase() || 'PP'}
               </div>
           }
@@ -210,7 +211,7 @@ export default function Tarjeta({ params }) {
           </span>
         </div>
         <div style={st.progressBg}>
-          <div style={{...st.progressFill, width: pct+'%', background: `linear-gradient(90deg, ${cliente.negocio?.color || '#e0001b'}, #f5c842)`}} />
+          <div style={{...st.progressFill, width: pct+'%', background: `linear-gradient(90deg, ${cliente.negocio?.color || theme.red}, #f5c842)`}} />
         </div>
 
         <div style={st.cardFooter}>
@@ -220,14 +221,14 @@ export default function Tarjeta({ params }) {
       </div>
 
       <button onClick={mostrarMiCodigo}
-        style={{width:'100%', display:'flex', alignItems:'center', justifyContent:'center', gap:10, padding:'14px 18px', background:'white', border:'none', borderRadius:16, color:'#0e0e0e', fontSize:15, fontWeight:700, cursor:'pointer', fontFamily:'inherit', marginBottom:16, boxShadow:'0 4px 20px rgba(0,0,0,0.06)'}}>
+        style={{width:'100%', display:'flex', alignItems:'center', justifyContent:'center', gap:10, padding:'14px 18px', background:'white', border:'none', borderRadius:16, color:theme.black, fontSize:15, fontWeight:700, cursor:'pointer', fontFamily:'inherit', marginBottom:16, boxShadow:'0 4px 20px rgba(0,0,0,0.06)'}}>
         <span style={{fontSize:18}}>📷</span>
         Mostrar mi código en la caja
       </button>
 
       {walletOk && (
         <button onClick={agregarAWallet} disabled={walletCargando}
-          style={{width:'100%', display:'flex', alignItems:'center', justifyContent:'center', gap:10, padding:'14px 18px', background:'#0e0e0e', border:'none', borderRadius:16, color:'white', fontSize:15, fontWeight:700, cursor:'pointer', fontFamily:'inherit', marginBottom:16}}>
+          style={{width:'100%', display:'flex', alignItems:'center', justifyContent:'center', gap:10, padding:'14px 18px', background:theme.black, border:'none', borderRadius:16, color:'white', fontSize:15, fontWeight:700, cursor:'pointer', fontFamily:'inherit', marginBottom:16}}>
           <span style={{fontSize:18}}>👛</span>
           {walletCargando ? 'Generando tu pase...' : 'Agregar a Google Wallet'}
         </button>
@@ -237,12 +238,12 @@ export default function Tarjeta({ params }) {
         <div onClick={() => setQrAbierto(false)}
           style={{position:'fixed', inset:0, background:'rgba(0,0,0,0.92)', zIndex:200, display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', padding:24}}>
           <div style={{background:'white', borderRadius:28, padding:'32px 28px', textAlign:'center', maxWidth:340, width:'100%'}} onClick={e => e.stopPropagation()}>
-            <div style={{fontSize:17, fontWeight:800, color:'#0e0e0e', marginBottom:6}}>Mostrale este código al negocio</div>
-            <div style={{fontSize:13, color:'#666', marginBottom:20, lineHeight:1.5}}>El empleado lo escanea desde la caja para sumarte puntos al instante.</div>
+            <div style={{fontSize:17, fontWeight:800, color:theme.black, marginBottom:6}}>Mostrale este código al negocio</div>
+            <div style={{fontSize:13, color:theme.gray, marginBottom:20, lineHeight:1.5}}>El empleado lo escanea desde la caja para sumarte puntos al instante.</div>
             {qrDataUrl && <img src={qrDataUrl} alt="Mi código" style={{width:'100%', maxWidth:260, height:'auto'}} />}
             <div style={{fontFamily:'monospace', fontSize:13, color:'#bbb', marginTop:12}}>FLT-{cliente.id.slice(0,5).toUpperCase()}</div>
             <button onClick={() => setQrAbierto(false)}
-              style={{marginTop:20, padding:'12px 32px', background:'#0e0e0e', border:'none', borderRadius:14, color:'white', fontSize:15, fontWeight:700, cursor:'pointer', fontFamily:'inherit'}}>
+              style={{marginTop:20, padding:'12px 32px', background:theme.black, border:'none', borderRadius:14, color:'white', fontSize:15, fontWeight:700, cursor:'pointer', fontFamily:'inherit'}}>
               Cerrar
             </button>
           </div>
@@ -253,16 +254,16 @@ export default function Tarjeta({ params }) {
         <div style={{background:'white', borderRadius:20, padding:'16px 18px', marginBottom:16, display:'flex', alignItems:'center', gap:12, boxShadow:'0 4px 20px rgba(0,0,0,0.06)'}}>
           <span style={{fontSize:22, flexShrink:0}}>📲</span>
           <div style={{flex:1}}>
-            <div style={{fontSize:14, fontWeight:700, color:'#0e0e0e', marginBottom:2}}>Guardá tu tarjeta</div>
-            <div style={{fontSize:12, color:'#666'}}>Accedé sin buscarla cada vez</div>
+            <div style={{fontSize:14, fontWeight:700, color:theme.black, marginBottom:2}}>Guardá tu tarjeta</div>
+            <div style={{fontSize:12, color:theme.gray}}>Accedé sin buscarla cada vez</div>
           </div>
           {esIOS ? (
-            <button style={{padding:'12px 14px', minHeight:44, background:'#0e0e0e', border:'none', borderRadius:10, color:'white', fontSize:13, fontWeight:700, cursor:'pointer', fontFamily:'inherit', flexShrink:0}}
+            <button style={{padding:'12px 14px', minHeight:44, background:theme.black, border:'none', borderRadius:10, color:'white', fontSize:13, fontWeight:700, cursor:'pointer', fontFamily:'inherit', flexShrink:0}}
               onClick={() => setModalIOSAbierto(true)}>
               Cómo hacerlo
             </button>
           ) : deferredPrompt ? (
-            <button style={{padding:'12px 14px', minHeight:44, background:'#0e0e0e', border:'none', borderRadius:10, color:'white', fontSize:13, fontWeight:700, cursor:'pointer', fontFamily:'inherit', flexShrink:0}}
+            <button style={{padding:'12px 14px', minHeight:44, background:theme.black, border:'none', borderRadius:10, color:'white', fontSize:13, fontWeight:700, cursor:'pointer', fontFamily:'inherit', flexShrink:0}}
               onClick={async () => { deferredPrompt.prompt(); const { outcome } = await deferredPrompt.userChoice; if (outcome === 'accepted') setBannerInstalar(false) }}>
               Instalar
             </button>
@@ -279,8 +280,8 @@ export default function Tarjeta({ params }) {
         <div style={{position:'fixed', inset:0, zIndex:200, display:'flex', flexDirection:'column', justifyContent:'flex-end'}} onClick={() => setModalIOSAbierto(false)}>
           <div style={{background:'white', borderRadius:'24px 24px 0 0', padding:'28px 24px 40px', boxShadow:'0 -8px 40px rgba(0,0,0,0.15)'}} onClick={e => e.stopPropagation()}>
             <div style={{width:40, height:4, background:'#e0e0e0', borderRadius:2, margin:'0 auto 24px'}} />
-            <div style={{fontSize:18, fontWeight:800, color:'#0e0e0e', marginBottom:6}}>Agregar a pantalla de inicio</div>
-            <div style={{fontSize:13, color:'#666', marginBottom:24}}>Seguí estos pasos en Safari para tener tu tarjeta como una app:</div>
+            <div style={{fontSize:18, fontWeight:800, color:theme.black, marginBottom:6}}>Agregar a pantalla de inicio</div>
+            <div style={{fontSize:13, color:theme.gray, marginBottom:24}}>Seguí estos pasos en Safari para tener tu tarjeta como una app:</div>
             {[
               { n:1, texto: <>Tocá los <strong>⋯ tres puntos</strong> arriba a la derecha en Safari</> },
               { n:2, texto: <>Tocá <strong>Compartir</strong></> },
@@ -288,11 +289,11 @@ export default function Tarjeta({ params }) {
               { n:4, texto: <>Tocá <strong>"Agregar a pantalla de inicio"</strong> y confirmá</> },
             ].map(({ n, texto }) => (
               <div key={n} style={{display:'flex', alignItems:'flex-start', gap:14, marginBottom:18}}>
-                <div style={{width:28, height:28, borderRadius:'50%', background:'#0e0e0e', color:'white', display:'flex', alignItems:'center', justifyContent:'center', fontSize:13, fontWeight:800, flexShrink:0}}>{n}</div>
+                <div style={{width:28, height:28, borderRadius:'50%', background:theme.black, color:'white', display:'flex', alignItems:'center', justifyContent:'center', fontSize:13, fontWeight:800, flexShrink:0}}>{n}</div>
                 <div style={{fontSize:14, color:'#333', lineHeight:1.5, paddingTop:4}}>{texto}</div>
               </div>
             ))}
-            <button style={{width:'100%', padding:16, background:'#0e0e0e', border:'none', borderRadius:14, color:'white', fontSize:15, fontWeight:800, cursor:'pointer', fontFamily:'inherit', marginTop:8}}
+            <button style={{width:'100%', padding:16, background:theme.black, border:'none', borderRadius:14, color:'white', fontSize:15, fontWeight:800, cursor:'pointer', fontFamily:'inherit', marginTop:8}}
               onClick={() => setModalIOSAbierto(false)}>
               Entendido
             </button>
@@ -322,7 +323,7 @@ export default function Tarjeta({ params }) {
               </div>
               <button disabled={!desbloqueada || estaCargando} onClick={() => canjear(r)}
                 style={{...st.badge, background: desbloqueada ? 'rgba(0,185,107,0.15)' : '#f0f1f5',
-                  color: desbloqueada ? '#00b96b' : '#aaa', cursor: desbloqueada ? 'pointer' : 'default',
+                  color: desbloqueada ? theme.green : theme.grayLight, cursor: desbloqueada ? 'pointer' : 'default',
                   border:'none', fontFamily:'inherit'}}>
                 {estaCargando ? '...' : desbloqueada ? 'Canjear' : `${r.puntos_necesarios} pts`}
               </button>
@@ -335,14 +336,14 @@ export default function Tarjeta({ params }) {
         <div style={st.sectionTitle}>Invitá amigos</div>
         <div style={{textAlign:'center', padding:'8px 0 16px'}}>
           <div style={{fontSize:32, marginBottom:8}}>🤝</div>
-          <div style={{fontSize:15, fontWeight:700, color:'#0e0e0e', marginBottom:4}}>
+          <div style={{fontSize:15, fontWeight:700, color:theme.black, marginBottom:4}}>
             Compartí tu link y ganá puntos
           </div>
-          <div style={{fontSize:13, color:'#666', marginBottom:20, lineHeight:1.5}}>
+          <div style={{fontSize:13, color:theme.gray, marginBottom:20, lineHeight:1.5}}>
             Cuando un amigo se registra con tu link, vos ganás{' '}
-            <strong style={{color:'#0e0e0e'}}>{cliente.negocio?.puntos_referido_emisor || 100} pts</strong>{' '}
+            <strong style={{color:theme.black}}>{cliente.negocio?.puntos_referido_emisor || 100} pts</strong>{' '}
             y tu amigo gana{' '}
-            <strong style={{color:'#0e0e0e'}}>{cliente.negocio?.puntos_referido_receptor || 50} pts</strong>.
+            <strong style={{color:theme.black}}>{cliente.negocio?.puntos_referido_receptor || 50} pts</strong>.
           </div>
           <button style={{
             width:'100%', padding:14,
@@ -371,7 +372,7 @@ export default function Tarjeta({ params }) {
         </a>
       </div>
 
-    </div>
+    </main>
   )
 }
 
@@ -385,19 +386,19 @@ function HistorialSection({ transacciones, cargando }) {
     return '✨'
   }
 
-  const getColor = (tipo) => tipo === 'canje' ? '#e0001b' : '#00b96b'
+  const getColor = (tipo) => tipo === 'canje' ? theme.red : theme.green
   const getPrefix = (tipo) => tipo === 'canje' ? '-' : '+'
 
   return (
     <div style={st.section}>
       <div style={st.sectionTitle}>Historial</div>
-      {cargando && <div style={{textAlign:'center', padding:20, color:'#666', fontSize:13}}>Cargando...</div>}
+      {cargando && <div style={{textAlign:'center', padding:20, color:theme.gray, fontSize:13}}>Cargando...</div>}
       {!cargando && transacciones.length === 0 && (
-        <div style={{textAlign:'center', padding:20, color:'#666', fontSize:13}}>Todavía no hay movimientos</div>
+        <div style={{textAlign:'center', padding:20, color:theme.gray, fontSize:13}}>Todavía no hay movimientos</div>
       )}
       {transacciones.map((t, i) => (
         <div key={i} style={{...st.histItem, borderBottom: i < transacciones.length - 1 ? '1px solid #f0f1f5' : 'none'}}>
-          <div style={{...st.histIcon, background: t.tipo === 'canje' ? '#fff0f0' : t.tipo === 'cumpleanos' ? '#fff8e0' : '#f0f2f7'}}>
+          <div style={{...st.histIcon, background: t.tipo === 'canje' ? theme.errorBg : t.tipo === 'cumpleanos' ? '#fff8e0' : theme.bgMuted}}>
             {getIcono(t.tipo)}
           </div>
           <div style={st.histInfo}>
@@ -417,8 +418,8 @@ function HistorialSection({ transacciones, cargando }) {
 }
 
 const st = {
-  wrap: { minHeight:'100vh', background:'#f0f2f7', padding:'20px 16px 60px', maxWidth:420, margin:'0 auto' },
-  loader: { textAlign:'center', padding:60, color:'#666', fontSize:16 },
+  wrap: { minHeight:'100vh', background:theme.bgMuted, padding:'20px 16px 60px', maxWidth:420, margin:'0 auto' },
+  loader: { textAlign:'center', padding:60, color:theme.gray, fontSize:16 },
   loyaltyCard: { background:'linear-gradient(145deg, #1a1a2e, #0f3460)', borderRadius:28, padding:28, marginBottom:16, boxShadow:'0 20px 60px rgba(26,26,46,0.3)' },
   cardTop: { display:'flex', alignItems:'center', gap:12, marginBottom:28 },
   bizLogo: { width:44, height:44, borderRadius:14, display:'flex', alignItems:'center', justifyContent:'center', fontSize:15, fontWeight:900, color:'white', flexShrink:0 },
@@ -436,17 +437,17 @@ const st = {
   cardUser: { fontSize:14, color:'rgba(255,255,255,0.7)', fontWeight:500 },
   cardId: { fontFamily:'monospace', fontSize:11, color:'rgba(255,255,255,0.3)' },
   section: { background:'white', borderRadius:24, padding:24, marginBottom:16, boxShadow:'0 4px 20px rgba(0,0,0,0.06)' },
-  sectionTitle: { fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.08em', color:'#666', marginBottom:16 },
+  sectionTitle: { fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.08em', color:theme.gray, marginBottom:16 },
   rewardRow: { display:'flex', alignItems:'center', gap:14, borderBottom:'1px solid #f0f1f5' },
-  rewardIcon: { width:44, height:44, borderRadius:12, background:'#f0f2f7', display:'flex', alignItems:'center', justifyContent:'center', fontSize:22, flexShrink:0 },
+  rewardIcon: { width:44, height:44, borderRadius:12, background:theme.bgMuted, display:'flex', alignItems:'center', justifyContent:'center', fontSize:22, flexShrink:0 },
   rewardInfo: { flex:1 },
-  rewardName: { fontSize:15, fontWeight:700, color:'#0e0e0e' },
-  rewardReq: { fontSize:12, color:'#666', marginTop:2 },
+  rewardName: { fontSize:15, fontWeight:700, color:theme.black },
+  rewardReq: { fontSize:12, color:theme.gray, marginTop:2 },
   badge: { padding:'6px 12px', borderRadius:100, fontSize:12, fontWeight:700, flexShrink:0 },
   histItem: { display:'flex', alignItems:'center', gap:12, padding:'12px 0' },
-  histIcon: { width:36, height:36, borderRadius:10, background:'#f0f2f7', display:'flex', alignItems:'center', justifyContent:'center', fontSize:16 },
+  histIcon: { width:36, height:36, borderRadius:10, background:theme.bgMuted, display:'flex', alignItems:'center', justifyContent:'center', fontSize:16 },
   histInfo: { flex:1 },
   histTitle: { fontSize:14, fontWeight:600 },
-  histDate: { fontSize:12, color:'#666', marginTop:1 },
-  histPts: { fontSize:14, fontWeight:700, color:'#00b96b' },
+  histDate: { fontSize:12, color:theme.gray, marginTop:1 },
+  histPts: { fontSize:14, fontWeight:700, color:theme.green },
 }

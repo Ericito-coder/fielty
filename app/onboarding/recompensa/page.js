@@ -1,4 +1,5 @@
 'use client'
+import { theme } from '@/lib/theme'
 import { useState } from 'react'
 import { supabase } from '@/lib/supabase'
 import { storage } from '@/lib/storage'
@@ -49,7 +50,7 @@ export default function PrimeraRecompensa() {
 
   return (
     <div style={s.wrap}>
-      <div style={s.card}>
+      <main style={s.card}>
         <div style={s.logo}>
           <div style={s.logoDot}></div>
           <span style={s.logoText}>fielty</span>
@@ -84,25 +85,25 @@ export default function PrimeraRecompensa() {
         <button style={s.btn} onClick={guardar} disabled={cargando}>
           {cargando ? 'Guardando...' : '¡Listo, empezar! →'}
         </button>
-      </div>
+      </main>
     </div>
   )
 }
 
 const s = {
-  wrap: { minHeight:'100vh', background:'#0e0e0e', display:'flex', alignItems:'center', justifyContent:'center', padding:20 },
+  wrap: { minHeight:'100vh', background:theme.black, display:'flex', alignItems:'center', justifyContent:'center', padding:20 },
   card: { background:'white', borderRadius:28, padding:'40px 32px', width:'100%', maxWidth:420 },
   logo: { display:'flex', alignItems:'center', gap:8, marginBottom:28 },
-  logoDot: { width:10, height:10, borderRadius:'50%', background:'#e0001b', boxShadow:'0 0 10px #e0001b' },
-  logoText: { fontSize:22, fontWeight:800, color:'#0e0e0e', letterSpacing:-0.5 },
-  step: { fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.1em', color:'#e0001b', marginBottom:8 },
-  title: { fontSize:28, fontWeight:800, color:'#0e0e0e', marginBottom:8 },
-  sub: { fontSize:14, color:'#666', marginBottom:28, lineHeight:1.6 },
-  label: { display:'block', fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.06em', color:'#666', marginBottom:8 },
+  logoDot: { width:10, height:10, borderRadius:'50%', background:theme.red, boxShadow:'0 0 10px #e0001b' },
+  logoText: { fontSize:22, fontWeight:800, color:theme.black, letterSpacing:-0.5 },
+  step: { fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.1em', color:theme.red, marginBottom:8 },
+  title: { fontSize:28, fontWeight:800, color:theme.black, marginBottom:8 },
+  sub: { fontSize:14, color:theme.gray, marginBottom:28, lineHeight:1.6 },
+  label: { display:'block', fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.06em', color:theme.gray, marginBottom:8 },
   input: { width:'100%', padding:'14px 16px', border:'2px solid #e8eaf0', borderRadius:12, fontSize:16, fontFamily:'inherit', outline:'none', boxSizing:'border-box' },
   recompensaRow: { display:'flex', gap:10, alignItems:'flex-end', marginBottom:12 },
-  deleteBtn: { minWidth:44, minHeight:44, padding:'14px 12px', background:'#fff0f0', border:'none', borderRadius:12, color:'#e0001b', cursor:'pointer', fontSize:14, fontWeight:700, marginBottom:0, alignSelf:'flex-end', display:'flex', alignItems:'center', justifyContent:'center' },
-  addBtn: { width:'100%', padding:14, background:'#f5f6fa', border:'2px dashed #e8eaf0', borderRadius:12, fontSize:14, fontWeight:700, cursor:'pointer', color:'#666', fontFamily:'inherit', marginBottom:20 },
-  btn: { width:'100%', padding:18, background:'#e0001b', border:'none', borderRadius:14, color:'white', fontSize:16, fontWeight:800, cursor:'pointer', fontFamily:'inherit' },
-  error: { background:'#fff0f0', color:'#e0001b', padding:'10px 14px', borderRadius:10, fontSize:13, marginBottom:12 },
+  deleteBtn: { minWidth:44, minHeight:44, padding:'14px 12px', background:theme.errorBg, border:'none', borderRadius:12, color:theme.red, cursor:'pointer', fontSize:14, fontWeight:700, marginBottom:0, alignSelf:'flex-end', display:'flex', alignItems:'center', justifyContent:'center' },
+  addBtn: { width:'100%', padding:14, background:theme.bgMuted2, border:'2px dashed #e8eaf0', borderRadius:12, fontSize:14, fontWeight:700, cursor:'pointer', color:theme.gray, fontFamily:'inherit', marginBottom:20 },
+  btn: { width:'100%', padding:18, background:theme.red, border:'none', borderRadius:14, color:'white', fontSize:16, fontWeight:800, cursor:'pointer', fontFamily:'inherit' },
+  error: { background:theme.errorBg, color:theme.red, padding:'10px 14px', borderRadius:10, fontSize:13, marginBottom:12 },
 }

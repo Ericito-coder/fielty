@@ -1,4 +1,5 @@
 'use client'
+import { theme } from '@/lib/theme'
 import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
 import { storage } from '@/lib/storage'
@@ -10,7 +11,7 @@ const PLANES = {
     precio: '$10.000',
     precioOriginal: '$20.000',
     periodo: 'por mes · primer año',
-    color: '#e0001b',
+    color: theme.red,
     features: [
       'Clientes ilimitados',
       'Hasta 3 sucursales',
@@ -25,7 +26,7 @@ const PLANES = {
     nombre: 'Business',
     precio: '$35.000',
     periodo: 'por mes',
-    color: '#f0a500',
+    color: theme.gold,
     features: [
       'Todo lo de Pro',
       'Sucursales ilimitadas',
@@ -91,7 +92,7 @@ export default function Upgrade() {
   }
 
   if (!negocio) return (
-    <div style={s.wrap}><div style={{color:'#666'}}>Cargando...</div></div>
+    <div style={s.wrap}><div style={{color:theme.gray}}>Cargando...</div></div>
   )
 
   // Opciones según plan actual
@@ -100,7 +101,7 @@ export default function Upgrade() {
 
   return (
     <div style={s.wrap}>
-      <div style={s.card}>
+      <main style={s.card}>
         <div style={s.logo}>
           <div style={s.logoDot} />
           <span style={s.logoText}>fielty</span>
@@ -138,20 +139,20 @@ export default function Upgrade() {
                       {seleccionado && <div style={{width:8, height:8, borderRadius:'50%', background:'white'}} />}
                     </div>
                     <div>
-                      <div style={{fontSize:16, fontWeight:800, color:'#0e0e0e'}}>{info.nombre}</div>
-                      <div style={{fontSize:12, color:'#666'}}>{info.periodo}</div>
+                      <div style={{fontSize:16, fontWeight:800, color:theme.black}}>{info.nombre}</div>
+                      <div style={{fontSize:12, color:theme.gray}}>{info.periodo}</div>
                     </div>
                   </div>
                   <div style={{textAlign:'right'}}>
                     {info.precioOriginal && (
                       <div style={{fontSize:12, color:'#bbb', textDecoration:'line-through', fontFamily:'monospace'}}>{info.precioOriginal}</div>
                     )}
-                    <div style={{fontSize:22, fontWeight:900, color:'#0e0e0e', fontFamily:'monospace'}}>{info.precio}</div>
+                    <div style={{fontSize:22, fontWeight:900, color:theme.black, fontFamily:'monospace'}}>{info.precio}</div>
                   </div>
                 </div>
                 <div style={{display:'flex', flexDirection:'column', gap:6, paddingLeft:28}}>
                   {info.features.map((f, i) => (
-                    <div key={i} style={{display:'flex', alignItems:'center', gap:8, fontSize:13, color:'#555'}}>
+                    <div key={i} style={{display:'flex', alignItems:'center', gap:8, fontSize:13, color:theme.grayMid}}>
                       <span style={{color:info.color, fontWeight:700, fontSize:11}}>✓</span> {f}
                     </div>
                   ))}
@@ -164,7 +165,7 @@ export default function Upgrade() {
         {error && <div style={s.error}>{error}</div>}
 
         <button
-          style={{...s.btn, background: planSeleccionado ? PLANES[planSeleccionado].color : '#e0001b', opacity: cargando ? 0.7 : 1}}
+          style={{...s.btn, background: planSeleccionado ? PLANES[planSeleccionado].color : theme.red, opacity: cargando ? 0.7 : 1}}
           onClick={pagar}
           disabled={cargando || !planSeleccionado}
         >
@@ -174,20 +175,20 @@ export default function Upgrade() {
         <button style={s.btnSecondary} onClick={() => window.location.href = '/dashboard'}>
           Ahora no, ir al panel
         </button>
-      </div>
+      </main>
     </div>
   )
 }
 
 const s = {
-  wrap: { minHeight:'100vh', background:'#0e0e0e', display:'flex', alignItems:'center', justifyContent:'center', padding:20 },
+  wrap: { minHeight:'100vh', background:theme.black, display:'flex', alignItems:'center', justifyContent:'center', padding:20 },
   card: { background:'white', borderRadius:28, padding:'40px 32px', width:'100%', maxWidth:480 },
   logo: { display:'flex', alignItems:'center', gap:8, marginBottom:28 },
-  logoDot: { width:10, height:10, borderRadius:'50%', background:'#e0001b', boxShadow:'0 0 10px #e0001b' },
-  logoText: { fontSize:22, fontWeight:800, color:'#0e0e0e', letterSpacing:-0.5 },
-  title: { fontSize:28, fontWeight:800, color:'#0e0e0e', marginBottom:8 },
-  sub: { fontSize:14, color:'#666', marginBottom:24, lineHeight:1.6 },
-  error: { background:'#fff0f0', color:'#e0001b', padding:'10px 14px', borderRadius:10, fontSize:13, marginBottom:16 },
+  logoDot: { width:10, height:10, borderRadius:'50%', background:theme.red, boxShadow:'0 0 10px #e0001b' },
+  logoText: { fontSize:22, fontWeight:800, color:theme.black, letterSpacing:-0.5 },
+  title: { fontSize:28, fontWeight:800, color:theme.black, marginBottom:8 },
+  sub: { fontSize:14, color:theme.gray, marginBottom:24, lineHeight:1.6 },
+  error: { background:theme.errorBg, color:theme.red, padding:'10px 14px', borderRadius:10, fontSize:13, marginBottom:16 },
   btn: { width:'100%', padding:18, border:'none', borderRadius:14, color:'white', fontSize:16, fontWeight:800, cursor:'pointer', fontFamily:'inherit', marginBottom:12 },
-  btnSecondary: { width:'100%', padding:14, background:'transparent', border:'none', borderRadius:14, color:'#666', fontSize:14, fontWeight:600, cursor:'pointer', fontFamily:'inherit' },
+  btnSecondary: { width:'100%', padding:14, background:'transparent', border:'none', borderRadius:14, color:theme.gray, fontSize:14, fontWeight:600, cursor:'pointer', fontFamily:'inherit' },
 }

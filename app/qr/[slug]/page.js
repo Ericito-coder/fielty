@@ -1,4 +1,5 @@
 'use client'
+import { theme } from '@/lib/theme'
 import { useState, useEffect, useRef } from 'react'
 import QRCode from 'qrcode'
 
@@ -22,7 +23,7 @@ export default function QRPage({ params }) {
     QRCode.toDataURL(url, {
       width: 400,
       margin: 2,
-      color: { dark: '#0e0e0e', light: '#ffffff' }
+      color: { dark: theme.black, light: '#ffffff' }
     }).then(setQrUrl)
   }, [negocio])
 
@@ -39,7 +40,7 @@ export default function QRPage({ params }) {
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
       `}</style>
 
-      <div style={s.wrap}>
+      <main style={s.wrap}>
         <button className="no-print" style={s.printBtn} onClick={() => window.print()}>
           🖨️ Imprimir
         </button>
@@ -105,20 +106,20 @@ export default function QRPage({ params }) {
             </div>
           </div>
           <div style={{padding:20, textAlign:'center'}}>
-            <div style={{fontSize:15, fontWeight:800, color:'#0e0e0e', marginBottom:4}}>¡Sumate y ganá puntos!</div>
-            <div style={{fontSize:12, color:'#666', marginBottom:16}}>Escaneá con tu celular</div>
+            <div style={{fontSize:15, fontWeight:800, color:theme.black, marginBottom:4}}>¡Sumate y ganá puntos!</div>
+            <div style={{fontSize:12, color:theme.gray, marginBottom:16}}>Escaneá con tu celular</div>
             {qrUrl && <img src={qrUrl} style={{width:150, height:150}} alt="QR" />}
-            <div style={{fontSize:11, color:'#aaa', marginTop:12}}>Powered by fielty</div>
+            <div style={{fontSize:11, color:theme.grayLight, marginTop:12}}>Powered by fielty</div>
           </div>
         </div>
-      </div>
+      </main>
     </>
   )
 }
 
 const s = {
-  wrap: { minHeight:'100vh', background:'#f0f2f7', padding:'40px 20px', display:'flex', flexDirection:'column', alignItems:'center', gap:24 },
-  printBtn: { padding:'12px 28px', background:'#0e0e0e', border:'none', borderRadius:12, color:'white', fontSize:15, fontWeight:700, cursor:'pointer', fontFamily:'inherit' },
+  wrap: { minHeight:'100vh', background:theme.bgMuted, padding:'40px 20px', display:'flex', flexDirection:'column', alignItems:'center', gap:24 },
+  printBtn: { padding:'12px 28px', background:theme.black, border:'none', borderRadius:12, color:'white', fontSize:15, fontWeight:700, cursor:'pointer', fontFamily:'inherit' },
   page: { background:'white', borderRadius:24, width:'100%', maxWidth:440, overflow:'hidden', boxShadow:'0 8px 40px rgba(0,0,0,0.12)' },
   pageMini: { maxWidth:280 },
   header: { padding:'32px 28px 28px', textAlign:'center', color:'white' },
@@ -126,18 +127,18 @@ const s = {
   bizName: { fontSize:24, fontWeight:900, marginBottom:4 },
   bizSub: { fontSize:13, opacity:0.75 },
   content: { padding:'32px 28px' },
-  headline: { fontSize:26, fontWeight:900, color:'#0e0e0e', textAlign:'center', marginBottom:8 },
-  sub: { fontSize:14, color:'#666', textAlign:'center', lineHeight:1.6, marginBottom:28 },
+  headline: { fontSize:26, fontWeight:900, color:theme.black, textAlign:'center', marginBottom:8 },
+  sub: { fontSize:14, color:theme.gray, textAlign:'center', lineHeight:1.6, marginBottom:28 },
   qrWrap: { display:'flex', justifyContent:'center', marginBottom:28, padding:16, background:'#f8f9fc', borderRadius:20 },
   qrImg: { width:200, height:200 },
   steps: { display:'flex', alignItems:'center', justifyContent:'center', gap:8, marginBottom:24 },
   step: { display:'flex', flexDirection:'column', alignItems:'center', gap:6 },
   stepNum: { width:32, height:32, borderRadius:'50%', display:'flex', alignItems:'center', justifyContent:'center', color:'white', fontSize:14, fontWeight:800 },
-  stepText: { fontSize:11, fontWeight:600, color:'#666', textAlign:'center' },
+  stepText: { fontSize:11, fontWeight:600, color:theme.gray, textAlign:'center' },
   stepArrow: { fontSize:18, color:'#ccc', marginBottom:16 },
   benefits: { background:'#f8f9fc', borderRadius:16, padding:'16px 20px', marginBottom:24, display:'flex', flexDirection:'column', gap:10 },
-  benefit: { fontSize:13, color:'#555', fontWeight:500 },
+  benefit: { fontSize:13, color:theme.grayMid, fontWeight:500 },
   footer: { display:'flex', alignItems:'center', justifyContent:'center', gap:6 },
-  footerDot: { width:8, height:8, borderRadius:'50%', background:'#e0001b', boxShadow:'0 0 6px #e0001b' },
-  footerText: { fontSize:12, color:'#aaa', fontWeight:600 },
+  footerDot: { width:8, height:8, borderRadius:'50%', background:theme.red, boxShadow:'0 0 6px #e0001b' },
+  footerText: { fontSize:12, color:theme.grayLight, fontWeight:600 },
 }

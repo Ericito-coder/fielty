@@ -1,4 +1,5 @@
 'use client'
+import { theme } from '@/lib/theme'
 import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
 import { storage } from '@/lib/storage'
@@ -129,86 +130,86 @@ export default function Dashboard() {
   }
 
   if (isMobile === null) return (
-    <div style={{minHeight:'100vh', background:'#f0f2f7'}} />
+    <div style={{minHeight:'100vh', background:theme.bgMuted}} />
   )
   if (cargando) return (
-    <div style={{minHeight:'100vh', background:'#f0f2f7', display:'flex', alignItems:'center', justifyContent:'center'}}>
+    <div style={{minHeight:'100vh', background:theme.bgMuted, display:'flex', alignItems:'center', justifyContent:'center'}}>
       {errorCarga
         ? <div style={{textAlign:'center', padding:40}}>
             <div style={{fontSize:32, marginBottom:12}}>⚠️</div>
-            <div style={{fontSize:15, fontWeight:700, color:'#0e0e0e', marginBottom:6}}>{errorCarga}</div>
-            <button onClick={() => window.location.reload()} style={{marginTop:12, padding:'10px 24px', background:'#e0001b', border:'none', borderRadius:10, color:'white', fontSize:14, fontWeight:700, cursor:'pointer', fontFamily:'inherit'}}>
+            <div style={{fontSize:15, fontWeight:700, color:theme.black, marginBottom:6}}>{errorCarga}</div>
+            <button onClick={() => window.location.reload()} style={{marginTop:12, padding:'10px 24px', background:theme.red, border:'none', borderRadius:10, color:'white', fontSize:14, fontWeight:700, cursor:'pointer', fontFamily:'inherit'}}>
               Recargar
             </button>
           </div>
-        : <div style={{color:'#666'}}>Cargando panel...</div>
+        : <div style={{color:theme.gray}}>Cargando panel...</div>
       }
     </div>
   )
 
   if (isMobile) return (
-    <div style={{minHeight:'100vh', background:'#f0f2f7', maxWidth:480, margin:'0 auto'}}>
+    <div style={{minHeight:'100vh', background:theme.bgMuted, maxWidth:480, margin:'0 auto'}}>
       {/* DRAWER OVERLAY */}
       {menuAbierto && (
         <div style={{position:'fixed', inset:0, zIndex:100, display:'flex'}}>
           <div style={{flex:1, background:'rgba(0,0,0,0.45)'}} onClick={() => setMenuAbierto(false)} />
-          <div style={{width:260, background:'#0e0e0e', height:'100%', display:'flex', flexDirection:'column', padding:'28px 16px', gap:4, overflowY:'auto'}}>
+          <nav style={{width:260, background:theme.black, height:'100%', display:'flex', flexDirection:'column', padding:'28px 16px', gap:4, overflowY:'auto'}}>
             <div style={{display:'flex', alignItems:'center', gap:10, marginBottom:24, paddingLeft:8}}>
               <div style={{width:36, height:36, borderRadius:10, background: negocio.color, display:'flex', alignItems:'center', justifyContent:'center', fontSize:13, fontWeight:900, color:'white', flexShrink:0}}>
                 {negocio.nombre.slice(0,2).toUpperCase()}
               </div>
               <div>
                 <div style={{fontSize:14, fontWeight:700, color:'white'}}>{negocio.nombre}</div>
-                <div style={{fontSize:11, color:'#666'}}>Panel del dueño</div>
+                <div style={{fontSize:11, color:theme.gray}}>Panel del dueño</div>
               </div>
             </div>
             {NAV_ITEMS.map(item => (
-              <button key={item.id} style={{padding:'15px 16px', border:'none', borderRadius:12, fontSize:14, cursor:'pointer', fontFamily:'inherit', textAlign:'left', background: seccion === item.id ? '#1e1e1e' : 'transparent', color: seccion === item.id ? 'white' : '#666', fontWeight: seccion === item.id ? 700 : 500}}
+              <button key={item.id} style={{padding:'15px 16px', border:'none', borderRadius:12, fontSize:14, cursor:'pointer', fontFamily:'inherit', textAlign:'left', background: seccion === item.id ? '#1e1e1e' : 'transparent', color: seccion === item.id ? 'white' : theme.gray, fontWeight: seccion === item.id ? 700 : 500}}
                 onClick={() => { setSeccion(item.id); setMenuAbierto(false) }}>
                 {item.icon} {item.label}
               </button>
             ))}
             <div style={{marginTop:'auto', paddingTop:24}}>
-              <button style={{width:'100%', padding:'12px 16px', background:'transparent', border:'1px solid #2a2a2a', borderRadius:12, color:'#666', fontSize:14, fontWeight:600, cursor:'pointer', fontFamily:'inherit', textAlign:'left'}} onClick={cerrarSesion}>
+              <button style={{width:'100%', padding:'12px 16px', background:'transparent', border:'1px solid #2a2a2a', borderRadius:12, color:theme.gray, fontSize:14, fontWeight:600, cursor:'pointer', fontFamily:'inherit', textAlign:'left'}} onClick={cerrarSesion}>
                 ↩ Cerrar sesión
               </button>
             </div>
-          </div>
+          </nav>
         </div>
       )}
       {/* MOBILE TOPBAR */}
-      <div style={{display:'flex', alignItems:'center', justifyContent:'space-between', padding:'20px 20px 16px', background:'white', borderBottom:'1px solid #e8eaf0', position:'sticky', top:0, zIndex:10}}>
+      <header style={{display:'flex', alignItems:'center', justifyContent:'space-between', padding:'20px 20px 16px', background:'white', borderBottom:'1px solid #e8eaf0', position:'sticky', top:0, zIndex:10}}>
         <div style={{display:'flex', alignItems:'center', gap:12}}>
           <div style={{width:40, height:40, borderRadius:12, background: negocio.color, display:'flex', alignItems:'center', justifyContent:'center', fontSize:14, fontWeight:900, color:'white'}}>
             {negocio.nombre.slice(0,2).toUpperCase()}
           </div>
           <div>
-            <div style={{fontSize:16, fontWeight:700, color:'#0e0e0e'}}>{negocio.nombre}</div>
-            <div style={{fontSize:11, color:'#666'}}>{NAV_ITEMS.find(n => n.id === seccion)?.icon} {NAV_ITEMS.find(n => n.id === seccion)?.label}</div>
+            <div style={{fontSize:16, fontWeight:700, color:theme.black}}>{negocio.nombre}</div>
+            <div style={{fontSize:11, color:theme.gray}}>{NAV_ITEMS.find(n => n.id === seccion)?.icon} {NAV_ITEMS.find(n => n.id === seccion)?.label}</div>
           </div>
         </div>
-        <button style={{width:44, height:44, background:'#f0f2f7', border:'none', borderRadius:10, fontSize:20, cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center'}} onClick={() => setMenuAbierto(true)}>
+        <button style={{width:44, height:44, background:theme.bgMuted, border:'none', borderRadius:10, fontSize:20, cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center'}} onClick={() => setMenuAbierto(true)}>
           ☰
         </button>
-      </div>
-      <div style={{padding:16}}>
+      </header>
+      <main style={{padding:16}}>
         {mostrarExito && <BannerExito onClose={() => setMostrarExito(false)} />}
         {negocio.plan === 'gratis' && metricas && <BannerLimite totalClientes={metricas.totalClientes} />}
         <BannerPinDebil negocio={negocio} onConfigurar={() => { setSeccion('config'); setMenuAbierto(false) }} />
         <SeccionContenido seccion={seccion} negocio={negocio} metricas={metricas} setNegocio={setNegocio} />
-      </div>
+      </main>
     </div>
   )
 
   // DESKTOP LAYOUT
   return (
-    <div style={{minHeight:'100vh', background:'#f0f2f7', display:'flex'}}>
+    <div style={{minHeight:'100vh', background:theme.bgMuted, display:'flex'}}>
       {/* SIDEBAR */}
-      <div style={{width:260, background:'#0e0e0e', minHeight:'100vh', display:'flex', flexDirection:'column', position:'fixed', left:0, top:0, bottom:0}}>
+      <nav style={{width:260, background:theme.black, minHeight:'100vh', display:'flex', flexDirection:'column', position:'fixed', left:0, top:0, bottom:0}}>
         {/* Logo */}
         <div style={{padding:'28px 24px 24px', borderBottom:'1px solid #1e1e1e'}}>
           <div style={{display:'flex', alignItems:'center', gap:10, marginBottom:20}}>
-            <div style={{width:8, height:8, borderRadius:'50%', background:'#e0001b', boxShadow:'0 0 8px #e0001b'}}/>
+            <div style={{width:8, height:8, borderRadius:'50%', background:theme.red, boxShadow:'0 0 8px #e0001b'}}/>
             <span style={{fontSize:18, fontWeight:800, color:'white', letterSpacing:-0.5}}>fielty</span>
           </div>
           <div style={{display:'flex', alignItems:'center', gap:10}}>
@@ -217,7 +218,7 @@ export default function Dashboard() {
             </div>
             <div>
               <div style={{fontSize:14, fontWeight:700, color:'white'}}>{negocio.nombre}</div>
-              <div style={{fontSize:11, color:'#555'}}>Panel del dueño</div>
+              <div style={{fontSize:11, color:theme.grayMid}}>Panel del dueño</div>
             </div>
           </div>
         </div>
@@ -230,7 +231,7 @@ export default function Dashboard() {
               padding:'12px 16px', borderRadius:12, border:'none', cursor:'pointer',
               fontFamily:'inherit', fontSize:14, fontWeight: seccion === item.id ? 700 : 500,
               background: seccion === item.id ? '#1e1e1e' : 'transparent',
-              color: seccion === item.id ? 'white' : '#666',
+              color: seccion === item.id ? 'white' : theme.gray,
               marginBottom:4, textAlign:'left', transition:'all 0.15s'
             }}>
               <span style={{fontSize:18}}>{item.icon}</span>
@@ -245,35 +246,35 @@ export default function Dashboard() {
         <div style={{padding:'12px 12px 0'}}>
           {negocio.plan && negocio.plan !== 'gratis' ? (
             <div style={{padding:'10px 16px', borderRadius:12, background:'#1e1e1e', display:'flex', alignItems:'center', gap:8}}>
-              <div style={{width:8, height:8, borderRadius:'50%', background: negocio.plan === 'business' ? '#f0a500' : '#e0001b', flexShrink:0}} />
+              <div style={{width:8, height:8, borderRadius:'50%', background: negocio.plan === 'business' ? theme.gold : theme.red, flexShrink:0}} />
               <span style={{fontSize:13, fontWeight:700, color:'white', textTransform:'capitalize'}}>
                 Plan {negocio.plan === 'pro_early' ? 'Pro' : negocio.plan}
               </span>
             </div>
           ) : (
-            <button onClick={() => window.location.href = '/dashboard/upgrade'} style={{width:'100%', padding:'10px 16px', borderRadius:12, border:'1px dashed #333', background:'transparent', cursor:'pointer', fontFamily:'inherit', fontSize:13, fontWeight:700, color:'#e0001b', textAlign:'left', display:'flex', alignItems:'center', gap:8}}>
+            <button onClick={() => window.location.href = '/dashboard/upgrade'} style={{width:'100%', padding:'10px 16px', borderRadius:12, border:'1px dashed #333', background:'transparent', cursor:'pointer', fontFamily:'inherit', fontSize:13, fontWeight:700, color:theme.red, textAlign:'left', display:'flex', alignItems:'center', gap:8}}>
               <span>⬆</span> Mejorar plan
             </button>
           )}
         </div>
         <div style={{padding:'12px 12px', borderTop:'1px solid #1e1e1e', marginTop:12}}>
-          <button onClick={cerrarSesion} style={{width:'100%', padding:'12px 16px', borderRadius:12, border:'none', cursor:'pointer', fontFamily:'inherit', fontSize:14, fontWeight:600, background:'transparent', color:'#555', textAlign:'left', display:'flex', alignItems:'center', gap:12}}>
+          <button onClick={cerrarSesion} style={{width:'100%', padding:'12px 16px', borderRadius:12, border:'none', cursor:'pointer', fontFamily:'inherit', fontSize:14, fontWeight:600, background:'transparent', color:theme.grayMid, textAlign:'left', display:'flex', alignItems:'center', gap:12}}>
             <span>🚪</span> Cerrar sesión
           </button>
         </div>
-      </div>
+      </nav>
 
       {/* MAIN CONTENT */}
-      <div style={{marginLeft:260, flex:1, padding:32, minHeight:'100vh'}}>
+      <main style={{marginLeft:260, flex:1, padding:32, minHeight:'100vh'}}>
         {mostrarExito && <BannerExito onClose={() => setMostrarExito(false)} />}
         {negocio.plan === 'gratis' && metricas && <BannerLimite totalClientes={metricas.totalClientes} />}
         <BannerPinDebil negocio={negocio} onConfigurar={() => setSeccion('config')} />
         {/* Header */}
         <div style={{marginBottom:28}}>
-          <div style={{fontSize:22, fontWeight:800, color:'#0e0e0e'}}>
+          <div style={{fontSize:22, fontWeight:800, color:theme.black}}>
             {NAV_ITEMS.find(n => n.id === seccion)?.icon} {NAV_ITEMS.find(n => n.id === seccion)?.label}
           </div>
-          <div style={{fontSize:13, color:'#666', marginTop:4}}>
+          <div style={{fontSize:13, color:theme.gray, marginTop:4}}>
             {seccion === 'inicio' && 'Resumen general de tu negocio'}
             {seccion === 'clientes' && 'Todos los clientes registrados'}
             {seccion === 'recompensas' && 'Gestión de recompensas y canjes'}
@@ -283,7 +284,7 @@ export default function Dashboard() {
           </div>
         </div>
         <SeccionContenido seccion={seccion} negocio={negocio} metricas={metricas} setNegocio={setNegocio} isDesktop={true} />
-      </div>
+      </main>
     </div>
   )
 }
@@ -342,31 +343,31 @@ function TutorialChecklist({ negocio, metricas }) {
     <div style={{background:'white', borderRadius:20, padding:'24px 24px 20px', marginBottom:24, boxShadow:'0 2px 12px rgba(0,0,0,0.07)'}}>
       {confirmarCierre && (
         <div style={{background:'#fff8e6', border:'1px solid #f0a500', borderRadius:14, padding:'16px 18px', marginBottom:16}}>
-          <div style={{fontSize:14, fontWeight:700, color:'#0e0e0e', marginBottom:4}}>¿Cerrar la guía de primeros pasos?</div>
-          <div style={{fontSize:13, color:'#666', marginBottom:14}}>Todavía no completaste todos los pasos. Podés volver a abrirla desde Configuración si querés.</div>
+          <div style={{fontSize:14, fontWeight:700, color:theme.black, marginBottom:4}}>¿Cerrar la guía de primeros pasos?</div>
+          <div style={{fontSize:13, color:theme.gray, marginBottom:14}}>Todavía no completaste todos los pasos. Podés volver a abrirla desde Configuración si querés.</div>
           <div style={{display:'flex', gap:10}}>
-            <button onClick={cerrar} style={{padding:'8px 18px', background:'#0e0e0e', border:'none', borderRadius:10, color:'white', fontSize:13, fontWeight:700, cursor:'pointer', fontFamily:'inherit'}}>Sí, cerrar</button>
-            <button onClick={() => setConfirmarCierre(false)} style={{padding:'8px 18px', background:'#f0f2f7', border:'none', borderRadius:10, color:'#555', fontSize:13, fontWeight:700, cursor:'pointer', fontFamily:'inherit'}}>Cancelar</button>
+            <button onClick={cerrar} style={{padding:'8px 18px', background:theme.black, border:'none', borderRadius:10, color:'white', fontSize:13, fontWeight:700, cursor:'pointer', fontFamily:'inherit'}}>Sí, cerrar</button>
+            <button onClick={() => setConfirmarCierre(false)} style={{padding:'8px 18px', background:theme.bgMuted, border:'none', borderRadius:10, color:theme.grayMid, fontSize:13, fontWeight:700, cursor:'pointer', fontFamily:'inherit'}}>Cancelar</button>
           </div>
         </div>
       )}
       <div style={{display:'flex', alignItems:'flex-start', justifyContent:'space-between', marginBottom:14}}>
         <div>
-          <div style={{fontSize:16, fontWeight:800, color:'#0e0e0e'}}>🚀 Primeros pasos</div>
-          <div style={{fontSize:13, color:'#666', marginTop:3}}>{completados} de {pasos.length} completados</div>
+          <div style={{fontSize:16, fontWeight:800, color:theme.black}}>🚀 Primeros pasos</div>
+          <div style={{fontSize:13, color:theme.gray, marginTop:3}}>{completados} de {pasos.length} completados</div>
         </div>
         <button onClick={() => setConfirmarCierre(true)} style={{background:'none', border:'none', cursor:'pointer', fontSize:20, color:'#ccc', width:44, height:44, display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0}}>×</button>
       </div>
-      <div style={{background:'#f0f2f7', borderRadius:99, height:6, marginBottom:20}}>
-        <div style={{background:'#e0001b', borderRadius:99, height:6, width:`${progreso}%`, transition:'width 0.5s'}} />
+      <div style={{background:theme.bgMuted, borderRadius:99, height:6, marginBottom:20}}>
+        <div style={{background:theme.red, borderRadius:99, height:6, width:`${progreso}%`, transition:'width 0.5s'}} />
       </div>
       {pasos.map((paso, i) => (
         <div key={i} style={{display:'flex', alignItems:'center', gap:12, padding:'10px 0', borderBottom: i < pasos.length - 1 ? '1px solid #f0f2f7' : 'none'}}>
           <div style={{width:24, height:24, borderRadius:'50%', flexShrink:0, display:'flex', alignItems:'center', justifyContent:'center', fontSize:12, fontWeight:800,
-            background: paso.done ? '#00b96b' : '#f0f2f7', color: paso.done ? 'white' : '#aaa'}}>
+            background: paso.done ? theme.green : theme.bgMuted, color: paso.done ? 'white' : theme.grayLight}}>
             {paso.done ? '✓' : i + 1}
           </div>
-          <span style={{fontSize:14, fontWeight: paso.done ? 400 : 600, color: paso.done ? '#aaa' : '#0e0e0e', textDecoration: paso.done ? 'line-through' : 'none'}}>
+          <span style={{fontSize:14, fontWeight: paso.done ? 400 : 600, color: paso.done ? theme.grayLight : theme.black, textDecoration: paso.done ? 'line-through' : 'none'}}>
             {paso.label}
           </span>
         </div>
@@ -392,8 +393,8 @@ function InicioSection({ negocio, metricas, isDesktop }) {
         ].map((m, i) => (
           <div key={i} style={{background:'white', borderRadius:16, padding:'20px 16px', textAlign:'center', boxShadow:'0 2px 8px rgba(0,0,0,0.06)'}}>
             <div style={{fontSize:24, marginBottom:8}}>{m.icon}</div>
-            <div style={{fontSize: isDesktop ? 28 : 22, fontWeight:800, color:'#0e0e0e', fontFamily:'monospace'}}>{m.value}</div>
-            <div style={{fontSize:11, color:'#666', marginTop:4, lineHeight:1.3}}>{m.label}</div>
+            <div style={{fontSize: isDesktop ? 28 : 22, fontWeight:800, color:theme.black, fontFamily:'monospace'}}>{m.value}</div>
+            <div style={{fontSize:11, color:theme.gray, marginTop:4, lineHeight:1.3}}>{m.label}</div>
           </div>
         ))}
       </div>
@@ -403,28 +404,28 @@ function InicioSection({ negocio, metricas, isDesktop }) {
           <div style={s.sectionTitle}>Links del negocio</div>
           <div style={s.card}>
             <div style={{marginBottom:16}}>
-              <div style={{fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.06em', color:'#666', marginBottom:6}}>Registro de clientes</div>
-              <div style={{background:'#f0f2f7', borderRadius:10, padding:'10px 14px', fontSize:12, fontFamily:'monospace', color:'#0e0e0e', wordBreak:'break-all', marginBottom:8}}>
+              <div style={{fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.06em', color:theme.gray, marginBottom:6}}>Registro de clientes</div>
+              <div style={{background:theme.bgMuted, borderRadius:10, padding:'10px 14px', fontSize:12, fontFamily:'monospace', color:theme.black, wordBreak:'break-all', marginBottom:8}}>
                 {typeof window !== 'undefined' ? window.location.origin : ''}/registro/{negocio.slug}
               </div>
               <div style={{display:'flex', gap:8}}>
                 <button style={{...s.btnRed, padding:10, fontSize:13, flex:1}} onClick={() => { navigator.clipboard.writeText(`${window.location.origin}/registro/${negocio.slug}`); storage.set('fielty_tutorial_link_copiado', '1') }}>📋 Copiar link</button>
-                <button style={{...s.btnRed, padding:10, fontSize:13, flex:1, background:'#0e0e0e'}} onClick={() => window.open(`/qr/${negocio.slug}`, '_blank')}>🖨️ Ver QR</button>
+                <button style={{...s.btnRed, padding:10, fontSize:13, flex:1, background:theme.black}} onClick={() => window.open(`/qr/${negocio.slug}`, '_blank')}>🖨️ Ver QR</button>
               </div>
             </div>
             <div style={{marginBottom:16}}>
-              <div style={{fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.06em', color:'#666', marginBottom:6}}>Ver tarjeta (clientes registrados)</div>
-              <div style={{background:'#f0f2f7', borderRadius:10, padding:'10px 14px', fontSize:12, fontFamily:'monospace', color:'#0e0e0e', wordBreak:'break-all', marginBottom:8}}>
+              <div style={{fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.06em', color:theme.gray, marginBottom:6}}>Ver tarjeta (clientes registrados)</div>
+              <div style={{background:theme.bgMuted, borderRadius:10, padding:'10px 14px', fontSize:12, fontFamily:'monospace', color:theme.black, wordBreak:'break-all', marginBottom:8}}>
                 {typeof window !== 'undefined' ? window.location.origin : ''}/mi-tarjeta
               </div>
               <div style={{display:'flex', gap:8}}>
                 <button style={{...s.btnRed, padding:10, fontSize:13, flex:1}} onClick={() => navigator.clipboard.writeText(`${window.location.origin}/mi-tarjeta`)}>📋 Copiar link</button>
-                <button style={{...s.btnRed, padding:10, fontSize:13, flex:1, background:'#0e0e0e'}} onClick={() => window.open('/qr/mi-tarjeta', '_blank')}>🖨️ Imprimir cartel</button>
+                <button style={{...s.btnRed, padding:10, fontSize:13, flex:1, background:theme.black}} onClick={() => window.open('/qr/mi-tarjeta', '_blank')}>🖨️ Imprimir cartel</button>
               </div>
             </div>
             <div>
-              <div style={{fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.06em', color:'#666', marginBottom:6}}>Caja (sin sucursal)</div>
-              <div style={{background:'#f0f2f7', borderRadius:10, padding:'10px 14px', fontSize:12, fontFamily:'monospace', color:'#0e0e0e', wordBreak:'break-all', marginBottom:8}}>
+              <div style={{fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.06em', color:theme.gray, marginBottom:6}}>Caja (sin sucursal)</div>
+              <div style={{background:theme.bgMuted, borderRadius:10, padding:'10px 14px', fontSize:12, fontFamily:'monospace', color:theme.black, wordBreak:'break-all', marginBottom:8}}>
                 {typeof window !== 'undefined' ? window.location.origin : ''}/c/{negocio.slug}
               </div>
               <button style={{...s.btnRed, padding:10, fontSize:13}} onClick={() => navigator.clipboard.writeText(`${window.location.origin}/c/${negocio.slug}`)}>📋 Copiar link de caja</button>
@@ -435,17 +436,17 @@ function InicioSection({ negocio, metricas, isDesktop }) {
         <div>
           <div style={s.sectionTitle}>Últimas transacciones</div>
           <div style={s.card}>
-            {metricas.transacciones.length === 0 && <div style={{textAlign:'center', padding:24, color:'#666', fontSize:14}}>Todavía no hay transacciones</div>}
+            {metricas.transacciones.length === 0 && <div style={{textAlign:'center', padding:24, color:theme.gray, fontSize:14}}>Todavía no hay transacciones</div>}
             {metricas.transacciones.map((t, i) => (
               <div key={i} style={{display:'flex', alignItems:'center', gap:12, padding:'12px 0', borderBottom:'1px solid #f0f2f7'}}>
-                <div style={{width:36, height:36, borderRadius:10, display:'flex', alignItems:'center', justifyContent:'center', fontSize:16, flexShrink:0, background: t.tipo === 'suma' ? '#e8faf2' : t.tipo === 'cumpleanos' ? '#fff8e0' : '#f0f0ff'}}>
+                <div style={{width:36, height:36, borderRadius:10, display:'flex', alignItems:'center', justifyContent:'center', fontSize:16, flexShrink:0, background: t.tipo === 'suma' ? theme.successBg : t.tipo === 'cumpleanos' ? '#fff8e0' : '#f0f0ff'}}>
                   {t.tipo === 'suma' ? '⭐' : t.tipo === 'cumpleanos' ? '🎂' : t.tipo === 'referido' ? '🤝' : '🎁'}
                 </div>
                 <div style={{flex:1}}>
-                  <div style={{fontSize:13, fontWeight:600, color:'#0e0e0e'}}>{t.descripcion}</div>
-                  <div style={{fontSize:11, color:'#666', marginTop:2}}>{new Date(t.created_at).toLocaleDateString('es-AR')}</div>
+                  <div style={{fontSize:13, fontWeight:600, color:theme.black}}>{t.descripcion}</div>
+                  <div style={{fontSize:11, color:theme.gray, marginTop:2}}>{new Date(t.created_at).toLocaleDateString('es-AR')}</div>
                 </div>
-                <div style={{fontSize:14, fontWeight:800, fontFamily:'monospace', color: t.tipo === 'suma' || t.tipo === 'cumpleanos' || t.tipo === 'referido' ? '#00b96b' : '#e0001b'}}>
+                <div style={{fontSize:14, fontWeight:800, fontFamily:'monospace', color: t.tipo === 'suma' || t.tipo === 'cumpleanos' || t.tipo === 'referido' ? theme.green : theme.red}}>
                   {t.tipo === 'suma' || t.tipo === 'cumpleanos' || t.tipo === 'referido' ? '+' : '-'}{t.puntos} pts
                 </div>
               </div>
@@ -460,25 +461,25 @@ function InicioSection({ negocio, metricas, isDesktop }) {
           <div style={s.card}>
             <div style={{display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:10, marginBottom: metricas.recompensaMasCanjeada ? 16 : 0}}>
               {[
-                { label:'Este mes', value: metricas.canjesEsteMes, color:'#00b96b' },
-                { label:'Total', value: metricas.totalCanjes, color:'#0e0e0e' },
-                { label:'Pendientes', value: metricas.canjesPendientes, color:'#f0a500' },
+                { label:'Este mes', value: metricas.canjesEsteMes, color:theme.green },
+                { label:'Total', value: metricas.totalCanjes, color:theme.black },
+                { label:'Pendientes', value: metricas.canjesPendientes, color:theme.gold },
               ].map((item, i) => (
                 <div key={i} style={{textAlign:'center', background:'#f8f9fc', borderRadius:14, padding:'14px 8px'}}>
                   <div style={{fontSize:24, fontWeight:800, color:item.color, fontFamily:'monospace'}}>{item.value}</div>
-                  <div style={{fontSize:11, color:'#666', marginTop:4}}>{item.label}</div>
+                  <div style={{fontSize:11, color:theme.gray, marginTop:4}}>{item.label}</div>
                 </div>
               ))}
             </div>
             {metricas.recompensaMasCanjeada && (
-              <div style={{background:'#f0f2f7', borderRadius:12, padding:'12px 14px', display:'flex', alignItems:'center', justifyContent:'space-between'}}>
+              <div style={{background:theme.bgMuted, borderRadius:12, padding:'12px 14px', display:'flex', alignItems:'center', justifyContent:'space-between'}}>
                 <div>
-                  <div style={{fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.06em', color:'#666', marginBottom:2}}>Más popular</div>
-                  <div style={{fontSize:14, fontWeight:700, color:'#0e0e0e'}}>{metricas.recompensaMasCanjeada[0]}</div>
+                  <div style={{fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.06em', color:theme.gray, marginBottom:2}}>Más popular</div>
+                  <div style={{fontSize:14, fontWeight:700, color:theme.black}}>{metricas.recompensaMasCanjeada[0]}</div>
                 </div>
                 <div style={{textAlign:'right'}}>
-                  <div style={{fontSize:22, fontWeight:800, color:'#e0001b', fontFamily:'monospace'}}>{metricas.recompensaMasCanjeada[1]}</div>
-                  <div style={{fontSize:10, color:'#666'}}>canjes</div>
+                  <div style={{fontSize:22, fontWeight:800, color:theme.red, fontFamily:'monospace'}}>{metricas.recompensaMasCanjeada[1]}</div>
+                  <div style={{fontSize:10, color:theme.gray}}>canjes</div>
                 </div>
               </div>
             )}
@@ -504,10 +505,10 @@ function InicioSection({ negocio, metricas, isDesktop }) {
                     {c.nombre.slice(0,2).toUpperCase()}
                   </div>
                   <div style={{flex:1, minWidth:0}}>
-                    <div style={{fontSize:14, fontWeight:700, color:'#0e0e0e', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap'}}>{c.nombre}</div>
-                    <div style={{fontSize:11, color:'#666', marginTop:1}}>{nivel} {(c.puntos_historicos || 0).toLocaleString('es-AR')} pts históricos</div>
+                    <div style={{fontSize:14, fontWeight:700, color:theme.black, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap'}}>{c.nombre}</div>
+                    <div style={{fontSize:11, color:theme.gray, marginTop:1}}>{nivel} {(c.puntos_historicos || 0).toLocaleString('es-AR')} pts históricos</div>
                   </div>
-                  <div style={{fontSize:16, fontWeight:800, color:'#f0a500', fontFamily:'monospace', flexShrink:0}}>{(c.puntos || 0).toLocaleString('es-AR')}</div>
+                  <div style={{fontSize:16, fontWeight:800, color:theme.gold, fontFamily:'monospace', flexShrink:0}}>{(c.puntos || 0).toLocaleString('es-AR')}</div>
                 </div>
               )
             })}
@@ -574,7 +575,7 @@ function ClientesSection({ negocioId, color, plan, nombreNegocio, isDesktop }) {
       <div style={{display: isDesktop ? 'flex' : 'block', alignItems:'center', justifyContent:'space-between', marginBottom:16, gap:16}}>
         <div style={{display:'flex', gap:8, flexWrap:'wrap', marginBottom: isDesktop ? 0 : 12}}>
           {['todos', 'activos', 'inactivos', 'referidos'].map(f => (
-            <button key={f} style={{...s.filtroBtn, background: filtro === f ? '#0e0e0e' : '#f0f2f7', color: filtro === f ? 'white' : '#666'}} onClick={() => setFiltro(f)}>
+            <button key={f} style={{...s.filtroBtn, background: filtro === f ? theme.black : theme.bgMuted, color: filtro === f ? 'white' : theme.gray}} onClick={() => setFiltro(f)}>
               {f.charAt(0).toUpperCase() + f.slice(1)}
             </button>
           ))}
@@ -584,11 +585,11 @@ function ClientesSection({ negocioId, color, plan, nombreNegocio, isDesktop }) {
             <input data-clarity-mask="True" placeholder="🔍 Buscar por nombre o DNI..." value={busqueda} onChange={e => setBusqueda(e.target.value)}
               style={{padding:'10px 16px', border:'2px solid #e8eaf0', borderRadius:12, fontSize:14, fontFamily:'inherit', outline:'none', width:280}} />
             {esPago(plan) ? (
-              <button onClick={exportarCSV} style={{padding:'10px 16px', background:'#0e0e0e', border:'none', borderRadius:12, color:'white', fontSize:13, fontWeight:700, cursor:'pointer', fontFamily:'inherit', whiteSpace:'nowrap'}}>
+              <button onClick={exportarCSV} style={{padding:'10px 16px', background:theme.black, border:'none', borderRadius:12, color:'white', fontSize:13, fontWeight:700, cursor:'pointer', fontFamily:'inherit', whiteSpace:'nowrap'}}>
                 ↓ Exportar CSV
               </button>
             ) : (
-              <button onClick={() => window.location.href = '/dashboard/upgrade'} title="Disponible en los planes Pro y Business" style={{padding:'10px 16px', background:'#f5f6fa', border:'1px dashed #ccc', borderRadius:12, color:'#aaa', fontSize:13, fontWeight:700, cursor:'pointer', fontFamily:'inherit', whiteSpace:'nowrap'}}>
+              <button onClick={() => window.location.href = '/dashboard/upgrade'} title="Disponible en los planes Pro y Business" style={{padding:'10px 16px', background:theme.bgMuted2, border:'1px dashed #ccc', borderRadius:12, color:theme.grayLight, fontSize:13, fontWeight:700, cursor:'pointer', fontFamily:'inherit', whiteSpace:'nowrap'}}>
                 🔒 Exportar CSV
               </button>
             )}
@@ -596,13 +597,13 @@ function ClientesSection({ negocioId, color, plan, nombreNegocio, isDesktop }) {
         )}
       </div>
       <div style={s.card}>
-        <div style={{fontSize:11, color:'#666', marginBottom:12}}>{filtrados.length} clientes</div>
+        <div style={{fontSize:11, color:theme.gray, marginBottom:12}}>{filtrados.length} clientes</div>
         {isDesktop ? (
           <table style={{width:'100%', borderCollapse:'collapse'}}>
             <thead>
               <tr style={{borderBottom:'2px solid #f0f2f7'}}>
                 {['Cliente', 'DNI', 'Nivel', 'Puntos', 'Visitas', 'Última visita', ''].map((h, i) => (
-                  <th key={i} style={{textAlign:'left', padding:'8px 12px', fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.06em', color:'#666'}}>{h}</th>
+                  <th key={i} style={{textAlign:'left', padding:'8px 12px', fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.06em', color:theme.gray}}>{h}</th>
                 ))}
               </tr>
             </thead>
@@ -614,14 +615,14 @@ function ClientesSection({ negocioId, color, plan, nombreNegocio, isDesktop }) {
                       <div style={{width:36, height:36, borderRadius:10, background: color, display:'flex', alignItems:'center', justifyContent:'center', fontSize:12, fontWeight:800, color:'white', flexShrink:0}}>
                         {c.nombre.slice(0,2).toUpperCase()}
                       </div>
-                      <div style={{fontSize:14, fontWeight:700, color:'#0e0e0e'}}>{c.nombre}</div>
+                      <div style={{fontSize:14, fontWeight:700, color:theme.black}}>{c.nombre}</div>
                     </div>
                   </td>
-                  <td style={{padding:'14px 12px', fontSize:13, color:'#666'}}>{c.dni}</td>
+                  <td style={{padding:'14px 12px', fontSize:13, color:theme.gray}}>{c.dni}</td>
                   <td style={{padding:'14px 12px', fontSize:13}}>{getNivel(c.puntos_historicos || 0)}</td>
-                  <td style={{padding:'14px 12px', fontSize:16, fontWeight:800, color:'#f0a500', fontFamily:'monospace'}}>{c.puntos}</td>
-                  <td style={{padding:'14px 12px', fontSize:13, color:'#666'}}>{c.visitas || 0}</td>
-                  <td style={{padding:'14px 12px', fontSize:13, color:'#666'}}>{c.ultima_visita ? new Date(c.ultima_visita).toLocaleDateString('es-AR') : '—'}</td>
+                  <td style={{padding:'14px 12px', fontSize:16, fontWeight:800, color:theme.gold, fontFamily:'monospace'}}>{c.puntos}</td>
+                  <td style={{padding:'14px 12px', fontSize:13, color:theme.gray}}>{c.visitas || 0}</td>
+                  <td style={{padding:'14px 12px', fontSize:13, color:theme.gray}}>{c.ultima_visita ? new Date(c.ultima_visita).toLocaleDateString('es-AR') : '—'}</td>
                   <td style={{padding:'14px 12px'}}>
                     {c.telefono && (
                       <a href={waCliente(c, !c.ultima_visita || new Date(c.ultima_visita) <= hace30dias)} target="_blank" rel="noreferrer" title="Enviar WhatsApp"
@@ -642,12 +643,12 @@ function ClientesSection({ negocioId, color, plan, nombreNegocio, isDesktop }) {
                   {c.nombre.slice(0,2).toUpperCase()}
                 </div>
                 <div style={{flex:1}}>
-                  <div style={{fontSize:14, fontWeight:700, color:'#0e0e0e'}}>{c.nombre}</div>
-                  <div style={{fontSize:11, color:'#666', marginTop:2}}>DNI {c.dni} · {getNivel(c.puntos_historicos || 0)}</div>
+                  <div style={{fontSize:14, fontWeight:700, color:theme.black}}>{c.nombre}</div>
+                  <div style={{fontSize:11, color:theme.gray, marginTop:2}}>DNI {c.dni} · {getNivel(c.puntos_historicos || 0)}</div>
                 </div>
                 <div style={{textAlign:'right'}}>
-                  <div style={{fontSize:16, fontWeight:800, color:'#f0a500', fontFamily:'monospace'}}>{c.puntos}</div>
-                  <div style={{fontSize:10, color:'#666'}}>pts</div>
+                  <div style={{fontSize:16, fontWeight:800, color:theme.gold, fontFamily:'monospace'}}>{c.puntos}</div>
+                  <div style={{fontSize:10, color:theme.gray}}>pts</div>
                 </div>
                 {c.telefono && (
                   <a href={waCliente(c, !c.ultima_visita || new Date(c.ultima_visita) <= hace30dias)} target="_blank" rel="noreferrer" title="Enviar WhatsApp"
@@ -659,7 +660,7 @@ function ClientesSection({ negocioId, color, plan, nombreNegocio, isDesktop }) {
             ))}
           </div>
         )}
-        {filtrados.length === 0 && <div style={{textAlign:'center', padding:24, color:'#666', fontSize:14}}>No hay clientes en este filtro</div>}
+        {filtrados.length === 0 && <div style={{textAlign:'center', padding:24, color:theme.gray, fontSize:14}}>No hay clientes en este filtro</div>}
       </div>
     </>
   )
@@ -743,17 +744,17 @@ function CampanasSection({ negocio, isDesktop }) {
     return (
       <div style={{...s.card, textAlign:'center', padding:'48px 32px', maxWidth:520}}>
         <div style={{fontSize:44, marginBottom:16}}>📣</div>
-        <div style={{fontSize:19, fontWeight:800, color:'#0e0e0e', marginBottom:8}}>Traé de vuelta a tus clientes inactivos</div>
-        <div style={{fontSize:14, color:'#666', lineHeight:1.6, marginBottom:8}}>
+        <div style={{fontSize:19, fontWeight:800, color:theme.black, marginBottom:8}}>Traé de vuelta a tus clientes inactivos</div>
+        <div style={{fontSize:14, color:theme.gray, lineHeight:1.6, marginBottom:8}}>
           Mandá campañas de email a los clientes que dejaron de venir y mirá cuántos vuelven a comprar.
         </div>
         {inactivos > 0 && (
-          <div style={{fontSize:14, color:'#0e0e0e', fontWeight:700, marginBottom:20}}>
+          <div style={{fontSize:14, color:theme.black, fontWeight:700, marginBottom:20}}>
             Tenés {inactivos} cliente{inactivos === 1 ? '' : 's'} inactivo{inactivos === 1 ? '' : 's'} esperando volver.
           </div>
         )}
         <button onClick={() => window.location.href = '/dashboard/upgrade'}
-          style={{padding:'14px 28px', background:'#e0001b', border:'none', borderRadius:14, color:'white', fontSize:15, fontWeight:800, cursor:'pointer', fontFamily:'inherit'}}>
+          style={{padding:'14px 28px', background:theme.red, border:'none', borderRadius:14, color:'white', fontSize:15, fontWeight:800, cursor:'pointer', fontFamily:'inherit'}}>
           Desbloquear con el plan Pro →
         </button>
       </div>
@@ -763,32 +764,32 @@ function CampanasSection({ negocio, isDesktop }) {
   return (
     <>
       <div style={s.card}>
-        <div style={{fontSize:15, fontWeight:800, color:'#0e0e0e', marginBottom:4}}>📣 Nueva campaña</div>
-        <div style={{fontSize:13, color:'#666', marginBottom:20}}>
+        <div style={{fontSize:15, fontWeight:800, color:theme.black, marginBottom:4}}>📣 Nueva campaña</div>
+        <div style={{fontSize:13, color:theme.gray, marginBottom:20}}>
           Enviá un email a un grupo de clientes. Cada cliente se contacta como máximo una vez cada 30 días.
         </div>
 
-        <div style={{fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.06em', color:'#666', marginBottom:8}}>¿A quiénes?</div>
+        <div style={{fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.06em', color:theme.gray, marginBottom:8}}>¿A quiénes?</div>
         <div style={{display:'flex', gap:8, flexWrap:'wrap', marginBottom:16}}>
           {SEGMENTOS.map(seg => (
             <button key={seg.id} onClick={() => setSegmento(seg.id)}
-              style={{...s.filtroBtn, background: segmento === seg.id ? '#0e0e0e' : '#f0f2f7', color: segmento === seg.id ? 'white' : '#666'}}>
+              style={{...s.filtroBtn, background: segmento === seg.id ? theme.black : theme.bgMuted, color: segmento === seg.id ? 'white' : theme.gray}}>
               {seg.label}
             </button>
           ))}
         </div>
 
-        <div style={{fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.06em', color:'#666', marginBottom:8}}>Asunto</div>
+        <div style={{fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.06em', color:theme.gray, marginBottom:8}}>Asunto</div>
         <input value={asunto} onChange={e => setAsunto(e.target.value)}
           style={{width:'100%', padding:'12px 14px', border:'2px solid #e8eaf0', borderRadius:12, fontSize:14, fontFamily:'inherit', outline:'none', boxSizing:'border-box', marginBottom:16}} />
 
-        <div style={{fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.06em', color:'#666', marginBottom:8}}>Mensaje</div>
+        <div style={{fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.06em', color:theme.gray, marginBottom:8}}>Mensaje</div>
         <textarea value={mensaje} onChange={e => setMensaje(e.target.value)} rows={5}
           style={{width:'100%', padding:'12px 14px', border:'2px solid #e8eaf0', borderRadius:12, fontSize:14, fontFamily:'inherit', outline:'none', boxSizing:'border-box', resize:'vertical', lineHeight:1.5}} />
-        <div style={{fontSize:12, color:'#aaa', marginTop:6, marginBottom:20}}>
-          Variables: <code style={{background:'#f0f2f7', padding:'2px 6px', borderRadius:6}}>{'{nombre}'}</code>{' '}
-          <code style={{background:'#f0f2f7', padding:'2px 6px', borderRadius:6}}>{'{puntos}'}</code>{' '}
-          <code style={{background:'#f0f2f7', padding:'2px 6px', borderRadius:6}}>{'{negocio}'}</code>
+        <div style={{fontSize:12, color:theme.grayLight, marginTop:6, marginBottom:20}}>
+          Variables: <code style={{background:theme.bgMuted, padding:'2px 6px', borderRadius:6}}>{'{nombre}'}</code>{' '}
+          <code style={{background:theme.bgMuted, padding:'2px 6px', borderRadius:6}}>{'{puntos}'}</code>{' '}
+          <code style={{background:theme.bgMuted, padding:'2px 6px', borderRadius:6}}>{'{negocio}'}</code>
           {' '}· El email incluye el botón "Ver mi tarjeta" y el link de baja automáticamente.
         </div>
 
@@ -798,14 +799,14 @@ function CampanasSection({ negocio, isDesktop }) {
           </div>
         )}
         {resultado?.error && (
-          <div style={{background:'#fff0f0', color:'#e0001b', padding:'12px 16px', borderRadius:12, fontSize:13, marginBottom:12}}>
+          <div style={{background:theme.errorBg, color:theme.red, padding:'12px 16px', borderRadius:12, fontSize:13, marginBottom:12}}>
             {resultado.error}
           </div>
         )}
 
         {!confirmar ? (
           <button onClick={() => destinatarios > 0 && setConfirmar(true)} disabled={enviando || destinatarios === 0}
-            style={{padding:'14px 24px', background: destinatarios > 0 ? '#0e0e0e' : '#f0f2f7', border:'none', borderRadius:12, color: destinatarios > 0 ? 'white' : '#aaa', fontSize:14, fontWeight:800, cursor: destinatarios > 0 ? 'pointer' : 'default', fontFamily:'inherit'}}>
+            style={{padding:'14px 24px', background: destinatarios > 0 ? theme.black : theme.bgMuted, border:'none', borderRadius:12, color: destinatarios > 0 ? 'white' : theme.grayLight, fontSize:14, fontWeight:800, cursor: destinatarios > 0 ? 'pointer' : 'default', fontFamily:'inherit'}}>
             {destinatarios === 0 ? 'No hay clientes para contactar en este segmento' : `Enviar a ${destinatarios} cliente${destinatarios === 1 ? '' : 's'} →`}
           </button>
         ) : (
@@ -815,7 +816,7 @@ function CampanasSection({ negocio, isDesktop }) {
               {enviando ? 'Enviando...' : `✓ Confirmar envío a ${destinatarios}`}
             </button>
             <button onClick={() => setConfirmar(false)} disabled={enviando}
-              style={{padding:'14px 20px', background:'#f0f2f7', border:'none', borderRadius:12, color:'#666', fontSize:14, fontWeight:700, cursor:'pointer', fontFamily:'inherit'}}>
+              style={{padding:'14px 20px', background:theme.bgMuted, border:'none', borderRadius:12, color:theme.gray, fontSize:14, fontWeight:700, cursor:'pointer', fontFamily:'inherit'}}>
               Cancelar
             </button>
           </div>
@@ -823,26 +824,26 @@ function CampanasSection({ negocio, isDesktop }) {
       </div>
 
       <div style={s.card}>
-        <div style={{fontSize:15, fontWeight:800, color:'#0e0e0e', marginBottom:16}}>Historial</div>
+        <div style={{fontSize:15, fontWeight:800, color:theme.black, marginBottom:16}}>Historial</div>
         {campanas.length === 0 && (
-          <div style={{textAlign:'center', padding:24, color:'#666', fontSize:14}}>Todavía no enviaste ninguna campaña</div>
+          <div style={{textAlign:'center', padding:24, color:theme.gray, fontSize:14}}>Todavía no enviaste ninguna campaña</div>
         )}
         {campanas.map(cam => (
           <div key={cam.id} style={{display:'flex', alignItems:'center', gap:12, padding:'14px 0', borderBottom:'1px solid #f0f2f7', flexWrap:'wrap'}}>
             <div style={{flex:1, minWidth:180}}>
-              <div style={{fontSize:14, fontWeight:700, color:'#0e0e0e'}}>{cam.asunto}</div>
-              <div style={{fontSize:12, color:'#666', marginTop:2}}>
+              <div style={{fontSize:14, fontWeight:700, color:theme.black}}>{cam.asunto}</div>
+              <div style={{fontSize:12, color:theme.gray, marginTop:2}}>
                 {new Date(cam.created_at).toLocaleDateString('es-AR', { day:'numeric', month:'short' })}
                 {' · '}{SEGMENTOS.find(x => x.id === cam.segmento)?.label || cam.segmento}
               </div>
             </div>
             <div style={{textAlign:'center'}}>
-              <div style={{fontSize:16, fontWeight:800, color:'#0e0e0e', fontFamily:'monospace'}}>{cam.enviados}</div>
-              <div style={{fontSize:10, color:'#666'}}>enviados</div>
+              <div style={{fontSize:16, fontWeight:800, color:theme.black, fontFamily:'monospace'}}>{cam.enviados}</div>
+              <div style={{fontSize:10, color:theme.gray}}>enviados</div>
             </div>
             <div style={{textAlign:'center', background: cam.volvieron > 0 ? '#e7f9ef' : '#f8f9fc', borderRadius:10, padding:'6px 14px'}}>
-              <div style={{fontSize:16, fontWeight:800, color: cam.volvieron > 0 ? '#00a884' : '#aaa', fontFamily:'monospace'}}>{cam.volvieron}</div>
-              <div style={{fontSize:10, color: cam.volvieron > 0 ? '#00a884' : '#aaa'}}>volvieron</div>
+              <div style={{fontSize:16, fontWeight:800, color: cam.volvieron > 0 ? '#00a884' : theme.grayLight, fontFamily:'monospace'}}>{cam.volvieron}</div>
+              <div style={{fontSize:10, color: cam.volvieron > 0 ? '#00a884' : theme.grayLight}}>volvieron</div>
             </div>
           </div>
         ))}
@@ -902,18 +903,18 @@ function RecompensasSection({ negocioId, isDesktop }) {
                 <div style={{display:'flex', alignItems:'center', gap:8, flexWrap:'wrap'}}>
                   <input style={{...s.inputField, flex:2, minWidth:120}} value={editando.nombre} onChange={e => setEditando({...editando, nombre: e.target.value})} autoFocus />
                   <input style={{...s.inputField, width:80}} type="number" value={editando.puntos_necesarios} onChange={e => setEditando({...editando, puntos_necesarios: e.target.value})} />
-                  <span style={{fontSize:12, color:'#666'}}>pts</span>
+                  <span style={{fontSize:12, color:theme.gray}}>pts</span>
                   <button style={{...s.btnRed, padding:'8px 14px', fontSize:13}} onClick={guardarEdicion}>Guardar</button>
-                  <button style={{padding:'8px 14px', background:'#f0f2f7', border:'none', borderRadius:10, fontSize:13, cursor:'pointer', fontFamily:'inherit', color:'#666'}} onClick={() => setEditando(null)}>Cancelar</button>
+                  <button style={{padding:'8px 14px', background:theme.bgMuted, border:'none', borderRadius:10, fontSize:13, cursor:'pointer', fontFamily:'inherit', color:theme.gray}} onClick={() => setEditando(null)}>Cancelar</button>
                 </div>
               ) : (
                 <div style={{display:'flex', alignItems:'center', gap:10}}>
                   <div style={{flex:1}}>
-                    <div style={{fontSize:15, fontWeight:700, color: r.activa ? '#0e0e0e' : '#bbb'}}>{r.nombre}</div>
-                    <div style={{fontSize:12, color:'#666'}}>{r.puntos_necesarios} pts</div>
+                    <div style={{fontSize:15, fontWeight:700, color: r.activa ? theme.black : '#bbb'}}>{r.nombre}</div>
+                    <div style={{fontSize:12, color:theme.gray}}>{r.puntos_necesarios} pts</div>
                   </div>
-                  <button style={{padding:'6px 12px', background:'#f0f2f7', border:'none', borderRadius:8, fontSize:12, fontWeight:600, cursor:'pointer', color:'#555', fontFamily:'inherit'}} onClick={() => setEditando({ id: r.id, nombre: r.nombre, puntos_necesarios: r.puntos_necesarios })}>✏️ Editar</button>
-                  <button style={{...s.toggleBtn, background: r.activa ? '#e8faf2' : '#f0f2f7', color: r.activa ? '#00b96b' : '#bbb'}} onClick={() => toggleActiva(r)}>
+                  <button style={{padding:'6px 12px', background:theme.bgMuted, border:'none', borderRadius:8, fontSize:12, fontWeight:600, cursor:'pointer', color:theme.grayMid, fontFamily:'inherit'}} onClick={() => setEditando({ id: r.id, nombre: r.nombre, puntos_necesarios: r.puntos_necesarios })}>✏️ Editar</button>
+                  <button style={{...s.toggleBtn, background: r.activa ? theme.successBg : theme.bgMuted, color: r.activa ? theme.green : '#bbb'}} onClick={() => toggleActiva(r)}>
                     {r.activa ? 'Activa' : 'Inactiva'}
                   </button>
                   <button style={s.deleteBtn} onClick={() => eliminar(r.id)}>✕</button>
@@ -921,7 +922,7 @@ function RecompensasSection({ negocioId, isDesktop }) {
               )}
             </div>
           ))}
-          {recompensas.length === 0 && <div style={{textAlign:'center', padding:24, color:'#666', fontSize:14}}>No hay recompensas todavía</div>}
+          {recompensas.length === 0 && <div style={{textAlign:'center', padding:24, color:theme.gray, fontSize:14}}>No hay recompensas todavía</div>}
         </div>
       </div>
       <div>
@@ -947,13 +948,13 @@ function PinActualDisplay({ pinActual, esDebil }) {
   const [visible, setVisible] = useState(false)
   const pin = pinActual || '1234'
   return (
-    <div style={{display:'flex', alignItems:'center', gap:10, background: esDebil ? '#fff8e6' : '#f5f6fa', border: esDebil ? '1px solid #f0a500' : '1px solid #e8eaf0', borderRadius:10, padding:'10px 14px', maxWidth:260}}>
-      <span style={{fontSize:12, color:'#666', flexShrink:0}}>PIN actual:</span>
-      <span style={{fontFamily:'monospace', fontSize:18, fontWeight:800, letterSpacing:6, color: esDebil ? '#b37a00' : '#0e0e0e', flex:1, minWidth:60}}>
+    <div style={{display:'flex', alignItems:'center', gap:10, background: esDebil ? '#fff8e6' : theme.bgMuted2, border: esDebil ? '1px solid #f0a500' : '1px solid #e8eaf0', borderRadius:10, padding:'10px 14px', maxWidth:260}}>
+      <span style={{fontSize:12, color:theme.gray, flexShrink:0}}>PIN actual:</span>
+      <span style={{fontFamily:'monospace', fontSize:18, fontWeight:800, letterSpacing:6, color: esDebil ? '#b37a00' : theme.black, flex:1, minWidth:60}}>
         {visible ? pin : pin.split('').map(() => '●').join('')}
       </span>
       <button onClick={() => setVisible(v => !v)}
-        style={{background:'#e8eaf0', border:'none', borderRadius:6, cursor:'pointer', fontSize:12, color:'#555', padding:'4px 8px', flexShrink:0, fontFamily:'inherit', fontWeight:600}}>
+        style={{background:'#e8eaf0', border:'none', borderRadius:6, cursor:'pointer', fontSize:12, color:theme.grayMid, padding:'4px 8px', flexShrink:0, fontFamily:'inherit', fontWeight:600}}>
         {visible ? 'Ocultar' : 'Ver'}
       </button>
       {esDebil && <span style={{fontSize:10, color:'#b37a00', fontWeight:700, flexShrink:0}}>⚠️ Débil</span>}
@@ -1066,10 +1067,10 @@ function ConfigSection({ negocio, setNegocio }) {
   }
 
   const planInfo = {
-    gratis:    { label: 'Gratis', color: '#666',    desc: 'Hasta 50 clientes' },
-    pro_early: { label: 'Pro',    color: '#e0001b', desc: 'Early Adopter · $10.000/mes' },
-    pro:       { label: 'Pro',    color: '#e0001b', desc: '$20.000/mes' },
-    business:  { label: 'Business', color: '#f0a500', desc: '$35.000/mes' },
+    gratis:    { label: 'Gratis', color: theme.gray,    desc: 'Hasta 50 clientes' },
+    pro_early: { label: 'Pro',    color: theme.red, desc: 'Early Adopter · $10.000/mes' },
+    pro:       { label: 'Pro',    color: theme.red, desc: '$20.000/mes' },
+    business:  { label: 'Business', color: theme.gold, desc: '$35.000/mes' },
   }
   const pi = planInfo[negocio.plan] || planInfo.gratis
 
@@ -1080,25 +1081,25 @@ function ConfigSection({ negocio, setNegocio }) {
         <div style={{display:'flex', alignItems:'center', gap:12}}>
           <div style={{width:10, height:10, borderRadius:'50%', background:pi.color}} />
           <div>
-            <div style={{fontSize:15, fontWeight:800, color:'#0e0e0e'}}>Plan {pi.label}</div>
-            <div style={{fontSize:12, color:'#666', marginTop:2}}>{pi.desc}</div>
+            <div style={{fontSize:15, fontWeight:800, color:theme.black}}>Plan {pi.label}</div>
+            <div style={{fontSize:12, color:theme.gray, marginTop:2}}>{pi.desc}</div>
           </div>
         </div>
         <div style={{display:'flex', gap:8, alignItems:'center', flexWrap:'wrap'}}>
           {negocio.mp_plan_id && (
             <button onClick={verificarPago} disabled={verificando}
-              style={{padding:'10px 16px', background:'#f0f2f7', border:'none', borderRadius:12, color:'#555', fontSize:13, fontWeight:700, cursor:'pointer', fontFamily:'inherit'}}>
+              style={{padding:'10px 16px', background:theme.bgMuted, border:'none', borderRadius:12, color:theme.grayMid, fontSize:13, fontWeight:700, cursor:'pointer', fontFamily:'inherit'}}>
               {verificando ? 'Verificando...' : '↻ Ya pagué, verificar'}
             </button>
           )}
           {(!negocio.plan || negocio.plan === 'gratis') && (
-            <button onClick={() => window.location.href = '/dashboard/upgrade'} style={{padding:'10px 20px', background:'#e0001b', border:'none', borderRadius:12, color:'white', fontSize:13, fontWeight:800, cursor:'pointer', fontFamily:'inherit'}}>
+            <button onClick={() => window.location.href = '/dashboard/upgrade'} style={{padding:'10px 20px', background:theme.red, border:'none', borderRadius:12, color:'white', fontSize:13, fontWeight:800, cursor:'pointer', fontFamily:'inherit'}}>
               Mejorar plan →
             </button>
           )}
         </div>
         {avisoPago && (
-          <div style={{width:'100%', fontSize:13, color:'#555', background:'#f8f9fc', borderRadius:10, padding:'10px 14px'}}>{avisoPago}</div>
+          <div style={{width:'100%', fontSize:13, color:theme.grayMid, background:'#f8f9fc', borderRadius:10, padding:'10px 14px'}}>{avisoPago}</div>
         )}
       </div>
       <div style={s.card}>
@@ -1125,24 +1126,24 @@ function ConfigSection({ negocio, setNegocio }) {
           {esPago(negocio.plan) ? (
             <div style={{display:'flex', alignItems:'center', gap:16}}>
               {negocio.logo_url
-                ? <img src={negocio.logo_url} style={{width:56, height:56, borderRadius:12, objectFit:'cover', border:'2px solid #e8eaf0'}} />
-                : <div style={{width:56, height:56, borderRadius:12, background:'#f0f2f7', display:'flex', alignItems:'center', justifyContent:'center', fontSize:11, color:'#aaa'}}>Sin logo</div>
+                ? <img src={negocio.logo_url} alt={`Logo de ${negocio.nombre}`} style={{width:56, height:56, borderRadius:12, objectFit:'cover', border:'2px solid #e8eaf0'}} />
+                : <div style={{width:56, height:56, borderRadius:12, background:theme.bgMuted, display:'flex', alignItems:'center', justifyContent:'center', fontSize:11, color:theme.grayLight}}>Sin logo</div>
               }
               <div>
-                <label style={{padding:'10px 18px', background:'#0e0e0e', borderRadius:12, color:'white', fontSize:13, fontWeight:700, cursor:'pointer', display:'inline-block'}}>
+                <label style={{padding:'10px 18px', background:theme.black, borderRadius:12, color:'white', fontSize:13, fontWeight:700, cursor:'pointer', display:'inline-block'}}>
                   {subiendoLogo ? 'Subiendo...' : negocio.logo_url ? 'Cambiar logo' : 'Subir logo'}
                   <input type="file" accept=".jpg,.jpeg,.png,.webp,.svg" style={{display:'none'}} onChange={subirLogo} disabled={subiendoLogo} />
                 </label>
-                <div style={{fontSize:11, color:'#aaa', marginTop:6}}>JPG, PNG, WEBP o SVG · Máx 2MB</div>
-                {errorLogo && <div style={{fontSize:11, color:'#e0001b', marginTop:4}}>{errorLogo}</div>}
+                <div style={{fontSize:11, color:theme.grayLight, marginTop:6}}>JPG, PNG, WEBP o SVG · Máx 2MB</div>
+                {errorLogo && <div style={{fontSize:11, color:theme.red, marginTop:4}}>{errorLogo}</div>}
               </div>
             </div>
           ) : (
             <div style={{display:'flex', alignItems:'center', gap:12}}>
-              <div style={{width:56, height:56, borderRadius:12, background:'#f0f2f7', display:'flex', alignItems:'center', justifyContent:'center', fontSize:18}}>🔒</div>
+              <div style={{width:56, height:56, borderRadius:12, background:theme.bgMuted, display:'flex', alignItems:'center', justifyContent:'center', fontSize:18}}>🔒</div>
               <div>
-                <div style={{fontSize:13, color:'#aaa'}}>Disponible en los planes Pro y Business</div>
-                <button onClick={() => window.location.href = '/dashboard/upgrade'} style={{marginTop:4, padding:'5px 12px', background:'#e0001b', border:'none', borderRadius:8, color:'white', fontSize:12, fontWeight:700, cursor:'pointer', fontFamily:'inherit'}}>Mejorar →</button>
+                <div style={{fontSize:13, color:theme.grayLight}}>Disponible en los planes Pro y Business</div>
+                <button onClick={() => window.location.href = '/dashboard/upgrade'} style={{marginTop:4, padding:'5px 12px', background:theme.red, border:'none', borderRadius:8, color:'white', fontSize:12, fontWeight:700, cursor:'pointer', fontFamily:'inherit'}}>Mejorar →</button>
               </div>
             </div>
           )}
@@ -1150,23 +1151,23 @@ function ConfigSection({ negocio, setNegocio }) {
         <div style={s.configField}>
           <div style={s.configLabel}>Regla de puntos</div>
           <div style={{display:'flex', alignItems:'center', gap:8, flexWrap:'wrap'}}>
-            <span style={{fontSize:13, color:'#666'}}>Cada $</span>
+            <span style={{fontSize:13, color:theme.gray}}>Cada $</span>
             <input style={{...s.inputField, width:'auto'}} type="text" inputMode="numeric" aria-label="Pesos gastados por tramo"
               value={form.pesos_por_punto ? Number(form.pesos_por_punto).toLocaleString('es-AR') : ''}
               size={Math.max(3, (form.pesos_por_punto ? Number(form.pesos_por_punto).toLocaleString('es-AR') : '').length + 1)}
               onChange={e => setForm({...form, pesos_por_punto: parseInt(e.target.value.replace(/\D/g, '')) || 0})} />
-            <span style={{fontSize:13, color:'#666'}}>→</span>
+            <span style={{fontSize:13, color:theme.gray}}>→</span>
             <input style={{...s.inputField, width:'auto'}} type="text" inputMode="numeric" aria-label="Puntos otorgados por tramo"
               value={form.puntos_por_tramo || ''}
               size={Math.max(3, String(form.puntos_por_tramo || '').length + 1)}
               onChange={e => setForm({...form, puntos_por_tramo: parseInt(e.target.value.replace(/\D/g, '')) || 0})} />
-            <span style={{fontSize:13, color:'#666'}}>pts</span>
+            <span style={{fontSize:13, color:theme.gray}}>pts</span>
           </div>
         </div>
         <div style={s.configField}>
           <label style={s.configLabel} htmlFor="dashboard-puntos-bienvenida">Puntos de bienvenida 🎁</label>
           <input id="dashboard-puntos-bienvenida" style={{...s.inputField, width:100}} type="number" value={form.puntos_bienvenida} onChange={e => setForm({...form, puntos_bienvenida: parseInt(e.target.value)})} />
-          <div style={{fontSize:11, color:'#aaa', marginTop:6}}>Los que recibe cada cliente al registrarse por primera vez</div>
+          <div style={{fontSize:11, color:theme.grayLight, marginTop:6}}>Los que recibe cada cliente al registrarse por primera vez</div>
         </div>
         <div style={s.configField}>
           <label style={s.configLabel} htmlFor="dashboard-puntos-cumple">Puntos por cumpleaños 🎂</label>
@@ -1179,23 +1180,23 @@ function ConfigSection({ negocio, setNegocio }) {
             <input style={{...s.inputField, fontFamily:'monospace', letterSpacing:2}} type="password" aria-label="Nuevo PIN de caja" placeholder="Nuevo PIN" value={form.pin_caja} onChange={e => { setForm({...form, pin_caja: e.target.value}); setErrorPin('') }} />
             <input style={{...s.inputField, fontFamily:'monospace', letterSpacing:2}} type="password" aria-label="Confirmar nuevo PIN de caja" placeholder="Confirmar PIN" value={form.pin_confirmar} onChange={e => { setForm({...form, pin_confirmar: e.target.value}); setErrorPin('') }} />
           </div>
-          {errorPin && <div style={{fontSize:12, color:'#e0001b', marginTop:6}}>⚠️ {errorPin}</div>}
-          <div style={{fontSize:11, color:'#aaa', marginTop:6}}>Letras, números o mezcla. Mínimo 4 caracteres. Dejá vacío para no cambiar.</div>
+          {errorPin && <div style={{fontSize:12, color:theme.red, marginTop:6}}>⚠️ {errorPin}</div>}
+          <div style={{fontSize:11, color:theme.grayLight, marginTop:6}}>Letras, números o mezcla. Mínimo 4 caracteres. Dejá vacío para no cambiar.</div>
         </div>
         <div style={s.configField}>
           <div style={s.configLabel}>Puntos por referido 🤝</div>
           <div style={{display:'flex', gap:20, flexWrap:'wrap'}}>
             <div>
-              <label style={{fontSize:11, color:'#666', marginBottom:4, display:'block'}} htmlFor="dashboard-puntos-ref-emisor">Para el que invita</label>
+              <label style={{fontSize:11, color:theme.gray, marginBottom:4, display:'block'}} htmlFor="dashboard-puntos-ref-emisor">Para el que invita</label>
               <input id="dashboard-puntos-ref-emisor" style={{...s.inputField, width:100}} type="number" value={form.puntos_referido_emisor} onChange={e => setForm({...form, puntos_referido_emisor: parseInt(e.target.value)})} />
             </div>
             <div>
-              <label style={{fontSize:11, color:'#666', marginBottom:4, display:'block'}} htmlFor="dashboard-puntos-ref-receptor">Para el nuevo cliente</label>
+              <label style={{fontSize:11, color:theme.gray, marginBottom:4, display:'block'}} htmlFor="dashboard-puntos-ref-receptor">Para el nuevo cliente</label>
               <input id="dashboard-puntos-ref-receptor" style={{...s.inputField, width:100}} type="number" value={form.puntos_referido_receptor} onChange={e => setForm({...form, puntos_referido_receptor: parseInt(e.target.value)})} />
             </div>
           </div>
         </div>
-        {ok && <div style={{background:'#e8faf2', color:'#00b96b', padding:'10px 14px', borderRadius:10, fontSize:13, marginBottom:12}}>✅ Cambios guardados</div>}
+        {ok && <div style={{background:theme.successBg, color:theme.green, padding:'10px 14px', borderRadius:10, fontSize:13, marginBottom:12}}>✅ Cambios guardados</div>}
         <button style={s.btnRed} onClick={guardar} disabled={guardando}>{guardando ? 'Guardando...' : 'Guardar cambios'}</button>
       </div>
     </div>
@@ -1243,7 +1244,7 @@ function SucursalesSection({ negocio }) {
   return (
     <>
       {sucursales.length === 0 && (
-        <div style={{...s.card, textAlign:'center', color:'#666', fontSize:14, padding:28}}>
+        <div style={{...s.card, textAlign:'center', color:theme.gray, fontSize:14, padding:28}}>
           Sin sucursales — tu caja usa la URL principal.<br/>
           <span style={{fontSize:12, marginTop:8, display:'block'}}>Agregá sucursales si tenés más de un local.</span>
         </div>
@@ -1253,13 +1254,13 @@ function SucursalesSection({ negocio }) {
         <div key={i} style={s.card}>
           <div style={{display:'flex', alignItems:'flex-start', justifyContent:'space-between', marginBottom:12}}>
             <div>
-              <div style={{fontSize:16, fontWeight:800, color:'#0e0e0e'}}>{suc.nombre}</div>
-              {suc.direccion && <div style={{fontSize:12, color:'#666', marginTop:2}}>{suc.direccion}</div>}
+              <div style={{fontSize:16, fontWeight:800, color:theme.black}}>{suc.nombre}</div>
+              {suc.direccion && <div style={{fontSize:12, color:theme.gray, marginTop:2}}>{suc.direccion}</div>}
             </div>
             <button style={s.deleteBtn} onClick={() => eliminar(suc.id)}>✕</button>
           </div>
-          <div style={{fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.06em', color:'#666', marginBottom:6}}>URL de caja</div>
-          <div style={{background:'#f0f2f7', borderRadius:10, padding:'10px 14px', fontSize:12, fontFamily:'monospace', color:'#0e0e0e', wordBreak:'break-all', marginBottom:8}}>
+          <div style={{fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.06em', color:theme.gray, marginBottom:6}}>URL de caja</div>
+          <div style={{background:theme.bgMuted, borderRadius:10, padding:'10px 14px', fontSize:12, fontFamily:'monospace', color:theme.black, wordBreak:'break-all', marginBottom:8}}>
             {urlBase}/c/{negocio.slug}/{suc.slug}
           </div>
           <button style={{...s.btnRed, padding:12, fontSize:13, marginBottom:12}} onClick={() => navigator.clipboard.writeText(`${urlBase}/c/${negocio.slug}/${suc.slug}`)}>📋 Copiar URL de caja</button>
@@ -1275,7 +1276,7 @@ function SucursalesSection({ negocio }) {
               ? `El plan Gratis permite 1 sucursal. Mejorar a Pro para tener hasta 3.`
               : `El plan Pro permite hasta 3 sucursales. Mejorar a Business para sucursales ilimitadas.`}
           </div>
-          <button onClick={() => window.location.href = '/dashboard/upgrade'} style={{padding:'8px 16px', background:'#f0a500', border:'none', borderRadius:10, color:'white', fontSize:13, fontWeight:800, cursor:'pointer', fontFamily:'inherit', whiteSpace:'nowrap'}}>
+          <button onClick={() => window.location.href = '/dashboard/upgrade'} style={{padding:'8px 16px', background:theme.gold, border:'none', borderRadius:10, color:'white', fontSize:13, fontWeight:800, cursor:'pointer', fontFamily:'inherit', whiteSpace:'nowrap'}}>
             Mejorar plan →
           </button>
         </div>
@@ -1292,13 +1293,13 @@ function SucursalesSection({ negocio }) {
         <div style={s.configField}>
           <label style={s.configLabel} htmlFor="sucursal-pin">PIN de caja 🔐</label>
           <input id="sucursal-pin" style={{...s.inputField, width:160, fontFamily:'monospace', letterSpacing:2}} type="password" placeholder="Mín. 4 caracteres" value={nueva.pin_caja} onChange={e => { setNueva({...nueva, pin_caja: e.target.value}); setErrorPin('') }} />
-          <div style={{fontSize:11, color:'#aaa', marginTop:6}}>Letras, números o mezcla. Mínimo 4 caracteres.</div>
+          <div style={{fontSize:11, color:theme.grayLight, marginTop:6}}>Letras, números o mezcla. Mínimo 4 caracteres.</div>
         </div>
         <div style={s.configField}>
           <label style={s.configLabel} htmlFor="sucursal-pin-confirmar">Confirmar PIN 🔐</label>
           <input id="sucursal-pin-confirmar" style={{...s.inputField, width:120, fontFamily:'monospace', letterSpacing:4}} type="password" maxLength={6} placeholder="Repetí el PIN" value={nueva.pin_confirmar} onChange={e => { setNueva({...nueva, pin_confirmar: e.target.value}); setErrorPin('') }} />
         </div>
-        {errorPin && <div style={{background:'#fff0f0', color:'#e0001b', padding:'10px 14px', borderRadius:10, fontSize:13, marginBottom:12}}>⚠️ {errorPin}</div>}
+        {errorPin && <div style={{background:theme.errorBg, color:theme.red, padding:'10px 14px', borderRadius:10, fontSize:13, marginBottom:12}}>⚠️ {errorPin}</div>}
         <button style={s.btnRed} onClick={agregar} disabled={guardando}>{guardando ? 'Guardando...' : '+ Agregar sucursal'}</button>
       </div>
     </>
@@ -1331,7 +1332,7 @@ function PinSucursal({ suc, recargar }) {
 
   return (
     <div style={{borderTop:'1px solid #f0f2f7', paddingTop:12}}>
-      <div style={{fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.06em', color:'#666', marginBottom:8}}>PIN de caja 🔐</div>
+      <div style={{fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.06em', color:theme.gray, marginBottom:8}}>PIN de caja 🔐</div>
       <div style={{marginBottom:10}}>
         <PinActualDisplay pinActual={suc.pin_caja} esDebil={pinActualEsDebil} />
       </div>
@@ -1340,7 +1341,7 @@ function PinSucursal({ suc, recargar }) {
           <input style={{padding:'10px 14px', border:'none', fontSize:15, fontFamily:'monospace', letterSpacing: mostrar ? 2 : 3, outline:'none', width:'100%'}}
             type={mostrar ? 'text' : 'password'} placeholder="Nuevo PIN"
             value={pin} onChange={e => { setPin(e.target.value); setErrorPin('') }} />
-          <button style={{padding:'10px 12px', background:'#f0f2f7', border:'none', cursor:'pointer', fontSize:14}}
+          <button style={{padding:'10px 12px', background:theme.bgMuted, border:'none', cursor:'pointer', fontSize:14}}
             onClick={() => setMostrar(!mostrar)}>
             {mostrar ? '🙈' : '👁️'}
           </button>
@@ -1348,8 +1349,8 @@ function PinSucursal({ suc, recargar }) {
         <input style={{padding:'10px 14px', border:'2px solid #e8eaf0', borderRadius:12, fontSize:15, fontFamily:'monospace', letterSpacing: mostrar ? 2 : 3, outline:'none', width:'100%', boxSizing:'border-box'}}
           type={mostrar ? 'text' : 'password'} placeholder="Confirmar PIN"
           value={confirmar} onChange={e => { setConfirmar(e.target.value); setErrorPin('') }} />
-        {errorPin && <div style={{fontSize:12, color:'#e0001b'}}>⚠️ {errorPin}</div>}
-        <button style={{padding:'10px 16px', background: ok ? '#00b96b' : '#0e0e0e', border:'none', borderRadius:12, color:'white', fontSize:13, fontWeight:700, cursor:'pointer', fontFamily:'inherit'}}
+        {errorPin && <div style={{fontSize:12, color:theme.red}}>⚠️ {errorPin}</div>}
+        <button style={{padding:'10px 16px', background: ok ? theme.green : theme.black, border:'none', borderRadius:12, color:'white', fontSize:13, fontWeight:700, cursor:'pointer', fontFamily:'inherit'}}
           onClick={guardar} disabled={guardando}>
           {ok ? '✓ PIN actualizado' : guardando ? '...' : 'Cambiar PIN'}
         </button>
@@ -1408,27 +1409,27 @@ function MetricasSucursales({ negocioId, isDesktop }) {
         {datos.map((suc, i) => (
           <div key={i} style={{background:'white', borderRadius:20, padding:20, boxShadow:'0 2px 8px rgba(0,0,0,0.06)', marginBottom: isDesktop ? 0 : 12}}>
             <div style={{display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:16}}>
-              <div style={{fontSize:15, fontWeight:800, color:'#0e0e0e'}}>📍 {suc.nombre}</div>
+              <div style={{fontSize:15, fontWeight:800, color:theme.black}}>📍 {suc.nombre}</div>
               {i === 0 && datos.length > 1 && (
-                <div style={{background:'#fff8e0', color:'#f0a500', fontSize:11, fontWeight:700, padding:'3px 10px', borderRadius:100}}>🏆 Top</div>
+                <div style={{background:'#fff8e0', color:theme.gold, fontSize:11, fontWeight:700, padding:'3px 10px', borderRadius:100}}>🏆 Top</div>
               )}
             </div>
             <div style={{display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:10, marginBottom:16}}>
-              <div style={{textAlign:'center', background:'#f0f2f7', borderRadius:12, padding:'12px 8px'}}>
-                <div style={{fontSize:20, fontWeight:800, color:'#0e0e0e', fontFamily:'monospace'}}>{suc.totalTransacciones}</div>
-                <div style={{fontSize:10, color:'#666', marginTop:2}}>Ventas</div>
+              <div style={{textAlign:'center', background:theme.bgMuted, borderRadius:12, padding:'12px 8px'}}>
+                <div style={{fontSize:20, fontWeight:800, color:theme.black, fontFamily:'monospace'}}>{suc.totalTransacciones}</div>
+                <div style={{fontSize:10, color:theme.gray, marginTop:2}}>Ventas</div>
               </div>
-              <div style={{textAlign:'center', background:'#f0f2f7', borderRadius:12, padding:'12px 8px'}}>
-                <div style={{fontSize:20, fontWeight:800, color:'#f0a500', fontFamily:'monospace'}}>{suc.puntosAcreditados}</div>
-                <div style={{fontSize:10, color:'#666', marginTop:2}}>Puntos</div>
+              <div style={{textAlign:'center', background:theme.bgMuted, borderRadius:12, padding:'12px 8px'}}>
+                <div style={{fontSize:20, fontWeight:800, color:theme.gold, fontFamily:'monospace'}}>{suc.puntosAcreditados}</div>
+                <div style={{fontSize:10, color:theme.gray, marginTop:2}}>Puntos</div>
               </div>
-              <div style={{textAlign:'center', background:'#f0f2f7', borderRadius:12, padding:'12px 8px'}}>
-                <div style={{fontSize:20, fontWeight:800, color:'#00b96b', fontFamily:'monospace'}}>{suc.totalCanjes}</div>
-                <div style={{fontSize:10, color:'#666', marginTop:2}}>Canjes</div>
+              <div style={{textAlign:'center', background:theme.bgMuted, borderRadius:12, padding:'12px 8px'}}>
+                <div style={{fontSize:20, fontWeight:800, color:theme.green, fontFamily:'monospace'}}>{suc.totalCanjes}</div>
+                <div style={{fontSize:10, color:theme.gray, marginTop:2}}>Canjes</div>
               </div>
             </div>
-            <div style={{fontSize:11, color:'#666', marginBottom:6}}>Puntos acreditados</div>
-            <div style={{background:'#f0f2f7', borderRadius:100, height:8, overflow:'hidden'}}>
+            <div style={{fontSize:11, color:theme.gray, marginBottom:6}}>Puntos acreditados</div>
+            <div style={{background:theme.bgMuted, borderRadius:100, height:8, overflow:'hidden'}}>
               <div style={{height:'100%', borderRadius:100, background:'linear-gradient(90deg, #e0001b, #f0a500)', width: `${Math.round((suc.puntosAcreditados / maxPuntos) * 100)}%`, transition:'width 0.8s ease'}} />
             </div>
           </div>
@@ -1439,15 +1440,15 @@ function MetricasSucursales({ negocioId, isDesktop }) {
 }
 
 const s = {
-  sectionTitle: { fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.08em', color:'#666', marginBottom:12, marginTop:8 },
+  sectionTitle: { fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.08em', color:theme.gray, marginBottom:12, marginTop:8 },
   card: { background:'white', borderRadius:20, padding:20, marginBottom:16, boxShadow:'0 2px 8px rgba(0,0,0,0.06)' },
   filtroBtn: { padding:'8px 14px', border:'none', borderRadius:100, fontSize:12, fontWeight:600, cursor:'pointer', fontFamily:'inherit' },
   toggleBtn: { padding:'6px 12px', border:'none', borderRadius:100, fontSize:12, fontWeight:600, cursor:'pointer', fontFamily:'inherit' },
-  deleteBtn: { minWidth:44, minHeight:44, padding:'6px 10px', background:'#fff0f0', border:'none', borderRadius:8, color:'#e0001b', cursor:'pointer', fontSize:12, fontWeight:700, display:'flex', alignItems:'center', justifyContent:'center' },
+  deleteBtn: { minWidth:44, minHeight:44, padding:'6px 10px', background:theme.errorBg, border:'none', borderRadius:8, color:theme.red, cursor:'pointer', fontSize:12, fontWeight:700, display:'flex', alignItems:'center', justifyContent:'center' },
   configField: { marginBottom:20 },
-  configLabel: { display:'block', fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.06em', color:'#666', marginBottom:8 },
+  configLabel: { display:'block', fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.06em', color:theme.gray, marginBottom:8 },
   inputField: { width:'100%', padding:'12px 14px', border:'2px solid #e8eaf0', borderRadius:12, fontSize:15, fontFamily:'inherit', outline:'none', boxSizing:'border-box' },
-  btnRed: { width:'100%', padding:16, background:'#e0001b', border:'none', borderRadius:14, color:'white', fontSize:15, fontWeight:800, cursor:'pointer', fontFamily:'inherit' },
+  btnRed: { width:'100%', padding:16, background:theme.red, border:'none', borderRadius:14, color:'white', fontSize:15, fontWeight:800, cursor:'pointer', fontFamily:'inherit' },
 }
 
 function BannerPinDebil({ negocio, onConfigurar }) {
@@ -1457,12 +1458,12 @@ function BannerPinDebil({ negocio, onConfigurar }) {
     <div style={{ background:'#fff8e6', border:'1.5px solid #f0a500', borderRadius:14, padding:'14px 18px', marginBottom:20, display:'flex', alignItems:'center', gap:12 }}>
       <span style={{ fontSize:22, flexShrink:0 }}>🔐</span>
       <div style={{ flex:1 }}>
-        <div style={{ fontSize:14, fontWeight:700, color:'#0e0e0e', marginBottom:2 }}>PIN de caja no configurado</div>
-        <div style={{ fontSize:13, color:'#666', lineHeight:1.4 }}>
+        <div style={{ fontSize:14, fontWeight:700, color:theme.black, marginBottom:2 }}>PIN de caja no configurado</div>
+        <div style={{ fontSize:13, color:theme.gray, lineHeight:1.4 }}>
           {negocio.pin_caja ? 'El PIN actual es muy común y fácil de adivinar.' : 'Sin PIN configurado, la caja queda bloqueada para el staff.'} Configuralo en Ajustes.
         </div>
       </div>
-      <button onClick={onConfigurar} style={{ padding:'8px 16px', background:'#f0a500', border:'none', borderRadius:10, color:'white', fontSize:13, fontWeight:700, cursor:'pointer', fontFamily:'inherit', whiteSpace:'nowrap', flexShrink:0 }}>
+      <button onClick={onConfigurar} style={{ padding:'8px 16px', background:theme.gold, border:'none', borderRadius:10, color:'white', fontSize:13, fontWeight:700, cursor:'pointer', fontFamily:'inherit', whiteSpace:'nowrap', flexShrink:0 }}>
         Configurar →
       </button>
     </div>
@@ -1475,8 +1476,8 @@ function BannerLimite({ totalClientes }) {
 
   return (
     <div style={{
-      background: esLimite ? '#fff0f0' : '#fff8e6',
-      border: `1.5px solid ${esLimite ? '#e0001b' : '#f0a500'}`,
+      background: esLimite ? theme.errorBg : '#fff8e6',
+      border: `1.5px solid ${esLimite ? theme.red : theme.gold}`,
       borderRadius: 14,
       padding: '14px 18px',
       marginBottom: 20,
@@ -1486,10 +1487,10 @@ function BannerLimite({ totalClientes }) {
       gap: 12,
     }}>
       <div>
-        <div style={{ fontSize: 14, fontWeight: 700, color: '#0e0e0e', marginBottom: 2 }}>
+        <div style={{ fontSize: 14, fontWeight: 700, color: theme.black, marginBottom: 2 }}>
           {esLimite ? '⚠️ Llegaste al límite de 50 clientes' : `📊 ${totalClientes} de 50 clientes — te estás acercando al límite`}
         </div>
-        <div style={{ fontSize: 13, color: '#666' }}>
+        <div style={{ fontSize: 13, color: theme.gray }}>
           {esLimite
             ? 'Los nuevos clientes no pueden registrarse. Pasate al plan Pro para seguir creciendo.'
             : 'En el plan Gratis podés tener hasta 50. Pasate al Pro para no tener límite.'}
@@ -1497,7 +1498,7 @@ function BannerLimite({ totalClientes }) {
       </div>
       <button
         onClick={() => window.location.href = '/dashboard/upgrade'}
-        style={{ padding: '8px 16px', background: esLimite ? '#e0001b' : '#f0a500', border: 'none', borderRadius: 10, color: 'white', fontSize: 13, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit', whiteSpace: 'nowrap', flexShrink: 0 }}
+        style={{ padding: '8px 16px', background: esLimite ? theme.red : theme.gold, border: 'none', borderRadius: 10, color: 'white', fontSize: 13, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit', whiteSpace: 'nowrap', flexShrink: 0 }}
       >
         Ver planes →
       </button>

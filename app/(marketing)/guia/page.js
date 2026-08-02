@@ -1,3 +1,4 @@
+import { theme } from '@/lib/theme'
 export const metadata = {
   title: 'Guía completa de Fielty | Cómo fidelizar clientes sin app',
   description: 'Guía de producto de Fielty: cómo crear tu programa de puntos, registrar clientes por QR, configurar recompensas, niveles de lealtad, referidos, campañas de reactivación por email y Google Wallet para negocios físicos en Argentina.',
@@ -15,7 +16,7 @@ const breadcrumbLd = {
 
 export default function Guia() {
   return (
-    <div style={{ fontFamily: 'inherit', maxWidth: 800, margin: '0 auto', padding: '60px 40px', color: '#0e0e0e', lineHeight: 1.7 }}>
+    <main style={{ fontFamily: 'inherit', maxWidth: 800, margin: '0 auto', padding: '60px 40px', color: theme.black, lineHeight: 1.7 }}>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
@@ -24,8 +25,8 @@ export default function Guia() {
       {/* Portada */}
       <div style={{ textAlign: 'center', marginBottom: 80, paddingBottom: 60, borderBottom: '3px solid #e0001b' }}>
         <div style={{ fontSize: 48, fontWeight: 900, letterSpacing: -2, marginBottom: 8 }}>● fielty</div>
-        <h1 style={{ fontSize: 28, fontWeight: 300, color: '#555', marginBottom: 24 }}>Guía completa de Fielty</h1>
-        <div style={{ display: 'inline-block', background: '#f5f5f5', borderRadius: 12, padding: '10px 24px', fontSize: 14, color: '#666' }}>
+        <h1 style={{ fontSize: 28, fontWeight: 300, color: theme.grayMid, marginBottom: 24 }}>Guía completa de Fielty</h1>
+        <div style={{ display: 'inline-block', background: '#f5f5f5', borderRadius: 12, padding: '10px 24px', fontSize: 14, color: theme.gray }}>
           Actualizada · Julio 2026 · fielty.app
         </div>
       </div>
@@ -37,13 +38,13 @@ export default function Guia() {
         <P>Ideal para: peluquerías, barberías, cafeterías, veterinarias, pet shops, gimnasios, restaurantes, tiendas de ropa, farmacias y cualquier negocio que quiera hacer volver a sus clientes.</P>
         <P style={{ fontSize: 14 }}>
           Si querés ver cómo se aplica a un rubro puntual, hay guías específicas para{' '}
-          <a href="/para/barberias" style={{ color: '#e0001b', textDecoration: 'none', fontWeight: 600 }}>barberías</a>,{' '}
-          <a href="/para/cafeterias" style={{ color: '#e0001b', textDecoration: 'none', fontWeight: 600 }}>cafeterías</a>,{' '}
-          <a href="/para/peluquerias" style={{ color: '#e0001b', textDecoration: 'none', fontWeight: 600 }}>peluquerías</a>,{' '}
-          <a href="/para/veterinarias" style={{ color: '#e0001b', textDecoration: 'none', fontWeight: 600 }}>veterinarias</a>,{' '}
-          <a href="/para/gimnasios" style={{ color: '#e0001b', textDecoration: 'none', fontWeight: 600 }}>gimnasios</a>,{' '}
-          <a href="/para/restaurantes" style={{ color: '#e0001b', textDecoration: 'none', fontWeight: 600 }}>restaurantes</a> y{' '}
-          <a href="/para/panaderias" style={{ color: '#e0001b', textDecoration: 'none', fontWeight: 600 }}>panaderías</a>.
+          <a href="/para/barberias" style={{ color: theme.red, textDecoration: 'none', fontWeight: 600 }}>barberías</a>,{' '}
+          <a href="/para/cafeterias" style={{ color: theme.red, textDecoration: 'none', fontWeight: 600 }}>cafeterías</a>,{' '}
+          <a href="/para/peluquerias" style={{ color: theme.red, textDecoration: 'none', fontWeight: 600 }}>peluquerías</a>,{' '}
+          <a href="/para/veterinarias" style={{ color: theme.red, textDecoration: 'none', fontWeight: 600 }}>veterinarias</a>,{' '}
+          <a href="/para/gimnasios" style={{ color: theme.red, textDecoration: 'none', fontWeight: 600 }}>gimnasios</a>,{' '}
+          <a href="/para/restaurantes" style={{ color: theme.red, textDecoration: 'none', fontWeight: 600 }}>restaurantes</a> y{' '}
+          <a href="/para/panaderias" style={{ color: theme.red, textDecoration: 'none', fontWeight: 600 }}>panaderías</a>.
         </P>
       </Section>
 
@@ -51,7 +52,7 @@ export default function Guia() {
       <Section title="Planes disponibles">
         <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 14, marginBottom: 16 }}>
           <thead>
-            <tr style={{ background: '#0e0e0e', color: 'white' }}>
+            <tr style={{ background: theme.black, color: 'white' }}>
               <th style={th}></th>
               <th style={th}>Gratis</th>
               <th style={th}>Pro</th>
@@ -70,12 +71,12 @@ export default function Guia() {
             ].map(([label, ...vals], i) => (
               <tr key={i} style={{ background: i % 2 === 0 ? '#f9f9f9' : 'white' }}>
                 <td style={{ ...td, fontWeight: 700 }}>{label}</td>
-                {vals.map((v, j) => <td key={j} style={{ ...td, textAlign: 'center', color: v === '✓' ? '#00b96b' : v === '✗' ? '#ccc' : '#0e0e0e' }}>{v}</td>)}
+                {vals.map((v, j) => <td key={j} style={{ ...td, textAlign: 'center', color: v === '✓' ? theme.green : v === '✗' ? '#ccc' : theme.black }}>{v}</td>)}
               </tr>
             ))}
           </tbody>
         </table>
-        <P style={{ fontSize: 12, color: '#666' }}>* Precio especial para los primeros 100 negocios. Precio regular: $20.000/mes.</P>
+        <P style={{ fontSize: 12, color: theme.gray }}>* Precio especial para los primeros 100 negocios. Precio regular: $20.000/mes.</P>
       </Section>
 
       <PageBreak />
@@ -167,7 +168,7 @@ export default function Guia() {
       <Section title="Notificaciones automáticas al dueño" level={3}>
         <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 14 }}>
           <thead>
-            <tr style={{ background: '#0e0e0e', color: 'white' }}>
+            <tr style={{ background: theme.black, color: 'white' }}>
               <th style={th}>Evento</th>
               <th style={th}>Asunto del email</th>
             </tr>
@@ -244,7 +245,7 @@ export default function Guia() {
           'WhatsApp — opcional',
           'Fecha de nacimiento — opcional (recibe puntos extra en su cumpleaños)',
         ]} />
-        <P style={{ fontSize: 13, color: '#666' }}>Si en cambio lo registra un empleado desde la caja, los campos pedidos son distintos — ver "Registrar un cliente nuevo desde la caja" en la Parte 2.</P>
+        <P style={{ fontSize: 13, color: theme.gray }}>Si en cambio lo registra un empleado desde la caja, los campos pedidos son distintos — ver "Registrar un cliente nuevo desde la caja" en la Parte 2.</P>
 
         <SubTitle>Al registrarse recibe automáticamente</SubTitle>
         <List items={[
@@ -301,7 +302,7 @@ export default function Guia() {
         <P>Los niveles se calculan en base a <strong>puntos históricos</strong> (todos los puntos que ganó, incluso los ya canjeados):</P>
         <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 14 }}>
           <thead>
-            <tr style={{ background: '#0e0e0e', color: 'white' }}>
+            <tr style={{ background: theme.black, color: 'white' }}>
               <th style={th}>Nivel</th>
               <th style={th}>Puntos históricos</th>
             </tr>
@@ -334,7 +335,7 @@ export default function Guia() {
       <Section title="">
         <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
           <thead>
-            <tr style={{ background: '#0e0e0e', color: 'white' }}>
+            <tr style={{ background: theme.black, color: 'white' }}>
               <th style={th}>Página</th>
               <th style={th}>URL</th>
               <th style={th}>Para quién</th>
@@ -376,8 +377,8 @@ export default function Guia() {
       </Section>
 
       {/* Footer */}
-      <div style={{ marginTop: 80, paddingTop: 32, borderTop: '2px solid #e0001b', textAlign: 'center', color: '#666', fontSize: 13 }}>
-        <div style={{ fontSize: 20, fontWeight: 900, color: '#0e0e0e', marginBottom: 8 }}>● fielty</div>
+      <div style={{ marginTop: 80, paddingTop: 32, borderTop: '2px solid #e0001b', textAlign: 'center', color: theme.gray, fontSize: 13 }}>
+        <div style={{ fontSize: 20, fontWeight: 900, color: theme.black, marginBottom: 8 }}>● fielty</div>
         <div>fielty.app · hola@fielty.app · Julio 2026</div>
       </div>
 
@@ -388,19 +389,19 @@ export default function Guia() {
           @page { margin: 20mm 15mm; size: A4; }
         }
       `}</style>
-    </div>
+    </main>
   )
 }
 
 // Componentes auxiliares
 const P = ({ children, style }) => <p style={{ fontSize: 15, marginBottom: 12, ...style }}>{children}</p>
-const SubTitle = ({ children }) => <h4 style={{ fontSize: 15, fontWeight: 700, marginTop: 20, marginBottom: 8, color: '#0e0e0e' }}>{children}</h4>
+const SubTitle = ({ children }) => <h4 style={{ fontSize: 15, fontWeight: 700, marginTop: 20, marginBottom: 8, color: theme.black }}>{children}</h4>
 const Highlight = ({ children }) => (
-  <div style={{ background: '#fff8e6', borderLeft: '4px solid #f0a500', padding: '12px 16px', borderRadius: '0 10px 10px 0', marginBottom: 16, fontSize: 14, color: '#555' }}>
+  <div style={{ background: '#fff8e6', borderLeft: '4px solid #f0a500', padding: '12px 16px', borderRadius: '0 10px 10px 0', marginBottom: 16, fontSize: 14, color: theme.grayMid }}>
     {children}
   </div>
 )
-const Code = ({ children }) => <code style={{ background: '#f0f2f7', padding: '2px 6px', borderRadius: 5, fontSize: 13, fontFamily: 'monospace' }}>{children}</code>
+const Code = ({ children }) => <code style={{ background: theme.bgMuted, padding: '2px 6px', borderRadius: 5, fontSize: 13, fontFamily: 'monospace' }}>{children}</code>
 const List = ({ items }) => (
   <ul style={{ paddingLeft: 20, marginBottom: 16 }}>
     {items.map((item, i) => <li key={i} style={{ fontSize: 14, marginBottom: 6, color: '#333' }}>{item}</li>)}
@@ -409,15 +410,15 @@ const List = ({ items }) => (
 const PageBreak = () => <div style={{ pageBreakAfter: 'always', marginTop: 60, marginBottom: 60, borderBottom: '1px solid #e8eaf0' }} />
 const PartTitle = ({ number, title }) => (
   <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 40 }}>
-    <div style={{ width: 48, height: 48, borderRadius: '50%', background: '#e0001b', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20, fontWeight: 900, flexShrink: 0 }}>{number}</div>
-    <h2 style={{ fontSize: 26, fontWeight: 800, color: '#0e0e0e', margin: 0 }}>{title}</h2>
+    <div style={{ width: 48, height: 48, borderRadius: '50%', background: theme.red, color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20, fontWeight: 900, flexShrink: 0 }}>{number}</div>
+    <h2 style={{ fontSize: 26, fontWeight: 800, color: theme.black, margin: 0 }}>{title}</h2>
   </div>
 )
 const Section = ({ title, children, level = 2 }) => {
   const Heading = level === 3 ? 'h3' : 'h2'
   return (
     <div style={{ marginBottom: 40 }}>
-      {title && <Heading style={{ fontSize: 20, fontWeight: 800, color: '#0e0e0e', marginBottom: 20, paddingBottom: 10, borderBottom: '2px solid #f0f2f7' }}>{title}</Heading>}
+      {title && <Heading style={{ fontSize: 20, fontWeight: 800, color: theme.black, marginBottom: 20, paddingBottom: 10, borderBottom: '2px solid #f0f2f7' }}>{title}</Heading>}
       {children}
     </div>
   )

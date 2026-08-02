@@ -1,14 +1,15 @@
 'use client'
+import { theme } from '@/lib/theme'
 import { useState } from 'react'
 import { supabase } from '@/lib/supabase'
 import { storage } from '@/lib/storage'
 import { validarPin } from '@/lib/pin'
 
-const COLORES = ['#e0001b', '#0e76fd', '#00b96b', '#7c3aed', '#f0a500', '#0e0e0e']
+const COLORES = [theme.red, theme.blue, theme.green, theme.purple, theme.gold, theme.black]
 
 export default function ConfigNegocio() {
   const [nombre, setNombre] = useState('')
-  const [color, setColor] = useState('#e0001b')
+  const [color, setColor] = useState(theme.red)
   const [pesosPorTramo, setPesosPorTramo] = useState('100')
   const [puntosPorTramo, setPuntosPorTramo] = useState('1')
   const [puntosCumpleanos, setPuntosCumpleanos] = useState('50')
@@ -74,7 +75,7 @@ export default function ConfigNegocio() {
 
   return (
     <div style={s.wrap}>
-      <div style={s.card}>
+      <main style={s.card}>
         <div style={s.logo}>
           <div style={s.logoDot}></div>
           <span style={s.logoText}>fielty</span>
@@ -115,7 +116,7 @@ export default function ConfigNegocio() {
           <div style={{display:'flex', alignItems:'center', gap:10, marginTop:12}}>
             <div style={{width:32, height:32, borderRadius:8, background:color, border:'1px solid #e8eaf0', flexShrink:0}}/>
             <div style={{position:'relative', flex:1}}>
-              <span style={{position:'absolute', left:12, top:'50%', transform:'translateY(-50%)', fontSize:14, color:'#666', fontFamily:'monospace'}}>#</span>
+              <span style={{position:'absolute', left:12, top:'50%', transform:'translateY(-50%)', fontSize:14, color:theme.gray, fontFamily:'monospace'}}>#</span>
               <input style={{...s.input, paddingLeft:28, fontFamily:'monospace', fontSize:14}}
                 aria-labelledby="negocio-color-label" placeholder="e0001b" maxLength={6}
                 value={color.replace('#', '')}
@@ -130,18 +131,18 @@ export default function ConfigNegocio() {
         <div style={s.field}>
           <div style={s.label}>Regla de puntos</div>
           <div style={{display:'flex', alignItems:'center', gap:10, flexWrap:'wrap'}}>
-            <span style={{fontSize:14, color:'#666'}}>Cada</span>
+            <span style={{fontSize:14, color:theme.gray}}>Cada</span>
             <div style={{position:'relative'}}>
-              <span style={{position:'absolute', left:12, top:'50%', transform:'translateY(-50%)', fontSize:14, color:'#666'}}>$</span>
+              <span style={{position:'absolute', left:12, top:'50%', transform:'translateY(-50%)', fontSize:14, color:theme.gray}}>$</span>
               <input style={{...s.input, width:100, paddingLeft:24}} type="number" aria-label="Pesos gastados por tramo" placeholder="100"
                 value={pesosPorTramo} onChange={e => setPesosPorTramo(e.target.value)} />
             </div>
-            <span style={{fontSize:14, color:'#666'}}>gastados →</span>
+            <span style={{fontSize:14, color:theme.gray}}>gastados →</span>
             <input style={{...s.input, width:80}} type="number" aria-label="Puntos otorgados por tramo" placeholder="1"
               value={puntosPorTramo} onChange={e => setPuntosPorTramo(e.target.value)} />
-            <span style={{fontSize:14, color:'#666'}}>punto{puntosPorTramo != 1 ? 's' : ''}</span>
+            <span style={{fontSize:14, color:theme.gray}}>punto{puntosPorTramo != 1 ? 's' : ''}</span>
           </div>
-          <div style={{fontSize:12, color:'#aaa', marginTop:8}}>
+          <div style={{fontSize:12, color:theme.grayLight, marginTop:8}}>
             Ej: compra de ${(parseInt(pesosPorTramo)||100) * 5} → {(parseInt(puntosPorTramo)||1) * 5} puntos
           </div>
         </div>
@@ -151,9 +152,9 @@ export default function ConfigNegocio() {
           <div style={{display:'flex', alignItems:'center', gap:10}}>
             <input id="negocio-puntos-cumple" style={{...s.input, width:100}} type="number" placeholder="50"
               value={puntosCumpleanos} onChange={e => setPuntosCumpleanos(e.target.value)} />
-            <span style={{fontSize:14, color:'#666'}}>puntos de regalo el día del cumpleaños</span>
+            <span style={{fontSize:14, color:theme.gray}}>puntos de regalo el día del cumpleaños</span>
           </div>
-          <div style={{fontSize:12, color:'#aaa', marginTop:8}}>
+          <div style={{fontSize:12, color:theme.grayLight, marginTop:8}}>
             Se acreditan automáticamente cada año 🎂
           </div>
         </div>
@@ -164,22 +165,22 @@ export default function ConfigNegocio() {
             <div style={{display:'flex', alignItems:'center', gap:10}}>
               <input style={{...s.input, width:100}} type="number" aria-label="Puntos para el que invita" placeholder="100"
                 value={puntosReferidoEmisor} onChange={e => setPuntosReferidoEmisor(e.target.value)} />
-              <span style={{fontSize:14, color:'#666'}}>puntos para el que invita</span>
+              <span style={{fontSize:14, color:theme.gray}}>puntos para el que invita</span>
             </div>
             <div style={{display:'flex', alignItems:'center', gap:10}}>
               <input style={{...s.input, width:100}} type="number" aria-label="Puntos para el nuevo cliente" placeholder="50"
                 value={puntosReferidoReceptor} onChange={e => setPuntosReferidoReceptor(e.target.value)} />
-              <span style={{fontSize:14, color:'#666'}}>puntos para el nuevo cliente</span>
+              <span style={{fontSize:14, color:theme.gray}}>puntos para el nuevo cliente</span>
             </div>
           </div>
-          <div style={{fontSize:12, color:'#aaa', marginTop:8}}>
+          <div style={{fontSize:12, color:theme.grayLight, marginTop:8}}>
             Se acreditan automáticamente cuando el amigo se registra 🤝
           </div>
         </div>
 
         <div style={s.field}>
           <div style={s.label}>PIN de la caja</div>
-          <div style={{fontSize:13, color:'#666', marginBottom:10, lineHeight:1.6}}>
+          <div style={{fontSize:13, color:theme.gray, marginBottom:10, lineHeight:1.6}}>
             Es la clave que van a usar vos y tus empleados para entrar a la caja y cargar las compras.
             No la compartas con los clientes.
           </div>
@@ -189,7 +190,7 @@ export default function ConfigNegocio() {
             <input style={{...s.input, flex:1, minWidth:130}} type="password" aria-label="Repetir PIN de la caja" placeholder="Repetilo"
               value={pinConfirmar} onChange={e => setPinConfirmar(e.target.value)} />
           </div>
-          <div style={{fontSize:12, color:'#aaa', marginTop:8}}>
+          <div style={{fontSize:12, color:theme.grayLight, marginTop:8}}>
             Elegí uno que no sea fácil de adivinar 🔒
           </div>
         </div>
@@ -213,25 +214,25 @@ export default function ConfigNegocio() {
         <button style={s.btn} onClick={guardar} disabled={cargando}>
           {cargando ? 'Guardando...' : 'Continuar →'}
         </button>
-      </div>
+      </main>
     </div>
   )
 }
 
 const s = {
-  wrap: { minHeight:'100vh', background:'#0e0e0e', display:'flex', alignItems:'center', justifyContent:'center', padding:20 },
+  wrap: { minHeight:'100vh', background:theme.black, display:'flex', alignItems:'center', justifyContent:'center', padding:20 },
   card: { background:'white', borderRadius:28, padding:'40px 32px', width:'100%', maxWidth:420 },
   logo: { display:'flex', alignItems:'center', gap:8, marginBottom:28 },
-  logoDot: { width:10, height:10, borderRadius:'50%', background:'#e0001b', boxShadow:'0 0 10px #e0001b' },
-  logoText: { fontSize:22, fontWeight:800, color:'#0e0e0e', letterSpacing:-0.5 },
-  step: { fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.1em', color:'#e0001b', marginBottom:8 },
-  title: { fontSize:28, fontWeight:800, color:'#0e0e0e', marginBottom:8 },
-  sub: { fontSize:14, color:'#666', marginBottom:28, lineHeight:1.6 },
+  logoDot: { width:10, height:10, borderRadius:'50%', background:theme.red, boxShadow:'0 0 10px #e0001b' },
+  logoText: { fontSize:22, fontWeight:800, color:theme.black, letterSpacing:-0.5 },
+  step: { fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.1em', color:theme.red, marginBottom:8 },
+  title: { fontSize:28, fontWeight:800, color:theme.black, marginBottom:8 },
+  sub: { fontSize:14, color:theme.gray, marginBottom:28, lineHeight:1.6 },
   field: { marginBottom:20 },
-  label: { display:'block', fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.06em', color:'#666', marginBottom:8 },
+  label: { display:'block', fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.06em', color:theme.gray, marginBottom:8 },
   input: { width:'100%', padding:'14px 16px', border:'2px solid #e8eaf0', borderRadius:12, fontSize:16, fontFamily:'inherit', outline:'none', boxSizing:'border-box' },
   colorRow: { display:'flex', gap:12, alignItems:'center', flexWrap:'wrap' },
   swatch: { width:44, height:44, borderRadius:10, cursor:'pointer', transition:'all 0.15s' },
-  btn: { width:'100%', padding:18, background:'#e0001b', border:'none', borderRadius:14, color:'white', fontSize:16, fontWeight:800, cursor:'pointer', fontFamily:'inherit' },
-  error: { background:'#fff0f0', color:'#e0001b', padding:'10px 14px', borderRadius:10, fontSize:13, marginBottom:12 },
+  btn: { width:'100%', padding:18, background:theme.red, border:'none', borderRadius:14, color:'white', fontSize:16, fontWeight:800, cursor:'pointer', fontFamily:'inherit' },
+  error: { background:theme.errorBg, color:theme.red, padding:'10px 14px', borderRadius:10, fontSize:13, marginBottom:12 },
 }

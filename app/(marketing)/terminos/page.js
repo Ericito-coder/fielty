@@ -1,3 +1,4 @@
+import { theme } from '@/lib/theme'
 export const metadata = {
   title: 'Términos y condiciones | Fielty',
   description: 'Términos y condiciones de uso de Fielty, la plataforma de fidelización de clientes para negocios.',
@@ -6,23 +7,23 @@ export const metadata = {
 
 export default function Terminos() {
   return (
-    <div style={{ minHeight: '100vh', background: '#0e0e0e', fontFamily: 'inherit' }}>
+    <div style={{ minHeight: '100vh', background: theme.black, fontFamily: 'inherit' }}>
 
       <nav style={{ borderBottom: '1px solid #1a1a1a', padding: '0 32px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: 64 }}>
         <a href="/" style={{ display: 'flex', alignItems: 'center', gap: 8, textDecoration: 'none' }}>
-          <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#e0001b', boxShadow: '0 0 8px #e0001b' }} />
+          <div style={{ width: 8, height: 8, borderRadius: '50%', background: theme.red, boxShadow: '0 0 8px #e0001b' }} />
           <span style={{ fontSize: 18, fontWeight: 800, color: 'white', letterSpacing: -0.5 }}>fielty</span>
         </a>
         <div style={{ display: 'flex', gap: 24, alignItems: 'center' }}>
-          <a href="/login" style={{ fontSize: 13, color: '#666', textDecoration: 'none', fontWeight: 500 }}>Ingresar</a>
-          <a href="/onboarding/registro" style={{ fontSize: 13, color: 'white', textDecoration: 'none', fontWeight: 700, background: '#e0001b', padding: '9px 16px', borderRadius: 10 }}>Empezá →</a>
+          <a href="/login" style={{ fontSize: 13, color: theme.gray, textDecoration: 'none', fontWeight: 500 }}>Ingresar</a>
+          <a href="/onboarding/registro" style={{ fontSize: 13, color: 'white', textDecoration: 'none', fontWeight: 700, background: theme.red, padding: '9px 16px', borderRadius: 10 }}>Empezá →</a>
         </div>
       </nav>
 
       <div style={{ maxWidth: 720, margin: '0 auto', padding: '64px 24px 48px' }}>
-        <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', color: '#e0001b', marginBottom: 16 }}>Legal</div>
+        <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', color: theme.red, marginBottom: 16 }}>Legal</div>
         <h1 style={{ fontSize: 40, fontWeight: 900, color: 'white', marginBottom: 16, letterSpacing: -1, lineHeight: 1.1 }}>Términos y condiciones</h1>
-        <p style={{ fontSize: 14, color: '#555', lineHeight: 1.7 }}>Última actualización: mayo de 2026</p>
+        <p style={{ fontSize: 14, color: theme.grayMid, lineHeight: 1.7 }}>Última actualización: mayo de 2026</p>
       </div>
 
       <div style={{ maxWidth: 720, margin: '0 auto', padding: '0 24px 80px' }}>
@@ -69,13 +70,13 @@ export default function Terminos() {
 
         <Section title="11. Contacto">
           Para consultas, reclamos o cualquier comunicación relacionada con estos términos, escribinos a{' '}
-          <a href="mailto:hola@fielty.app" style={{ color: '#e0001b', textDecoration: 'none', fontWeight: 600 }}>hola@fielty.app</a>.
+          <a href="mailto:hola@fielty.app" style={{ color: theme.red, textDecoration: 'none', fontWeight: 600 }}>hola@fielty.app</a>.
         </Section>
 
       </div>
 
       <div style={{ borderTop: '1px solid #1a1a1a', textAlign: 'center', padding: '24px 20px 40px', fontSize: 13, color: '#444' }}>
-        <a href="/terminos" style={{ color: '#666', textDecoration: 'none', marginRight: 20 }}>Términos</a>
+        <a href="/terminos" style={{ color: theme.gray, textDecoration: 'none', marginRight: 20 }}>Términos</a>
         <a href="/privacidad" style={{ color: '#444', textDecoration: 'none', marginRight: 20 }}>Privacidad</a>
         <a href="/" style={{ color: '#444', textDecoration: 'none' }}>fielty.app</a>
       </div>
@@ -88,7 +89,7 @@ function Section({ title, children }) {
   return (
     <div style={{ marginBottom: 40 }}>
       <h2 style={{ fontSize: 17, fontWeight: 800, color: 'white', marginBottom: 12 }}>{title}</h2>
-      <p style={{ fontSize: 14, color: '#666', lineHeight: 1.9 }}>{children}</p>
+      <p style={{ fontSize: 14, color: theme.gray, lineHeight: 1.9 }}>{children}</p>
     </div>
   )
 }

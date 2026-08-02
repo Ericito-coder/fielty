@@ -1,4 +1,5 @@
 'use client'
+import { theme } from '@/lib/theme'
 import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
 import { storage } from '@/lib/storage'
@@ -45,7 +46,7 @@ export default function Listo() {
     }
     // Generar QR real
     const url = `${window.location.origin}/registro/${negocio.slug}`
-    QRCode.toDataURL(url, { width: 200, margin: 1, color: { dark: '#0e0e0e', light: '#ffffff' } })
+    QRCode.toDataURL(url, { width: 200, margin: 1, color: { dark: theme.black, light: '#ffffff' } })
       .then(setQrUrl)
   }, [negocio])
 
@@ -58,7 +59,7 @@ export default function Listo() {
 
   if (!negocio) return (
     <div style={s.wrap}>
-      <div style={{color:'#666', fontSize:16}}>Cargando...</div>
+      <div style={{color:theme.gray, fontSize:16}}>Cargando...</div>
     </div>
   )
 
@@ -67,7 +68,7 @@ export default function Listo() {
 
   return (
     <div style={s.wrap}>
-      <div style={s.card}>
+      <main style={s.card}>
         <div style={s.logo}>
           <div style={s.logoDot}></div>
           <span style={s.logoText}>fielty</span>
@@ -81,7 +82,7 @@ export default function Listo() {
         <div style={s.linkCard}>
           <div style={s.linkLabel}>Link de registro de clientes</div>
           <div style={s.linkUrl}>{registroUrl}</div>
-          <button style={{...s.copyBtn, background: copiado ? '#00b96b' : '#0e0e0e'}} onClick={copiarLink}>
+          <button style={{...s.copyBtn, background: copiado ? theme.green : theme.black}} onClick={copiarLink}>
             {copiado ? '✓ ¡Copiado!' : '📋 Copiar link'}
           </button>
         </div>
@@ -92,15 +93,15 @@ export default function Listo() {
           <div style={s.qrBox}>
             {qrUrl
               ? <img src={qrUrl} alt="QR de registro" style={{width:132, height:132}} />
-              : <div style={{width:132, height:132, background:'#f0f2f7', borderRadius:8}} />
+              : <div style={{width:132, height:132, background:theme.bgMuted, borderRadius:8}} />
             }
           </div>
-          <div style={{fontSize:12, color:'#666', textAlign:'center', marginBottom:8}}>
+          <div style={{fontSize:12, color:theme.gray, textAlign:'center', marginBottom:8}}>
             Escaneá para registrarse en {negocio.nombre}
           </div>
           <div style={{textAlign:'center'}}>
             <a href={`/qr/${negocio.slug}`} target="_blank" rel="noreferrer"
-              style={{fontSize:13, color:'#e0001b', fontWeight:700, textDecoration:'none'}}>
+              style={{fontSize:13, color:theme.red, fontWeight:700, textDecoration:'none'}}>
               Ver QR completo para imprimir →
             </a>
           </div>
@@ -146,34 +147,34 @@ export default function Listo() {
             ? 'Completar pago →'
             : 'Ir al panel →'}
         </button>
-      </div>
+      </main>
     </div>
   )
 }
 
 const s = {
-  wrap: { minHeight:'100vh', background:'#0e0e0e', display:'flex', alignItems:'center', justifyContent:'center', padding:20 },
+  wrap: { minHeight:'100vh', background:theme.black, display:'flex', alignItems:'center', justifyContent:'center', padding:20 },
   card: { background:'white', borderRadius:28, padding:'40px 32px', width:'100%', maxWidth:420 },
   logo: { display:'flex', alignItems:'center', gap:8, marginBottom:24 },
-  logoDot: { width:10, height:10, borderRadius:'50%', background:'#e0001b', boxShadow:'0 0 10px #e0001b' },
-  logoText: { fontSize:22, fontWeight:800, color:'#0e0e0e', letterSpacing:-0.5 },
+  logoDot: { width:10, height:10, borderRadius:'50%', background:theme.red, boxShadow:'0 0 10px #e0001b' },
+  logoText: { fontSize:22, fontWeight:800, color:theme.black, letterSpacing:-0.5 },
   celebracion: { fontSize:52, marginBottom:16, textAlign:'center' },
-  title: { fontSize:28, fontWeight:800, color:'#0e0e0e', marginBottom:8, lineHeight:1.2 },
-  sub: { fontSize:14, color:'#666', marginBottom:24, lineHeight:1.6 },
-  linkCard: { background:'#f5f6fa', borderRadius:16, padding:20, marginBottom:20 },
-  linkLabel: { fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.06em', color:'#666', marginBottom:8 },
-  linkUrl: { fontSize:12, color:'#0e0e0e', fontFamily:'monospace', wordBreak:'break-all', marginBottom:12, lineHeight:1.5 },
+  title: { fontSize:28, fontWeight:800, color:theme.black, marginBottom:8, lineHeight:1.2 },
+  sub: { fontSize:14, color:theme.gray, marginBottom:24, lineHeight:1.6 },
+  linkCard: { background:theme.bgMuted2, borderRadius:16, padding:20, marginBottom:20 },
+  linkLabel: { fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.06em', color:theme.gray, marginBottom:8 },
+  linkUrl: { fontSize:12, color:theme.black, fontFamily:'monospace', wordBreak:'break-all', marginBottom:12, lineHeight:1.5 },
   copyBtn: { padding:'10px 16px', border:'none', borderRadius:10, color:'white', fontSize:13, fontWeight:700, cursor:'pointer', fontFamily:'inherit', transition:'background 0.2s' },
   qrWrap: { marginBottom:24 },
-  qrLabel: { fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.06em', color:'#666', marginBottom:12, textAlign:'center' },
-  qrBox: { width:160, height:160, background:'#f5f6fa', borderRadius:16, margin:'0 auto 12px', display:'flex', alignItems:'center', justifyContent:'center' },
-  pasos: { background:'#f5f6fa', borderRadius:16, padding:20, marginBottom:24 },
-  pasosTitle: { fontSize:13, fontWeight:700, color:'#0e0e0e', marginBottom:8 },
-  pasosIntro: { fontSize:13, color:'#666', lineHeight:1.6, margin:'0 0 16px' },
+  qrLabel: { fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.06em', color:theme.gray, marginBottom:12, textAlign:'center' },
+  qrBox: { width:160, height:160, background:theme.bgMuted2, borderRadius:16, margin:'0 auto 12px', display:'flex', alignItems:'center', justifyContent:'center' },
+  pasos: { background:theme.bgMuted2, borderRadius:16, padding:20, marginBottom:24 },
+  pasosTitle: { fontSize:13, fontWeight:700, color:theme.black, marginBottom:8 },
+  pasosIntro: { fontSize:13, color:theme.gray, lineHeight:1.6, margin:'0 0 16px' },
   pasoBtn: { display:'flex', alignItems:'center', gap:12, background:'white', border:'1px solid #e8eaf0', borderRadius:12, padding:'12px 14px', marginBottom:8, textDecoration:'none' },
-  pasoTexto: { flex:1, fontSize:13, fontWeight:600, color:'#0e0e0e', lineHeight:1.4 },
-  pasoFlecha: { fontSize:14, color:'#e0001b', fontWeight:700, flexShrink:0 },
-  pasosNota: { fontSize:12, color:'#666', lineHeight:1.6, marginTop:12 },
-  pasoNum: { width:24, height:24, borderRadius:'50%', background:'#e0001b', color:'white', display:'flex', alignItems:'center', justifyContent:'center', fontSize:12, fontWeight:800, flexShrink:0 },
-  btn: { width:'100%', padding:18, background:'#e0001b', border:'none', borderRadius:14, color:'white', fontSize:16, fontWeight:800, cursor:'pointer', fontFamily:'inherit' },
+  pasoTexto: { flex:1, fontSize:13, fontWeight:600, color:theme.black, lineHeight:1.4 },
+  pasoFlecha: { fontSize:14, color:theme.red, fontWeight:700, flexShrink:0 },
+  pasosNota: { fontSize:12, color:theme.gray, lineHeight:1.6, marginTop:12 },
+  pasoNum: { width:24, height:24, borderRadius:'50%', background:theme.red, color:'white', display:'flex', alignItems:'center', justifyContent:'center', fontSize:12, fontWeight:800, flexShrink:0 },
+  btn: { width:'100%', padding:18, background:theme.red, border:'none', borderRadius:14, color:'white', fontSize:16, fontWeight:800, cursor:'pointer', fontFamily:'inherit' },
 }

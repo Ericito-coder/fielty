@@ -1,4 +1,5 @@
 'use client'
+import { theme } from '@/lib/theme'
 import { useState, useEffect } from 'react'
 
 export const dynamic = 'force-dynamic'
@@ -81,7 +82,7 @@ export default function RegistroSlug({ params }) {
 
   if (clienteId) return (
     <div style={styles.wrap}>
-      <div style={styles.card}>
+      <main style={styles.card}>
         <div style={{fontSize:56, marginBottom:16}}>🎉</div>
         <h2 style={styles.title}>¡Bienvenido!</h2>
         <p style={styles.sub}>
@@ -91,10 +92,10 @@ export default function RegistroSlug({ params }) {
           Ver mi tarjeta →
         </button>
         {!yaInstalada && (
-          <div style={{marginTop:20, background:'#f5f6fa', borderRadius:14, padding:'14px 16px', display:'flex', gap:12, alignItems:'flex-start'}}>
+          <div style={{marginTop:20, background:theme.bgMuted2, borderRadius:14, padding:'14px 16px', display:'flex', gap:12, alignItems:'flex-start'}}>
             <span style={{fontSize:20, flexShrink:0}}>📲</span>
-            <p style={{margin:0, fontSize:13, color:'#555', lineHeight:1.5}}>
-              <strong style={{color:'#0e0e0e'}}>Guardá tu tarjeta a mano: </strong>
+            <p style={{margin:0, fontSize:13, color:theme.grayMid, lineHeight:1.5}}>
+              <strong style={{color:theme.black}}>Guardá tu tarjeta a mano: </strong>
               {esIOS
                 ? <>tocá los <strong>⋯ tres puntos</strong> en Safari → <strong>Compartir</strong> → <strong>Ver más</strong> → <strong>"Agregar a inicio"</strong>.</>
                 : <>tocá los <strong>⋮ tres puntos</strong> del navegador y elegí <strong>"Agregar a pantalla de inicio"</strong>.</>
@@ -102,13 +103,13 @@ export default function RegistroSlug({ params }) {
             </p>
           </div>
         )}
-      </div>
+      </main>
     </div>
   )
 
   return (
     <div style={styles.wrap}>
-      <div style={styles.card}>
+      <main style={styles.card}>
         <div style={{display:'flex', alignItems:'center', gap:10, marginBottom:16}}>
           {negocio.logo_url
             ? <img src={negocio.logo_url} alt={negocio.nombre} style={{width:40, height:40, borderRadius:12, objectFit:'cover'}} />
@@ -157,7 +158,7 @@ export default function RegistroSlug({ params }) {
           <input id="cliente-nacimiento" style={{...styles.input, width:'calc(100% - 32px)'}} type="date"
             value={fechaNacimiento} onChange={e => setFechaNacimiento(e.target.value)} />
           {negocio.puntos_cumpleanos > 0 && (
-            <div style={{fontSize:12, color:'#666', marginTop:6}}>🎂 Si la cargás, podés recibir puntos de regalo en tu cumpleaños.</div>
+            <div style={{fontSize:12, color:theme.gray, marginTop:6}}>🎂 Si la cargás, podés recibir puntos de regalo en tu cumpleaños.</div>
           )}
         </div>
 
@@ -166,19 +167,19 @@ export default function RegistroSlug({ params }) {
         <button style={{...styles.btn, background: negocio.color}} onClick={registrar} disabled={cargando}>
           {cargando ? 'Creando tu tarjeta...' : '✦ Crear mi tarjeta gratis'}
         </button>
-      </div>
+      </main>
     </div>
   )
 }
 
 const styles = {
-  wrap: { minHeight:'100vh', background:'#0e0e0e', display:'flex', alignItems:'center', justifyContent:'center', padding:20 },
+  wrap: { minHeight:'100vh', background:theme.black, display:'flex', alignItems:'center', justifyContent:'center', padding:20 },
   card: { background:'white', borderRadius:28, padding:'36px 28px', width:'100%', maxWidth:400 },
-  title: { fontSize:28, fontWeight:800, color:'#0e0e0e', lineHeight:1.2, marginBottom:10 },
-  sub: { fontSize:14, color:'#666', marginBottom:28, lineHeight:1.6 },
+  title: { fontSize:28, fontWeight:800, color:theme.black, lineHeight:1.2, marginBottom:10 },
+  sub: { fontSize:14, color:theme.gray, marginBottom:28, lineHeight:1.6 },
   field: { marginBottom:16 },
-  label: { display:'block', fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.06em', color:'#666', marginBottom:8 },
+  label: { display:'block', fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.06em', color:theme.gray, marginBottom:8 },
   input: { width:'100%', padding:'14px 16px', border:'2px solid #e8eaf0', borderRadius:12, fontSize:16, fontFamily:'inherit', outline:'none', boxSizing:'border-box', maxWidth:'100%' },
   btn: { width:'100%', padding:18, border:'none', borderRadius:14, color:'white', fontSize:16, fontWeight:800, cursor:'pointer', marginTop:8, fontFamily:'inherit' },
-  error: { background:'#fff0f0', color:'#e0001b', padding:'10px 14px', borderRadius:10, fontSize:13, marginBottom:12 }
+  error: { background:theme.errorBg, color:theme.red, padding:'10px 14px', borderRadius:10, fontSize:13, marginBottom:12 }
 }

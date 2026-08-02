@@ -1,4 +1,5 @@
 'use client'
+import { theme } from '@/lib/theme'
 import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
 import { storage } from '@/lib/storage'
@@ -57,7 +58,7 @@ export default function Registro() {
 
   return (
     <div style={s.wrap}>
-      <div style={s.card}>
+      <main style={s.card}>
         <div style={s.logo}>
           <div style={s.logoDot}></div>
           <span style={s.logoText}>fielty</span>
@@ -110,28 +111,28 @@ export default function Registro() {
         <div style={s.login}>
           ¿Ya tenés cuenta? <a href="/login" style={s.link}>Iniciá sesión</a>
         </div>
-      </div>
+      </main>
     </div>
   )
 }
 
 const s = {
-  wrap: { minHeight:'100vh', background:'#0e0e0e', display:'flex', alignItems:'center', justifyContent:'center', padding:20 },
+  wrap: { minHeight:'100vh', background:theme.black, display:'flex', alignItems:'center', justifyContent:'center', padding:20 },
   card: { background:'white', borderRadius:28, padding:'40px 32px', width:'100%', maxWidth:420 },
   logo: { display:'flex', alignItems:'center', gap:8, marginBottom:28 },
-  logoDot: { width:10, height:10, borderRadius:'50%', background:'#e0001b', boxShadow:'0 0 10px #e0001b' },
-  logoText: { fontSize:22, fontWeight:800, color:'#0e0e0e', letterSpacing:-0.5 },
-  step: { fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.1em', color:'#e0001b', marginBottom:8 },
-  title: { fontSize:28, fontWeight:800, color:'#0e0e0e', marginBottom:8 },
-  sub: { fontSize:14, color:'#666', marginBottom:28, lineHeight:1.6 },
+  logoDot: { width:10, height:10, borderRadius:'50%', background:theme.red, boxShadow:'0 0 10px #e0001b' },
+  logoText: { fontSize:22, fontWeight:800, color:theme.black, letterSpacing:-0.5 },
+  step: { fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.1em', color:theme.red, marginBottom:8 },
+  title: { fontSize:28, fontWeight:800, color:theme.black, marginBottom:8 },
+  sub: { fontSize:14, color:theme.gray, marginBottom:28, lineHeight:1.6 },
   field: { marginBottom:16 },
-  label: { display:'block', fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.06em', color:'#666', marginBottom:8 },
+  label: { display:'block', fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.06em', color:theme.gray, marginBottom:8 },
   input: { width:'100%', padding:'14px 16px', border:'2px solid #e8eaf0', borderRadius:12, fontSize:16, fontFamily:'inherit', outline:'none', boxSizing:'border-box', transition:'border-color 0.2s' },
-  btn: { width:'100%', padding:18, background:'#e0001b', border:'none', borderRadius:14, color:'white', fontSize:16, fontWeight:800, cursor:'pointer', marginTop:8, fontFamily:'inherit' },
-  error: { background:'#fff0f0', color:'#e0001b', padding:'10px 14px', borderRadius:10, fontSize:13, marginBottom:12 },
-  login: { textAlign:'center', marginTop:20, fontSize:13, color:'#666' },
-  link: { color:'#e0001b', fontWeight:600, textDecoration:'none', display:'inline-block', padding:'14px 4px' },
+  btn: { width:'100%', padding:18, background:theme.red, border:'none', borderRadius:14, color:'white', fontSize:16, fontWeight:800, cursor:'pointer', marginTop:8, fontFamily:'inherit' },
+  error: { background:theme.errorBg, color:theme.red, padding:'10px 14px', borderRadius:10, fontSize:13, marginBottom:12 },
+  login: { textAlign:'center', marginTop:20, fontSize:13, color:theme.gray },
+  link: { color:theme.red, fontWeight:600, textDecoration:'none', display:'inline-block', padding:'14px 4px' },
   divider: { display:'flex', alignItems:'center', gap:12, margin:'20px 0 12px' },
   dividerLine: { flex:1, height:1, background:'#e8eaf0' },
-  dividerText: { fontSize:12, color:'#aaa' },
+  dividerText: { fontSize:12, color:theme.grayLight },
 }

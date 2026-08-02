@@ -1,10 +1,11 @@
 'use client'
+import { theme } from '@/lib/theme'
 import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
 import { linkWhatsApp } from '@/lib/wa'
 
 const ADMIN_EMAIL = process.env.NEXT_PUBLIC_ADMIN_EMAIL
-const PLAN_COLORES = { gratis: '#666', pro_early: '#e0001b', pro: '#e0001b', business: '#f0a500' }
+const PLAN_COLORES = { gratis: theme.gray, pro_early: theme.red, pro: theme.red, business: theme.gold }
 const PLAN_LABELS = { gratis: 'Gratis', pro_early: 'Pro Early', pro: 'Pro', business: 'Business' }
 const PLANES_OPCIONES = ['gratis', 'pro_early', 'pro', 'business']
 
@@ -74,8 +75,8 @@ export default function Admin() {
     setCambiandoPlan(null)
   }
 
-  if (cargando) return <div style={s.wrap}><div style={{color:'#666'}}>Cargando panel de admin...</div></div>
-  if (error) return <div style={s.wrap}><div style={{color:'#e0001b'}}>{error}</div></div>
+  if (cargando) return <div style={s.wrap}><div style={{color:theme.gray}}>Cargando panel de admin...</div></div>
+  if (error) return <div style={s.wrap}><div style={{color:theme.red}}>{error}</div></div>
   if (!data) return null
 
   const { metricas, facturacion, alertas, crecimiento, negocios } = data
@@ -128,7 +129,7 @@ export default function Admin() {
       {negocioDetalle && (
         <div style={{position:'fixed', inset:0, zIndex:200, display:'flex'}}>
           <div style={{flex:1, background:'rgba(0,0,0,0.6)'}} onClick={() => { setNegocioDetalle(null); setDetalleData(null) }} />
-          <div style={{width:520, background:'#0e0e0e', borderLeft:'1px solid #1e1e1e', overflowY:'auto', display:'flex', flexDirection:'column'}}>
+          <div style={{width:520, background:theme.black, borderLeft:'1px solid #1e1e1e', overflowY:'auto', display:'flex', flexDirection:'column'}}>
             {/* Header */}
             <div style={{padding:'24px 24px 20px', borderBottom:'1px solid #1e1e1e', display:'flex', alignItems:'center', gap:14}}>
               <div style={{width:44, height:44, borderRadius:12, background: negocioDetalle.color || '#333', display:'flex', alignItems:'center', justifyContent:'center', fontSize:15, fontWeight:900, color:'white', flexShrink:0}}>
@@ -136,16 +137,16 @@ export default function Admin() {
               </div>
               <div style={{flex:1}}>
                 <div style={{fontSize:17, fontWeight:800, color:'white'}}>{negocioDetalle.nombre}</div>
-                <div style={{fontSize:12, color:'#555', marginTop:2}}>{negocioDetalle.email} · desde {new Date(negocioDetalle.created_at).toLocaleDateString('es-AR')}</div>
+                <div style={{fontSize:12, color:theme.grayMid, marginTop:2}}>{negocioDetalle.email} · desde {new Date(negocioDetalle.created_at).toLocaleDateString('es-AR')}</div>
               </div>
               <div style={{display:'flex', alignItems:'center', gap:10}}>
                 <span style={{fontSize:12, fontWeight:700, color: PLAN_COLORES[negocioDetalle.plan || 'gratis'], background:'#1a1a1a', padding:'4px 10px', borderRadius:100}}>{PLAN_LABELS[negocioDetalle.plan || 'gratis']}</span>
-                <button onClick={() => { setNegocioDetalle(null); setDetalleData(null) }} style={{background:'#1a1a1a', border:'none', borderRadius:8, color:'#666', cursor:'pointer', fontSize:18, width:44, height:44, display:'flex', alignItems:'center', justifyContent:'center'}}>×</button>
+                <button onClick={() => { setNegocioDetalle(null); setDetalleData(null) }} style={{background:'#1a1a1a', border:'none', borderRadius:8, color:theme.gray, cursor:'pointer', fontSize:18, width:44, height:44, display:'flex', alignItems:'center', justifyContent:'center'}}>×</button>
               </div>
             </div>
 
             <div style={{padding:24, flex:1}}>
-              {cargandoDetalle && <div style={{color:'#555', textAlign:'center', padding:40}}>Cargando...</div>}
+              {cargandoDetalle && <div style={{color:theme.grayMid, textAlign:'center', padding:40}}>Cargando...</div>}
 
               {detalleData && (
                 <>
@@ -161,15 +162,15 @@ export default function Admin() {
                     ].map((item, i) => (
                       <div key={i} style={{background:'#1a1a1a', borderRadius:12, padding:'12px 14px', textAlign:'center'}}>
                         <div style={{fontSize:18, fontWeight:800, color:'white', fontFamily:'monospace'}}>{item.value}</div>
-                        <div style={{fontSize:10, color:'#555', marginTop:3}}>{item.label}</div>
+                        <div style={{fontSize:10, color:theme.grayMid, marginTop:3}}>{item.label}</div>
                       </div>
                     ))}
                   </div>
 
                   {/* Top clientes */}
-                  <div style={{fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.08em', color:'#555', marginBottom:10}}>Top clientes</div>
+                  <div style={{fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.08em', color:theme.grayMid, marginBottom:10}}>Top clientes</div>
                   <div style={{background:'#111', borderRadius:14, overflow:'hidden', marginBottom:24}}>
-                    {detalleData.topClientes.length === 0 && <div style={{padding:20, textAlign:'center', color:'#555', fontSize:13}}>Sin clientes</div>}
+                    {detalleData.topClientes.length === 0 && <div style={{padding:20, textAlign:'center', color:theme.grayMid, fontSize:13}}>Sin clientes</div>}
                     {detalleData.topClientes.map((c, i) => {
                       const nivel = (c.puntos_historicos || 0) >= 5000 ? '🥇' : (c.puntos_historicos || 0) >= 1000 ? '🥈' : '🥉'
                       return (
@@ -177,40 +178,40 @@ export default function Admin() {
                           <div style={{fontSize:12, fontWeight:800, color:'#333', width:20, textAlign:'center', flexShrink:0}}>#{i+1}</div>
                           <div style={{flex:1}}>
                             <div style={{fontSize:13, fontWeight:700, color:'white'}}>{c.nombre}</div>
-                            <div style={{fontSize:11, color:'#555'}}>DNI {c.dni} · {nivel} {(c.puntos_historicos||0).toLocaleString('es-AR')} hist.</div>
+                            <div style={{fontSize:11, color:theme.grayMid}}>DNI {c.dni} · {nivel} {(c.puntos_historicos||0).toLocaleString('es-AR')} hist.</div>
                           </div>
-                          <div style={{fontSize:15, fontWeight:800, color:'#f0a500', fontFamily:'monospace'}}>{(c.puntos||0).toLocaleString('es-AR')}</div>
+                          <div style={{fontSize:15, fontWeight:800, color:theme.gold, fontFamily:'monospace'}}>{(c.puntos||0).toLocaleString('es-AR')}</div>
                         </div>
                       )
                     })}
                   </div>
 
                   {/* Canjes recientes */}
-                  <div style={{fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.08em', color:'#555', marginBottom:10}}>Últimos canjes</div>
+                  <div style={{fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.08em', color:theme.grayMid, marginBottom:10}}>Últimos canjes</div>
                   <div style={{background:'#111', borderRadius:14, overflow:'hidden', marginBottom:24}}>
-                    {detalleData.canjesRecientes.length === 0 && <div style={{padding:20, textAlign:'center', color:'#555', fontSize:13}}>Sin canjes</div>}
+                    {detalleData.canjesRecientes.length === 0 && <div style={{padding:20, textAlign:'center', color:theme.grayMid, fontSize:13}}>Sin canjes</div>}
                     {detalleData.canjesRecientes.map((c, i) => (
                       <div key={i} style={{display:'flex', alignItems:'center', gap:12, padding:'12px 16px', borderBottom:'1px solid #1a1a1a'}}>
                         <div style={{flex:1}}>
                           <div style={{fontSize:13, fontWeight:700, color:'white'}}>{c.recompensas?.nombre || '—'}</div>
-                          <div style={{fontSize:11, color:'#555'}}>{c.clientes?.nombre || '—'}</div>
+                          <div style={{fontSize:11, color:theme.grayMid}}>{c.clientes?.nombre || '—'}</div>
                         </div>
-                        <div style={{fontSize:11, color:'#555', fontFamily:'monospace'}}>{c.usado_at ? new Date(c.usado_at).toLocaleDateString('es-AR') : '—'}</div>
+                        <div style={{fontSize:11, color:theme.grayMid, fontFamily:'monospace'}}>{c.usado_at ? new Date(c.usado_at).toLocaleDateString('es-AR') : '—'}</div>
                       </div>
                     ))}
                   </div>
 
                   {/* Últimas transacciones */}
-                  <div style={{fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.08em', color:'#555', marginBottom:10}}>Últimas transacciones</div>
+                  <div style={{fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.08em', color:theme.grayMid, marginBottom:10}}>Últimas transacciones</div>
                   <div style={{background:'#111', borderRadius:14, overflow:'hidden'}}>
-                    {detalleData.transacciones.length === 0 && <div style={{padding:20, textAlign:'center', color:'#555', fontSize:13}}>Sin transacciones</div>}
+                    {detalleData.transacciones.length === 0 && <div style={{padding:20, textAlign:'center', color:theme.grayMid, fontSize:13}}>Sin transacciones</div>}
                     {detalleData.transacciones.map((t, i) => (
                       <div key={i} style={{display:'flex', alignItems:'center', gap:12, padding:'12px 16px', borderBottom:'1px solid #1a1a1a'}}>
                         <div style={{flex:1}}>
                           <div style={{fontSize:13, color:'white'}}>{t.descripcion}</div>
-                          <div style={{fontSize:11, color:'#555'}}>{new Date(t.created_at).toLocaleDateString('es-AR')}</div>
+                          <div style={{fontSize:11, color:theme.grayMid}}>{new Date(t.created_at).toLocaleDateString('es-AR')}</div>
                         </div>
-                        <div style={{fontSize:13, fontWeight:800, fontFamily:'monospace', color: t.tipo === 'suma' || t.tipo === 'referido' || t.tipo === 'cumpleanos' ? '#00b96b' : '#e0001b'}}>
+                        <div style={{fontSize:13, fontWeight:800, fontFamily:'monospace', color: t.tipo === 'suma' || t.tipo === 'referido' || t.tipo === 'cumpleanos' ? theme.green : theme.red}}>
                           +{t.puntos} pts
                         </div>
                       </div>
@@ -223,17 +224,17 @@ export default function Admin() {
         </div>
       )}
 
-      <div style={s.inner}>
+      <main style={s.inner}>
 
         {/* Header */}
         <div style={{display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:32}}>
           <div style={{display:'flex', alignItems:'center', gap:10}}>
-            <div style={{width:10, height:10, borderRadius:'50%', background:'#e0001b', boxShadow:'0 0 10px #e0001b'}} />
+            <div style={{width:10, height:10, borderRadius:'50%', background:theme.red, boxShadow:'0 0 10px #e0001b'}} />
             <span style={{fontSize:20, fontWeight:800, color:'white', letterSpacing:-0.5}}>fielty</span>
-            <span style={{fontSize:13, color:'#555', marginLeft:4}}>/ admin</span>
+            <span style={{fontSize:13, color:theme.grayMid, marginLeft:4}}>/ admin</span>
           </div>
           <button onClick={() => supabase.auth.signOut().then(() => window.location.href = '/login')}
-            style={{padding:'8px 16px', background:'#1a1a1a', border:'none', borderRadius:10, color:'#666', fontSize:13, fontWeight:600, cursor:'pointer', fontFamily:'inherit'}}>
+            style={{padding:'8px 16px', background:'#1a1a1a', border:'none', borderRadius:10, color:theme.gray, fontSize:13, fontWeight:600, cursor:'pointer', fontFamily:'inherit'}}>
             Salir
           </button>
         </div>
@@ -242,14 +243,14 @@ export default function Admin() {
         <div style={s.sectionTitle}>Métricas generales</div>
         <div style={s.cardsRow}>
           {[
-            { label: 'Negocios totales', value: metricas.totalNegocios, color: '#e0001b' },
+            { label: 'Negocios totales', value: metricas.totalNegocios, color: theme.red },
             { label: 'Negocios activos (30d)', value: metricas.negociosActivos, color: '#00c853' },
-            { label: 'Clientes totales', value: metricas.totalClientes.toLocaleString('es-AR'), color: '#0e76fd' },
-            { label: 'Puntos en circulación', value: metricas.totalPuntos.toLocaleString('es-AR'), color: '#f0a500' },
-            { label: 'Canjes realizados', value: metricas.totalCanjes.toLocaleString('es-AR'), color: '#7c3aed' },
+            { label: 'Clientes totales', value: metricas.totalClientes.toLocaleString('es-AR'), color: theme.blue },
+            { label: 'Puntos en circulación', value: metricas.totalPuntos.toLocaleString('es-AR'), color: theme.gold },
+            { label: 'Canjes realizados', value: metricas.totalCanjes.toLocaleString('es-AR'), color: theme.purple },
           ].map((m, i) => (
             <div key={i} style={s.metricCard}>
-              <div style={{fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.08em', color:'#555', marginBottom:8}}>{m.label}</div>
+              <div style={{fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.08em', color:theme.grayMid, marginBottom:8}}>{m.label}</div>
               <div style={{fontSize:32, fontWeight:900, color: m.color, fontFamily:'monospace'}}>{m.value}</div>
             </div>
           ))}
@@ -259,25 +260,25 @@ export default function Admin() {
         <div style={s.sectionTitle}>Facturación</div>
         <div style={s.cardsRow}>
           <div style={{...s.metricCard, flex:2}}>
-            <div style={{fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.08em', color:'#555', marginBottom:12}}>MRR</div>
+            <div style={{fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.08em', color:theme.grayMid, marginBottom:12}}>MRR</div>
             <div style={{fontSize:38, fontWeight:900, color:'#00c853', fontFamily:'monospace'}}>${facturacion.mrr.toLocaleString('es-AR')}</div>
-            <div style={{fontSize:12, color:'#555', marginTop:4}}>por mes</div>
+            <div style={{fontSize:12, color:theme.grayMid, marginTop:4}}>por mes</div>
           </div>
           <div style={{...s.metricCard, flex:2}}>
-            <div style={{fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.08em', color:'#555', marginBottom:12}}>Negocios por plan</div>
+            <div style={{fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.08em', color:theme.grayMid, marginBottom:12}}>Negocios por plan</div>
             {PLANES_OPCIONES.map(p => (
               <div key={p} style={{display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:8}}>
                 <div style={{display:'flex', alignItems:'center', gap:8}}>
                   <div style={{width:8, height:8, borderRadius:'50%', background: PLAN_COLORES[p]}} />
-                  <span style={{fontSize:13, color:'#666'}}>{PLAN_LABELS[p]}</span>
+                  <span style={{fontSize:13, color:theme.gray}}>{PLAN_LABELS[p]}</span>
                 </div>
                 <span style={{fontSize:15, fontWeight:800, color:'white', fontFamily:'monospace'}}>{facturacion.porPlan[p] || 0}</span>
               </div>
             ))}
           </div>
           <div style={s.metricCard}>
-            <div style={{fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.08em', color:'#555', marginBottom:8}}>Nuevos este mes</div>
-            <div style={{fontSize:32, fontWeight:900, color:'#0e76fd', fontFamily:'monospace'}}>{facturacion.nuevosEsteMes}</div>
+            <div style={{fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.08em', color:theme.grayMid, marginBottom:8}}>Nuevos este mes</div>
+            <div style={{fontSize:32, fontWeight:900, color:theme.blue, fontFamily:'monospace'}}>{facturacion.nuevosEsteMes}</div>
           </div>
         </div>
 
@@ -288,28 +289,28 @@ export default function Admin() {
             <div style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:16, marginBottom:32}}>
               {alertas.cercaDelLimite.length > 0 && (
                 <div style={s.alertCard}>
-                  <div style={{fontSize:13, fontWeight:700, color:'#f0a500', marginBottom:12}}>⚠️ Cerca del límite (40+ clientes en gratis)</div>
+                  <div style={{fontSize:13, fontWeight:700, color:theme.gold, marginBottom:12}}>⚠️ Cerca del límite (40+ clientes en gratis)</div>
                   {alertas.cercaDelLimite.map(n => (
                     <div key={n.id} style={{display:'flex', justifyContent:'space-between', alignItems:'center', padding:'8px 0', borderBottom:'1px solid #1e1e1e'}}>
                       <div>
                         <div style={{fontSize:13, fontWeight:700, color:'white'}}>{n.nombre}</div>
-                        <div style={{fontSize:11, color:'#555'}}>{n.email}</div>
+                        <div style={{fontSize:11, color:theme.grayMid}}>{n.email}</div>
                       </div>
-                      <div style={{fontSize:13, fontWeight:700, color:'#f0a500'}}>{n.totalClientes}/50</div>
+                      <div style={{fontSize:13, fontWeight:700, color:theme.gold}}>{n.totalClientes}/50</div>
                     </div>
                   ))}
                 </div>
               )}
               {alertas.inactivos.length > 0 && (
                 <div style={s.alertCard}>
-                  <div style={{fontSize:13, fontWeight:700, color:'#555', marginBottom:12}}>💤 Inactivos hace más de 30 días</div>
+                  <div style={{fontSize:13, fontWeight:700, color:theme.grayMid, marginBottom:12}}>💤 Inactivos hace más de 30 días</div>
                   {alertas.inactivos.slice(0, 5).map(n => (
                     <div key={n.id} style={{display:'flex', justifyContent:'space-between', alignItems:'center', padding:'8px 0', borderBottom:'1px solid #1e1e1e'}}>
                       <div>
                         <div style={{fontSize:13, fontWeight:700, color:'white'}}>{n.nombre}</div>
-                        <div style={{fontSize:11, color:'#555'}}>{n.email}</div>
+                        <div style={{fontSize:11, color:theme.grayMid}}>{n.email}</div>
                       </div>
-                      <div style={{fontSize:11, color:'#555', fontFamily:'monospace', textAlign:'right'}}>
+                      <div style={{fontSize:11, color:theme.grayMid, fontFamily:'monospace', textAlign:'right'}}>
                         {PLAN_LABELS[n.plan || 'gratis']}
                       </div>
                     </div>
@@ -327,16 +328,16 @@ export default function Admin() {
             {crecimiento.map((m, i) => (
               <div key={i} style={{flex:1, display:'flex', flexDirection:'column', alignItems:'center', gap:4}}>
                 <div style={{width:'100%', display:'flex', gap:3, alignItems:'flex-end', height:80}}>
-                  <div style={{flex:1, background:'#e0001b', borderRadius:'4px 4px 0 0', height:`${(m.negocios / maxCrecimiento) * 100}%`, minHeight: m.negocios > 0 ? 4 : 0}} title={`${m.negocios} negocios`} />
-                  <div style={{flex:1, background:'#0e76fd', borderRadius:'4px 4px 0 0', height:`${(m.clientes / maxCrecimiento) * 100}%`, minHeight: m.clientes > 0 ? 4 : 0}} title={`${m.clientes} clientes`} />
+                  <div style={{flex:1, background:theme.red, borderRadius:'4px 4px 0 0', height:`${(m.negocios / maxCrecimiento) * 100}%`, minHeight: m.negocios > 0 ? 4 : 0}} title={`${m.negocios} negocios`} />
+                  <div style={{flex:1, background:theme.blue, borderRadius:'4px 4px 0 0', height:`${(m.clientes / maxCrecimiento) * 100}%`, minHeight: m.clientes > 0 ? 4 : 0}} title={`${m.clientes} clientes`} />
                 </div>
-                <div style={{fontSize:10, color:'#555', textAlign:'center'}}>{m.mes.slice(5)}/{m.mes.slice(2,4)}</div>
+                <div style={{fontSize:10, color:theme.grayMid, textAlign:'center'}}>{m.mes.slice(5)}/{m.mes.slice(2,4)}</div>
               </div>
             ))}
           </div>
           <div style={{display:'flex', gap:16, marginTop:12}}>
-            <div style={{display:'flex', alignItems:'center', gap:6}}><div style={{width:10, height:10, borderRadius:2, background:'#e0001b'}} /><span style={{fontSize:11, color:'#555'}}>Negocios</span></div>
-            <div style={{display:'flex', alignItems:'center', gap:6}}><div style={{width:10, height:10, borderRadius:2, background:'#0e76fd'}} /><span style={{fontSize:11, color:'#555'}}>Clientes</span></div>
+            <div style={{display:'flex', alignItems:'center', gap:6}}><div style={{width:10, height:10, borderRadius:2, background:theme.red}} /><span style={{fontSize:11, color:theme.grayMid}}>Negocios</span></div>
+            <div style={{display:'flex', alignItems:'center', gap:6}}><div style={{width:10, height:10, borderRadius:2, background:theme.blue}} /><span style={{fontSize:11, color:theme.grayMid}}>Clientes</span></div>
           </div>
         </div>
 
@@ -363,7 +364,7 @@ export default function Admin() {
                       style={{
                         padding:'14px 16px', textAlign:'left', fontSize:11, fontWeight:700,
                         textTransform:'uppercase', letterSpacing:'0.06em',
-                        color: activa ? '#e0001b' : '#555',
+                        color: activa ? theme.red : theme.grayMid,
                         cursor: col.campo ? 'pointer' : 'default',
                         userSelect:'none', whiteSpace:'nowrap',
                       }}>
@@ -388,19 +389,19 @@ export default function Admin() {
                   </td>
                   <td style={{padding:'14px 16px'}}>
                     {n.nombreDueno && <div style={{fontSize:12, color:'white', fontWeight:600}}>{n.nombreDueno}</div>}
-                    <div style={{fontSize:12, color:'#666'}}>{n.email}</div>
+                    <div style={{fontSize:12, color:theme.gray}}>{n.email}</div>
                     {n.telefono ? (
                       <a
                         href={linkWhatsApp(n.telefono, `Hola ${n.nombreDueno || n.nombre}! Te escribo de Fielty.`)}
                         target="_blank"
                         rel="noreferrer"
                         onClick={e => e.stopPropagation()}
-                        style={{fontSize:12, color:'#00b96b', textDecoration:'none'}}
+                        style={{fontSize:12, color:theme.green, textDecoration:'none'}}
                       >
                         📱 {n.telefono}
                       </a>
                     ) : (
-                      <div style={{fontSize:12, color:'#555'}}>—</div>
+                      <div style={{fontSize:12, color:theme.grayMid}}>—</div>
                     )}
                   </td>
                   <td style={{padding:'14px 16px'}} onClick={e => e.stopPropagation()}>
@@ -416,30 +417,30 @@ export default function Admin() {
                     </select>
                     {n.plan_manual && (
                       <div title="Plan puesto a mano: el cron de Mercado Pago no lo va a bajar a gratis"
-                        style={{fontSize:10, color:'#666', marginTop:4, whiteSpace:'nowrap'}}>
+                        style={{fontSize:10, color:theme.gray, marginTop:4, whiteSpace:'nowrap'}}>
                         ✋ a mano
                       </div>
                     )}
                   </td>
                   <td style={{padding:'14px 16px', fontSize:13, fontWeight:700, color:'white', fontFamily:'monospace'}}>{n.totalClientes}</td>
-                  <td style={{padding:'14px 16px', fontSize:13, fontWeight:700, color:'#7c3aed', fontFamily:'monospace'}}>{n.totalCanjesNegocio}</td>
-                  <td style={{padding:'14px 16px', fontSize:13, color:'#f0a500', fontFamily:'monospace'}}>{(n.totalPuntosNegocio || 0).toLocaleString('es-AR')}</td>
-                  <td style={{padding:'14px 16px', fontSize:12, color:'#555'}}>
+                  <td style={{padding:'14px 16px', fontSize:13, fontWeight:700, color:theme.purple, fontFamily:'monospace'}}>{n.totalCanjesNegocio}</td>
+                  <td style={{padding:'14px 16px', fontSize:13, color:theme.gold, fontFamily:'monospace'}}>{(n.totalPuntosNegocio || 0).toLocaleString('es-AR')}</td>
+                  <td style={{padding:'14px 16px', fontSize:12, color:theme.grayMid}}>
                     {n.ultimaActividad ? new Date(n.ultimaActividad).toLocaleDateString('es-AR') : '—'}
                   </td>
-                  <td style={{padding:'14px 16px', fontSize:12, color:'#555'}}>
+                  <td style={{padding:'14px 16px', fontSize:12, color:theme.grayMid}}>
                     {new Date(n.created_at).toLocaleDateString('es-AR')}
                   </td>
                 </tr>
               ))}
               {negociosOrdenados.length === 0 && (
-                <tr><td colSpan={COLUMNAS.length} style={{padding:32, textAlign:'center', color:'#555', fontSize:13}}>Sin resultados</td></tr>
+                <tr><td colSpan={COLUMNAS.length} style={{padding:32, textAlign:'center', color:theme.grayMid, fontSize:13}}>Sin resultados</td></tr>
               )}
             </tbody>
           </table>
         </div>
 
-      </div>
+      </main>
     </div>
   )
 }
@@ -447,7 +448,7 @@ export default function Admin() {
 const s = {
   wrap: { minHeight:'100vh', background:'#0a0a0a', display:'flex', justifyContent:'center', padding:'32px 20px' },
   inner: { width:'100%', maxWidth:1200 },
-  sectionTitle: { fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.1em', color:'#555', marginBottom:12 },
+  sectionTitle: { fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.1em', color:theme.grayMid, marginBottom:12 },
   cardsRow: { display:'flex', gap:12, marginBottom:32, flexWrap:'wrap' },
   metricCard: { flex:1, minWidth:160, background:'#111', borderRadius:16, padding:'20px 24px' },
   alertCard: { background:'#111', borderRadius:16, padding:20 },

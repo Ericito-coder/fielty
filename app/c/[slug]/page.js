@@ -1,4 +1,5 @@
 'use client'
+import { theme } from '@/lib/theme'
 import { useState, useEffect } from 'react'
 import QRCode from 'qrcode'
 import { linkWhatsApp } from '@/lib/wa'
@@ -236,22 +237,22 @@ export default function CajaSlug({ params }) {
   async function abrirQrModal() {
     if (!qrDataUrl) {
       const url = `${window.location.origin}/mi-tarjeta`
-      const data = await QRCode.toDataURL(url, { width: 300, margin: 2, color: { dark: '#0e0e0e', light: '#ffffff' } })
+      const data = await QRCode.toDataURL(url, { width: 300, margin: 2, color: { dark: theme.black, light: '#ffffff' } })
       setQrDataUrl(data)
     }
     setQrModal(true)
   }
 
-  if (isMobile === null || !negocio) return <div style={{minHeight:'100vh', background:'#0e0e0e'}} />
+  if (isMobile === null || !negocio) return <div style={{minHeight:'100vh', background:theme.black}} />
 
   // ===== PIN (igual para todos) =====
   if (pantalla === 'pin') return (
-    <div style={{minHeight:'100vh', background:'#0e0e0e', color:'white', display:'flex', alignItems:'center', justifyContent:'center'}}>
+    <div style={{minHeight:'100vh', background:theme.black, color:'white', display:'flex', alignItems:'center', justifyContent:'center'}}>
       {mensaje && <div style={s.toast(mensaje.tipo)}>{mensaje.texto}</div>}
-      <div style={{display:'flex', flexDirection:'column', alignItems:'center', gap:24, padding:32}}>
+      <main style={{display:'flex', flexDirection:'column', alignItems:'center', gap:24, padding:32}}>
         <div style={{width:56, height:56, borderRadius:16, background: negocio.color, display:'flex', alignItems:'center', justifyContent:'center', fontSize:20, fontWeight:900}}>{negocio.nombre.slice(0,2).toUpperCase()}</div>
         <div style={{fontSize:26, fontWeight:800}}>{negocio.nombre}</div>
-        <div style={{fontSize:14, color:'#666', marginTop:-16}}>Vista de caja · Staff</div>
+        <div style={{fontSize:14, color:theme.gray, marginTop:-16}}>Vista de caja · Staff</div>
         <input
           type="password"
           placeholder="PIN de caja"
@@ -264,7 +265,7 @@ export default function CajaSlug({ params }) {
         <button onClick={ingresarPin} style={{width:'100%', maxWidth:300, padding:18, background: negocio.color, border:'none', borderRadius:16, color:'white', fontSize:16, fontWeight:800, cursor:'pointer', fontFamily:'inherit'}}>
           Ingresar
         </button>
-      </div>
+      </main>
     </div>
   )
 
@@ -272,41 +273,41 @@ export default function CajaSlug({ params }) {
     <div onClick={() => setRegModal(false)} style={{position:'fixed', inset:0, background:'rgba(0,0,0,0.88)', display:'flex', alignItems:'flex-start', justifyContent:'center', zIndex:9999, padding:'20px 16px', overflowY:'auto'}}>
       <div data-clarity-mask="True" onClick={e => e.stopPropagation()} style={{background:'#111', border:'1px solid #2a2a2a', borderRadius:24, padding:'28px 24px', maxWidth:360, width:'100%', marginTop:'auto', marginBottom:'auto'}}>
         <div style={{fontSize:17, fontWeight:800, color:'white', marginBottom:4}}>Registrar nuevo cliente</div>
-        <div style={{fontSize:13, color:'#666', marginBottom:20}}>La contraseña inicial será su DNI.</div>
+        <div style={{fontSize:13, color:theme.gray, marginBottom:20}}>La contraseña inicial será su DNI.</div>
 
         <div style={{marginBottom:12}}>
-          <div style={{fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.08em', color:'#555', marginBottom:6}}>Nombre y apellido</div>
+          <div style={{fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.08em', color:theme.grayMid, marginBottom:6}}>Nombre y apellido</div>
           <input style={{width:'100%', padding:'12px 14px', background:'#1a1a1a', border:'1px solid #2a2a2a', borderRadius:12, color:'white', fontSize:15, fontFamily:'inherit', outline:'none', boxSizing:'border-box'}}
             placeholder="Ej: María García" value={regNombre} onChange={e => setRegNombre(e.target.value)} autoFocus />
         </div>
         <div style={{marginBottom:12}}>
-          <div style={{fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.08em', color:'#555', marginBottom:6}}>DNI</div>
+          <div style={{fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.08em', color:theme.grayMid, marginBottom:6}}>DNI</div>
           <input style={{width:'100%', padding:'12px 14px', background:'#1a1a1a', border:'1px solid #2a2a2a', borderRadius:12, color:'white', fontSize:15, fontFamily:'monospace', outline:'none', boxSizing:'border-box'}}
             placeholder="Ej: 38452100" inputMode="numeric" value={regDni} onChange={e => setRegDni(e.target.value.replace(/\D/g, ''))} />
         </div>
         <div style={{marginBottom:12}}>
-          <div style={{fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.08em', color:'#555', marginBottom:6}}>Email <span style={{color:'#444', fontWeight:400, textTransform:'none'}}>(opcional)</span></div>
+          <div style={{fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.08em', color:theme.grayMid, marginBottom:6}}>Email <span style={{color:'#444', fontWeight:400, textTransform:'none'}}>(opcional)</span></div>
           <input style={{width:'100%', padding:'12px 14px', background:'#1a1a1a', border:'1px solid #2a2a2a', borderRadius:12, color:'white', fontSize:15, fontFamily:'inherit', outline:'none', boxSizing:'border-box'}}
             placeholder="cliente@email.com" type="email" value={regEmail} onChange={e => setRegEmail(e.target.value)} />
         </div>
         <div style={{marginBottom:12}}>
-          <div style={{fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.08em', color:'#555', marginBottom:6}}>Teléfono <span style={{color:'#444', fontWeight:400, textTransform:'none'}}>(opcional)</span></div>
+          <div style={{fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.08em', color:theme.grayMid, marginBottom:6}}>Teléfono <span style={{color:'#444', fontWeight:400, textTransform:'none'}}>(opcional)</span></div>
           <input style={{width:'100%', padding:'12px 14px', background:'#1a1a1a', border:'1px solid #2a2a2a', borderRadius:12, color:'white', fontSize:15, fontFamily:'monospace', outline:'none', boxSizing:'border-box'}}
             placeholder="Ej: 1134567890" inputMode="numeric" value={regTelefono} onChange={e => setRegTelefono(e.target.value.replace(/\D/g, ''))} />
         </div>
         <div style={{marginBottom:16}}>
-          <div style={{fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.08em', color:'#555', marginBottom:6}}>Consumo de hoy <span style={{color:'#444', fontWeight:400, textTransform:'none'}}>(opcional)</span></div>
+          <div style={{fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.08em', color:theme.grayMid, marginBottom:6}}>Consumo de hoy <span style={{color:'#444', fontWeight:400, textTransform:'none'}}>(opcional)</span></div>
           <div style={{display:'flex', alignItems:'center', gap:8, background:'#1a1a1a', border:'1px solid #2a2a2a', borderRadius:12, padding:'12px 14px'}}>
-            <span style={{color:'#555'}}>$</span>
+            <span style={{color:theme.grayMid}}>$</span>
             <input style={{flex:1, background:'transparent', border:'none', outline:'none', color:'white', fontSize:15, fontFamily:'monospace'}}
               placeholder="0" inputMode="numeric" value={regMonto ? Number(regMonto).toLocaleString('es-AR') : ''} onChange={e => setRegMonto(e.target.value.replace(/\D/g, ''))} />
           </div>
         </div>
 
-        {regError && <div style={{background:'rgba(224,0,27,0.12)', color:'#e0001b', padding:'10px 14px', borderRadius:10, fontSize:13, marginBottom:12}}>{regError}</div>}
+        {regError && <div style={{background:'rgba(224,0,27,0.12)', color:theme.red, padding:'10px 14px', borderRadius:10, fontSize:13, marginBottom:12}}>{regError}</div>}
 
         <div style={{display:'flex', gap:10}}>
-          <button onClick={() => setRegModal(false)} style={{flex:1, padding:14, background:'#1a1a1a', border:'1px solid #2a2a2a', borderRadius:12, color:'#666', fontSize:14, fontWeight:700, cursor:'pointer', fontFamily:'inherit'}}>
+          <button onClick={() => setRegModal(false)} style={{flex:1, padding:14, background:'#1a1a1a', border:'1px solid #2a2a2a', borderRadius:12, color:theme.gray, fontSize:14, fontWeight:700, cursor:'pointer', fontFamily:'inherit'}}>
             Cancelar
           </button>
           <button onClick={registrarCliente} disabled={regCargando} style={{flex:2, padding:14, background: negocio.color, border:'none', borderRadius:12, color:'white', fontSize:14, fontWeight:800, cursor:'pointer', fontFamily:'inherit'}}>
@@ -320,11 +321,11 @@ export default function CajaSlug({ params }) {
   const qrModalJsx = qrModal && (
     <div onClick={() => setQrModal(false)} style={{position:'fixed', inset:0, background:'rgba(0,0,0,0.88)', display:'flex', alignItems:'center', justifyContent:'center', zIndex:9999, padding:24}}>
       <div onClick={e => e.stopPropagation()} style={{background:'white', borderRadius:24, padding:'32px 28px', maxWidth:340, width:'100%', textAlign:'center'}}>
-        <div style={{fontSize:18, fontWeight:800, color:'#0e0e0e', marginBottom:4}}>Tarjeta de clientes</div>
-        <div style={{fontSize:13, color:'#666', marginBottom:24, lineHeight:1.5}}>Mostrá este QR al cliente para que acceda a su tarjeta de puntos</div>
+        <div style={{fontSize:18, fontWeight:800, color:theme.black, marginBottom:4}}>Tarjeta de clientes</div>
+        <div style={{fontSize:13, color:theme.gray, marginBottom:24, lineHeight:1.5}}>Mostrá este QR al cliente para que acceda a su tarjeta de puntos</div>
         {qrDataUrl && <img src={qrDataUrl} style={{width:220, height:220}} alt="QR mi tarjeta" />}
         <div style={{fontSize:12, color:'#bbb', marginTop:12, marginBottom:20, fontFamily:'monospace'}}>{typeof window !== 'undefined' ? window.location.origin : ''}/mi-tarjeta</div>
-        <button onClick={() => setQrModal(false)} style={{padding:'12px 32px', background:'#0e0e0e', border:'none', borderRadius:12, color:'white', fontSize:15, fontWeight:700, cursor:'pointer', fontFamily:'inherit'}}>Cerrar</button>
+        <button onClick={() => setQrModal(false)} style={{padding:'12px 32px', background:theme.black, border:'none', borderRadius:12, color:'white', fontSize:15, fontWeight:700, cursor:'pointer', fontFamily:'inherit'}}>Cerrar</button>
       </div>
     </div>
   )
@@ -335,28 +336,28 @@ export default function CajaSlug({ params }) {
 
   // ===== DESKTOP LAYOUT =====
   if (!isMobile) return (
-    <div style={{minHeight:'100vh', background:'#0e0e0e', color:'white', display:'flex', flexDirection:'column'}}>
+    <div style={{minHeight:'100vh', background:theme.black, color:'white', display:'flex', flexDirection:'column'}}>
       {regModalJsx}
       {qrModalJsx}
       {escanerJsx}
       {mensaje && <div style={s.toast(mensaje.tipo)}>{mensaje.texto}</div>}
 
       {/* TOPBAR */}
-      <div style={{display:'flex', alignItems:'center', justifyContent:'space-between', padding:'16px 28px', borderBottom:'1px solid #1e1e1e', background:'#0e0e0e'}}>
+      <header style={{display:'flex', alignItems:'center', justifyContent:'space-between', padding:'16px 28px', borderBottom:'1px solid #1e1e1e', background:theme.black}}>
         <div style={{display:'flex', alignItems:'center', gap:12}}>
-          <div style={{width:8, height:8, borderRadius:'50%', background:'#e0001b', boxShadow:'0 0 8px #e0001b'}}/>
+          <div style={{width:8, height:8, borderRadius:'50%', background:theme.red, boxShadow:'0 0 8px #e0001b'}}/>
           <span style={{fontSize:16, fontWeight:800, color:'white', letterSpacing:-0.5}}>fielty</span>
           <span style={{color:'#333', fontSize:16}}>·</span>
           <div style={{width:28, height:28, borderRadius:8, background: negocio.color, display:'flex', alignItems:'center', justifyContent:'center', fontSize:11, fontWeight:900}}>{negocio.nombre.slice(0,2).toUpperCase()}</div>
           <span style={{fontSize:15, fontWeight:700}}>{negocio.nombre}</span>
-          <span style={{background:'#1a1a1a', color:'#666', fontSize:11, padding:'3px 10px', borderRadius:100, border:'1px solid #2a2a2a'}}>Caja</span>
+          <span style={{background:'#1a1a1a', color:theme.gray, fontSize:11, padding:'3px 10px', borderRadius:100, border:'1px solid #2a2a2a'}}>Caja</span>
         </div>
-        <button style={{padding:'8px 16px', background:'#1a1a1a', border:'1px solid #2a2a2a', borderRadius:10, color:'#666', cursor:'pointer', fontSize:13, fontFamily:'inherit'}}
+        <button style={{padding:'8px 16px', background:'#1a1a1a', border:'1px solid #2a2a2a', borderRadius:10, color:theme.gray, cursor:'pointer', fontSize:13, fontFamily:'inherit'}}
           onClick={() => { setPantalla('pin'); setPin('') }}>🔒 Bloquear</button>
-      </div>
+      </header>
 
       {/* BODY */}
-      <div style={{display:'flex', flex:1, overflow:'hidden'}}>
+      <main style={{display:'flex', flex:1, overflow:'hidden'}}>
 
         {/* PANEL IZQUIERDO — búsqueda */}
         <div style={{width:380, borderRight:'1px solid #1e1e1e', display:'flex', flexDirection:'column', background:'#0a0a0a'}}>
@@ -379,10 +380,10 @@ export default function CajaSlug({ params }) {
                   <div style={{width:44, height:44, borderRadius:12, background: seleccionado ? negocio.color : '#2a2a2a', display:'flex', alignItems:'center', justifyContent:'center', fontSize:14, fontWeight:800, flexShrink:0}}>{c.nombre.slice(0,2).toUpperCase()}</div>
                   <div style={{flex:1}}>
                     <div style={{fontSize:15, fontWeight:700}}>{c.nombre}</div>
-                    <div style={{fontSize:12, color:'#555', marginTop:2}}>DNI {c.dni} · {nivel.emoji} {nivel.nombre}</div>
+                    <div style={{fontSize:12, color:theme.grayMid, marginTop:2}}>DNI {c.dni} · {nivel.emoji} {nivel.nombre}</div>
                   </div>
                   <div style={{textAlign:'right'}}>
-                    <div style={{fontSize:18, fontWeight:800, color:'#f0a500', fontFamily:'monospace'}}>{c.puntos}</div>
+                    <div style={{fontSize:18, fontWeight:800, color:theme.gold, fontFamily:'monospace'}}>{c.puntos}</div>
                     <div style={{fontSize:10, color:'#444'}}>pts</div>
                   </div>
                 </div>
@@ -405,11 +406,11 @@ export default function CajaSlug({ params }) {
               onClick={() => { setClienteSeleccionado(null); setTabDesktop('canje') }}>
               🎁 Validar canje de recompensa
             </button>
-            <button style={{width:'100%', padding:14, background:'#1a1a1a', border:'1px solid #2a2a2a', borderRadius:14, color:'#aaa', fontSize:14, fontWeight:600, cursor:'pointer', fontFamily:'inherit'}}
+            <button style={{width:'100%', padding:14, background:'#1a1a1a', border:'1px solid #2a2a2a', borderRadius:14, color:theme.grayLight, fontSize:14, fontWeight:600, cursor:'pointer', fontFamily:'inherit'}}
               onClick={abrirQrModal}>
               📱 Mostrar QR al cliente
             </button>
-            <button style={{width:'100%', padding:14, background:'#1a1a1a', border:'1px solid #2a2a2a', borderRadius:14, color:'#aaa', fontSize:14, fontWeight:600, cursor:'pointer', fontFamily:'inherit'}}
+            <button style={{width:'100%', padding:14, background:'#1a1a1a', border:'1px solid #2a2a2a', borderRadius:14, color:theme.grayLight, fontSize:14, fontWeight:600, cursor:'pointer', fontFamily:'inherit'}}
               onClick={abrirRegModal}>
               ➕ Registrar cliente nuevo
             </button>
@@ -434,11 +435,11 @@ export default function CajaSlug({ params }) {
                     <div style={{width:56, height:56, borderRadius:16, background: negocio.color, display:'flex', alignItems:'center', justifyContent:'center', fontSize:18, fontWeight:900}}>{clienteSeleccionado.nombre.slice(0,2).toUpperCase()}</div>
                     <div style={{flex:1}}>
                       <div style={{fontSize:20, fontWeight:800}}>{clienteSeleccionado.nombre}</div>
-                      <div style={{fontSize:13, color:'#555', marginTop:2}}>DNI {clienteSeleccionado.dni} · {nivel.emoji} {nivel.nombre}</div>
+                      <div style={{fontSize:13, color:theme.grayMid, marginTop:2}}>DNI {clienteSeleccionado.dni} · {nivel.emoji} {nivel.nombre}</div>
                     </div>
                     <div style={{textAlign:'right'}}>
-                      <div style={{fontSize:36, fontWeight:900, color:'#f0a500', fontFamily:'monospace', lineHeight:1}}>{clienteSeleccionado.puntos}</div>
-                      <div style={{fontSize:12, color:'#555'}}>puntos</div>
+                      <div style={{fontSize:36, fontWeight:900, color:theme.gold, fontFamily:'monospace', lineHeight:1}}>{clienteSeleccionado.puntos}</div>
+                      <div style={{fontSize:12, color:theme.grayMid}}>puntos</div>
                     </div>
                   </div>
                 </div>
@@ -462,8 +463,8 @@ export default function CajaSlug({ params }) {
                         onChange={e => setMonto(e.target.value.replace(/\D/g, ''))}
                         onKeyDown={e => e.key === 'Enter' && acreditarPuntos()} autoFocus />
                       <div style={{textAlign:'right', minWidth:80}}>
-                        <div style={{fontSize:28, fontWeight:800, color:'#00b96b', fontFamily:'monospace'}}>+{ptsPreview}</div>
-                        <div style={{fontSize:11, color:'#555'}}>puntos</div>
+                        <div style={{fontSize:28, fontWeight:800, color:theme.green, fontFamily:'monospace'}}>+{ptsPreview}</div>
+                        <div style={{fontSize:11, color:theme.grayMid}}>puntos</div>
                       </div>
                     </div>
                     <div style={{display:'grid', gridTemplateColumns:'repeat(6,1fr)', gap:8, marginBottom:20}}>
@@ -503,7 +504,7 @@ export default function CajaSlug({ params }) {
             </div>
           )}
         </div>
-      </div>
+      </main>
     </div>
   )
 
@@ -514,17 +515,17 @@ export default function CajaSlug({ params }) {
       {qrModalJsx}
       {escanerJsx}
       {mensaje && <div style={s.toast(mensaje.tipo)}>{mensaje.texto}</div>}
-      <div style={s.mobileTopbar}>
+      <header style={s.mobileTopbar}>
         <div style={{display:'flex', alignItems:'center', gap:10, flex:1}}>
           <div style={{width:32, height:32, borderRadius:9, background: negocio.color, display:'flex', alignItems:'center', justifyContent:'center', fontSize:12, fontWeight:900}}>{negocio.nombre.slice(0,2).toUpperCase()}</div>
           <div>
             <div style={{fontSize:15, fontWeight:700}}>Caja · {negocio.nombre}</div>
-            <div style={{fontSize:11, color:'#666'}}>👤 Staff</div>
+            <div style={{fontSize:11, color:theme.gray}}>👤 Staff</div>
           </div>
         </div>
         <button style={s.lockBtnMobile} onClick={() => { setPantalla('pin'); setPin('') }}>🔒</button>
-      </div>
-      <div style={{padding:20}}>
+      </header>
+      <main style={{padding:20}}>
         <div style={s.mobileLabel}>Buscar cliente</div>
         <div style={{display:'flex', alignItems:'center', gap:10, background:'#1a1a1a', border:'1px solid #2a2a2a', borderRadius:16, padding:'14px 16px', marginBottom:12}}>
           <span>🔍</span>
@@ -540,11 +541,11 @@ export default function CajaSlug({ params }) {
                   <div style={{width:42, height:42, borderRadius:12, background: negocio.color, display:'flex', alignItems:'center', justifyContent:'center', fontSize:14, fontWeight:800, flexShrink:0}}>{c.nombre.slice(0,2).toUpperCase()}</div>
                   <div style={{flex:1}}>
                     <div style={{fontSize:15, fontWeight:700}}>{c.nombre}</div>
-                    <div style={{fontSize:12, color:'#666'}}>DNI {c.dni} · {nivel.emoji} {nivel.nombre}</div>
+                    <div style={{fontSize:12, color:theme.gray}}>DNI {c.dni} · {nivel.emoji} {nivel.nombre}</div>
                   </div>
                   <div style={{textAlign:'right'}}>
-                    <div style={{fontSize:18, fontWeight:800, color:'#f0a500', fontFamily:'monospace'}}>{c.puntos}</div>
-                    <div style={{fontSize:10, color:'#666'}}>pts</div>
+                    <div style={{fontSize:18, fontWeight:800, color:theme.gold, fontFamily:'monospace'}}>{c.puntos}</div>
+                    <div style={{fontSize:10, color:theme.gray}}>pts</div>
                   </div>
                 </div>
               )
@@ -558,16 +559,16 @@ export default function CajaSlug({ params }) {
               onClick={() => setEscanerAbierto(true)}>📷 Escanear tarjeta del cliente</button>
             <button style={{width:'100%', padding:16, background:'#1a1a1a', border:'1px solid #2a2a2a', borderRadius:14, color:'white', fontSize:15, fontWeight:700, cursor:'pointer', fontFamily:'inherit', textAlign:'left', marginBottom:10}}
               onClick={() => setPantalla('validar')}>🎁 Validar canje de recompensa</button>
-            <button style={{width:'100%', padding:16, background:'#1a1a1a', border:'1px solid #2a2a2a', borderRadius:14, color:'#aaa', fontSize:15, fontWeight:600, cursor:'pointer', fontFamily:'inherit', textAlign:'left', marginBottom:10}}
+            <button style={{width:'100%', padding:16, background:'#1a1a1a', border:'1px solid #2a2a2a', borderRadius:14, color:theme.grayLight, fontSize:15, fontWeight:600, cursor:'pointer', fontFamily:'inherit', textAlign:'left', marginBottom:10}}
               onClick={abrirRegModal}>➕ Registrar cliente nuevo</button>
-            <button style={{width:'100%', padding:16, background:'#1a1a1a', border:'1px solid #2a2a2a', borderRadius:14, color:'#aaa', fontSize:14, fontWeight:600, cursor:'pointer', fontFamily:'inherit', textAlign:'left', display:'flex', alignItems:'center', justifyContent:'space-between'}}
+            <button style={{width:'100%', padding:16, background:'#1a1a1a', border:'1px solid #2a2a2a', borderRadius:14, color:theme.grayLight, fontSize:14, fontWeight:600, cursor:'pointer', fontFamily:'inherit', textAlign:'left', display:'flex', alignItems:'center', justifyContent:'space-between'}}
               onClick={abrirQrModal}>
               <span>❓ ¿El cliente no sabe cómo ver su tarjeta?</span>
-              <span style={{fontSize:18, color:'#555'}}>→</span>
+              <span style={{fontSize:18, color:theme.grayMid}}>→</span>
             </button>
           </div>
         )}
-      </div>
+      </main>
     </div>
   )
 
@@ -576,28 +577,28 @@ export default function CajaSlug({ params }) {
     return (
       <div style={s.mobileWrap}>
         {mensaje && <div style={s.toast(mensaje.tipo)}>{mensaje.texto}</div>}
-        <div style={s.mobileTopbar}>
+        <header style={s.mobileTopbar}>
           <button style={s.backBtnMobile} onClick={() => setPantalla('buscar')}>←</button>
           <div data-clarity-mask="True" style={{flex:1}}>
             <div style={{fontSize:15, fontWeight:700}}>{clienteSeleccionado?.nombre}</div>
-            <div style={{fontSize:11, color:'#666'}}>DNI {clienteSeleccionado?.dni} · {nivel.emoji} {nivel.nombre}</div>
+            <div style={{fontSize:11, color:theme.gray}}>DNI {clienteSeleccionado?.dni} · {nivel.emoji} {nivel.nombre}</div>
           </div>
           <div style={{textAlign:'right'}}>
-            <div style={{fontSize:24, fontWeight:800, color:'#f0a500', fontFamily:'monospace'}}>{clienteSeleccionado?.puntos}</div>
-            <div style={{fontSize:10, color:'#666'}}>puntos</div>
+            <div style={{fontSize:24, fontWeight:800, color:theme.gold, fontFamily:'monospace'}}>{clienteSeleccionado?.puntos}</div>
+            <div style={{fontSize:10, color:theme.gray}}>puntos</div>
           </div>
-        </div>
-        <div style={{padding:20}}>
+        </header>
+        <main style={{padding:20}}>
           <div style={s.mobileLabel}>Acreditar puntos</div>
           <div style={{display:'flex', alignItems:'center', gap:12, background:'#1a1a1a', border:'2px solid #2a2a2a', borderRadius:20, padding:'18px 20px', marginBottom:14}}>
-            <span style={{fontSize:24, color:'#666', fontWeight:300}}>$</span>
+            <span style={{fontSize:24, color:theme.gray, fontWeight:300}}>$</span>
             <input style={{flex:1, background:'transparent', border:'none', outline:'none', color:'white', fontSize:36, fontWeight:500, fontFamily:'monospace', minWidth:0}}
               type="text" inputMode="numeric" placeholder="0"
               value={monto ? Number(monto).toLocaleString('es-AR') : ''}
               onChange={e => setMonto(e.target.value.replace(/\D/g, ''))} />
             <div style={{textAlign:'right'}}>
-              <div style={{fontSize:20, fontWeight:800, color:'#00b96b', fontFamily:'monospace'}}>+{ptsPreview}</div>
-              <div style={{fontSize:10, color:'#666'}}>puntos</div>
+              <div style={{fontSize:20, fontWeight:800, color:theme.green, fontFamily:'monospace'}}>+{ptsPreview}</div>
+              <div style={{fontSize:10, color:theme.gray}}>puntos</div>
             </div>
           </div>
           <div style={{display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:8, marginBottom:16}}>
@@ -620,7 +621,7 @@ export default function CajaSlug({ params }) {
           )}
           <button style={{width:'100%', padding:16, background:'#1a1a1a', border:'1px solid #2a2a2a', borderRadius:14, color:'white', fontSize:15, fontWeight:700, cursor:'pointer', fontFamily:'inherit', marginTop:10}}
             onClick={() => setPantalla('validar')}>🎁 Validar canje de recompensa</button>
-        </div>
+        </main>
       </div>
     )
   }
@@ -628,13 +629,13 @@ export default function CajaSlug({ params }) {
   if (pantalla === 'validar') return (
     <div style={s.mobileWrap}>
       {mensaje && <div style={s.toast(mensaje.tipo)}>{mensaje.texto}</div>}
-      <div style={s.mobileTopbar}>
+      <header style={s.mobileTopbar}>
         <button style={s.backBtnMobile} onClick={() => { setPantalla('buscar'); setCanjeResult(null); setCodigo('') }}>←</button>
         <div style={{fontSize:15, fontWeight:700}}>Validar canje</div>
-      </div>
-      <div style={{padding:20}}>
+      </header>
+      <main style={{padding:20}}>
         <ValidarCanjePanel negocio={negocio} codigo={codigo} setCodigo={setCodigo} canjeResult={canjeResult} validarCanje={validarCanje} confirmarCanje={confirmarCanje} cargando={cargando} />
-      </div>
+      </main>
     </div>
   )
 }
@@ -654,20 +655,20 @@ function TarjetaClienteInfo() {
     <div>
       <button
         onClick={() => setAbierto(!abierto)}
-        style={{width:'100%', padding:16, background:'#1a1a1a', border:'1px solid #2a2a2a', borderRadius:14, color:'#666', fontSize:14, fontWeight:600, cursor:'pointer', fontFamily:'inherit', textAlign:'left', display:'flex', alignItems:'center', justifyContent:'space-between'}}>
+        style={{width:'100%', padding:16, background:'#1a1a1a', border:'1px solid #2a2a2a', borderRadius:14, color:theme.gray, fontSize:14, fontWeight:600, cursor:'pointer', fontFamily:'inherit', textAlign:'left', display:'flex', alignItems:'center', justifyContent:'space-between'}}>
         <span>❓ ¿El cliente no sabe cómo ver su tarjeta?</span>
-        <span style={{fontSize:18, color:'#555', transform: abierto ? 'rotate(45deg)' : 'none', transition:'transform 0.2s'}}>+</span>
+        <span style={{fontSize:18, color:theme.grayMid, transform: abierto ? 'rotate(45deg)' : 'none', transition:'transform 0.2s'}}>+</span>
       </button>
       {abierto && (
         <div style={{background:'#111', border:'1px solid #2a2a2a', borderTop:'none', borderRadius:'0 0 14px 14px', padding:'16px 18px'}}>
-          <p style={{fontSize:14, color:'#666', margin:'0 0 10px', lineHeight:1.6}}>
+          <p style={{fontSize:14, color:theme.gray, margin:'0 0 10px', lineHeight:1.6}}>
             Indicale que tiene que ingresar a este link desde su celular:
           </p>
           <div style={{background:'#1a1a1a', borderRadius:10, padding:'10px 14px', fontSize:13, fontFamily:'monospace', color:'white', wordBreak:'break-all', marginBottom:12}}>
             {appUrl}/mi-tarjeta
           </div>
           <button onClick={copiar}
-            style={{padding:'9px 16px', background: copiado ? '#00b96b' : '#2a2a2a', border:'none', borderRadius:10, color:'white', fontSize:13, fontWeight:700, cursor:'pointer', fontFamily:'inherit', transition:'background 0.2s'}}>
+            style={{padding:'9px 16px', background: copiado ? theme.green : '#2a2a2a', border:'none', borderRadius:10, color:'white', fontSize:13, fontWeight:700, cursor:'pointer', fontFamily:'inherit', transition:'background 0.2s'}}>
             {copiado ? '✓ ¡Copiado!' : '📋 Copiar link'}
           </button>
         </div>
@@ -679,7 +680,7 @@ function TarjetaClienteInfo() {
 function ValidarCanjePanel({ negocio, codigo, setCodigo, canjeResult, validarCanje, confirmarCanje, cargando }) {
   return (
     <>
-      <div style={{fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.1em', color:'#666', marginBottom:12}}>Código del cliente</div>
+      <div style={{fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.1em', color:theme.gray, marginBottom:12}}>Código del cliente</div>
       <div style={{display:'flex', gap:10, marginBottom:20}}>
         <input style={{flex:1, background:'#1a1a1a', border:'2px solid #2a2a2a', borderRadius:14, padding:'16px 18px', color:'white', fontSize:22, fontWeight:500, fontFamily:'monospace', letterSpacing:4, textAlign:'center', outline:'none'}}
           placeholder="XK4-92B" value={codigo} maxLength={7}
@@ -697,10 +698,10 @@ function ValidarCanjePanel({ negocio, codigo, setCodigo, canjeResult, validarCan
       {canjeResult && (
         <div data-clarity-mask="True" style={{background:'rgba(0,185,107,0.08)', border:'1px solid rgba(0,185,107,0.3)', borderRadius:20, padding:28, textAlign:'center'}}>
           <div style={{fontSize:36, marginBottom:12}}>🎁</div>
-          <div style={{fontSize:11, color:'#00b96b', fontWeight:700, textTransform:'uppercase', letterSpacing:'0.08em', marginBottom:4}}>Canje válido</div>
+          <div style={{fontSize:11, color:theme.green, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.08em', marginBottom:4}}>Canje válido</div>
           <div style={{fontSize:20, fontWeight:800, marginBottom:4}}>{canjeResult.recompensas.nombre}</div>
-          <div style={{fontSize:14, color:'#666', marginBottom:24}}>Cliente: {canjeResult.clientes.nombre} · {canjeResult.recompensas.puntos_necesarios} pts</div>
-          <button style={{width:'100%', padding:18, background:'#00b96b', border:'none', borderRadius:14, color:'white', fontSize:17, fontWeight:800, cursor:'pointer', fontFamily:'inherit', boxShadow:'0 8px 24px rgba(0,185,107,0.3)'}}
+          <div style={{fontSize:14, color:theme.gray, marginBottom:24}}>Cliente: {canjeResult.clientes.nombre} · {canjeResult.recompensas.puntos_necesarios} pts</div>
+          <button style={{width:'100%', padding:18, background:theme.green, border:'none', borderRadius:14, color:'white', fontSize:17, fontWeight:800, cursor:'pointer', fontFamily:'inherit', boxShadow:'0 8px 24px rgba(0,185,107,0.3)'}}
             onClick={confirmarCanje} disabled={cargando}>
             {cargando ? 'Confirmando...' : '✓ Confirmar canje'}
           </button>
@@ -711,10 +712,10 @@ function ValidarCanjePanel({ negocio, codigo, setCodigo, canjeResult, validarCan
 }
 
 const s = {
-  toast: (tipo) => ({ position:'fixed', top:20, left:'50%', transform:'translateX(-50%)', color:'white', padding:'12px 24px', borderRadius:100, fontSize:14, fontWeight:600, zIndex:9999, whiteSpace:'nowrap', boxShadow:'0 8px 24px rgba(0,0,0,0.4)', background: tipo==='error' ? '#e0001b' : '#00b96b' }),
-  mobileWrap: { minHeight:'100vh', background:'#0e0e0e', color:'white', width:'100%', maxWidth:420, margin:'0 auto', position:'relative' },
+  toast: (tipo) => ({ position:'fixed', top:20, left:'50%', transform:'translateX(-50%)', color:'white', padding:'12px 24px', borderRadius:100, fontSize:14, fontWeight:600, zIndex:9999, whiteSpace:'nowrap', boxShadow:'0 8px 24px rgba(0,0,0,0.4)', background: tipo==='error' ? theme.red : theme.green }),
+  mobileWrap: { minHeight:'100vh', background:theme.black, color:'white', width:'100%', maxWidth:420, margin:'0 auto', position:'relative' },
   mobileTopbar: { display:'flex', alignItems:'center', gap:12, padding:'20px 20px 16px', borderBottom:'1px solid #1e1e1e' },
-  mobileLabel: { fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.1em', color:'#666', marginBottom:12 },
+  mobileLabel: { fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.1em', color:theme.gray, marginBottom:12 },
   lockBtnMobile: { background:'#1a1a1a', border:'1px solid #2a2a2a', borderRadius:10, padding:'8px 12px', color:'white', cursor:'pointer', fontSize:16 },
   backBtnMobile: { background:'#1a1a1a', border:'1px solid #2a2a2a', borderRadius:10, width:44, height:44, color:'white', cursor:'pointer', fontSize:18, display:'flex', alignItems:'center', justifyContent:'center' },
 }

@@ -1,4 +1,5 @@
 'use client'
+import { theme } from '@/lib/theme'
 import { useEffect, useState } from 'react'
 
 export default function LandingClient() {
@@ -35,8 +36,8 @@ const [isMobile, setIsMobile] = useState(false)
           </div>
           {isMobile ? (
             <div style={{display:'flex', gap:8, alignItems:'center'}}>
-              <a href="/login" style={{fontSize:13, color:'#666', textDecoration:'none', fontWeight:500, padding:'8px 12px'}}>Ingresar</a>
-              <a href="/onboarding/registro" style={{fontSize:13, color:'white', textDecoration:'none', fontWeight:700, background:'#e0001b', padding:'9px 16px', borderRadius:10}}>Empezá →</a>
+              <a href="/login" style={{fontSize:13, color:theme.gray, textDecoration:'none', fontWeight:500, padding:'8px 12px'}}>Ingresar</a>
+              <a href="/onboarding/registro" style={{fontSize:13, color:'white', textDecoration:'none', fontWeight:700, background:theme.red, padding:'9px 16px', borderRadius:10}}>Empezá →</a>
             </div>
           ) : (
             <div style={{display:'flex', alignItems:'center', gap:28}}>
@@ -145,7 +146,7 @@ const [isMobile, setIsMobile] = useState(false)
                 precio: '$10.000',
                 precioOriginal: '$20.000',
                 periodo: 'por mes · primer año',
-                color: '#e0001b',
+                color: theme.red,
                 features: ['Clientes ilimitados', 'Hasta 3 sucursales', 'Campañas de email a inactivos', 'Logo personalizado en tu tarjeta', 'Exportar clientes a CSV', 'Soporte por WhatsApp'],
                 cta: 'Empezar con Pro',
                 href: '/onboarding/registro?plan=pro_early',
@@ -156,7 +157,7 @@ const [isMobile, setIsMobile] = useState(false)
                 nombre: 'Business',
                 precio: '$35.000',
                 periodo: 'por mes',
-                color: '#f0a500',
+                color: theme.gold,
                 features: ['Todo lo de Pro', 'Sucursales ilimitadas', 'Tu tarjeta en Google Wallet', 'WhatsApp automático (próximamente)', 'Soporte prioritario'],
                 cta: 'Empezar con Business',
                 href: '/onboarding/registro?plan=business',
@@ -168,17 +169,17 @@ const [isMobile, setIsMobile] = useState(false)
                 <div style={{fontSize:18, fontWeight:800, color:'white', marginBottom:8}}>{plan.nombre}</div>
                 {plan.precioOriginal && (
                   <div style={{display:'flex', alignItems:'center', gap:8, marginBottom:4}}>
-                    <span style={{fontSize:16, color:'#555', fontFamily:'monospace', textDecoration:'line-through'}}>{plan.precioOriginal}</span>
-                    <span style={{background:'#e0001b', color:'white', fontSize:11, fontWeight:800, padding:'3px 8px', borderRadius:100}}>50% OFF</span>
+                    <span style={{fontSize:16, color:theme.grayMid, fontFamily:'monospace', textDecoration:'line-through'}}>{plan.precioOriginal}</span>
+                    <span style={{background:theme.red, color:'white', fontSize:11, fontWeight:800, padding:'3px 8px', borderRadius:100}}>50% OFF</span>
                   </div>
                 )}
                 <div style={{display:'flex', alignItems:'baseline', gap:6, marginBottom:4}}>
                   <span style={{fontSize:36, fontWeight:900, color:'white', fontFamily:'monospace'}}>{plan.precio}</span>
                 </div>
-                <div style={{fontSize:13, color:'#555', marginBottom:24}}>{plan.periodo}</div>
+                <div style={{fontSize:13, color:theme.grayMid, marginBottom:24}}>{plan.periodo}</div>
                 <div style={{display:'flex', flexDirection:'column', gap:10, marginBottom:28}}>
                   {plan.features.map((f, j) => (
-                    <div key={j} style={{display:'flex', alignItems:'center', gap:8, fontSize:14, color:'#666'}}>
+                    <div key={j} style={{display:'flex', alignItems:'center', gap:8, fontSize:14, color:theme.gray}}>
                       <span style={{color: plan.color, fontWeight:700}}>✓</span> {f}
                     </div>
                   ))}
@@ -189,15 +190,15 @@ const [isMobile, setIsMobile] = useState(false)
               </div>
             ))}
           </div>
-          <div style={{textAlign:'center', marginTop:32, fontSize:14, color:'#555'}}>
-            🎁 <strong style={{color:'#666'}}>Por ser de los primeros:</strong> 50% de descuento en el plan Pro por un año. <a href="/onboarding/registro" style={{color:'#e0001b', fontWeight:700}}>Registrate ahora →</a>
+          <div style={{textAlign:'center', marginTop:32, fontSize:14, color:theme.grayMid}}>
+            🎁 <strong style={{color:theme.gray}}>Por ser de los primeros:</strong> 50% de descuento en el plan Pro por un año. <a href="/onboarding/registro" style={{color:theme.red, fontWeight:700}}>Registrate ahora →</a>
           </div>
         </div>
       </section>
 
       {/* POR RUBRO */}
       <section style={{padding:'0 32px 40px', textAlign:'center'}}>
-        <div style={{fontSize:15, color:'#666', marginBottom:12}}>Mirá cómo funciona en tu rubro</div>
+        <div style={{fontSize:15, color:theme.gray, marginBottom:12}}>Mirá cómo funciona en tu rubro</div>
         <div style={{display:'flex', gap:'12px 20px', justifyContent:'center', flexWrap:'wrap'}}>
           {[
             ['/para/barberias', 'Barberías'],
@@ -208,7 +209,7 @@ const [isMobile, setIsMobile] = useState(false)
             ['/para/restaurantes', 'Restaurantes'],
             ['/para/panaderias', 'Panaderías'],
           ].map(([href, nombre]) => (
-            <a key={href} href={href} style={{color:'#e0001b', fontWeight:700, textDecoration:'none', fontSize:15}}>
+            <a key={href} href={href} style={{color:theme.red, fontWeight:700, textDecoration:'none', fontSize:15}}>
               {nombre} →
             </a>
           ))}
@@ -254,50 +255,50 @@ const [isMobile, setIsMobile] = useState(false)
 }
 
 const s = {
-  page: { minHeight:'100vh', background:'#0e0e0e', color:'white', fontFamily:'inherit' },
+  page: { minHeight:'100vh', background:theme.black, color:'white', fontFamily:'inherit' },
   nav: { position:'fixed', top:0, left:0, right:0, zIndex:100, transition:'all 0.3s' },
   navInner: { maxWidth:1100, margin:'0 auto', padding:'20px 32px', display:'flex', alignItems:'center', justifyContent:'space-between' },
   navLogo: { display:'flex', alignItems:'center', gap:8 },
-  logoDot: { width:10, height:10, borderRadius:'50%', background:'#e0001b', boxShadow:'0 0 10px #e0001b' },
+  logoDot: { width:10, height:10, borderRadius:'50%', background:theme.red, boxShadow:'0 0 10px #e0001b' },
   logoText: { fontSize:20, fontWeight:800, color:'white', letterSpacing:-0.5 },
   navLinks: { display:'flex', alignItems:'center', gap:28 },
-  navLink: { fontSize:14, color:'#666', textDecoration:'none', fontWeight:500 },
-  navCta: { fontSize:14, color:'white', textDecoration:'none', fontWeight:700, background:'#e0001b', padding:'10px 20px', borderRadius:10 },
+  navLink: { fontSize:14, color:theme.gray, textDecoration:'none', fontWeight:500 },
+  navCta: { fontSize:14, color:'white', textDecoration:'none', fontWeight:700, background:theme.red, padding:'10px 20px', borderRadius:10 },
   hero: { minHeight:'100vh', display:'flex', alignItems:'center', justifyContent:'center', padding:'120px 32px 80px', position:'relative' },
   heroInner: { maxWidth:800, textAlign:'center' },
-  heroBadge: { display:'inline-block', background:'#1a1a1a', border:'1px solid #2a2a2a', borderRadius:100, padding:'8px 20px', fontSize:13, color:'#666', marginBottom:32, fontWeight:500 },
+  heroBadge: { display:'inline-block', background:'#1a1a1a', border:'1px solid #2a2a2a', borderRadius:100, padding:'8px 20px', fontSize:13, color:theme.gray, marginBottom:32, fontWeight:500 },
   heroTitle: { fontSize:'clamp(36px, 8vw, 72px)', fontWeight:900, lineHeight:1.05, letterSpacing:-2, marginBottom:24, color:'white' },
   heroGradient: { background:'linear-gradient(135deg, #e0001b, #f0a500)', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent' },
-  heroSub: { fontSize:20, color:'#666', lineHeight:1.7, marginBottom:40, maxWidth:580, margin:'0 auto 40px' },
+  heroSub: { fontSize:20, color:theme.gray, lineHeight:1.7, marginBottom:40, maxWidth:580, margin:'0 auto 40px' },
   heroCtas: { display:'flex', gap:16, justifyContent:'center', flexWrap:'wrap', marginBottom:60 },
-  ctaPrimary: { background:'#e0001b', color:'white', textDecoration:'none', padding:'16px 32px', borderRadius:14, fontSize:16, fontWeight:800 },
+  ctaPrimary: { background:theme.red, color:'white', textDecoration:'none', padding:'16px 32px', borderRadius:14, fontSize:16, fontWeight:800 },
   ctaSecondary: { background:'#1a1a1a', color:'white', textDecoration:'none', padding:'16px 32px', borderRadius:14, fontSize:16, fontWeight:600, border:'1px solid #2a2a2a' },
   heroStats: { display:'flex', alignItems:'center', justifyContent:'center', gap:32, flexWrap:'wrap' },
   stat: { display:'flex', flexDirection:'column', alignItems:'center', gap:4 },
   statNum: { fontSize:28, fontWeight:900, color:'white', fontFamily:'monospace' },
-  statLabel: { fontSize:12, color:'#555' },
+  statLabel: { fontSize:12, color:theme.grayMid },
   statDivider: { width:1, height:40, background:'#2a2a2a' },
   section: { padding:'100px 32px' },
   sectionInner: { maxWidth:1100, margin:'0 auto' },
-  sectionBadge: { display:'inline-block', background:'#1a1a1a', border:'1px solid #2a2a2a', borderRadius:100, padding:'6px 16px', fontSize:12, color:'#666', marginBottom:20, fontWeight:600, textTransform:'uppercase', letterSpacing:'0.08em' },
+  sectionBadge: { display:'inline-block', background:'#1a1a1a', border:'1px solid #2a2a2a', borderRadius:100, padding:'6px 16px', fontSize:12, color:theme.gray, marginBottom:20, fontWeight:600, textTransform:'uppercase', letterSpacing:'0.08em' },
   sectionTitle: { fontSize:'clamp(28px, 5vw, 48px)', fontWeight:900, color:'white', marginBottom:16, letterSpacing:-1 },
-  sectionSub: { fontSize:18, color:'#555', lineHeight:1.7, marginBottom:60 },
+  sectionSub: { fontSize:18, color:theme.grayMid, lineHeight:1.7, marginBottom:60 },
   stepsGrid: { display:'grid', gridTemplateColumns:'repeat(auto-fit, minmax(280px, 1fr))', gap:24 },
   stepCard: { background:'#1a1a1a', borderRadius:24, padding:32, border:'1px solid #2a2a2a' },
   stepNum: { fontSize:11, fontWeight:700, color:'#333', letterSpacing:'0.1em', marginBottom:16 },
   stepIcon: { fontSize:36, marginBottom:16 },
   stepTitle: { fontSize:20, fontWeight:800, color:'white', marginBottom:10 },
-  stepDesc: { fontSize:14, color:'#666', lineHeight:1.7 },
+  stepDesc: { fontSize:14, color:theme.gray, lineHeight:1.7 },
   featuresGrid: { display:'grid', gridTemplateColumns:'repeat(auto-fit, minmax(300px, 1fr))', gap:20 },
   featureCard: { background:'#1a1a1a', borderRadius:20, padding:28, border:'1px solid #1e1e1e' },
   featureIcon: { fontSize:32, marginBottom:14 },
   featureTitle: { fontSize:17, fontWeight:800, color:'white', marginBottom:8 },
-  featureDesc: { fontSize:14, color:'#555', lineHeight:1.7 },
+  featureDesc: { fontSize:14, color:theme.grayMid, lineHeight:1.7 },
   pricingGrid: { display:'grid', gridTemplateColumns:'repeat(auto-fit, minmax(280px, 1fr))', gap:24, alignItems:'center' },
   planCard: { background:'#1a1a1a', borderRadius:24, padding:32, position:'relative' },
   planBadge: { position:'absolute', top:-12, left:'50%', transform:'translateX(-50%)', padding:'4px 16px', borderRadius:100, fontSize:11, fontWeight:700, color:'white', whiteSpace:'nowrap' },
   planCta: { display:'block', textAlign:'center', padding:'14px 24px', borderRadius:12, fontSize:15, fontWeight:700, textDecoration:'none' },
   footer: { borderTop:'1px solid #1a1a1a', padding:'32px' },
   footerInner: { maxWidth:1100, margin:'0 auto', display:'flex', alignItems:'center', justifyContent:'space-between', flexWrap:'wrap', gap:16 },
-  logoDot2: { width:12, height:12, borderRadius:'50%', background:'#e0001b', boxShadow:'0 0 14px #e0001b', margin:'0 auto 24px' },
+  logoDot2: { width:12, height:12, borderRadius:'50%', background:theme.red, boxShadow:'0 0 14px #e0001b', margin:'0 auto 24px' },
 }
