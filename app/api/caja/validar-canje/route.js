@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { getSupabaseAdmin, validarPinCaja } from '@/lib/server'
+import { getSupabaseAdmin, validarPinCaja, getRequestIp } from '@/lib/server'
 
 // Busca un canje pendiente por código. Si ya venció, lo expira y
 // devuelve los puntos al cliente (atómico, vía fn_expirar_canje).
@@ -9,7 +9,7 @@ export async function POST(request) {
     if (!negocioId || !codigo) return NextResponse.json({ error: 'Faltan datos' }, { status: 400 })
 
     const supabaseAdmin = getSupabaseAdmin()
-    const auth = await validarPinCaja(supabaseAdmin, { negocioId, sucursalId, pin })
+    const auth = await validarPinCaja(supabaseAdmin, { negocioId, sucursalId, pin, ip: getRequestIp(request) })
     if (auth.error) return NextResponse.json({ error: auth.error }, { status: auth.status })
 
     const { data: canje } = await supabaseAdmin
