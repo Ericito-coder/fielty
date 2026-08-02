@@ -48,8 +48,21 @@ export default function GoogleSignInButton({ onError }) {
       use_fedcm_for_prompt: true,
     })
 
-    window.google.accounts.id.renderButton(contenedorRef.current, {
-      theme: 'outline', size: 'large', shape: 'pill', text: 'continue_with', locale: 'es', width: 356,
+    // Ancho fijo en px (renderButton no admite "100%"): se mide el
+    // contenedor real para que calce con la tarjeta tanto en mobile
+    // como en desktop, en vez de hardcodear un valor pensado solo para
+    // el ancho de desktop. El doble rAF espera a que termine el layout
+    // del frame actual: si se mide en el mismo tick que onReady, el
+    // contenedor a veces todavia no tiene su ancho final y Google cae
+    // a un tamaño automático angosto por contenido.
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        if (!contenedorRef.current) return
+        window.google.accounts.id.renderButton(contenedorRef.current, {
+          theme: 'outline', size: 'large', shape: 'pill', text: 'continue_with', locale: 'es',
+          width: contenedorRef.current.clientWidth,
+        })
+      })
     })
   }
 
