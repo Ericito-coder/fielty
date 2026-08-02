@@ -49,7 +49,7 @@ export async function GET(request, { params }) {
     const [{ data: recompensas }, { data: canjeActivo }, { data: transacciones }] = await Promise.all([
       supabaseAdmin
         .from('recompensas')
-        .select('id, nombre, descripcion, puntos_necesarios')
+        .select('id, nombre, puntos_necesarios')
         .eq('negocio_id', cliente.negocio_id)
         .eq('activa', true)
         .order('puntos_necesarios', { ascending: true }),
