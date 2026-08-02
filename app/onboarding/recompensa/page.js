@@ -101,7 +101,7 @@ const s = {
   label: { display:'block', fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.06em', color:'#666', marginBottom:8 },
   input: { width:'100%', padding:'14px 16px', border:'2px solid #e8eaf0', borderRadius:12, fontSize:16, fontFamily:'inherit', outline:'none', boxSizing:'border-box' },
   recompensaRow: { display:'flex', gap:10, alignItems:'flex-end', marginBottom:12 },
-  deleteBtn: { padding:'14px 12px', background:'#fff0f0', border:'none', borderRadius:12, color:'#e0001b', cursor:'pointer', fontSize:14, fontWeight:700, marginBottom:0, alignSelf:'flex-end' },
+  deleteBtn: { minWidth:44, minHeight:44, padding:'14px 12px', background:'#fff0f0', border:'none', borderRadius:12, color:'#e0001b', cursor:'pointer', fontSize:14, fontWeight:700, marginBottom:0, alignSelf:'flex-end', display:'flex', alignItems:'center', justifyContent:'center' },
   addBtn: { width:'100%', padding:14, background:'#f5f6fa', border:'2px dashed #e8eaf0', borderRadius:12, fontSize:14, fontWeight:700, cursor:'pointer', color:'#666', fontFamily:'inherit', marginBottom:20 },
   btn: { width:'100%', padding:18, background:'#e0001b', border:'none', borderRadius:14, color:'white', fontSize:16, fontWeight:800, cursor:'pointer', fontFamily:'inherit' },
   error: { background:'#fff0f0', color:'#e0001b', padding:'10px 14px', borderRadius:10, fontSize:13, marginBottom:12 },

@@ -65,7 +65,7 @@ export default function EscanerQR({ onDetectar, onCerrar }) {
     <div style={{position:'fixed', inset:0, background:'#000', zIndex:10000, display:'flex', flexDirection:'column'}}>
       <div style={{display:'flex', alignItems:'center', justifyContent:'space-between', padding:'16px 20px', color:'white'}}>
         <div style={{fontSize:16, fontWeight:700}}>Escaneá la tarjeta del cliente</div>
-        <button onClick={onCerrar} style={{background:'#1a1a1a', border:'1px solid #2a2a2a', borderRadius:10, width:40, height:40, color:'white', fontSize:20, cursor:'pointer', fontFamily:'inherit'}}>✕</button>
+        <button onClick={onCerrar} style={{background:'#1a1a1a', border:'1px solid #2a2a2a', borderRadius:10, width:44, height:44, color:'white', fontSize:20, cursor:'pointer', fontFamily:'inherit'}}>✕</button>
       </div>
 
       <div style={{flex:1, position:'relative', overflow:'hidden'}}>

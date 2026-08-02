@@ -664,5 +664,5 @@ const s = {
   mobileTopbar: { display:'flex', alignItems:'center', gap:12, padding:'20px 20px 16px', borderBottom:'1px solid #1e1e1e' },
   mobileLabel: { fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.1em', color:'#666', marginBottom:12 },
   lockBtnMobile: { background:'#1a1a1a', border:'1px solid #2a2a2a', borderRadius:10, padding:'8px 12px', color:'white', cursor:'pointer', fontSize:16 },
-  backBtnMobile: { background:'#1a1a1a', border:'1px solid #2a2a2a', borderRadius:10, width:36, height:36, color:'white', cursor:'pointer', fontSize:18, display:'flex', alignItems:'center', justifyContent:'center' },
+  backBtnMobile: { background:'#1a1a1a', border:'1px solid #2a2a2a', borderRadius:10, width:44, height:44, color:'white', cursor:'pointer', fontSize:18, display:'flex', alignItems:'center', justifyContent:'center' },
 }

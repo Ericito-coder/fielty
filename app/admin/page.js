@@ -140,7 +140,7 @@ export default function Admin() {
               </div>
               <div style={{display:'flex', alignItems:'center', gap:10}}>
                 <span style={{fontSize:12, fontWeight:700, color: PLAN_COLORES[negocioDetalle.plan || 'gratis'], background:'#1a1a1a', padding:'4px 10px', borderRadius:100}}>{PLAN_LABELS[negocioDetalle.plan || 'gratis']}</span>
-                <button onClick={() => { setNegocioDetalle(null); setDetalleData(null) }} style={{background:'#1a1a1a', border:'none', borderRadius:8, color:'#666', cursor:'pointer', fontSize:18, width:32, height:32, display:'flex', alignItems:'center', justifyContent:'center'}}>×</button>
+                <button onClick={() => { setNegocioDetalle(null); setDetalleData(null) }} style={{background:'#1a1a1a', border:'none', borderRadius:8, color:'#666', cursor:'pointer', fontSize:18, width:44, height:44, display:'flex', alignItems:'center', justifyContent:'center'}}>×</button>
               </div>
             </div>
 

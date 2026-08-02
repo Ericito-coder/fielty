@@ -257,17 +257,17 @@ export default function Tarjeta({ params }) {
             <div style={{fontSize:12, color:'#666'}}>Accedé sin buscarla cada vez</div>
           </div>
           {esIOS ? (
-            <button style={{padding:'8px 14px', background:'#0e0e0e', border:'none', borderRadius:10, color:'white', fontSize:13, fontWeight:700, cursor:'pointer', fontFamily:'inherit', flexShrink:0}}
+            <button style={{padding:'12px 14px', minHeight:44, background:'#0e0e0e', border:'none', borderRadius:10, color:'white', fontSize:13, fontWeight:700, cursor:'pointer', fontFamily:'inherit', flexShrink:0}}
               onClick={() => setModalIOSAbierto(true)}>
               Cómo hacerlo
             </button>
           ) : deferredPrompt ? (
-            <button style={{padding:'8px 14px', background:'#0e0e0e', border:'none', borderRadius:10, color:'white', fontSize:13, fontWeight:700, cursor:'pointer', fontFamily:'inherit', flexShrink:0}}
+            <button style={{padding:'12px 14px', minHeight:44, background:'#0e0e0e', border:'none', borderRadius:10, color:'white', fontSize:13, fontWeight:700, cursor:'pointer', fontFamily:'inherit', flexShrink:0}}
               onClick={async () => { deferredPrompt.prompt(); const { outcome } = await deferredPrompt.userChoice; if (outcome === 'accepted') setBannerInstalar(false) }}>
               Instalar
             </button>
           ) : null}
-          <button style={{background:'none', border:'none', color:'#ccc', fontSize:16, cursor:'pointer', padding:4, flexShrink:0}}
+          <button style={{background:'none', border:'none', color:'#ccc', fontSize:16, cursor:'pointer', width:44, height:44, display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0}}
             onClick={() => setBannerInstalar(false)}>
             ✕
           </button>

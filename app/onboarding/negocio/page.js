@@ -101,9 +101,9 @@ export default function ConfigNegocio() {
                 transform: color === c ? 'scale(1.15)' : 'scale(1)'
               }} />
             ))}
-            <div style={{position:'relative', width:36, height:36, flexShrink:0}}>
+            <div style={{position:'relative', width:44, height:44, flexShrink:0}}>
               <div style={{
-                width:36, height:36, borderRadius:10, cursor:'pointer',
+                width:44, height:44, borderRadius:10, cursor:'pointer',
                 background: 'conic-gradient(red, yellow, lime, cyan, blue, magenta, red)',
                 border: '3px solid transparent', overflow:'hidden'
               }}>
@@ -230,8 +230,8 @@ const s = {
   field: { marginBottom:20 },
   label: { display:'block', fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.06em', color:'#666', marginBottom:8 },
   input: { width:'100%', padding:'14px 16px', border:'2px solid #e8eaf0', borderRadius:12, fontSize:16, fontFamily:'inherit', outline:'none', boxSizing:'border-box' },
-  colorRow: { display:'flex', gap:12, alignItems:'center' },
-  swatch: { width:36, height:36, borderRadius:10, cursor:'pointer', transition:'all 0.15s' },
+  colorRow: { display:'flex', gap:12, alignItems:'center', flexWrap:'wrap' },
+  swatch: { width:44, height:44, borderRadius:10, cursor:'pointer', transition:'all 0.15s' },
   btn: { width:'100%', padding:18, background:'#e0001b', border:'none', borderRadius:14, color:'white', fontSize:16, fontWeight:800, cursor:'pointer', fontFamily:'inherit' },
   error: { background:'#fff0f0', color:'#e0001b', padding:'10px 14px', borderRadius:10, fontSize:13, marginBottom:12 },
 }

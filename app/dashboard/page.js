@@ -163,7 +163,7 @@ export default function Dashboard() {
               </div>
             </div>
             {NAV_ITEMS.map(item => (
-              <button key={item.id} style={{padding:'13px 16px', border:'none', borderRadius:12, fontSize:14, cursor:'pointer', fontFamily:'inherit', textAlign:'left', background: seccion === item.id ? '#1e1e1e' : 'transparent', color: seccion === item.id ? 'white' : '#666', fontWeight: seccion === item.id ? 700 : 500}}
+              <button key={item.id} style={{padding:'15px 16px', border:'none', borderRadius:12, fontSize:14, cursor:'pointer', fontFamily:'inherit', textAlign:'left', background: seccion === item.id ? '#1e1e1e' : 'transparent', color: seccion === item.id ? 'white' : '#666', fontWeight: seccion === item.id ? 700 : 500}}
                 onClick={() => { setSeccion(item.id); setMenuAbierto(false) }}>
                 {item.icon} {item.label}
               </button>
@@ -187,7 +187,7 @@ export default function Dashboard() {
             <div style={{fontSize:11, color:'#666'}}>{NAV_ITEMS.find(n => n.id === seccion)?.icon} {NAV_ITEMS.find(n => n.id === seccion)?.label}</div>
           </div>
         </div>
-        <button style={{width:40, height:40, background:'#f0f2f7', border:'none', borderRadius:10, fontSize:20, cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center'}} onClick={() => setMenuAbierto(true)}>
+        <button style={{width:44, height:44, background:'#f0f2f7', border:'none', borderRadius:10, fontSize:20, cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center'}} onClick={() => setMenuAbierto(true)}>
           ☰
         </button>
       </div>
@@ -355,7 +355,7 @@ function TutorialChecklist({ negocio, metricas }) {
           <div style={{fontSize:16, fontWeight:800, color:'#0e0e0e'}}>🚀 Primeros pasos</div>
           <div style={{fontSize:13, color:'#666', marginTop:3}}>{completados} de {pasos.length} completados</div>
         </div>
-        <button onClick={() => setConfirmarCierre(true)} style={{background:'none', border:'none', cursor:'pointer', fontSize:20, color:'#ccc', padding:'0 4px', lineHeight:1}}>×</button>
+        <button onClick={() => setConfirmarCierre(true)} style={{background:'none', border:'none', cursor:'pointer', fontSize:20, color:'#ccc', width:44, height:44, display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0}}>×</button>
       </div>
       <div style={{background:'#f0f2f7', borderRadius:99, height:6, marginBottom:20}}>
         <div style={{background:'#e0001b', borderRadius:99, height:6, width:`${progreso}%`, transition:'width 0.5s'}} />
@@ -1443,7 +1443,7 @@ const s = {
   card: { background:'white', borderRadius:20, padding:20, marginBottom:16, boxShadow:'0 2px 8px rgba(0,0,0,0.06)' },
   filtroBtn: { padding:'8px 14px', border:'none', borderRadius:100, fontSize:12, fontWeight:600, cursor:'pointer', fontFamily:'inherit' },
   toggleBtn: { padding:'6px 12px', border:'none', borderRadius:100, fontSize:12, fontWeight:600, cursor:'pointer', fontFamily:'inherit' },
-  deleteBtn: { padding:'6px 10px', background:'#fff0f0', border:'none', borderRadius:8, color:'#e0001b', cursor:'pointer', fontSize:12, fontWeight:700 },
+  deleteBtn: { minWidth:44, minHeight:44, padding:'6px 10px', background:'#fff0f0', border:'none', borderRadius:8, color:'#e0001b', cursor:'pointer', fontSize:12, fontWeight:700, display:'flex', alignItems:'center', justifyContent:'center' },
   configField: { marginBottom:20 },
   configLabel: { display:'block', fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.06em', color:'#666', marginBottom:8 },
   inputField: { width:'100%', padding:'12px 14px', border:'2px solid #e8eaf0', borderRadius:12, fontSize:15, fontFamily:'inherit', outline:'none', boxSizing:'border-box' },

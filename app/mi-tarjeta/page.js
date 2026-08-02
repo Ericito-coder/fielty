@@ -101,7 +101,7 @@ export default function MiTarjeta() {
         </button>
 
         <div style={{ textAlign: 'center', marginTop: 20 }}>
-          <a href="/mi-tarjeta/reset" style={{ fontSize: 13, color: '#666', textDecoration: 'none' }}>
+          <a href="/mi-tarjeta/reset" style={{ fontSize: 13, color: '#666', textDecoration: 'none', display: 'inline-block', padding: '14px 4px' }}>
             ¿Olvidaste tu contraseña?
           </a>
         </div>

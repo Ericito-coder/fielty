@@ -141,7 +141,7 @@ const s = {
   error: { background:'#fff0f0', color:'#e0001b', padding:'10px 14px', borderRadius:10, fontSize:13, marginBottom:12 },
   successBox: { background:'#e8faf2', color:'#00b96b', padding:'14px 16px', borderRadius:12, fontSize:14, lineHeight:1.6, marginBottom:20 },
   register: { textAlign:'center', marginTop:8, fontSize:13, color:'#666' },
-  link: { color:'#e0001b', fontWeight:600, textDecoration:'none' },
+  link: { color:'#e0001b', fontWeight:600, textDecoration:'none', display:'inline-block', padding:'14px 4px' },
   divider: { display:'flex', alignItems:'center', gap:12, margin:'20px 0 12px' },
   dividerLine: { flex:1, height:1, background:'#e8eaf0' },
   dividerText: { fontSize:12, color:'#aaa' },
