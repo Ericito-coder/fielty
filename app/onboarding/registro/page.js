@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
 import { storage } from '@/lib/storage'
+import GoogleSignInButton from '@/components/GoogleSignInButton'
 
 export default function Registro() {
   const [email, setEmail] = useState('')
@@ -98,6 +99,14 @@ export default function Registro() {
           {cargando ? 'Creando cuenta...' : 'Continuar →'}
         </button>
 
+        <div style={s.divider}>
+          <div style={s.dividerLine}></div>
+          <span style={s.dividerText}>o</span>
+          <div style={s.dividerLine}></div>
+        </div>
+
+        <GoogleSignInButton onError={() => setError('Hubo un error al continuar con Google. Intentá de nuevo.')} />
+
         <div style={s.login}>
           ¿Ya tenés cuenta? <a href="/login" style={s.link}>Iniciá sesión</a>
         </div>
@@ -122,4 +131,7 @@ const s = {
   error: { background:'#fff0f0', color:'#e0001b', padding:'10px 14px', borderRadius:10, fontSize:13, marginBottom:12 },
   login: { textAlign:'center', marginTop:20, fontSize:13, color:'#888' },
   link: { color:'#e0001b', fontWeight:600, textDecoration:'none' },
+  divider: { display:'flex', alignItems:'center', gap:12, margin:'20px 0 12px' },
+  dividerLine: { flex:1, height:1, background:'#e8eaf0' },
+  dividerText: { fontSize:12, color:'#aaa' },
 }

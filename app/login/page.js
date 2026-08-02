@@ -1,6 +1,7 @@
 'use client'
 import { useState } from 'react'
 import { supabase } from '@/lib/supabase'
+import GoogleSignInButton from '@/components/GoogleSignInButton'
 
 export default function Login() {
   const [email, setEmail] = useState('')
@@ -104,8 +105,16 @@ export default function Login() {
           {cargando ? 'Ingresando...' : 'Ingresar →'}
         </button>
 
+        <div style={s.divider}>
+          <div style={s.dividerLine}></div>
+          <span style={s.dividerText}>o</span>
+          <div style={s.dividerLine}></div>
+        </div>
+
+        <GoogleSignInButton onError={() => setError('Hubo un error al iniciar sesión con Google. Intentá de nuevo.')} />
+
         <button style={s.linkBtn} onClick={() => { setModo('reset'); setError('') }}>
-          ¿Olvidaste tu contraseña? 
+          ¿Olvidaste tu contraseña?
         </button>
 
         <div style={s.register}>
@@ -133,4 +142,7 @@ const s = {
   successBox: { background:'#e8faf2', color:'#00b96b', padding:'14px 16px', borderRadius:12, fontSize:14, lineHeight:1.6, marginBottom:20 },
   register: { textAlign:'center', marginTop:8, fontSize:13, color:'#888' },
   link: { color:'#e0001b', fontWeight:600, textDecoration:'none' },
+  divider: { display:'flex', alignItems:'center', gap:12, margin:'20px 0 12px' },
+  dividerLine: { flex:1, height:1, background:'#e8eaf0' },
+  dividerText: { fontSize:12, color:'#aaa' },
 }
