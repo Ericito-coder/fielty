@@ -367,9 +367,14 @@ export default function Tarjeta({ params }) {
       <HistorialSection transacciones={transacciones} cargando={cargandoHistorial} />
 
       <div style={{ textAlign: 'center', padding: '8px 0 32px' }}>
-        <a href="/mi-tarjeta" style={{ fontSize: 13, color: 'rgba(255,255,255,0.3)', textDecoration: 'none' }}>
-          ¿No sos vos? Ingresá con tu cuenta
-        </a>
+        <button
+          style={{ fontSize: 13, color: theme.gray, background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'inherit', minHeight: 44, padding: '14px 12px', textDecoration: 'underline' }}
+          onClick={() => {
+            try { localStorage.removeItem('fielty_tarjetas') } catch {}
+            window.location.href = '/mi-tarjeta'
+          }}>
+          Cerrar sesión
+        </button>
       </div>
 
     </main>
