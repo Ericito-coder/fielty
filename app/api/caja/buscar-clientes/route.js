@@ -16,11 +16,13 @@ export async function POST(request) {
     const termino = String(q).replace(/[,()%]/g, '').trim()
     if (termino.length < 2) return NextResponse.json({ clientes: [] })
 
+    // También por teléfono y email: los clientes que se registran con
+    // Google no tienen DNI cargado, así que el DNI solo no alcanza.
     const { data: clientes } = await supabaseAdmin
       .from('clientes')
-      .select('id, nombre, dni, telefono, puntos, puntos_historicos')
+      .select('id, nombre, dni, telefono, email, puntos, puntos_historicos')
       .eq('negocio_id', negocioId)
-      .or(`nombre.ilike.%${termino}%,dni.ilike.%${termino}%`)
+      .or(`nombre.ilike.%${termino}%,dni.ilike.%${termino}%,telefono.ilike.%${termino}%,email.ilike.%${termino}%`)
       .limit(8)
 
     return NextResponse.json({ clientes: clientes || [] })

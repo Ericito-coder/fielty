@@ -1,6 +1,6 @@
-import { NextResponse } from 'next/server'
+import { NextResponse, after } from 'next/server'
 import { getSupabaseAdmin, NEGOCIO_CAMPOS_PUBLICOS } from '@/lib/server'
-import { walletDisponible } from '@/lib/googleWallet'
+import { walletDisponible, actualizarPuntosWallet } from '@/lib/googleWallet'
 import { puedeUsarWallet } from '@/lib/planes'
 import { rateLimit } from '@/lib/rateLimit'
 
@@ -19,7 +19,7 @@ export async function GET(request, { params }) {
 
     const { data: cliente } = await supabaseAdmin
       .from('clientes')
-      .select(`id, nombre, puntos, puntos_historicos, visitas, ultima_visita, negocio_id, negocio:negocios(${NEGOCIO_CAMPOS_PUBLICOS})`)
+      .select(`id, nombre, dni, telefono, email, fecha_nacimiento, puntos, puntos_historicos, visitas, ultima_visita, negocio_id, negocio:negocios(${NEGOCIO_CAMPOS_PUBLICOS})`)
       .eq('id', id)
       .single()
 
@@ -43,6 +43,7 @@ export async function GET(request, { params }) {
         const { data: actualizado } = await supabaseAdmin
           .from('clientes').select('puntos').eq('id', id).single()
         if (actualizado) cliente.puntos = actualizado.puntos
+        after(() => actualizarPuntosWallet(id))
       }
     }
 

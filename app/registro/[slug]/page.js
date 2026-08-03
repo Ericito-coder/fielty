@@ -23,6 +23,7 @@ export default function RegistroSlug({ params }) {
   const [google, setGoogle] = useState(null)
   const [fechaNacimiento, setFechaNacimiento] = useState('')
   const [cargando, setCargando] = useState(false)
+  const [registrandoGoogle, setRegistrandoGoogle] = useState(false)
   const [clienteId, setClienteId] = useState(null)
   const [error, setError] = useState('')
   const [negocio, setNegocio] = useState(null)
@@ -43,17 +44,26 @@ export default function RegistroSlug({ params }) {
     setYaInstalada(window.navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches)
   }, [params])
 
+  // Con Google la tarjeta se crea de una: el token trae nombre y email
+  // verificados, que es todo lo que hace falta. El resto del perfil
+  // (WhatsApp, cumpleaños) se completa después desde la tarjeta.
   function conectarGoogle(token) {
     const payload = decodificarJwt(token)
+    const nombreGoogle = payload?.name || nombre
     setGoogle({ token, email: payload?.email || '' })
-    if (payload?.name) setNombre(n => n || payload.name)
+    if (nombreGoogle) setNombre(n => n || nombreGoogle)
     setError('')
+    setRegistrandoGoogle(true)
+    registrar({ googleToken: token, nombre: nombreGoogle })
   }
 
-  async function registrar() {
-    if (!nombre) { setError('Ingresá tu nombre'); return }
-    if (!dni) { setError('Ingresá tu DNI'); return }
-    if (!google) {
+  async function registrar(override = {}) {
+    const nombreFinal = override.nombre || nombre
+    const tokenGoogle = override.googleToken || google?.token || null
+
+    if (!nombreFinal) { setError('Ingresá tu nombre'); return }
+    if (!tokenGoogle) {
+      if (!dni) { setError('Ingresá tu DNI'); return }
       if (!email) { setError('Ingresá tu email'); return }
       if (!password) { setError('Creá una contraseña'); return }
       if (password.length < 8) { setError('La contraseña debe tener al menos 8 caracteres'); return }
@@ -67,12 +77,12 @@ export default function RegistroSlug({ params }) {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          nombre,
-          dni,
+          nombre: nombreFinal,
+          dni: dni || null,
           telefono: telefono || null,
-          email: google ? null : email,
-          password: google ? null : password,
-          googleToken: google?.token || null,
+          email: tokenGoogle ? null : email,
+          password: tokenGoogle ? null : password,
+          googleToken: tokenGoogle,
           slug: negocio.slug,
           referidoPor: REFERIDO_POR || null,
           fechaNacimiento: fechaNacimiento || null,
@@ -84,20 +94,33 @@ export default function RegistroSlug({ params }) {
       if (!res.ok) {
         setError(result.error || 'Hubo un error, intentá de nuevo')
         setCargando(false)
+        setRegistrandoGoogle(false)
         return
       }
 
       setCargando(false)
+      setRegistrandoGoogle(false)
       setClienteId(result.clienteId)
     } catch {
       setError('Error de conexión. Revisá tu internet e intentá de nuevo.')
       setCargando(false)
+      setRegistrandoGoogle(false)
     }
   }
 
   if (!negocio) return (
     <div style={styles.wrap}>
       <div style={{color:'white', textAlign:'center'}}>Cargando...</div>
+    </div>
+  )
+
+  if (registrandoGoogle) return (
+    <div style={styles.wrap}>
+      <main style={{...styles.card, textAlign:'center'}}>
+        <div style={{fontSize:40, marginBottom:16}}>✨</div>
+        <h2 style={styles.title}>Creando tu tarjeta...</h2>
+        <p style={{...styles.sub, marginBottom:0}}>Un segundo, ya casi está.</p>
+      </main>
     </div>
   )
 
@@ -178,7 +201,9 @@ export default function RegistroSlug({ params }) {
             value={nombre} onChange={e => setNombre(e.target.value)} />
         </div>
         <div style={styles.field}>
-          <label style={styles.label} htmlFor="cliente-dni">DNI</label>
+          <label style={styles.label} htmlFor="cliente-dni">
+            DNI {google && <span style={{color:'#bbb', fontWeight:400}}>(opcional)</span>}
+          </label>
           <input id="cliente-dni" style={styles.input} placeholder="Ej: 38.452.100"
             value={dni} onChange={e => setDni(e.target.value)} />
         </div>
@@ -212,7 +237,7 @@ export default function RegistroSlug({ params }) {
 
         {error && <div style={styles.error}>{error}</div>}
 
-        <button style={{...styles.btn, background: negocio.color}} onClick={registrar} disabled={cargando}>
+        <button style={{...styles.btn, background: negocio.color}} onClick={() => registrar()} disabled={cargando}>
           {cargando ? 'Creando tu tarjeta...' : '✦ Crear mi tarjeta gratis'}
         </button>
       </main>

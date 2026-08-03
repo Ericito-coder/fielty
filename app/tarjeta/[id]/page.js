@@ -333,6 +333,8 @@ export default function Tarjeta({ params }) {
         })}
       </div>
 
+      <PerfilSection cliente={cliente} onGuardado={datos => setCliente(c => ({ ...c, ...datos }))} />
+
       <div style={st.section}>
         <div style={st.sectionTitle}>Invitá amigos</div>
         <div style={{textAlign:'center', padding:'8px 0 16px'}}>
@@ -379,6 +381,148 @@ export default function Tarjeta({ params }) {
       </div>
 
     </main>
+  )
+}
+
+// Los datos del cliente, editables por él mismo. Cumple dos funciones:
+// corregir lo que cargó mal y completar lo que nunca cargó (quien entra
+// con Google llega acá solo con nombre y email). Cuando falta algo, la
+// sección se muestra abierta y destacada en vez de esperar a que la
+// descubran.
+function PerfilSection({ cliente, onGuardado }) {
+  // `nudge` se calcula una sola vez al montar: si se recalculara en cada
+  // render, la sección se volvería a abrir sola después de guardar cuando
+  // el cliente completó solo una parte.
+  const [nudge, setNudge] = useState(!cliente.telefono || !cliente.fecha_nacimiento)
+  const [editando, setEditando] = useState(false)
+  const [nombre, setNombre] = useState(cliente.nombre || '')
+  const [dni, setDni] = useState(cliente.dni || '')
+  const [telefono, setTelefono] = useState(cliente.telefono || '')
+  const [fechaNacimiento, setFechaNacimiento] = useState(cliente.fecha_nacimiento || '')
+  const [guardando, setGuardando] = useState(false)
+  const [error, setError] = useState('')
+  const [guardado, setGuardado] = useState(false)
+
+  const puntosCumple = cliente.negocio?.puntos_cumpleanos || 0
+
+  async function guardar() {
+    setError('')
+    setGuardando(true)
+    try {
+      const res = await fetch('/api/tarjeta/perfil', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ clienteId: cliente.id, nombre, dni, telefono, fechaNacimiento: fechaNacimiento || null }),
+      })
+      const data = await res.json()
+      if (!res.ok) { setError(data.error || 'Hubo un error, intentá de nuevo'); setGuardando(false); return }
+      onGuardado(data.cliente)
+      setEditando(false)
+      setNudge(false)
+      setGuardado(true)
+      setTimeout(() => setGuardado(false), 3000)
+    } catch {
+      setError('Error de conexión. Intentá de nuevo.')
+    }
+    setGuardando(false)
+  }
+
+  function cancelar() {
+    setNombre(cliente.nombre || '')
+    setDni(cliente.dni || '')
+    setTelefono(cliente.telefono || '')
+    setFechaNacimiento(cliente.fecha_nacimiento || '')
+    setError('')
+    setEditando(false)
+  }
+
+  const abierto = editando || nudge
+
+  return (
+    <div style={{...st.section, ...(nudge ? st.sectionDestacada : {})}}>
+      <div style={{display:'flex', alignItems:'center', gap:12, marginBottom:16}}>
+        <div style={st.sectionTitle}>Mis datos</div>
+        {!abierto && (
+          <button onClick={() => setEditando(true)} style={st.linkBtn}>Editar</button>
+        )}
+      </div>
+
+      {nudge && (
+        <div style={{fontSize:13, color:theme.gray, lineHeight:1.6, marginBottom:18}}>
+          Completá tu perfil para que el negocio pueda encontrarte y avisarte de tus premios.
+          {!cliente.fecha_nacimiento && puntosCumple > 0 && (
+            <> <strong style={{color:theme.black}}>🎂 Cargá tu cumpleaños y recibí {puntosCumple} puntos de regalo</strong> ese día.</>
+          )}
+        </div>
+      )}
+
+      {guardado && (
+        <div style={{background:'rgba(0,185,107,0.1)', color:theme.green, padding:'10px 14px', borderRadius:10, fontSize:13, marginBottom:16, fontWeight:600}}>
+          ✓ Datos actualizados
+        </div>
+      )}
+
+      {abierto ? (
+        <>
+          <div style={st.field}>
+            <label style={st.fieldLabel} htmlFor="perfil-nombre">Nombre</label>
+            <input id="perfil-nombre" style={st.input} value={nombre} onChange={e => setNombre(e.target.value)} placeholder="Ej: Martina García" />
+          </div>
+          <div style={st.field}>
+            <label style={st.fieldLabel} htmlFor="perfil-telefono">
+              WhatsApp {!telefono && <span style={{color:theme.grayLight, fontWeight:400}}>(opcional)</span>}
+            </label>
+            <input id="perfil-telefono" style={st.input} value={telefono} onChange={e => setTelefono(e.target.value)} placeholder="Ej: 11 5555-1234" />
+          </div>
+          <div style={st.field}>
+            <label style={st.fieldLabel} htmlFor="perfil-nacimiento">
+              Fecha de nacimiento {!fechaNacimiento && <span style={{color:theme.grayLight, fontWeight:400}}>(opcional)</span>}
+            </label>
+            <input id="perfil-nacimiento" style={{...st.input, width:'calc(100% - 32px)'}} type="date"
+              value={fechaNacimiento} onChange={e => setFechaNacimiento(e.target.value)} />
+          </div>
+          <div style={st.field}>
+            <label style={st.fieldLabel} htmlFor="perfil-dni">
+              DNI {!dni && <span style={{color:theme.grayLight, fontWeight:400}}>(opcional)</span>}
+            </label>
+            <input id="perfil-dni" style={st.input} value={dni} onChange={e => setDni(e.target.value)} placeholder="Ej: 38.452.100" />
+          </div>
+          {cliente.email && (
+            <div style={{fontSize:12, color:theme.grayLight, marginBottom:16, lineHeight:1.5}}>
+              Tu email es <strong style={{color:theme.gray}}>{cliente.email}</strong>. Para cambiarlo, pedíselo al negocio.
+            </div>
+          )}
+
+          {error && <div style={{background:theme.errorBg, color:theme.red, padding:'10px 14px', borderRadius:10, fontSize:13, marginBottom:12}}>{error}</div>}
+
+          <div style={{display:'flex', gap:10}}>
+            <button onClick={guardar} disabled={guardando}
+              style={{flex:1, padding:14, background:theme.black, border:'none', borderRadius:14, color:'white', fontSize:14, fontWeight:700, cursor:'pointer', fontFamily:'inherit'}}>
+              {guardando ? 'Guardando...' : 'Guardar'}
+            </button>
+            <button onClick={editando ? cancelar : () => setNudge(false)}
+              style={{padding:'14px 20px', background:theme.bgMuted, border:'none', borderRadius:14, color:theme.gray, fontSize:14, fontWeight:700, cursor:'pointer', fontFamily:'inherit'}}>
+              {editando ? 'Cancelar' : 'Ahora no'}
+            </button>
+          </div>
+        </>
+      ) : (
+        <>
+          {[
+            { label: 'Nombre', valor: cliente.nombre },
+            { label: 'Email', valor: cliente.email },
+            { label: 'WhatsApp', valor: cliente.telefono },
+            { label: 'Cumpleaños', valor: cliente.fecha_nacimiento && new Date(`${cliente.fecha_nacimiento}T12:00:00`).toLocaleDateString('es-AR', { day:'numeric', month:'long' }) },
+            { label: 'DNI', valor: cliente.dni },
+          ].filter(d => d.valor).map(({ label, valor }) => (
+            <div key={label} style={{display:'flex', justifyContent:'space-between', alignItems:'center', gap:12, padding:'10px 0', borderBottom:'1px solid #f0f1f5'}}>
+              <span style={{fontSize:13, color:theme.gray}}>{label}</span>
+              <span style={{fontSize:14, fontWeight:600, color:theme.black, textAlign:'right', overflow:'hidden', textOverflow:'ellipsis'}}>{valor}</span>
+            </div>
+          ))}
+        </>
+      )}
+    </div>
   )
 }
 
@@ -443,7 +587,12 @@ const st = {
   cardUser: { fontSize:14, color:'rgba(255,255,255,0.7)', fontWeight:500 },
   cardId: { fontFamily:'monospace', fontSize:11, color:'rgba(255,255,255,0.3)' },
   section: { background:'white', borderRadius:24, padding:24, marginBottom:16, boxShadow:'0 4px 20px rgba(0,0,0,0.06)' },
+  sectionDestacada: { border:`2px solid ${theme.black}` },
   sectionTitle: { fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.08em', color:theme.gray, marginBottom:16 },
+  linkBtn: { marginLeft:'auto', marginBottom:16, background:'none', border:'none', color:theme.gray, fontSize:13, fontWeight:600, cursor:'pointer', fontFamily:'inherit', textDecoration:'underline', minHeight:44, padding:'0 4px' },
+  field: { marginBottom:16 },
+  fieldLabel: { display:'block', fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.06em', color:theme.gray, marginBottom:8 },
+  input: { width:'100%', padding:'14px 16px', border:'2px solid #e8eaf0', borderRadius:12, fontSize:16, fontFamily:'inherit', outline:'none', boxSizing:'border-box', maxWidth:'100%' },
   rewardRow: { display:'flex', alignItems:'center', gap:14, borderBottom:'1px solid #f0f1f5' },
   rewardIcon: { width:44, height:44, borderRadius:12, background:theme.bgMuted, display:'flex', alignItems:'center', justifyContent:'center', fontSize:22, flexShrink:0 },
   rewardInfo: { flex:1 },

@@ -3,6 +3,7 @@ import { theme } from '@/lib/theme'
 import { useState, useEffect } from 'react'
 import QRCode from 'qrcode'
 import { linkWhatsApp } from '@/lib/wa'
+import { identidadCliente } from '@/lib/clientes'
 import EscanerQR from '@/app/components/EscanerQR'
 
 export default function CajaSlug({ params }) {
@@ -366,7 +367,7 @@ export default function CajaSlug({ params }) {
             <div style={{display:'flex', alignItems:'center', gap:10, background:'#1a1a1a', border:'1px solid #2a2a2a', borderRadius:14, padding:'12px 16px'}}>
               <span style={{color:'#444'}}>🔍</span>
               <input data-clarity-mask="True" style={{flex:1, background:'transparent', border:'none', outline:'none', color:'white', fontSize:15, fontFamily:'inherit'}}
-                placeholder="Nombre o DNI..." value={busqueda}
+                placeholder="Nombre, DNI, teléfono o email..." value={busqueda}
                 onChange={e => buscarCliente(e.target.value)} autoComplete="off" autoFocus />
             </div>
           </div>
@@ -380,7 +381,7 @@ export default function CajaSlug({ params }) {
                   <div style={{width:44, height:44, borderRadius:12, background: seleccionado ? negocio.color : '#2a2a2a', display:'flex', alignItems:'center', justifyContent:'center', fontSize:14, fontWeight:800, flexShrink:0}}>{c.nombre.slice(0,2).toUpperCase()}</div>
                   <div style={{flex:1}}>
                     <div style={{fontSize:15, fontWeight:700}}>{c.nombre}</div>
-                    <div style={{fontSize:12, color:theme.grayMid, marginTop:2}}>DNI {c.dni} · {nivel.emoji} {nivel.nombre}</div>
+                    <div style={{fontSize:12, color:theme.grayMid, marginTop:2}}>{identidadCliente(c)} · {nivel.emoji} {nivel.nombre}</div>
                   </div>
                   <div style={{textAlign:'right'}}>
                     <div style={{fontSize:18, fontWeight:800, color:theme.gold, fontFamily:'monospace'}}>{c.puntos}</div>
@@ -435,7 +436,7 @@ export default function CajaSlug({ params }) {
                     <div style={{width:56, height:56, borderRadius:16, background: negocio.color, display:'flex', alignItems:'center', justifyContent:'center', fontSize:18, fontWeight:900}}>{clienteSeleccionado.nombre.slice(0,2).toUpperCase()}</div>
                     <div style={{flex:1}}>
                       <div style={{fontSize:20, fontWeight:800}}>{clienteSeleccionado.nombre}</div>
-                      <div style={{fontSize:13, color:theme.grayMid, marginTop:2}}>DNI {clienteSeleccionado.dni} · {nivel.emoji} {nivel.nombre}</div>
+                      <div style={{fontSize:13, color:theme.grayMid, marginTop:2}}>{identidadCliente(clienteSeleccionado)} · {nivel.emoji} {nivel.nombre}</div>
                     </div>
                     <div style={{textAlign:'right'}}>
                       <div style={{fontSize:36, fontWeight:900, color:theme.gold, fontFamily:'monospace', lineHeight:1}}>{clienteSeleccionado.puntos}</div>
@@ -530,7 +531,7 @@ export default function CajaSlug({ params }) {
         <div style={{display:'flex', alignItems:'center', gap:10, background:'#1a1a1a', border:'1px solid #2a2a2a', borderRadius:16, padding:'14px 16px', marginBottom:12}}>
           <span>🔍</span>
           <input data-clarity-mask="True" style={{flex:1, background:'transparent', border:'none', outline:'none', color:'white', fontSize:16, fontFamily:'inherit'}}
-            placeholder="Nombre o DNI..." value={busqueda} onChange={e => buscarCliente(e.target.value)} autoComplete="off" />
+            placeholder="Nombre, DNI, teléfono o email..." value={busqueda} onChange={e => buscarCliente(e.target.value)} autoComplete="off" />
         </div>
         {clientes.length > 0 && (
           <div data-clarity-mask="True" style={{background:'#1a1a1a', border:'1px solid #2a2a2a', borderRadius:16, overflow:'hidden'}}>
@@ -541,7 +542,7 @@ export default function CajaSlug({ params }) {
                   <div style={{width:42, height:42, borderRadius:12, background: negocio.color, display:'flex', alignItems:'center', justifyContent:'center', fontSize:14, fontWeight:800, flexShrink:0}}>{c.nombre.slice(0,2).toUpperCase()}</div>
                   <div style={{flex:1}}>
                     <div style={{fontSize:15, fontWeight:700}}>{c.nombre}</div>
-                    <div style={{fontSize:12, color:theme.gray}}>DNI {c.dni} · {nivel.emoji} {nivel.nombre}</div>
+                    <div style={{fontSize:12, color:theme.gray}}>{identidadCliente(c)} · {nivel.emoji} {nivel.nombre}</div>
                   </div>
                   <div style={{textAlign:'right'}}>
                     <div style={{fontSize:18, fontWeight:800, color:theme.gold, fontFamily:'monospace'}}>{c.puntos}</div>
@@ -581,7 +582,7 @@ export default function CajaSlug({ params }) {
           <button style={s.backBtnMobile} onClick={() => setPantalla('buscar')}>←</button>
           <div data-clarity-mask="True" style={{flex:1}}>
             <div style={{fontSize:15, fontWeight:700}}>{clienteSeleccionado?.nombre}</div>
-            <div style={{fontSize:11, color:theme.gray}}>DNI {clienteSeleccionado?.dni} · {nivel.emoji} {nivel.nombre}</div>
+            <div style={{fontSize:11, color:theme.gray}}>{identidadCliente(clienteSeleccionado)} · {nivel.emoji} {nivel.nombre}</div>
           </div>
           <div style={{textAlign:'right'}}>
             <div style={{fontSize:24, fontWeight:800, color:theme.gold, fontFamily:'monospace'}}>{clienteSeleccionado?.puntos}</div>

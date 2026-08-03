@@ -1,8 +1,9 @@
-import { NextResponse } from 'next/server'
+import { NextResponse, after } from 'next/server'
 import bcrypt from 'bcryptjs'
 import { createClient } from '@supabase/supabase-js'
 import { enviarEmail } from '@/lib/email'
 import { verificarGoogleToken } from '@/lib/googleToken'
+import { actualizarPuntosWallet } from '@/lib/googleWallet'
 
 const supabaseAdmin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL,
@@ -38,7 +39,10 @@ export async function POST(request) {
       passwordHash = await bcrypt.hash(password, 10)
     }
 
-    if (!nombre || !dni || !slug) {
+    // El DNI solo es obligatorio en el registro con contraseña: ahí es el
+    // usuario del login. Con Google la identidad es el email verificado,
+    // así que pedirlo sería fricción sin contrapartida.
+    if (!nombre || !slug || (!viaGoogle && !dni)) {
       return NextResponse.json({ error: 'Faltan datos obligatorios' }, { status: 400 })
     }
 
@@ -67,10 +71,12 @@ export async function POST(request) {
     }
 
     // Verificar duplicados
-    const { data: porDni } = await supabaseAdmin
-      .from('clientes').select('id').eq('negocio_id', negocio.id).eq('dni', dni).limit(1)
-    if (porDni?.length > 0) {
-      return NextResponse.json({ error: 'Ya tenés una tarjeta en este negocio registrada con ese DNI. ¡Pedile al empleado que te busque!' }, { status: 409 })
+    if (dni) {
+      const { data: porDni } = await supabaseAdmin
+        .from('clientes').select('id').eq('negocio_id', negocio.id).eq('dni', dni).limit(1)
+      if (porDni?.length > 0) {
+        return NextResponse.json({ error: 'Ya tenés una tarjeta en este negocio registrada con ese DNI. ¡Pedile al empleado que te busque!' }, { status: 409 })
+      }
     }
 
     if (telefono) {
@@ -93,7 +99,7 @@ export async function POST(request) {
       .from('clientes')
       .insert([{
         nombre,
-        dni,
+        dni: dni || null,
         telefono: telefono || null,
         email,
         negocio_id: negocio.id,
@@ -113,16 +119,17 @@ export async function POST(request) {
 
     const nuevoCliente = data[0]
 
-    // Notificar límite (no bloqueante)
+    // Notificar límite (no bloqueante, pero dentro de after() para que
+    // la función no se congele antes de que salga el pedido)
     if (negocio.plan === 'gratis') {
-      fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/notificar-limite`, {
+      after(() => fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/notificar-limite`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'x-internal-secret': process.env.WEBHOOK_SECRET || '',
         },
         body: JSON.stringify({ negocioId: negocio.id }),
-      }).catch(() => {})
+      }).catch(() => {}))
     }
 
     // Lógica de referidos
@@ -161,6 +168,10 @@ export async function POST(request) {
           puntos: ptsReceptor,
           descripcion: `Bonus por registrarte con un link de amigo`
         }])
+
+        // El que invitó sumó puntos: su pase de Wallet tiene que reflejarlo.
+        // (El recién registrado todavía no tiene pase, se crea cuando lo agrega.)
+        after(() => actualizarPuntosWallet(referidoPorValidado))
       }
     }
 
@@ -170,7 +181,7 @@ export async function POST(request) {
       const puntosRecibidos = referidoPorValidado
         ? (negocio.puntos_referido_receptor || 50)
         : (negocio.puntos_bienvenida || 10)
-      enviarEmail({
+      after(() => enviarEmail({
         from: 'Fielty <hola@fielty.app>',
         to: nuevoCliente.email,
         subject: `Bienvenido a ${negocio.nombre} — tu tarjeta está lista`,
@@ -193,7 +204,7 @@ export async function POST(request) {
             </p>
           </div>
         `,
-      }).catch(() => {})
+      }).catch(() => {}))
     }
 
     return NextResponse.json({

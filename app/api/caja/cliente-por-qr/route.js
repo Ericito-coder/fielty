@@ -15,7 +15,7 @@ export async function POST(request) {
 
     const { data: cliente } = await supabaseAdmin
       .from('clientes')
-      .select('id, nombre, dni, telefono, puntos, puntos_historicos')
+      .select('id, nombre, dni, telefono, email, puntos, puntos_historicos')
       .eq('id', clienteId)
       .eq('negocio_id', negocioId)
       .maybeSingle()
