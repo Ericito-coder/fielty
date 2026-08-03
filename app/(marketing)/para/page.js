@@ -2,11 +2,11 @@ import { s } from './estilos'
 
 export const metadata = {
   title: 'Programas de fidelización por rubro | Fielty',
-  description: 'Cómo se arma un programa de puntos según el tipo de negocio: barberías, cafeterías, peluquerías, veterinarias, gimnasios, restaurantes y panaderías. Cada rubro tiene su propia regla de puntos y sus premios.',
+  description: 'Cómo se arma un programa de puntos según el tipo de negocio: barberías, cafeterías, peluquerías, veterinarias, gimnasios, restaurantes, panaderías y kioscos. Cada rubro tiene su propia regla de puntos y sus premios.',
   alternates: { canonical: '/para' },
   openGraph: {
     title: 'Programas de fidelización por rubro | Fielty',
-    description: 'Guías por rubro: barberías, cafeterías, peluquerías, veterinarias, gimnasios, restaurantes y panaderías.',
+    description: 'Guías por rubro: barberías, cafeterías, peluquerías, veterinarias, gimnasios, restaurantes, panaderías y kioscos.',
     url: '/para',
     siteName: 'Fielty',
     locale: 'es_AR',
@@ -49,6 +49,11 @@ const RUBROS = [
     href: '/para/panaderias',
     nombre: 'Panaderías',
     hook: 'El pan se compra casi todos los días. Se premia esa costumbre para que sea con vos y no con la de la esquina.',
+  },
+  {
+    href: '/para/kioscos',
+    nombre: 'Kioscos y despensas',
+    hook: 'Es el rubro de mayor frecuencia de todos. El premio conviene que se alcance rápido, no a los dos meses.',
   },
 ]
 
@@ -107,7 +112,7 @@ export default function PorRubro() {
             ))}
           </div>
           <p style={{ ...s.cardText, marginTop: 32 }}>
-            ¿Tu rubro no está en la lista? Fielty funciona igual en cualquier negocio con local a la calle — farmacias, kioscos, tiendas de ropa. Escribinos a{' '}
+            ¿Tu rubro no está en la lista? Fielty funciona igual en cualquier negocio con local a la calle — farmacias, tiendas de ropa, ferreterías. Escribinos a{' '}
             <a href="mailto:hola@fielty.app" style={s.otrosLink}>hola@fielty.app</a> y te ayudamos a armarlo.
           </p>
         </div>

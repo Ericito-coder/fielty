@@ -22,6 +22,10 @@ export const FAQS = [
         q: '¿Sirve si tengo más de un local?',
         a: 'Sí. Cada sucursal tiene su propia pantalla de caja con su PIN, pero el cliente acumula y canjea puntos en cualquiera de tus locales con la misma tarjeta. El plan Gratis incluye 1 sucursal, el plan Pro hasta 3 y el plan Business sucursales ilimitadas.',
       },
+      {
+        q: '¿Cómo hago para que mis clientes vuelvan más seguido?',
+        a: 'Fielty no lo hace solo, pero le da al cliente una razón concreta para volver: ve en todo momento cuántos puntos tiene y cuánto le falta para el premio, recibe puntos extra el día de su cumpleaños, y vos podés detectar desde el panel quién dejó de venir para invitarlo a volver. Vos elegís la regla de puntos y las recompensas según lo que quieras incentivar.',
+      },
     ],
   },
   {
@@ -42,6 +46,10 @@ export const FAQS = [
       {
         q: '¿Qué pasa si mi cliente pierde el celular o se compra uno nuevo?',
         a: 'No pierde nada. Los puntos están guardados en su cuenta, no en el teléfono. Desde el celular nuevo entra a fielty.app/mi-tarjeta con su DNI y contraseña y vuelve a ver su tarjeta como siempre. Si no se acuerda la contraseña, puede recuperarla por email.',
+      },
+      {
+        q: '¿Cómo funcionan los referidos o "traé un amigo"?',
+        a: 'Cada cliente tiene su propio link de referido dentro de su tarjeta digital. Si lo comparte y alguien se registra desde ahí, los dos reciben puntos: vos definís desde el panel cuántos le tocan al que invita y cuántos al que se suma.',
       },
     ],
   },

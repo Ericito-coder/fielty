@@ -38,10 +38,37 @@ export const metadata = {
   },
 };
 
+const organizationLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Organization',
+      '@id': 'https://www.fielty.app/#organization',
+      name: 'Fielty',
+      url: 'https://www.fielty.app',
+      logo: 'https://www.fielty.app/icons/icon-512.png',
+      email: 'hola@fielty.app',
+      description: 'Programa de fidelización de clientes con puntos por QR, sin app, para negocios físicos en Argentina.',
+    },
+    {
+      '@type': 'WebSite',
+      '@id': 'https://www.fielty.app/#website',
+      name: 'Fielty',
+      url: 'https://www.fielty.app',
+      inLanguage: 'es-AR',
+      publisher: { '@id': 'https://www.fielty.app/#organization' },
+    },
+  ],
+}
+
 export default function RootLayout({ children }) {
   return (
     <html lang="es">
       <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationLd) }}
+        />
         <link rel="manifest" href="/manifest.json" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
