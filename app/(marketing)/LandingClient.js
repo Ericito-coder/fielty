@@ -43,6 +43,7 @@ const [isMobile, setIsMobile] = useState(false)
             <div style={{display:'flex', alignItems:'center', gap:28}}>
               <a href="#como-funciona" style={s.navLink}>Cómo funciona</a>
               <a href="#precios" style={s.navLink}>Precios</a>
+              <a href="/para" style={s.navLink}>Por rubro</a>
               <a href="/faq" style={s.navLink}>FAQ</a>
               <a href="/login" style={s.navLink}>Ingresar</a>
               <a href="/onboarding/registro" style={s.navCta}>Empezá gratis →</a>
@@ -59,6 +60,9 @@ const [isMobile, setIsMobile] = useState(false)
             Fidelizá clientes.<br/>
             <span style={s.heroGradient}>Hacelos volver.</span>
           </h1>
+          <p style={s.heroDefinicion}>
+            Fielty es un programa de fidelización de clientes con puntos por QR, sin app, para negocios físicos en Argentina.
+          </p>
           <p style={s.heroSub}>
             Mostrás un QR en el mostrador. Cada cliente que compra escanea, suma puntos y los ve en el celular sin instalar nada. Vos elegís cuánto vale cada compra y qué se puede canjear.
           </p>
@@ -208,6 +212,7 @@ const [isMobile, setIsMobile] = useState(false)
             ['/para/gimnasios', 'Gimnasios'],
             ['/para/restaurantes', 'Restaurantes'],
             ['/para/panaderias', 'Panaderías'],
+            ['/para/kioscos', 'Kioscos y despensas'],
           ].map(([href, nombre]) => (
             <a key={href} href={href} style={{color:theme.red, fontWeight:700, textDecoration:'none', fontSize:15}}>
               {nombre} →
@@ -269,6 +274,7 @@ const s = {
   heroBadge: { display:'inline-block', background:'#1a1a1a', border:'1px solid #2a2a2a', borderRadius:100, padding:'8px 20px', fontSize:13, color:theme.gray, marginBottom:32, fontWeight:500 },
   heroTitle: { fontSize:'clamp(36px, 8vw, 72px)', fontWeight:900, lineHeight:1.05, letterSpacing:-2, marginBottom:24, color:'white' },
   heroGradient: { background:'linear-gradient(135deg, #e0001b, #f0a500)', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent' },
+  heroDefinicion: { fontSize:15, color:theme.grayLight, lineHeight:1.6, marginBottom:16, maxWidth:520, margin:'0 auto 16px' },
   heroSub: { fontSize:20, color:theme.gray, lineHeight:1.7, marginBottom:40, maxWidth:580, margin:'0 auto 40px' },
   heroCtas: { display:'flex', gap:16, justifyContent:'center', flexWrap:'wrap', marginBottom:60 },
   ctaPrimary: { background:theme.red, color:'white', textDecoration:'none', padding:'16px 32px', borderRadius:14, fontSize:16, fontWeight:800 },
