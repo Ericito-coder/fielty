@@ -36,8 +36,9 @@ export default function Dashboard() {
 
   async function verificarAuth() {
     try {
-      const { data: { user } } = await supabase.auth.getUser()
-      if (!user) { window.location.href = '/login'; return }
+      const { data: { session } } = await supabase.auth.getSession()
+      if (!session) { window.location.href = '/login'; return }
+      const user = session.user
       let { data: negocioData } = await supabase.from('negocios').select('*').eq('user_id', user.id).single()
       if (!negocioData) { window.location.href = '/onboarding/registro'; return }
 

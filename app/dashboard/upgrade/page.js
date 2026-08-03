@@ -45,8 +45,9 @@ export default function Upgrade() {
   const [error, setError] = useState('')
 
   useEffect(() => {
-    supabase.auth.getUser().then(({ data: { user } }) => {
-      if (!user) { window.location.href = '/login'; return }
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (!session) { window.location.href = '/login'; return }
+      const user = session.user
       supabase.from('negocios').select('id, nombre, plan').eq('user_id', user.id).single()
         .then(({ data }) => {
           if (!data) { window.location.href = '/dashboard'; return }
