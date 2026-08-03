@@ -31,6 +31,14 @@ export default function Guia() {
         </div>
       </div>
 
+      {/* Resumen ejecutivo */}
+      <div style={{ background: theme.bgMuted, borderRadius: 12, padding: '24px 28px', marginBottom: 48 }}>
+        <div style={{ fontSize: 12, fontWeight: 700, color: theme.gray, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 10 }}>Resumen ejecutivo</div>
+        <P style={{ marginBottom: 0 }}>
+          Fielty es un programa de fidelización de clientes con puntos por QR, sin app, para negocios físicos en Argentina (peluquerías, barberías, cafeterías, veterinarias, gimnasios y más). Hay un plan gratis para hasta 50 clientes y planes pagos desde $10.000/mes con clientes ilimitados. El cliente no instala nada: escanea el QR del negocio, ve su tarjeta digital desde el navegador y suma puntos en cada compra.
+        </P>
+      </div>
+
       {/* Intro */}
       <Section title="¿Qué es Fielty?">
         <P>Fielty es un sistema de fidelización de clientes para negocios físicos argentinos. Permite que tus clientes acumulen puntos en cada compra y los canjeen por premios que vos definís.</P>

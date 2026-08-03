@@ -2,6 +2,7 @@
 import { theme } from '@/lib/theme'
 import { useEffect, useState } from 'react'
 import QRCode from 'qrcode'
+import Image from 'next/image'
 
 export default function Tarjeta({ params }) {
   const [cliente, setCliente] = useState(null)
@@ -181,7 +182,7 @@ export default function Tarjeta({ params }) {
       <div style={st.loyaltyCard}>
         <div style={st.cardTop}>
           {cliente.negocio?.logo_url
-            ? <img src={cliente.negocio.logo_url} alt={`Logo de ${cliente.negocio.nombre}`} style={{...st.bizLogo, objectFit:'cover', padding:0}} />
+            ? <Image src={cliente.negocio.logo_url} alt={`Logo de ${cliente.negocio.nombre}`} width={44} height={44} style={{...st.bizLogo, objectFit:'cover', padding:0}} />
             : <div style={{...st.bizLogo, background: cliente.negocio?.color || theme.red}}>
                 {cliente.negocio?.nombre?.slice(0,2).toUpperCase() || 'PP'}
               </div>
