@@ -1,6 +1,7 @@
-import { NextResponse } from 'next/server'
+import { NextResponse, after } from 'next/server'
 import { getSupabaseAdmin } from '@/lib/server'
 import { sincronizarSuscripcion } from '@/lib/mp'
+import { actualizarPuntosWallet } from '@/lib/googleWallet'
 
 export const maxDuration = 60
 
@@ -21,15 +22,28 @@ export async function GET(request) {
     const supabaseAdmin = getSupabaseAdmin()
     const { data: vencidos } = await supabaseAdmin
       .from('canjes')
-      .select('id')
+      .select('id, cliente_id')
       .eq('estado', 'pendiente')
       .lte('expira_at', new Date().toISOString())
       .limit(500)
 
     let expirados = 0
+    const clientesConDevolucion = new Set()
     for (const canje of vencidos || []) {
       const { data: ok } = await supabaseAdmin.rpc('fn_expirar_canje', { p_canje_id: canje.id })
-      if (ok) expirados++
+      if (ok) {
+        expirados++
+        if (canje.cliente_id) clientesConDevolucion.add(canje.cliente_id)
+      }
+    }
+
+    // Expirar devuelve los puntos: el pase de Wallet tiene que reflejarlo.
+    if (clientesConDevolucion.size) {
+      after(async () => {
+        for (const clienteId of clientesConDevolucion) {
+          await actualizarPuntosWallet(clienteId)
+        }
+      })
     }
 
     const suscripciones = await sincronizarSuscripciones(supabaseAdmin)

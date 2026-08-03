@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server'
+import { NextResponse, after } from 'next/server'
 import { MercadoPagoConfig, PreApproval } from 'mercadopago'
 import crypto from 'crypto'
 import { enviarEmail } from '@/lib/email'
@@ -99,7 +99,7 @@ export async function POST(request) {
       // Pago que no se puede asociar a ningún negocio: avisar para
       // resolverlo a mano antes de que el cliente reclame.
       console.error('Webhook MP: no se pudo asociar la suscripción', data.id, suscripcion?.preapproval_plan_id)
-      avisarHuerfano({ dataId: data.id, planId: suscripcion?.preapproval_plan_id, estado }).catch(() => {})
+      after(() => avisarHuerfano({ dataId: data.id, planId: suscripcion?.preapproval_plan_id, estado }).catch(() => {}))
       return NextResponse.json({ ok: true })
     }
 

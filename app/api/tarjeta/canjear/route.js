@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server'
+import { NextResponse, after } from 'next/server'
 import crypto from 'crypto'
 import { getSupabaseAdmin } from '@/lib/server'
 import { actualizarPuntosWallet } from '@/lib/googleWallet'
@@ -53,7 +53,7 @@ export async function POST(request) {
       return NextResponse.json({ error: 'No se pudo generar el canje, intentá de nuevo' }, { status: 500 })
     }
 
-    actualizarPuntosWallet(clienteId).catch(() => {})
+    after(() => actualizarPuntosWallet(clienteId))
 
     return NextResponse.json({ ok: true, codigo, expira_at: expiraAt, puntos: data?.puntos })
   } catch (error) {

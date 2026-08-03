@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server'
+import { NextResponse, after } from 'next/server'
 import { enviarEmail } from '@/lib/email'
 import { getSupabaseAdmin, validarPinCaja, getRequestIp } from '@/lib/server'
 import { actualizarPuntosWallet } from '@/lib/googleWallet'
@@ -63,11 +63,15 @@ export async function POST(request) {
         descripcion
       }])
 
-    // Email y pase de Google Wallet (fire-and-forget, no bloquean la respuesta)
-    if (cliente.email) {
-      enviarEmailPuntos({ cliente, negocio, pts, nuevosPuntos, montoNum }).catch(() => {})
-    }
-    actualizarPuntosWallet(clienteId).catch(() => {})
+    // Email y pase de Google Wallet: no bloquean la respuesta, pero van
+    // dentro de after() para que la función no se congele antes de que
+    // terminen (ver comentario en actualizarPuntosWallet).
+    after(async () => {
+      if (cliente.email) {
+        await enviarEmailPuntos({ cliente, negocio, pts, nuevosPuntos, montoNum }).catch(() => {})
+      }
+      await actualizarPuntosWallet(clienteId)
+    })
 
     return NextResponse.json({ ok: true, pts, nuevosPuntos, nuevosHistoricos })
 
