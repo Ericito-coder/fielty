@@ -1,11 +1,9 @@
 import { theme } from '@/lib/theme'
 import { NextResponse } from 'next/server'
-import { Resend } from 'resend'
+import { enviarEmail } from '@/lib/email'
 import { getSupabaseAdmin } from '@/lib/server'
 import { puedeUsarCampanas } from '@/lib/planes'
 import { rateLimit } from '@/lib/rateLimit'
-
-const resend = new Resend(process.env.RESEND_API_KEY)
 
 // Envío de campañas puede tardar (un email por cliente)
 export const maxDuration = 60
@@ -88,7 +86,7 @@ export async function POST(request) {
       const tanda = clientes.slice(i, i + 10)
       const resultados = await Promise.allSettled(tanda.map(c => {
         const cuerpo = reemplazarVariables(mensaje, c, negocio)
-        return resend.emails.send({
+        return enviarEmail({
           from: 'Fielty <hola@fielty.app>',
           to: c.email,
           subject: reemplazarVariables(asunto, c, negocio),
@@ -96,7 +94,7 @@ export async function POST(request) {
         })
       }))
       resultados.forEach((r, j) => {
-        if (r.status === 'fulfilled' && !r.value?.error) {
+        if (r.status === 'fulfilled' && r.value) {
           enviados++
           tanda[j]._enviado = true
         }

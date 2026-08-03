@@ -1,9 +1,7 @@
 import { NextResponse } from 'next/server'
-import { Resend } from 'resend'
+import { enviarEmail } from '@/lib/email'
 import { getSupabaseAdmin, validarPinCaja, getRequestIp } from '@/lib/server'
 import { actualizarPuntosWallet } from '@/lib/googleWallet'
-
-const resend = new Resend(process.env.RESEND_API_KEY)
 
 export async function POST(request) {
   try {
@@ -83,7 +81,7 @@ async function enviarEmailPuntos({ cliente, negocio, pts, nuevosPuntos, montoNum
   const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://www.fielty.app'
   const montoFormateado = `$${montoNum.toLocaleString('es-AR')}`
 
-  await resend.emails.send({
+  await enviarEmail({
     from: 'Fielty <hola@fielty.app>',
     to: cliente.email,
     subject: `+${pts} puntos en ${negocio.nombre} ⭐`,

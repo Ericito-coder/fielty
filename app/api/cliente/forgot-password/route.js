@@ -1,10 +1,8 @@
 import { NextResponse } from 'next/server'
-import { Resend } from 'resend'
+import { enviarEmail } from '@/lib/email'
 import { createClient } from '@supabase/supabase-js'
 import { randomBytes } from 'crypto'
 import { rateLimit } from '@/lib/rateLimit'
-
-const resend = new Resend(process.env.RESEND_API_KEY)
 
 const supabaseAdmin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL,
@@ -45,7 +43,7 @@ export async function POST(request) {
     const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://www.fielty.app'
     const resetUrl = `${appUrl}/mi-tarjeta/reset?token=${token}`
 
-    await resend.emails.send({
+    await enviarEmail({
       from: 'Fielty <hola@fielty.app>',
       to: email,
       subject: 'Recuperá tu contraseña de Fielty',

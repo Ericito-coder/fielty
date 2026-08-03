@@ -1,8 +1,6 @@
 import { NextResponse } from 'next/server'
-import { Resend } from 'resend'
+import { enviarEmail } from '@/lib/email'
 import { createClient } from '@supabase/supabase-js'
-
-const resend = new Resend(process.env.RESEND_API_KEY)
 
 const supabaseAdmin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL,
@@ -37,7 +35,7 @@ export async function POST(request) {
     const registroUrl = `${appUrl}/registro/${negocio.slug}`
     const dashboardUrl = `${appUrl}/dashboard`
 
-    await resend.emails.send({
+    await enviarEmail({
       from: 'Fielty <hola@fielty.app>',
       to: user.email,
       subject: `Tu programa de fidelización está listo — ${negocio.nombre}`,

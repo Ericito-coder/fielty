@@ -1,13 +1,11 @@
 import { NextResponse } from 'next/server'
 import { MercadoPagoConfig, PreApproval } from 'mercadopago'
 import crypto from 'crypto'
-import { Resend } from 'resend'
+import { enviarEmail } from '@/lib/email'
 import { getSupabaseAdmin } from '@/lib/server'
 import { resolverNegocio, sincronizarSuscripcion } from '@/lib/mp'
 
 const client = new MercadoPagoConfig({ accessToken: process.env.MP_ACCESS_TOKEN })
-const resend = new Resend(process.env.RESEND_API_KEY)
-
 // Valida el header x-signature que manda MP (HMAC-SHA256 sobre
 // "id:{dataId};request-id:{x-request-id};ts:{ts};" con la "Firma
 // secreta" del webhook). Se activa solo si MP_WEBHOOK_SECRET está
@@ -124,7 +122,7 @@ export async function POST(request) {
 async function avisarHuerfano({ dataId, planId, estado }) {
   const admin = process.env.ADMIN_EMAIL
   if (!admin) return
-  await resend.emails.send({
+  await enviarEmail({
     from: 'Fielty <hola@fielty.app>',
     to: admin,
     subject: '⚠️ Pago de Mercado Pago sin negocio asociado',

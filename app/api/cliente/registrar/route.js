@@ -1,10 +1,8 @@
 import { NextResponse } from 'next/server'
 import bcrypt from 'bcryptjs'
 import { createClient } from '@supabase/supabase-js'
-import { Resend } from 'resend'
+import { enviarEmail } from '@/lib/email'
 import { verificarGoogleToken } from '@/lib/googleToken'
-
-const resend = new Resend(process.env.RESEND_API_KEY)
 
 const supabaseAdmin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL,
@@ -172,7 +170,7 @@ export async function POST(request) {
       const puntosRecibidos = referidoPorValidado
         ? (negocio.puntos_referido_receptor || 50)
         : (negocio.puntos_bienvenida || 10)
-      resend.emails.send({
+      enviarEmail({
         from: 'Fielty <hola@fielty.app>',
         to: nuevoCliente.email,
         subject: `Bienvenido a ${negocio.nombre} — tu tarjeta está lista`,
