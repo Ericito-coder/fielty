@@ -18,11 +18,17 @@ correctos.
 
 Tokens CSS con el prefijo `--fielty-*`. Usalos siempre en vez de escribir el hex.
 
-**Color:** `--fielty-rojo` `--fielty-negro` `--fielty-blanco` `--fielty-negro-profundo`
-`--fielty-gris-carbon` `--fielty-borde` `--fielty-borde-sutil` `--fielty-gris-texto`
-`--fielty-gris-texto-tenue` `--fielty-gris-claro` `--fielty-borde-claro`
+**Color, sobre oscuro:** `--fielty-rojo` `--fielty-negro` `--fielty-blanco`
+`--fielty-negro-profundo` `--fielty-gris-carbon` `--fielty-borde`
+`--fielty-borde-sutil` `--fielty-gris-texto` `--fielty-gris-texto-tenue`
 `--fielty-ambar` `--fielty-verde` `--fielty-degradado` `--fielty-foco`
 (`--whatsapp-verde` es de WhatsApp, solo para el botón de WhatsApp).
+
+**Color, sobre claro:** `--fielty-gris-claro` `--fielty-gris-bloque`
+`--fielty-borde-claro` `--fielty-texto-claro` `--fielty-texto-claro-secundario`
+`--fielty-texto-claro-terciario` (solo letra chica: sobre blanco no alcanza para
+texto de lectura), más el par de la superficie crema: `--fielty-crema` con
+`--fielty-ambar-oscuro` (el `--fielty-ambar` normal no contrasta sobre crema).
 
 **Tipografía:** `--fielty-font-sans` `--fielty-font-mono`; pesos
 `--fielty-peso-normal|medio|semi|fuerte|titulo|maximo` (400→900); interlineado
@@ -33,9 +39,51 @@ Tokens CSS con el prefijo `--fielty-*`. Usalos siempre en vez de escribir el hex
 `--fielty-borde-ancho`, `--fielty-borde-ancho-destacado`.
 
 **Primitivas** (clases de este bundle, no del código de la app):
-`.fielty-oscuro` `.fielty-claro` `.fielty-tarjeta` `.fielty-boton`
-`.fielty-boton-secundario` `.fielty-etiqueta` `.fielty-titulo`
-`.fielty-resaltado` `.fielty-texto-secundario` `.fielty-numero` `.fielty-pastilla`.
+`.fielty-oscuro` `.fielty-claro` `.fielty-crema` `.fielty-tarjeta`
+`.fielty-boton` `.fielty-boton-secundario` `.fielty-etiqueta` `.fielty-titulo`
+`.fielty-resaltado` `.fielty-texto-secundario` `.fielty-numero`
+`.fielty-pastilla` `.fielty-firma`.
+
+`.fielty-etiqueta-ambar` existe pero **solo adentro de `.fielty-crema`**: el
+ámbar oscuro es legible sobre la crema y sobre nada más.
+
+Las tres superficies (`.fielty-oscuro`, `.fielty-claro`, `.fielty-crema`) usan
+**las mismas primitivas adentro**: los overrides estan scopeados, asi que
+`.fielty-tarjeta` o `.fielty-texto-secundario` se acomodan solos al fondo. No
+hay nombres distintos por variante.
+
+## Carruseles de Instagram
+
+`.fielty-slide` + `.fielty-slide-cuerpo` (el cuerpo es obligatorio: es donde
+vive el padding). Modificadores: `.fielty-slide-cuadrado` (1:1 en vez de 4:5) y
+`.fielty-slide-portada` (etiqueta arriba, titulo abajo). Adentro:
+`.fielty-slide-etiqueta` `.fielty-slide-titulo` `.fielty-slide-titulo-chico`
+`.fielty-slide-texto` `.fielty-slide-numero` `.fielty-slide-pie`.
+
+Todo se mide en `cqw`, asi que el slide escala solo: el mismo markup se ve igual
+a 212px para previsualizar que a 1080px para exportar. **El padding nunca va en
+el `.fielty-slide`**: un `padding` en `cqw` sobre el propio contenedor se
+resuelve contra el contenedor de afuera y te aplasta la caja de contenido.
+
+Alterná carruseles oscuros y claros para que la grilla del perfil respire, pero
+no mezcles las dos variantes dentro del mismo carrusel, salvo el slide de cierre
+en crema.
+
+```html
+<div class="fielty-slide fielty-claro fielty-slide-portada">
+  <div class="fielty-slide-cuerpo">
+    <div class="fielty-slide-etiqueta">Cafeterías</div>
+    <div>
+      <h3 class="fielty-slide-titulo">Hay otra a media <span class="fielty-resaltado">cuadra</span></h3>
+      <p class="fielty-slide-texto fielty-texto-secundario">Los puntos son la razón para pasar de largo.</p>
+    </div>
+    <div class="fielty-slide-pie">
+      <span class="fielty-firma">fielty.app</span>
+      <span class="fielty-texto-secundario">1/4</span>
+    </div>
+  </div>
+</div>
+```
 
 ## Reglas que no se negocian
 

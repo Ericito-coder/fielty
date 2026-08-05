@@ -43,6 +43,44 @@ si corrige el manual o el codigo:
   negativo. No inventamos un token para eso; la guia sigue en
   `guidelines/manual-de-marca.md` tal cual la escribio Eric.
 
+## Variantes claras y slides de carrusel
+
+Se agregaron despues del primer sync, para poder alternar carruseles negros y
+blancos en el feed de Instagram. Las dos superficies claras salieron del
+producto, no se inventaron:
+
+- **Blanco:** el de los emails. Texto `#0e0e0e`, secundario `#555`, bordes
+  `#e8eaf0`. Ojo con `#aaa`: en los emails se usa sobre fondo claro pero solo en
+  los pies de pagina; para texto de lectura sobre blanco no alcanza, por eso
+  quedo como `--fielty-texto-claro-terciario`.
+- **Crema:** `#fff8e6` con ambar oscuro `#7a5800`, el par de los bloques
+  destacados de los emails y de la guia imprimible. El `--fielty-ambar` normal
+  (`#f0a500`) no contrasta sobre crema; por eso existe el token oscurecido.
+
+Los overrides de las primitivas estan scopeados bajo `.fielty-claro` y
+`.fielty-crema`, asi que las mismas clases sirven en las tres superficies. La
+unica que no es universal es `.fielty-etiqueta-ambar`, que solo existe dentro de
+`.fielty-crema`.
+
+### Dos trampas de CSS que costaron un ciclo de debug
+
+Vale la pena dejarlas escritas porque no son obvias y se repiten en cualquier
+pieza de tamano fijo:
+
+1. **`padding` en `cqw` sobre el propio contenedor.** Un `padding:8.5cqw` en el
+   elemento que tiene `container-type:inline-size` no se resuelve contra si
+   mismo sino contra el contenedor de afuera. En la card se inflo a 66px, aplasto
+   la caja de contenido a 77px, y los hijos terminaron midiendo su `cqw` contra
+   esos 77px: titulos de 7px en vez de 19px. Por eso el padding vive en
+   `.fielty-slide-cuerpo`, que si es descendiente.
+2. **`aspect-ratio` adentro de una fila flex.** El `align-items:stretch` por
+   defecto le pisa el `aspect-ratio` y el slide sale con la altura del vecino mas
+   alto: el 1:1 salia 4:5. `.fielty-slide` lleva `align-self:flex-start` para
+   blindarse.
+
+Las dos se verificaron midiendo con `getComputedStyle` en el navegador, no a
+ojo: en la captura el 1:1 y el 4:5 parecian casi iguales.
+
 ## Fuentes
 
 Geist Sans y Geist Mono se cargan con `next/font/google` en `app/layout.js`; no
