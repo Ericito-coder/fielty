@@ -1,0 +1,6 @@
+{
+  "projectId": "c8fcabdb-a401-4147-b370-8c80492dac18",
+  "shape": "brand-foundations",
+  "localDir": "./ds-bundle",
+  "note": "Fielty no es una libreria de componentes: es la app Next.js. No hay dist/ ni Storybook, asi que el converter de /design-sync no aplica. Este sync sube solo fundamentos de marca (tokens, guidelines, cards de foundations) generados a mano. Ver .design-sync/NOTES.md."
+}
