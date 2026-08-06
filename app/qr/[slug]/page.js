@@ -21,7 +21,7 @@ export default function QRPage({ params }) {
     if (!negocio) return
     const url = `${window.location.origin}/registro/${negocio.slug}`
     QRCode.toDataURL(url, {
-      width: 400,
+      width: 800,
       margin: 2,
       color: { dark: theme.black, light: '#ffffff' }
     }).then(setQrUrl)
@@ -32,15 +32,39 @@ export default function QRPage({ params }) {
   return (
     <>
       <style>{`
+        @page { size: A4 portrait; margin: 10mm; }
         @media print {
           .no-print { display: none !important; }
-          body { margin: 0; }
-          .print-page { box-shadow: none !important; }
+          html, body {
+            margin: 0 !important;
+            padding: 0 !important;
+            background: #fff !important;
+          }
+          /* Imprimir los fondos de color (header, cajas grises, numeros de pasos) */
+          * {
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+          }
+          .print-wrap {
+            min-height: 0 !important;
+            padding: 0 !important;
+            background: #fff !important;
+            display: block !important;
+          }
+          .print-page {
+            box-shadow: none !important;
+            border-radius: 0 !important;
+            max-width: none !important;
+            width: 440px !important;
+            margin: 0 auto !important;
+            zoom: 1.15;
+            break-inside: avoid;
+            page-break-inside: avoid;
+          }
         }
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
       `}</style>
 
-      <main style={s.wrap}>
+      <main style={s.wrap} className="print-wrap">
         <button className="no-print" style={s.printBtn} onClick={() => window.print()}>
           🖨️ Imprimir
         </button>
