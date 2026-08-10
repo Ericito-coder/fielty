@@ -4,6 +4,8 @@ import { createClient } from '@supabase/supabase-js'
 import { enviarEmail } from '@/lib/email'
 import { verificarGoogleToken } from '@/lib/googleToken'
 import { actualizarPuntosWallet } from '@/lib/googleWallet'
+import { rateLimit } from '@/lib/rateLimit'
+import { getRequestIp } from '@/lib/server'
 
 const supabaseAdmin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL,
@@ -12,6 +14,20 @@ const supabaseAdmin = createClient(
 
 export async function POST(request) {
   try {
+    // Límite por IP, no por negocio: el registro es público y sin él
+    // cualquiera puede llenar un negocio de clientes falsos hasta el tope
+    // del plan. 10 cada 10 minutos deja tranquilo el uso real (varios
+    // clientes registrándose en el mostrador comparten el WiFi del local,
+    // pero de a uno cada tanto) y corta cualquier alta masiva con script.
+    const { ok: sinBloqueo } = await rateLimit({
+      key: `registrar:${getRequestIp(request)}`,
+      maxAttempts: 10,
+      windowMs: 10 * 60 * 1000,
+    })
+    if (!sinBloqueo) {
+      return NextResponse.json({ error: 'Demasiados registros seguidos. Esperá unos minutos.' }, { status: 429 })
+    }
+
     const body = await request.json()
     const { nombre, dni, telefono, password, slug, referidoPor, fechaNacimiento, googleToken } = body
 

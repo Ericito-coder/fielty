@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
 import { linkWhatsApp } from '@/lib/wa'
 
-const ADMIN_EMAIL = process.env.NEXT_PUBLIC_ADMIN_EMAIL
 const PLAN_COLORES = { gratis: theme.gray, pro_early: theme.red, pro: theme.red, business: theme.gold }
 const PLAN_LABELS = { gratis: 'Gratis', pro_early: 'Pro Early', pro: 'Pro', business: 'Business' }
 const PLANES_OPCIONES = ['gratis', 'pro_early', 'pro', 'business']
@@ -40,15 +39,18 @@ export default function Admin() {
   useEffect(() => {
     supabase.auth.getSession().then(async ({ data: { session } }) => {
       if (!session) { window.location.href = '/login'; return }
-      if (session.user.email !== ADMIN_EMAIL) { window.location.href = '/dashboard'; return }
       setToken(session.access_token)
       fetchData(session.access_token)
     })
   }, [])
 
+  // Quién es el admin lo decide /api/admin/data contra el token: si no es
+  // él, contesta 401 y lo mandamos al dashboard. El navegador nunca supo
+  // cuál es el email de admin.
   async function fetchData(t) {
     setCargando(true)
     const res = await fetch('/api/admin/data', { headers: { Authorization: `Bearer ${t}` } })
+    if (res.status === 401) { window.location.href = '/dashboard'; return }
     if (!res.ok) { setError('Error cargando datos'); setCargando(false); return }
     const json = await res.json()
     setData(json)
