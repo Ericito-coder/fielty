@@ -137,6 +137,7 @@ export default function PorRubro() {
         <a href="/privacidad" style={s.footerLink}>Privacidad</a>
         <a href="/faq" style={s.footerLink}>FAQ</a>
         <a href="/guia" style={s.footerLink}>Guía completa</a>
+        <a href="/como-armar-un-programa-de-puntos" style={s.footerLink}>Cómo armar un programa de puntos</a>
         <a href="/" style={s.footerLink}>fielty.app</a>
       </footer>
     </div>

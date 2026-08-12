@@ -24,6 +24,7 @@ export default function sitemap() {
     { path: '/para/restaurantes', priority: 0.9, changeFrequency: 'monthly', lastModified: '2026-08-01' },
     { path: '/para/panaderias', priority: 0.9, changeFrequency: 'monthly', lastModified: '2026-08-01' },
     { path: '/para/kioscos', priority: 0.9, changeFrequency: 'monthly', lastModified: '2026-08-03' },
+    { path: '/como-armar-un-programa-de-puntos', priority: 0.8, changeFrequency: 'monthly', lastModified: '2026-08-12' },
     { path: '/faq', priority: 0.8, changeFrequency: 'monthly', lastModified: '2026-08-03' },
     { path: '/guia', priority: 0.6, changeFrequency: 'monthly', lastModified: '2026-08-01' },
     { path: '/terminos', priority: 0.3, changeFrequency: 'yearly', lastModified: '2026-05-17' },

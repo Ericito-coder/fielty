@@ -248,6 +248,7 @@ const [isMobile, setIsMobile] = useState(false)
             <a href="/privacidad" style={{fontSize:13, color:'#333', textDecoration:'none'}}>Política de privacidad</a>
             <a href="/faq" style={{fontSize:13, color:'#333', textDecoration:'none'}}>FAQ</a>
             <a href="/guia" style={{fontSize:13, color:'#333', textDecoration:'none'}}>Guía completa</a>
+            <a href="/como-armar-un-programa-de-puntos" style={{fontSize:13, color:'#333', textDecoration:'none'}}>Cómo armar un programa de puntos</a>
             <a href="/para" style={{fontSize:13, color:'#333', textDecoration:'none'}}>Por rubro</a>
             <a href="https://www.instagram.com/fieltyapp" target="_blank" rel="noreferrer me" style={{fontSize:13, color:'#333', textDecoration:'none'}}>Instagram</a>
             <a href="/login" style={{fontSize:13, color:'#333', textDecoration:'none'}}>Ingresar</a>

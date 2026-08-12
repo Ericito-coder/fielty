@@ -32,21 +32,10 @@ const jsonLd = {
     { '@type': 'Offer', name: 'Pro', price: '10000', priceCurrency: 'ARS', description: 'Clientes ilimitados, hasta 3 sucursales, campañas de email, logo personalizado.' },
     { '@type': 'Offer', name: 'Business', price: '35000', priceCurrency: 'ARS', description: 'Sucursales ilimitadas, tarjeta en Google Wallet, soporte prioritario.' },
   ],
-  provider: {
-    '@type': 'Organization',
-    name: 'Fielty',
-    url: 'https://www.fielty.app',
-    email: 'hola@fielty.app',
-    logo: {
-      '@type': 'ImageObject',
-      url: 'https://www.fielty.app/icons/icon-1024.png',
-      width: 1024,
-      height: 1024,
-    },
-    // Perfiles oficiales de la marca. Ayuda a que Google asocie la cuenta
-    // con Fielty y a desambiguar de otras empresas con nombre parecido.
-    sameAs: ['https://www.instagram.com/fieltyapp'],
-  },
+  // Referencia al Organization que define app/layout.js, en vez de volver a
+  // declararlo. Antes había dos nodos para la misma marca y con logos
+  // distintos, y eso deja a Google sin saber cuál es la entidad real.
+  provider: { '@id': 'https://www.fielty.app/#organization' },
 }
 
 export default function Page() {

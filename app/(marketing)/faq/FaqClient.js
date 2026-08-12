@@ -114,6 +114,7 @@ export default function FaqClient() {
         <a href="/terminos" style={{ color: '#444', textDecoration: 'none', marginRight: 20 }}>Términos</a>
         <a href="/privacidad" style={{ color: '#444', textDecoration: 'none', marginRight: 20 }}>Privacidad</a>
         <a href="/guia" style={{ color: '#444', textDecoration: 'none', marginRight: 20 }}>Guía completa</a>
+        <a href="/como-armar-un-programa-de-puntos" style={{ color: '#444', textDecoration: 'none', marginRight: 20 }}>Cómo armar un programa de puntos</a>
         <a href="/para" style={{ color: '#444', textDecoration: 'none', marginRight: 20 }}>Por rubro</a>
         <a href="/" style={{ color: '#444', textDecoration: 'none' }}>fielty.app</a>
       </div>

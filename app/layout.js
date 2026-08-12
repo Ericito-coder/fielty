@@ -46,9 +46,13 @@ const organizationLd = {
       '@id': 'https://www.fielty.app/#organization',
       name: 'Fielty',
       url: 'https://www.fielty.app',
-      logo: 'https://www.fielty.app/icons/icon-512.png',
+      logo: 'https://www.fielty.app/icons/icon-1024.png',
       email: 'hola@fielty.app',
       description: 'Programa de fidelización de clientes con puntos por QR, sin app, para negocios físicos en Argentina.',
+      // Perfiles oficiales: le confirman a Google que la cuenta es de esta
+      // marca. Van acá y no en la home porque este nodo es el que tiene @id
+      // y aparece en todas las páginas.
+      sameAs: ['https://www.instagram.com/fieltyapp'],
     },
     {
       '@type': 'WebSite',
