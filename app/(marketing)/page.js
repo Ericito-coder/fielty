@@ -43,6 +43,9 @@ const jsonLd = {
       width: 1024,
       height: 1024,
     },
+    // Perfiles oficiales de la marca. Ayuda a que Google asocie la cuenta
+    // con Fielty y a desambiguar de otras empresas con nombre parecido.
+    sameAs: ['https://www.instagram.com/fieltyapp'],
   },
 }
 

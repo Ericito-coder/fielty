@@ -19,17 +19,21 @@ export default function robots() {
     rules: {
       userAgent: '*',
       allow: '/',
+      // Ojo con lo que se agrega acá: disallow impide rastrear, no indexar.
+      // Una ruta bloqueada pero linkeada desde el sitio público termina
+      // apareciendo en Google sin descripción, y encima el bloqueo impide
+      // que lea el noindex que la sacaría. Para esas rutas (/login y
+      // /onboarding/*, linkeadas desde el nav y los CTA) se usa noindex en
+      // su layout. Acá quedan solo las que nadie enlaza desde afuera.
       disallow: [
         '/admin',
         '/email-preview',
         '/dashboard',
         '/api/',
-        '/login',
         '/reset-password',
         '/mi-tarjeta',
         '/tarjeta/',
         '/qr/mi-tarjeta',
-        '/onboarding/',
       ],
     },
     // Absoluto y con el mismo host que usa sitemap.js: un sitemap

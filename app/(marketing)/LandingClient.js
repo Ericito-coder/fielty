@@ -249,6 +249,7 @@ const [isMobile, setIsMobile] = useState(false)
             <a href="/faq" style={{fontSize:13, color:'#333', textDecoration:'none'}}>FAQ</a>
             <a href="/guia" style={{fontSize:13, color:'#333', textDecoration:'none'}}>Guía completa</a>
             <a href="/para" style={{fontSize:13, color:'#333', textDecoration:'none'}}>Por rubro</a>
+            <a href="https://www.instagram.com/fieltyapp" target="_blank" rel="noreferrer me" style={{fontSize:13, color:'#333', textDecoration:'none'}}>Instagram</a>
             <a href="/login" style={{fontSize:13, color:'#333', textDecoration:'none'}}>Ingresar</a>
             <a href="/onboarding/registro" style={{fontSize:13, color:'#333', textDecoration:'none'}}>Registrarse</a>
           </div>
