@@ -1,5 +1,5 @@
 import { NextResponse, after } from 'next/server'
-import { getSupabaseAdmin, NEGOCIO_CAMPOS_PUBLICOS } from '@/lib/server'
+import { getSupabaseAdmin, NEGOCIO_CAMPOS_PUBLICOS, negocioPublico } from '@/lib/server'
 import { walletDisponible, actualizarPuntosWallet } from '@/lib/googleWallet'
 import { puedeUsarWallet } from '@/lib/planes'
 import { rateLimit } from '@/lib/rateLimit'
@@ -71,18 +71,16 @@ export async function GET(request, { params }) {
         .limit(20),
     ])
 
-    const { data: planNegocio } = await supabaseAdmin
-      .from('negocios')
-      .select('plan')
-      .eq('id', cliente.negocio_id)
-      .single()
+    // El plan viene en el negocio anidado, así que se lee antes de que
+    // `negocioPublico` lo saque — antes esto costaba una consulta aparte.
+    const plan = cliente.negocio?.plan
 
     return NextResponse.json({
-      cliente,
+      cliente: { ...cliente, negocio: negocioPublico(cliente.negocio) },
       recompensas: recompensas || [],
       canjeActivo: canjeActivo || null,
       transacciones: transacciones || [],
-      wallet: walletDisponible() && puedeUsarWallet(planNegocio?.plan),
+      wallet: walletDisponible() && puedeUsarWallet(plan),
     })
   } catch (error) {
     console.error('tarjeta error:', error)

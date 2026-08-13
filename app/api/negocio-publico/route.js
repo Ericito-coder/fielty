@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { getSupabaseAdmin, NEGOCIO_CAMPOS_PUBLICOS } from '@/lib/server'
+import { getSupabaseAdmin, NEGOCIO_CAMPOS_PUBLICOS, negocioPublico } from '@/lib/server'
 
 // Info pública de un negocio por slug, para las páginas de registro
 // y QR. Solo expone campos seguros (nunca pin_caja ni user_id).
@@ -23,7 +23,7 @@ export async function GET(request) {
       .eq('negocio_id', negocio.id)
       .eq('activa', true)
 
-    return NextResponse.json({ negocio: { ...negocio, tieneRecompensas: (count || 0) > 0 } })
+    return NextResponse.json({ negocio: { ...negocioPublico(negocio), tieneRecompensas: (count || 0) > 0 } })
   } catch (error) {
     console.error('negocio-publico error:', error)
     return NextResponse.json({ error: 'Error interno' }, { status: 500 })

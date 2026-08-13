@@ -26,16 +26,11 @@ export async function GET(request) {
 
     if (!cliente) return NextResponse.json({ error: 'Cliente no encontrado' }, { status: 404 })
 
-    const { data: planNegocio } = await supabaseAdmin
-      .from('negocios')
-      .select('plan')
-      .eq('id', cliente.negocio_id)
-      .single()
     // Hoy `puedeUsarWallet` es true para todos los planes, así que este
     // camino no se alcanza. Se deja el chequeo — y no el mensaje viejo, que
     // nombraba al plan Business — para que el gating siga centralizado en
     // lib/planes.js si algún día vuelve a depender del plan.
-    if (!puedeUsarWallet(planNegocio?.plan)) {
+    if (!puedeUsarWallet(cliente.negocio?.plan)) {
       return NextResponse.json({ error: 'Google Wallet no está disponible para este negocio' }, { status: 403 })
     }
 
@@ -45,6 +40,9 @@ export async function GET(request) {
       .eq('negocio_id', cliente.negocio_id)
       .eq('activa', true)
 
+    // Se pasa el negocio crudo, con `plan` y `logo_url`: el gating del logo
+    // vive en `camposPresentacion`. Acá no hace falta `negocioPublico()`
+    // porque la respuesta solo devuelve la URL del pase.
     const url = await generarLinkWallet(cliente, cliente.negocio, recompensas || [])
     return NextResponse.json({ ok: true, url })
   } catch (error) {
