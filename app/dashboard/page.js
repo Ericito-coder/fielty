@@ -999,6 +999,26 @@ function ConfigSection({ negocio, setNegocio }) {
     setVerificando(false)
   }
 
+  // El pase de Google Wallet lleva el nombre, el logo y el color del
+  // negocio. Esos datos viven en una clase del lado de Google, así que hay
+  // que avisarle cuando cambian: si no, el pase de todos los clientes
+  // queda con la marca vieja hasta que alguno pida un link nuevo.
+  // Fire-and-forget: que Google tarde no puede demorar el guardado.
+  async function sincronizarWallet() {
+    try {
+      const { data: { session } } = await supabase.auth.getSession()
+      if (!session) return
+      await fetch('/api/wallet/sincronizar-clase', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${session.access_token}`,
+        },
+        body: JSON.stringify({ negocioId: negocio.id }),
+      })
+    } catch {}
+  }
+
   async function subirLogo(e) {
     const file = e.target.files[0]
     if (!file) return
@@ -1025,6 +1045,7 @@ function ConfigSection({ negocio, setNegocio }) {
     await supabase.from('negocios').update({ logo_url: publicUrl }).eq('id', negocio.id)
     setNegocio(n => ({ ...n, logo_url: publicUrl }))
     setSubiendoLogo(false)
+    sincronizarWallet()
   }
 
   const [form, setForm] = useState({
@@ -1065,6 +1086,7 @@ function ConfigSection({ negocio, setNegocio }) {
     setGuardando(false)
     setOk(true)
     setTimeout(() => setOk(false), 2000)
+    sincronizarWallet()
   }
 
   const planInfo = {
