@@ -49,7 +49,7 @@ export default function Privacidad() {
         </Section>
 
         <Section title="5. Servicios de terceros">
-          Fielty utiliza los siguientes servicios de terceros para operar: Supabase (base de datos y autenticación), Vercel (hosting), Resend (envío de emails transaccionales), Mercado Pago (procesamiento de pagos), Google Wallet (para los negocios en plan Business que ofrecen la tarjeta como pase de Google Wallet, se comparten los puntos y el nivel del cliente con la API de Google), Google Analytics (estadísticas de uso del sitio) y Microsoft Clarity (grabación de sesiones y mapas de calor para entender cómo se usa la plataforma). En el panel del dueño de negocio y en la caja, el nombre, DNI, teléfono y email de tus clientes se excluyen automáticamente de las grabaciones de Microsoft Clarity. Cada uno de estos servicios cuenta con su propia política de privacidad.
+          Fielty utiliza los siguientes servicios de terceros para operar: Supabase (base de datos y autenticación), Vercel (hosting), Resend (envío de emails transaccionales), Mercado Pago (procesamiento de pagos), Google Wallet (cuando un cliente agrega su tarjeta como pase de Google Wallet, se comparten su nombre, sus puntos y su nivel con la API de Google), Google Analytics (estadísticas de uso del sitio) y Microsoft Clarity (grabación de sesiones y mapas de calor para entender cómo se usa la plataforma). En el panel del dueño de negocio y en la caja, el nombre, DNI, teléfono y email de tus clientes se excluyen automáticamente de las grabaciones de Microsoft Clarity. Cada uno de estos servicios cuenta con su propia política de privacidad.
         </Section>
 
         <Section title="6. Retención de datos">

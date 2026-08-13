@@ -31,8 +31,12 @@ export async function GET(request) {
       .select('plan')
       .eq('id', cliente.negocio_id)
       .single()
+    // Hoy `puedeUsarWallet` es true para todos los planes, así que este
+    // camino no se alcanza. Se deja el chequeo — y no el mensaje viejo, que
+    // nombraba al plan Business — para que el gating siga centralizado en
+    // lib/planes.js si algún día vuelve a depender del plan.
     if (!puedeUsarWallet(planNegocio?.plan)) {
-      return NextResponse.json({ error: 'Google Wallet está disponible en el plan Business' }, { status: 403 })
+      return NextResponse.json({ error: 'Google Wallet no está disponible para este negocio' }, { status: 403 })
     }
 
     const { data: recompensas } = await supabaseAdmin

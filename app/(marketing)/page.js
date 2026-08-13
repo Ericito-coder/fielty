@@ -28,9 +28,9 @@ const jsonLd = {
   url: 'https://www.fielty.app',
   description: 'Sistema de fidelización de clientes con programa de puntos, niveles y referidos para negocios físicos. Sin app, funciona desde el navegador vía QR.',
   offers: [
-    { '@type': 'Offer', name: 'Gratis', price: '0', priceCurrency: 'ARS', description: 'Hasta 50 clientes, 1 sucursal, puntos, niveles y referidos.' },
-    { '@type': 'Offer', name: 'Pro', price: '10000', priceCurrency: 'ARS', description: 'Clientes ilimitados, hasta 3 sucursales, campañas de email, logo personalizado.' },
-    { '@type': 'Offer', name: 'Business', price: '35000', priceCurrency: 'ARS', description: 'Sucursales ilimitadas, tarjeta en Google Wallet, soporte prioritario.' },
+    { '@type': 'Offer', name: 'Gratis', price: '0', priceCurrency: 'ARS', description: 'Hasta 50 clientes, 1 sucursal, puntos, niveles, referidos y tarjeta en Google Wallet.' },
+    { '@type': 'Offer', name: 'Pro', price: '10000', priceCurrency: 'ARS', description: 'Clientes ilimitados, hasta 3 sucursales, campañas de email, tu logo en la tarjeta y en el pase de Google Wallet.' },
+    { '@type': 'Offer', name: 'Business', price: '35000', priceCurrency: 'ARS', description: 'Sucursales ilimitadas, WhatsApp automático y soporte prioritario.' },
   ],
   // Referencia al Organization que define app/layout.js, en vez de volver a
   // declararlo. Antes había dos nodos para la misma marca y con logos

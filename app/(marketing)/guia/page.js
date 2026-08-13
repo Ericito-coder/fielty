@@ -74,7 +74,7 @@ export default function Guia() {
               ['Campañas de email', '✗', '✓', '✓'],
               ['Logo personalizado', '✗', '✓', '✓'],
               ['Exportación CSV', '✗', '✓', '✓'],
-              ['Google Wallet', '✗', '✗', '✓'],
+              ['Google Wallet', '✓', '✓', '✓'],
               ['Precio', '$0', '$10.000/mes*', '$35.000/mes'],
             ].map(([label, ...vals], i) => (
               <tr key={i} style={{ background: i % 2 === 0 ? '#f9f9f9' : 'white' }}>
@@ -281,8 +281,9 @@ export default function Guia() {
           'Historial de las últimas 20 transacciones',
         ]} />
 
-        <SubTitle>Agregar a Google Wallet (negocios Business)</SubTitle>
-        <P>Si el negocio está en el plan Business, la tarjeta tiene un botón para agregarla a Google Wallet como un pase más. El pase muestra los puntos, el nivel y cuánto le falta para la próxima recompensa, y se actualiza solo cada vez que acredita puntos o canjea un premio.</P>
+        <SubTitle>Agregar a Google Wallet</SubTitle>
+        <P>En todos los planes, incluido el gratis, la tarjeta tiene un botón para agregarla a Google Wallet como un pase más. El pase muestra los puntos, el nivel y cuánto le falta para la próxima recompensa, y se actualiza solo cada vez que acredita puntos o canjea un premio.</P>
+        <P>La diferencia entre planes es la marca: en el plan gratis el pase lleva el ícono de Fielty, y con Pro o Business lleva el logo del negocio. El nombre del negocio, sus colores y sus recompensas aparecen igual en todos los planes.</P>
 
         <SubTitle>Instalar la tarjeta en la pantalla de inicio</SubTitle>
         <P>Aparece un banner para agregar la tarjeta a la pantalla de inicio del celular (Android o iOS), con instrucciones según el navegador. Una vez agregada, se abre como si fuera una app, sin pasar por ninguna tienda de aplicaciones.</P>

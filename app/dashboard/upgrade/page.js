@@ -16,7 +16,7 @@ const PLANES = {
       'Clientes ilimitados',
       'Hasta 3 sucursales',
       'Campañas de email a inactivos',
-      'Logo personalizado en tu tarjeta',
+      'Tu logo en la tarjeta y en el pase de Wallet',
       'Exportar clientes a CSV',
       'Soporte por WhatsApp',
     ],
@@ -30,7 +30,6 @@ const PLANES = {
     features: [
       'Todo lo de Pro',
       'Sucursales ilimitadas',
-      'Tu tarjeta en Google Wallet',
       'WhatsApp automático (próximamente)',
       'Soporte prioritario',
     ],
