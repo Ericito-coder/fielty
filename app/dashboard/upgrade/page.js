@@ -5,18 +5,16 @@ import { supabase } from '@/lib/supabase'
 import { storage } from '@/lib/storage'
 
 const PLANES = {
-  pro_early: {
+  pro: {
     nombre: 'Pro',
-    badge: 'Early Adopter · 50% OFF',
-    precio: '$10.000',
-    precioOriginal: '$20.000',
-    periodo: 'por mes · primer año',
+    precio: '$20.000',
+    periodo: 'por mes',
     color: theme.red,
     features: [
       'Clientes ilimitados',
       'Hasta 3 sucursales',
       'Campañas de email a inactivos',
-      'Tu logo en la tarjeta y en el pase de Wallet',
+      'Tu logo en la tarjeta del cliente y en Wallet',
       'Exportar clientes a CSV',
       'Soporte por WhatsApp',
     ],
@@ -58,7 +56,7 @@ export default function Upgrade() {
           if (planLocalStorage && PLANES[planLocalStorage]) {
             setPlanSeleccionado(planLocalStorage)
           } else if (!data.plan || data.plan === 'gratis') {
-            setPlanSeleccionado('pro_early')
+            setPlanSeleccionado('pro')
           } else {
             setPlanSeleccionado('business')
           }
@@ -97,7 +95,7 @@ export default function Upgrade() {
 
   // Opciones según plan actual
   const planActual = negocio.plan || 'gratis'
-  const opciones = planActual === 'gratis' ? ['pro_early', 'business'] : ['business']
+  const opciones = planActual === 'gratis' ? ['pro', 'business'] : ['business']
 
   return (
     <div style={s.wrap}>

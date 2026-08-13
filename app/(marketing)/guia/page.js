@@ -35,7 +35,7 @@ export default function Guia() {
       <div style={{ background: theme.bgMuted, borderRadius: 12, padding: '24px 28px', marginBottom: 48 }}>
         <div style={{ fontSize: 12, fontWeight: 700, color: theme.gray, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 10 }}>Resumen ejecutivo</div>
         <P style={{ marginBottom: 0 }}>
-          Fielty es un programa de fidelización de clientes con puntos por QR, sin app, para negocios físicos en Argentina (peluquerías, barberías, cafeterías, veterinarias, gimnasios y más). Hay un plan gratis para hasta 50 clientes y planes pagos desde $10.000/mes con clientes ilimitados. El cliente no instala nada: escanea el QR del negocio, ve su tarjeta digital desde el navegador y suma puntos en cada compra.
+          Fielty es un programa de fidelización de clientes con puntos por QR, sin app, para negocios físicos en Argentina (peluquerías, barberías, cafeterías, veterinarias, gimnasios y más). Hay un plan gratis para hasta 50 clientes y planes pagos desde $20.000/mes con clientes ilimitados. El cliente no instala nada: escanea el QR del negocio, ve su tarjeta digital desde el navegador y suma puntos en cada compra.
         </P>
       </div>
 
@@ -75,7 +75,7 @@ export default function Guia() {
               ['Logo personalizado', '✗', '✓', '✓'],
               ['Exportación CSV', '✗', '✓', '✓'],
               ['Google Wallet', '✓', '✓', '✓'],
-              ['Precio', '$0', '$10.000/mes*', '$35.000/mes'],
+              ['Precio', '$0', '$20.000/mes', '$35.000/mes'],
             ].map(([label, ...vals], i) => (
               <tr key={i} style={{ background: i % 2 === 0 ? '#f9f9f9' : 'white' }}>
                 <td style={{ ...td, fontWeight: 700 }}>{label}</td>
@@ -84,7 +84,7 @@ export default function Guia() {
             ))}
           </tbody>
         </table>
-        <P style={{ fontSize: 12, color: theme.gray }}>* Precio especial para los primeros 100 negocios. Precio regular: $20.000/mes.</P>
+        <P style={{ fontSize: 12, color: theme.gray }}>Suscripción mensual por Mercado Pago, sin permanencia. Se cancela cuando quieras.</P>
       </Section>
 
       <PageBreak />

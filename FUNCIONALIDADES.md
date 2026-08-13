@@ -69,7 +69,7 @@
 - **Tarjeta digital** con la identidad del negocio: puntos, **nivel (🥉 Bronce / 🥈 Plata / 🥇 Oro)** según puntos históricos, barra de progreso hacia el próximo premio.
 - **Canjes self-service**: cuando le alcanzan los puntos, canjea desde la tarjeta y recibe un código válido por 24 horas con cuenta regresiva. Si vence, los puntos se devuelven solos.
 - **"Mostrar mi código"**: QR grande para que lo escaneen en la caja.
-- **👛 Google Wallet** (negocios Business): la tarjeta como pase en la billetera del teléfono — puntos, nivel y "te faltan X pts para tu premio" **que se actualizan solos** con cada compra. Como Starbucks.
+- **👛 Google Wallet** (todos los planes): la tarjeta como pase en la billetera del teléfono — puntos, nivel y "te faltan X pts para tu premio" **que se actualizan solos** con cada compra. Como Starbucks.
 - **App instalable (PWA)**: la tarjeta queda como ícono en el inicio del celular y **funciona sin conexión**.
 - **Historial** de movimientos con detalle (compras, cumpleaños, referidos, canjes, sucursal).
 - **Referidos**: comparte su link único; cuando un amigo se registra, ambos ganan puntos.
@@ -100,7 +100,7 @@
 
 ## 💰 Planes
 
-| | **Gratis** | **Pro** $20.000/mes* | **Business** $35.000/mes |
+| | **Gratis** | **Pro** $20.000/mes | **Business** $35.000/mes |
 |---|---|---|---|
 | Clientes | Hasta 50 | Ilimitados | Ilimitados |
 | Sucursales | 1 | Hasta 3 | Ilimitadas |
@@ -110,10 +110,10 @@
 | Campañas de email con métrica de retorno | — | ✓ | ✓ |
 | Logo personalizado | — | ✓ | ✓ |
 | Exportar clientes (CSV) | — | ✓ | ✓ |
-| Tarjeta en Google Wallet | — | — | ✓ |
+| Tarjeta en Google Wallet | ✓ | ✓ | ✓ |
 | WhatsApp automático | — | — | Próximamente |
 
-*Promo primeros 100 negocios: $10.000/mes.
+Suscripción mensual por Mercado Pago, sin permanencia.
 
 ### Frases que venden (para tener a mano)
 - *"Tu cliente no baja ninguna app: escanea un QR y ya está sumando puntos."*

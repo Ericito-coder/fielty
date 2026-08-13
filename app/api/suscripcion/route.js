@@ -22,9 +22,13 @@ export async function POST(request) {
 
     const { negocioId, plan, email } = await request.json()
 
+    // Precios de los planes que se pueden contratar hoy. `pro_early` no
+    // está: la promo se cerró y los negocios que la tienen ya tienen su
+    // suscripción creada en MP, así que no vuelven a pasar por acá. Si
+    // estuviera, cualquiera podría pedir el precio viejo mandando el
+    // string a mano.
     const precioMap = {
       pro: 20000,
-      pro_early: 10000,
       business: 35000,
     }
 

@@ -140,22 +140,20 @@ const [isMobile, setIsMobile] = useState(false)
                 precio: '$0',
                 periodo: 'siempre',
                 color: '#333',
-                features: ['Hasta 50 clientes', '1 sucursal', 'Puntos, niveles y referidos', 'Caja con escáner QR', 'Tarjeta digital sin app', 'Tu tarjeta en Google Wallet'],
+                features: ['Hasta 50 clientes', '1 sucursal', 'Puntos, niveles y referidos', 'Caja con escáner QR', 'Tarjeta digital sin app', 'Tarjeta de cliente en Google Wallet'],
                 cta: 'Empezar gratis',
                 href: '/onboarding/registro',
                 destacado: false,
               },
               {
                 nombre: 'Pro',
-                precio: '$10.000',
-                precioOriginal: '$20.000',
-                periodo: 'por mes · primer año',
+                precio: '$20.000',
+                periodo: 'por mes',
                 color: theme.red,
-                features: ['Clientes ilimitados', 'Hasta 3 sucursales', 'Campañas de email a inactivos', 'Tu logo en la tarjeta y en el pase de Wallet', 'Exportar clientes a CSV', 'Soporte por WhatsApp'],
+                features: ['Clientes ilimitados', 'Hasta 3 sucursales', 'Campañas de email a inactivos', 'Tu logo en la tarjeta del cliente y en Wallet', 'Exportar clientes a CSV', 'Soporte por WhatsApp'],
                 cta: 'Empezar con Pro',
-                href: '/onboarding/registro?plan=pro_early',
+                href: '/onboarding/registro?plan=pro',
                 destacado: true,
-                oferta: true,
               },
               {
                 nombre: 'Business',
@@ -171,12 +169,6 @@ const [isMobile, setIsMobile] = useState(false)
               <div key={i} style={{...s.planCard, border: plan.destacado ? `2px solid ${plan.color}` : '1px solid #1e1e1e', transform: plan.destacado ? 'scale(1.04)' : 'scale(1)'}}>
                 {plan.destacado && <div style={{...s.planBadge, background: plan.color}}>Más popular</div>}
                 <div style={{fontSize:18, fontWeight:800, color:'white', marginBottom:8}}>{plan.nombre}</div>
-                {plan.precioOriginal && (
-                  <div style={{display:'flex', alignItems:'center', gap:8, marginBottom:4}}>
-                    <span style={{fontSize:16, color:theme.grayMid, fontFamily:'monospace', textDecoration:'line-through'}}>{plan.precioOriginal}</span>
-                    <span style={{background:theme.red, color:'white', fontSize:11, fontWeight:800, padding:'3px 8px', borderRadius:100}}>50% OFF</span>
-                  </div>
-                )}
                 <div style={{display:'flex', alignItems:'baseline', gap:6, marginBottom:4}}>
                   <span style={{fontSize:36, fontWeight:900, color:'white', fontFamily:'monospace'}}>{plan.precio}</span>
                 </div>
@@ -195,7 +187,7 @@ const [isMobile, setIsMobile] = useState(false)
             ))}
           </div>
           <div style={{textAlign:'center', marginTop:32, fontSize:14, color:theme.grayMid}}>
-            🎁 <strong style={{color:theme.gray}}>Por ser de los primeros:</strong> 50% de descuento en el plan Pro por un año. <a href="/onboarding/registro" style={{color:theme.red, fontWeight:700}}>Registrate ahora →</a>
+            Sin permanencia ni costo de instalación: cancelás cuando quieras. <a href="/onboarding/registro" style={{color:theme.red, fontWeight:700}}>Empezá gratis →</a>
           </div>
         </div>
       </section>
