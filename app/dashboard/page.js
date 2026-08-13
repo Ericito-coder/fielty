@@ -1041,9 +1041,15 @@ function ConfigSection({ negocio, setNegocio }) {
       setSubiendoLogo(false)
       return
     }
+    // El path es fijo (`<negocioId>/logo.<ext>`), así que reemplazar el logo
+    // deja la URL idéntica. Sin algo que la diferencie: el <img> del
+    // dashboard no se entera de que tiene que recargar, y la clase de Wallet
+    // tampoco, porque `presentacionCambio` compara URIs y las ve iguales.
+    // El sufijo hace que cada subida tenga su propia URL.
     const { data: { publicUrl } } = supabase.storage.from('negocios-media').getPublicUrl(path)
-    await supabase.from('negocios').update({ logo_url: publicUrl }).eq('id', negocio.id)
-    setNegocio(n => ({ ...n, logo_url: publicUrl }))
+    const urlConVersion = `${publicUrl}?v=${Date.now()}`
+    await supabase.from('negocios').update({ logo_url: urlConVersion }).eq('id', negocio.id)
+    setNegocio(n => ({ ...n, logo_url: urlConVersion }))
     setSubiendoLogo(false)
     sincronizarWallet()
   }
