@@ -1,6 +1,7 @@
-import { NextResponse } from 'next/server'
+import { NextResponse, after } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { getRequestIp } from '@/lib/server'
+import { sincronizarClaseWallet } from '@/lib/googleWallet'
 import { rateLimit } from '@/lib/rateLimit'
 
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL
@@ -36,6 +37,11 @@ export async function POST(request) {
       .from('negocios')
       .update({ plan, plan_manual: plan !== 'gratis' })
       .eq('id', negocioId)
+
+    // El logo propio es feature de pago: al cambiar el plan cambia lo que
+    // tiene que mostrar el pase. Los cambios automáticos ya lo hacen desde
+    // sincronizarSuscripcion; este es el camino manual.
+    after(() => sincronizarClaseWallet(negocioId))
 
     return NextResponse.json({ ok: true })
   } catch (error) {
