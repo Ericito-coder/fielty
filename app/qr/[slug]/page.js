@@ -99,6 +99,17 @@ export default function QRPage({ params }) {
             break-inside: avoid;
             page-break-inside: avoid;
           }
+          /* El cartel es casi 2:1 y el area imprimible de una A4 es 1.46:1,
+             asi que el alto es siempre lo que manda. Con el aire de pantalla
+             ocupaba el 95% de la hoja: entraba en Chrome con margen de 10mm
+             y se partia en dos en cualquier impresora con margenes propios,
+             o en iOS, que ignora el @page. Se recorta el aire, no el
+             contenido: los estilos van inline, por eso el !important. */
+          .print-contenido { padding: 20px 28px !important; }
+          .print-sub { margin-bottom: 14px !important; }
+          .print-qr { padding: 10px !important; margin-bottom: 14px !important; }
+          .print-pasos { margin-bottom: 12px !important; }
+          .print-beneficios { margin-bottom: 12px !important; }
         }
       `}</style>
 
@@ -129,17 +140,17 @@ export default function QRPage({ params }) {
           </div>
 
           {/* Content */}
-          <div style={s.content}>
+          <div style={s.content} className="print-contenido">
             <div style={s.headline}>¡Sumate y ganá puntos!</div>
-            <div style={s.sub}>Escaneá el código QR con tu celular,<br/>registrate y empezá a acumular premios.</div>
+            <div style={s.sub} className="print-sub">Escaneá el código QR con tu celular,<br/>registrate y empezá a acumular premios.</div>
 
             {/* QR */}
-            <div style={s.qrWrap}>
+            <div style={s.qrWrap} className="print-qr">
               {qrUrl && <img src={qrUrl} style={s.qrImg} alt="QR" />}
             </div>
 
             {/* Steps */}
-            <div style={s.steps}>
+            <div style={s.steps} className="print-pasos">
               <div style={s.step}>
                 <div style={{...s.stepNum, background: negocio.color}}>
                   <FondoImpreso color={negocio.color} />
@@ -166,7 +177,7 @@ export default function QRPage({ params }) {
             </div>
 
             {/* Beneficios */}
-            <div style={s.benefits}>
+            <div style={s.benefits} className="print-beneficios">
               {beneficiosDe(negocio).map(b => <div key={b} style={s.benefit}>{b}</div>)}
             </div>
 
