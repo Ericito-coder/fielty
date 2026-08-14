@@ -1,12 +1,24 @@
 'use client'
 import { theme } from '@/lib/theme'
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import QRCode from 'qrcode'
+import FondoImpreso, { colorSolido } from '@/components/FondoImpreso'
+import { generarCartelPng, descargarCartel } from '@/lib/cartelPng'
+
+// Los mismos beneficios los usa el cartel en pantalla y el PNG que se
+// descarga, así que se arman en un solo lugar.
+function beneficiosDe(negocio) {
+  return [
+    ...(negocio.tieneRecompensas ? ['🎁 Canjeá recompensas exclusivas'] : []),
+    ...(negocio.puntos_cumpleanos > 0 ? ['🎂 Puntos de regalo en tu cumpleaños'] : []),
+    '🤝 Invitá amigos y ganás más puntos',
+  ]
+}
 
 export default function QRPage({ params }) {
   const [negocio, setNegocio] = useState(null)
   const [qrUrl, setQrUrl] = useState('')
-  const canvasRef = useRef(null)
+  const [cartel, setCartel] = useState(null)
 
   useEffect(() => {
     params.then(p => {
@@ -27,6 +39,29 @@ export default function QRPage({ params }) {
     }).then(setQrUrl)
   }, [negocio])
 
+  // El PNG se arma apenas está el QR y no al apretar el botón: en iOS la
+  // hoja de compartir solo se abre si no se perdió el gesto del usuario, y
+  // generar la imagen en el medio lo pierde.
+  useEffect(() => {
+    if (!qrUrl || !negocio) return
+    let cancelado = false
+    generarCartelPng({
+      header: {
+        color: negocio.color,
+        iniciales: negocio.nombre.slice(0,2).toUpperCase(),
+        nombre: negocio.nombre,
+        subtitulo: 'Programa de fidelización',
+      },
+      headline: '¡Sumate y ganá puntos!',
+      sub: ['Escaneá el código QR con tu celular,', 'registrate y empezá a acumular premios.'],
+      qr: qrUrl,
+      pasos: ['Escaneá el QR', 'Registrate', '¡Ganás puntos!'],
+      flechas: true,
+      beneficios: beneficiosDe(negocio),
+    }).then(blob => { if (!cancelado) setCartel(blob) }).catch(() => {})
+    return () => { cancelado = true }
+  }, [qrUrl, negocio])
+
   if (!negocio) return <div style={{minHeight:'100vh', display:'flex', alignItems:'center', justifyContent:'center'}}>Cargando...</div>
 
   return (
@@ -40,7 +75,9 @@ export default function QRPage({ params }) {
             padding: 0 !important;
             background: #fff !important;
           }
-          /* Imprimir los fondos de color (header, cajas grises, numeros de pasos) */
+          /* Imprimir los fondos de color (cajas grises claras). Los bloques
+             de color fuerte van con <img> (ver components/FondoImpreso)
+             porque Safari de iOS ignora esta propiedad. */
           * {
             -webkit-print-color-adjust: exact !important;
             print-color-adjust: exact !important;
@@ -65,14 +102,27 @@ export default function QRPage({ params }) {
       `}</style>
 
       <main style={s.wrap} className="print-wrap">
-        <button className="no-print" style={s.printBtn} onClick={() => window.print()}>
-          🖨️ Imprimir
-        </button>
+        <div className="no-print" style={s.acciones}>
+          <button style={s.printBtn} onClick={() => window.print()}>
+            🖨️ Imprimir
+          </button>
+          <button
+            style={{...s.descargarBtn, ...(cartel ? {} : s.descargarBtnEsperando)}}
+            onClick={() => descargarCartel(cartel, `cartel-${negocio.slug}.png`)}
+            disabled={!cartel}
+          >
+            {cartel ? '⬇️ Descargar cartel' : 'Preparando cartel…'}
+          </button>
+        </div>
 
         <div style={s.page} className="print-page">
           {/* Header */}
           <div style={{...s.header, background: negocio.color}}>
-            <div style={s.bizLogo}>{negocio.nombre.slice(0,2).toUpperCase()}</div>
+            <FondoImpreso color={negocio.color} />
+            <div style={s.bizLogo}>
+              <FondoImpreso color="#ffffff" opacidad={0.2} />
+              <span style={{position:'relative'}}>{negocio.nombre.slice(0,2).toUpperCase()}</span>
+            </div>
             <div style={s.bizName}>{negocio.nombre}</div>
             <div style={s.bizSub}>Programa de fidelización</div>
           </div>
@@ -90,31 +140,38 @@ export default function QRPage({ params }) {
             {/* Steps */}
             <div style={s.steps}>
               <div style={s.step}>
-                <div style={{...s.stepNum, background: negocio.color}}>1</div>
+                <div style={{...s.stepNum, background: negocio.color}}>
+                  <FondoImpreso color={negocio.color} />
+                  <span style={{position:'relative'}}>1</span>
+                </div>
                 <div style={s.stepText}>Escaneá el QR</div>
               </div>
               <div style={s.stepArrow}>→</div>
               <div style={s.step}>
-                <div style={{...s.stepNum, background: negocio.color}}>2</div>
+                <div style={{...s.stepNum, background: negocio.color}}>
+                  <FondoImpreso color={negocio.color} />
+                  <span style={{position:'relative'}}>2</span>
+                </div>
                 <div style={s.stepText}>Registrate</div>
               </div>
               <div style={s.stepArrow}>→</div>
               <div style={s.step}>
-                <div style={{...s.stepNum, background: negocio.color}}>3</div>
+                <div style={{...s.stepNum, background: negocio.color}}>
+                  <FondoImpreso color={negocio.color} />
+                  <span style={{position:'relative'}}>3</span>
+                </div>
                 <div style={s.stepText}>¡Ganás puntos!</div>
               </div>
             </div>
 
             {/* Beneficios */}
             <div style={s.benefits}>
-              {negocio.tieneRecompensas && <div style={s.benefit}>🎁 Canjeá recompensas exclusivas</div>}
-              {negocio.puntos_cumpleanos > 0 && <div style={s.benefit}>🎂 Puntos de regalo en tu cumpleaños</div>}
-              <div style={s.benefit}>🤝 Invitá amigos y ganás más puntos</div>
+              {beneficiosDe(negocio).map(b => <div key={b} style={s.benefit}>{b}</div>)}
             </div>
 
             {/* Footer */}
             <div style={s.footer}>
-              <div style={s.footerDot}></div>
+              <img src={colorSolido(theme.red)} alt="" aria-hidden="true" style={s.footerDot} />
               <span style={s.footerText}>Powered by fielty</span>
             </div>
           </div>
@@ -143,13 +200,16 @@ export default function QRPage({ params }) {
 
 const s = {
   wrap: { minHeight:'100vh', background:theme.bgMuted, padding:'40px 20px', display:'flex', flexDirection:'column', alignItems:'center', gap:24 },
+  acciones: { display:'flex', gap:10, flexWrap:'wrap', justifyContent:'center' },
   printBtn: { padding:'12px 28px', background:theme.black, border:'none', borderRadius:12, color:'white', fontSize:15, fontWeight:700, cursor:'pointer', fontFamily:'inherit' },
+  descargarBtn: { padding:'12px 28px', background:'white', borderWidth:2, borderStyle:'solid', borderColor:theme.black, borderRadius:12, color:theme.black, fontSize:15, fontWeight:700, cursor:'pointer', fontFamily:'inherit' },
+  descargarBtnEsperando: { borderColor:theme.grayLight, color:theme.gray, cursor:'default' },
   page: { background:'white', borderRadius:24, width:'100%', maxWidth:440, overflow:'hidden', boxShadow:'0 8px 40px rgba(0,0,0,0.12)' },
   pageMini: { maxWidth:280 },
-  header: { padding:'32px 28px 28px', textAlign:'center', color:'white' },
-  bizLogo: { width:56, height:56, borderRadius:16, background:'rgba(255,255,255,0.2)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:20, fontWeight:900, margin:'0 auto 12px' },
-  bizName: { fontSize:24, fontWeight:900, marginBottom:4 },
-  bizSub: { fontSize:13, opacity:0.75 },
+  header: { position:'relative', padding:'32px 28px 28px', textAlign:'center', color:'white' },
+  bizLogo: { position:'relative', width:56, height:56, borderRadius:16, background:'rgba(255,255,255,0.2)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:20, fontWeight:900, margin:'0 auto 12px' },
+  bizName: { position:'relative', fontSize:24, fontWeight:900, marginBottom:4 },
+  bizSub: { position:'relative', fontSize:13, opacity:0.75 },
   content: { padding:'32px 28px' },
   headline: { fontSize:26, fontWeight:900, color:theme.black, textAlign:'center', marginBottom:8 },
   sub: { fontSize:14, color:theme.gray, textAlign:'center', lineHeight:1.6, marginBottom:28 },
@@ -157,12 +217,12 @@ const s = {
   qrImg: { width:200, height:200 },
   steps: { display:'flex', alignItems:'center', justifyContent:'center', gap:8, marginBottom:24 },
   step: { display:'flex', flexDirection:'column', alignItems:'center', gap:6 },
-  stepNum: { width:32, height:32, borderRadius:'50%', display:'flex', alignItems:'center', justifyContent:'center', color:'white', fontSize:14, fontWeight:800 },
+  stepNum: { position:'relative', width:32, height:32, borderRadius:'50%', display:'flex', alignItems:'center', justifyContent:'center', color:'white', fontSize:14, fontWeight:800 },
   stepText: { fontSize:11, fontWeight:600, color:theme.gray, textAlign:'center' },
   stepArrow: { fontSize:18, color:'#ccc', marginBottom:16 },
   benefits: { background:'#f8f9fc', borderRadius:16, padding:'16px 20px', marginBottom:24, display:'flex', flexDirection:'column', gap:10 },
   benefit: { fontSize:13, color:theme.grayMid, fontWeight:500 },
   footer: { display:'flex', alignItems:'center', justifyContent:'center', gap:6 },
-  footerDot: { width:8, height:8, borderRadius:'50%', background:theme.red, boxShadow:'0 0 6px #e0001b' },
+  footerDot: { position:'relative', width:8, height:8, borderRadius:'50%', background:theme.red, boxShadow:'0 0 6px #e0001b' },
   footerText: { fontSize:12, color:theme.grayLight, fontWeight:600 },
 }
