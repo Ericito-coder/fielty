@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import QRCode from 'qrcode'
 import FondoImpreso, { colorSolido } from '@/components/FondoImpreso'
 import { generarCartelPng, descargarCartel } from '@/lib/cartelPng'
+import { SITIO } from '@/lib/sitio'
 
 // Los mismos beneficios los usa el cartel en pantalla y el PNG que se
 // descarga, así que se arman en un solo lugar.
@@ -31,7 +32,7 @@ export default function QRPage({ params }) {
 
   useEffect(() => {
     if (!negocio) return
-    const url = `${window.location.origin}/registro/${negocio.slug}`
+    const url = `${SITIO}/registro/${negocio.slug}`
     QRCode.toDataURL(url, {
       width: 800,
       margin: 2,
@@ -177,22 +178,6 @@ export default function QRPage({ params }) {
           </div>
         </div>
 
-        {/* Versión mini para mostrador */}
-        <div style={{...s.page, ...s.pageMini}} className="print-page no-print">
-          <div style={{background: negocio.color, padding:'16px 20px', display:'flex', alignItems:'center', gap:12}}>
-            <div style={{...s.bizLogo, width:36, height:36, fontSize:13}}>{negocio.nombre.slice(0,2).toUpperCase()}</div>
-            <div>
-              <div style={{...s.bizName, fontSize:16}}>{negocio.nombre}</div>
-              <div style={{...s.bizSub, fontSize:11}}>Programa de puntos</div>
-            </div>
-          </div>
-          <div style={{padding:20, textAlign:'center'}}>
-            <div style={{fontSize:15, fontWeight:800, color:theme.black, marginBottom:4}}>¡Sumate y ganá puntos!</div>
-            <div style={{fontSize:12, color:theme.gray, marginBottom:16}}>Escaneá con tu celular</div>
-            {qrUrl && <img src={qrUrl} style={{width:150, height:150}} alt="QR" />}
-            <div style={{fontSize:11, color:theme.grayLight, marginTop:12}}>Powered by fielty</div>
-          </div>
-        </div>
       </main>
     </>
   )
@@ -205,7 +190,6 @@ const s = {
   descargarBtn: { padding:'12px 28px', background:'white', borderWidth:2, borderStyle:'solid', borderColor:theme.black, borderRadius:12, color:theme.black, fontSize:15, fontWeight:700, cursor:'pointer', fontFamily:'inherit' },
   descargarBtnEsperando: { borderColor:theme.grayLight, color:theme.gray, cursor:'default' },
   page: { background:'white', borderRadius:24, width:'100%', maxWidth:440, overflow:'hidden', boxShadow:'0 8px 40px rgba(0,0,0,0.12)' },
-  pageMini: { maxWidth:280 },
   header: { position:'relative', padding:'32px 28px 28px', textAlign:'center', color:'white' },
   bizLogo: { position:'relative', width:56, height:56, borderRadius:16, background:'rgba(255,255,255,0.2)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:20, fontWeight:900, margin:'0 auto 12px' },
   bizName: { position:'relative', fontSize:24, fontWeight:900, marginBottom:4 },

@@ -4,13 +4,14 @@ import { useState, useEffect } from 'react'
 import QRCode from 'qrcode'
 import FondoImpreso, { colorSolido } from '@/components/FondoImpreso'
 import { generarCartelPng, descargarCartel } from '@/lib/cartelPng'
+import { SITIO } from '@/lib/sitio'
 
 export default function QRMiTarjeta() {
   const [qrUrl, setQrUrl] = useState('')
   const [cartel, setCartel] = useState(null)
 
   useEffect(() => {
-    const url = `${window.location.origin}/mi-tarjeta`
+    const url = `${SITIO}/mi-tarjeta`
     QRCode.toDataURL(url, {
       width: 800,   // se dibuja a 200px pero el PNG lo usa a 4x
       margin: 2,
@@ -123,19 +124,6 @@ export default function QRMiTarjeta() {
           </div>
         </div>
 
-        {/* Versión mini para mostrador */}
-        <div style={{...s.page, maxWidth:280}} className="print-page no-print">
-          <div style={{...s.header, padding:'16px 20px'}}>
-            <div style={{...s.logoDot, width:8, height:8}} />
-            <div style={{...s.logoText, fontSize:16}}>fielty</div>
-          </div>
-          <div style={{padding:20, textAlign:'center'}}>
-            <div style={{fontSize:15, fontWeight:800, color:theme.black, marginBottom:4}}>¿Ya sos cliente?</div>
-            <div style={{fontSize:12, color:theme.gray, marginBottom:16}}>Escaneá para ver tu tarjeta</div>
-            {qrUrl && <img src={qrUrl} style={{width:150, height:150}} alt="QR" />}
-            <div style={{fontSize:11, color:theme.grayLight, marginTop:12}}>Powered by fielty</div>
-          </div>
-        </div>
       </main>
     </>
   )
