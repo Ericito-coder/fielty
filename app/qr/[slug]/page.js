@@ -89,15 +89,24 @@ export default function QRPage({ params }) {
             background: #fff !important;
             display: block !important;
           }
+          /* Sin zoom a proposito. Tenia zoom: 1.15 para que el cartel
+             saliera mas grande, pero el zoom se comporta distinto en cada
+             motor de impresion y dejaba el cartel al filo del alto de la
+             hoja. Para un cartel grande esta el PNG, que se escala solo al
+             tamano del papel; el boton de imprimir prioriza que salga en
+             una hoja y siempre igual. */
           .print-page {
             box-shadow: none !important;
             border-radius: 0 !important;
             max-width: none !important;
             width: 440px !important;
             margin: 0 auto !important;
-            zoom: 1.15;
             break-inside: avoid;
             page-break-inside: avoid;
+            /* Sin esto queda una segunda hoja en blanco: el navegador se
+               permite cortar despues del cartel aunque no haya nada mas. */
+            break-after: avoid;
+            page-break-after: avoid;
           }
           /* El cartel es casi 2:1 y el area imprimible de una A4 es 1.46:1,
              asi que el alto es siempre lo que manda. Con el aire de pantalla
