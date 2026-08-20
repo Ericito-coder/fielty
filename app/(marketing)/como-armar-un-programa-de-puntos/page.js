@@ -53,7 +53,7 @@ export default function ComoArmarUnProgramaDePuntos() {
         </a>
         <div style={{ display: 'flex', gap: 24, alignItems: 'center' }}>
           <a href="/login" style={s.navLink}>Ingresar</a>
-          <a href="/onboarding/registro" style={s.navCta}>Empezá →</a>
+          <a href="/onboarding/registro" style={s.navCta}>Empezá gratis</a>
         </div>
       </nav>
 
@@ -227,15 +227,15 @@ export default function ComoArmarUnProgramaDePuntos() {
             sin instalar ninguna app. Vos definís la regla y las recompensas, y el
             panel te muestra justamente cuántos volvieron a sumar.
           </p>
-          <a href="/onboarding/registro" style={s.ctaBoton}>Empezá gratis →</a>
+          <a href="/onboarding/registro" style={s.ctaBoton}>Empezá gratis</a>
           <div style={s.ctaNota}>Plan gratis hasta 50 clientes, sin tarjeta de crédito.</div>
         </div>
 
         <div style={s.relacionados}>
           <div style={s.relacionadosTitulo}>Seguir leyendo</div>
-          <a href="/para" style={s.relacionadoLink}>Cómo funciona según tu rubro →</a>
-          <a href="/faq" style={s.relacionadoLink}>Preguntas frecuentes →</a>
-          <a href="/guia" style={s.relacionadoLink}>Guía completa de Fielty →</a>
+          <a href="/para" style={s.relacionadoLink}>Cómo funciona según tu rubro</a>
+          <a href="/faq" style={s.relacionadoLink}>Preguntas frecuentes</a>
+          <a href="/guia" style={s.relacionadoLink}>Guía completa de Fielty</a>
         </div>
       </article>
 
@@ -256,17 +256,17 @@ const s = {
   navLogo: { display: 'flex', alignItems: 'center', gap: 8, textDecoration: 'none' },
   logoDot: { width: 8, height: 8, borderRadius: '50%', background: theme.red, boxShadow: '0 0 8px #e0001b' },
   logoText: { fontSize: 18, fontWeight: 800, color: 'white', letterSpacing: -0.5 },
-  navLink: { fontSize: 13, color: '#888', textDecoration: 'none', fontWeight: 500 },
+  navLink: { fontSize: 13, color: theme.darkMuted, textDecoration: 'none', fontWeight: 500 },
   navCta: { fontSize: 13, color: 'white', textDecoration: 'none', fontWeight: 700, background: theme.red, padding: '9px 16px', borderRadius: 10 },
 
   // Ancho angosto a propósito: es texto largo para leer, no una landing.
   wrap: { maxWidth: 680, margin: '0 auto', padding: '64px 24px 40px' },
-  badge: { display: 'inline-block', background: '#1a1a1a', border: '1px solid #2a2a2a', borderRadius: 100, padding: '6px 16px', fontSize: 11, color: '#888', marginBottom: 24, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em' },
+  badge: { display: 'inline-block', background: '#1a1a1a', border: '1px solid #2a2a2a', borderRadius: 100, padding: '6px 16px', fontSize: 11, color: theme.darkMuted, marginBottom: 24, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em' },
   h1: { fontSize: 'clamp(30px, 5.5vw, 44px)', fontWeight: 900, lineHeight: 1.12, letterSpacing: -1.2, marginBottom: 24, color: 'white' },
-  bajada: { fontSize: 18, color: '#999', lineHeight: 1.8, marginBottom: 56 },
+  bajada: { fontSize: 18, color: theme.darkText, lineHeight: 1.8, marginBottom: 56 },
 
   h2: { fontSize: 'clamp(22px, 3.5vw, 28px)', fontWeight: 900, color: 'white', margin: '56px 0 20px', letterSpacing: -0.6, lineHeight: 1.25 },
-  p: { fontSize: 16, color: '#999', lineHeight: 1.85, marginBottom: 20 },
+  p: { fontSize: 16, color: theme.darkText, lineHeight: 1.85, marginBottom: 20 },
   fuerte: { color: 'white', fontWeight: 700 },
 
   destacado: { borderLeft: `3px solid ${theme.red}`, background: '#141414', borderRadius: '0 12px 12px 0', padding: '20px 24px', margin: '28px 0' },
@@ -274,22 +274,22 @@ const s = {
   comparacion: { display: 'flex', flexDirection: 'column', gap: 12, margin: '24px 0 28px' },
   mal: { background: '#1a1a1a', border: '1px solid #2a2a2a', borderRadius: 14, padding: '18px 20px' },
   bien: { background: '#1a1a1a', border: `1px solid ${theme.red}`, borderRadius: 14, padding: '18px 20px' },
-  etiquetaMal: { fontSize: 10, fontWeight: 800, color: '#666', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 8 },
-  etiquetaBien: { fontSize: 10, fontWeight: 800, color: theme.red, textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 8 },
+  etiquetaMal: { fontSize: 10, fontWeight: 800, color: theme.darkText, textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 8 },
+  etiquetaBien: { fontSize: 10, fontWeight: 800, color: theme.redOnDark, textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 8 },
   cita: { fontSize: 16, color: 'white', lineHeight: 1.6, margin: 0, fontStyle: 'italic' },
 
   lista: { paddingLeft: 22, margin: '0 0 48px' },
-  item: { fontSize: 16, color: '#999', lineHeight: 1.85, marginBottom: 12 },
+  item: { fontSize: 16, color: theme.darkText, lineHeight: 1.85, marginBottom: 12 },
 
   cta: { background: '#141414', border: '1px solid #222', borderRadius: 20, padding: '32px 28px', margin: '56px 0 40px' },
   ctaTitulo: { fontSize: 20, fontWeight: 800, color: 'white', marginBottom: 12 },
   ctaBoton: { display: 'inline-block', background: theme.red, color: 'white', textDecoration: 'none', padding: '14px 28px', borderRadius: 14, fontSize: 15, fontWeight: 800 },
-  ctaNota: { fontSize: 12, color: '#666', marginTop: 14 },
+  ctaNota: { fontSize: 12, color: theme.darkText, marginTop: 14 },
 
   relacionados: { borderTop: '1px solid #1a1a1a', paddingTop: 28, display: 'flex', flexDirection: 'column', gap: 12 },
-  relacionadosTitulo: { fontSize: 11, fontWeight: 800, color: '#555', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 4 },
-  relacionadoLink: { fontSize: 15, color: theme.red, fontWeight: 700, textDecoration: 'none' },
+  relacionadosTitulo: { fontSize: 11, fontWeight: 800, color: theme.darkMuted, textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 4 },
+  relacionadoLink: { fontSize: 15, color: theme.redOnDark, fontWeight: 700, textDecoration: 'none' },
 
   footer: { borderTop: '1px solid #1a1a1a', textAlign: 'center', padding: '28px 20px 44px', display: 'flex', gap: 20, justifyContent: 'center', flexWrap: 'wrap' },
-  footerLink: { fontSize: 13, color: '#444', textDecoration: 'none' },
+  footerLink: { fontSize: 13, color: theme.darkMuted, textDecoration: 'none' },
 }

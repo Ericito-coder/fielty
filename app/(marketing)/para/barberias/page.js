@@ -68,7 +68,7 @@ export default function ParaBarberias() {
         </a>
         <div style={{ display: 'flex', gap: 24, alignItems: 'center' }}>
           <a href="/login" style={s.navLink}>Ingresar</a>
-          <a href="/onboarding/registro" style={s.navCta}>Empezá →</a>
+          <a href="/onboarding/registro" style={s.navCta}>Empezá gratis</a>
         </div>
       </nav>
 
@@ -84,7 +84,7 @@ export default function ParaBarberias() {
             Tus clientes ya vuelven cada tres o cuatro semanas. Fielty hace que ese ritmo no dependa de que se acuerden de vos: suman puntos en cada corte y los ven en el celular, sin instalar ninguna app.
           </p>
           <div style={s.ctaRow}>
-            <a href="/onboarding/registro" style={s.ctaPrimary}>Empezá gratis →</a>
+            <a href="/onboarding/registro" style={s.ctaPrimary}>Empezá gratis</a>
             <a href="/faq" style={s.ctaSecondary}>Ver preguntas frecuentes</a>
           </div>
         </div>
@@ -96,19 +96,19 @@ export default function ParaBarberias() {
           <h2 style={s.h2}>Por qué funciona en una barbería</h2>
           <div style={s.grid}>
             <div style={s.card}>
-              <div style={s.cardTitle}>El cliente ya es recurrente</div>
+              <h3 style={s.cardTitle}>El cliente ya es recurrente</h3>
               <p style={s.cardText}>
                 El pelo crece igual para todos: quien se corta con vos vuelve cada tres o cuatro semanas. No tenés que crear el hábito, solo asegurarte de que esa vuelta sea con vos y no con el que le queda más cerca ese día.
               </p>
             </div>
             <div style={s.card}>
-              <div style={s.cardTitle}>Cada visita vale bastante</div>
+              <h3 style={s.cardTitle}>Cada visita vale bastante</h3>
               <p style={s.cardText}>
                 Un corte no es una compra chica: cuando alguien deja de venir, se nota en la caja del mes. Recuperar a un cliente que se estaba yendo justifica de sobra el premio que le des.
               </p>
             </div>
             <div style={s.card}>
-              <div style={s.cardTitle}>Ya tenés la relación</div>
+              <h3 style={s.cardTitle}>Ya tenés la relación</h3>
               <p style={s.cardText}>
                 Los conocés por el nombre y sabés cómo les gusta el corte. Un programa de puntos le pone números a algo que ya hacés: reconocer al que siempre vuelve.
               </p>
@@ -129,14 +129,14 @@ export default function ParaBarberias() {
             <div style={s.step}>
               <div style={s.stepNum}>1</div>
               <div>
-                <div style={s.stepTitle}>Ponés el QR en el mostrador</div>
+                <h3 style={s.stepTitle}>Ponés el QR en el mostrador</h3>
                 <p style={s.stepText}>Te lo generamos listo para imprimir. El cliente lo escanea con la cámara mientras te paga y se registra en 30 segundos.</p>
               </div>
             </div>
             <div style={s.step}>
               <div style={s.stepNum}>2</div>
               <div>
-                <div style={s.stepTitle}>Definís la regla de puntos</div>
+                <h3 style={s.stepTitle}>Definís la regla de puntos</h3>
                 <p style={s.stepText}>
                   Si querés replicar la lógica de la tarjeta de sellos, poné el precio de un corte como regla: así cada corte suma un punto y ponés el premio en diez. Si preferís algo más fino, configurás puntos proporcionales al monto y también suman la barba, los productos o el combo.
                 </p>
@@ -145,7 +145,7 @@ export default function ParaBarberias() {
             <div style={s.step}>
               <div style={s.stepNum}>3</div>
               <div>
-                <div style={s.stepTitle}>Cargás el corte y listo</div>
+                <h3 style={s.stepTitle}>Cargás el corte y listo</h3>
                 <p style={s.stepText}>Buscás al cliente por nombre o DNI desde la caja, o escaneás el código de su tarjeta. Cuando llega al premio, te muestra un código que validás antes de dárselo.</p>
               </div>
             </div>
@@ -159,19 +159,19 @@ export default function ParaBarberias() {
           <h2 style={s.h2}>Lo que más se usa en este rubro</h2>
           <div style={s.grid}>
             <div style={s.card}>
-              <div style={s.cardTitle}>Referidos</div>
+              <h3 style={s.cardTitle}>Referidos</h3>
               <p style={s.cardText}>
                 Una barbería crece porque alguien le pregunta a un amigo dónde se corta. Cada cliente tiene su propio link para pasarle: si el amigo se registra desde ahí, los dos suman puntos.
               </p>
             </div>
             <div style={s.card}>
-              <div style={s.cardTitle}>Puntos de cumpleaños</div>
+              <h3 style={s.cardTitle}>Puntos de cumpleaños</h3>
               <p style={s.cardText}>
                 El día del cumpleaños le entran puntos de regalo automáticamente. Es una excusa para que aparezca sin que vos tengas que acordarte de nada.
               </p>
             </div>
             <div style={s.card}>
-              <div style={s.cardTitle}>Varios sillones, varias sucursales</div>
+              <h3 style={s.cardTitle}>Varios sillones, varias sucursales</h3>
               <p style={s.cardText}>
                 Si tenés más de un local, cada uno entra con su propio PIN, pero el cliente suma puntos en cualquiera de los dos.
               </p>
@@ -187,7 +187,7 @@ export default function ParaBarberias() {
           <div style={s.faqList}>
             {FAQS_RUBRO.map((f) => (
               <div key={f.q}>
-                <div style={s.faqQ}>{f.q}</div>
+                <h3 style={s.faqQ}>{f.q}</h3>
                 <p style={s.faqA}>{f.a}</p>
               </div>
             ))}
@@ -203,7 +203,7 @@ export default function ParaBarberias() {
             El plan gratis te sirve hasta 50 clientes, sin tarjeta de crédito. Se configura en cinco minutos.
           </p>
           <a href="/onboarding/registro" style={{ ...s.ctaPrimary, fontSize: 17, padding: '17px 38px' }}>
-            Empezá gratis →
+            Empezá gratis
           </a>
         </div>
       </section>
@@ -214,7 +214,7 @@ export default function ParaBarberias() {
           ¿Tenés otro tipo de negocio? Mirá cómo funciona en{' '}
           <a href="/para/peluquerias" style={s.otrosLink}>peluquerías</a>,{' '}
           <a href="/para/cafeterias" style={s.otrosLink}>cafeterías</a> o{' '}
-          <a href="/para" style={s.otrosLink}>ver todos los rubros →</a>
+          <a href="/para" style={s.otrosLink}>ver todos los rubros</a>
         </div>
       </section>
 

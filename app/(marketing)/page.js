@@ -1,4 +1,10 @@
 import LandingClient from './LandingClient'
+import { pruebaSocial } from '@/lib/metricas'
+
+// La home sigue siendo estática: se regenera cada 6 horas en vez de consultar
+// la base en cada visita. Los números de la prueba social no cambian tan rápido
+// como para que valga pagar una query por visitante.
+export const revalidate = 21600
 
 export const metadata = {
   title: 'Fielty — Programa de fidelización y puntos para negocios sin app',
@@ -38,14 +44,15 @@ const jsonLd = {
   provider: { '@id': 'https://www.fielty.app/#organization' },
 }
 
-export default function Page() {
+export default async function Page() {
+  const prueba = await pruebaSocial()
   return (
     <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <LandingClient />
+      <LandingClient prueba={prueba} />
     </>
   )
 }

@@ -68,7 +68,7 @@ export default function ParaPeluquerias() {
         </a>
         <div style={{ display: 'flex', gap: 24, alignItems: 'center' }}>
           <a href="/login" style={s.navLink}>Ingresar</a>
-          <a href="/onboarding/registro" style={s.navCta}>Empezá →</a>
+          <a href="/onboarding/registro" style={s.navCta}>Empezá gratis</a>
         </div>
       </nav>
 
@@ -84,7 +84,7 @@ export default function ParaPeluquerias() {
             En un salón no todas las visitas valen lo mismo: entre un brushing y un color hay una diferencia enorme en cuánto deja cada uno. Fielty premia según lo que cada clienta realmente gasta, sin que tengas que llevar ninguna cuenta aparte.
           </p>
           <div style={s.ctaRow}>
-            <a href="/onboarding/registro" style={s.ctaPrimary}>Empezá gratis →</a>
+            <a href="/onboarding/registro" style={s.ctaPrimary}>Empezá gratis</a>
             <a href="/faq" style={s.ctaSecondary}>Ver preguntas frecuentes</a>
           </div>
         </div>
@@ -96,19 +96,19 @@ export default function ParaPeluquerias() {
           <h2 style={s.h2}>Por qué funciona en una peluquería</h2>
           <div style={s.grid}>
             <div style={s.card}>
-              <div style={s.cardTitle}>No todos los servicios valen lo mismo</div>
+              <h3 style={s.cardTitle}>No todos los servicios valen lo mismo</h3>
               <p style={s.cardText}>
                 Un corte, un color, un tratamiento y un peinado para un evento no se parecen en nada en lo que dejan. Los puntos por monto reconocen sola esa diferencia: la clienta que se hace color suma mucho más que la que pasa por las puntas.
               </p>
             </div>
             <div style={s.card}>
-              <div style={s.cardTitle}>Los intervalos son largos</div>
+              <h3 style={s.cardTitle}>Los intervalos son largos</h3>
               <p style={s.cardText}>
                 Entre un color y el siguiente pueden pasar dos meses, y en el medio aparece una promoción de otro salón. Tener puntos acumulados es lo que hace que esperen en vez de probar suerte en otro lado.
               </p>
             </div>
             <div style={s.card}>
-              <div style={s.cardTitle}>Vienen por la persona</div>
+              <h3 style={s.cardTitle}>Vienen por la persona</h3>
               <p style={s.cardText}>
                 La clienta no elige el local, elige a quien la atiende: ya hay confianza y ya sabés qué le gusta. El programa le pone algo concreto encima de una relación que ya existe.
               </p>
@@ -129,14 +129,14 @@ export default function ParaPeluquerias() {
             <div style={s.step}>
               <div style={s.stepNum}>1</div>
               <div>
-                <div style={s.stepTitle}>Ponés el QR en recepción</div>
+                <h3 style={s.stepTitle}>Ponés el QR en recepción</h3>
                 <p style={s.stepText}>Te lo generamos listo para imprimir. Se escanea con la cámara mientras esperan el turno o mientras pagan, y el registro toma 30 segundos.</p>
               </div>
             </div>
             <div style={s.step}>
               <div style={s.stepNum}>2</div>
               <div>
-                <div style={s.stepTitle}>Definís la regla de puntos</div>
+                <h3 style={s.stepTitle}>Definís la regla de puntos</h3>
                 <p style={s.stepText}>
                   Acá conviene puntos por monto y no por visita, justamente porque los servicios son tan distintos entre sí. Elegís cada cuántos pesos se suman puntos y el sistema hace el resto en cada servicio.
                 </p>
@@ -145,7 +145,7 @@ export default function ParaPeluquerias() {
             <div style={s.step}>
               <div style={s.stepNum}>3</div>
               <div>
-                <div style={s.stepTitle}>Cargás el servicio y listo</div>
+                <h3 style={s.stepTitle}>Cargás el servicio y listo</h3>
                 <p style={s.stepText}>Buscás a la clienta por nombre o DNI desde la caja, o escaneás el código de su tarjeta. Cuando llega al premio, te muestra un código que validás antes de dárselo.</p>
               </div>
             </div>
@@ -159,19 +159,19 @@ export default function ParaPeluquerias() {
           <h2 style={s.h2}>Lo que más se usa en este rubro</h2>
           <div style={s.grid}>
             <div style={s.card}>
-              <div style={s.cardTitle}>Premios de distinto valor</div>
+              <h3 style={s.cardTitle}>Premios de distinto valor</h3>
               <p style={s.cardText}>
                 Podés tener varias recompensas activas al mismo tiempo con distinto costo en puntos: un lavado o un tratamiento de puntas para que se alcancen rápido, y algo más grande para la clienta que hace color todos los meses.
               </p>
             </div>
             <div style={s.card}>
-              <div style={s.cardTitle}>Niveles de lealtad</div>
+              <h3 style={s.cardTitle}>Niveles de lealtad</h3>
               <p style={s.cardText}>
                 Bronce, Plata y Oro según los puntos que acumuló en total. Sirve para que la clienta de años vea reconocido eso, en vez de recibir lo mismo que alguien que vino una vez.
               </p>
             </div>
             <div style={s.card}>
-              <div style={s.cardTitle}>Referidos</div>
+              <h3 style={s.cardTitle}>Referidos</h3>
               <p style={s.cardText}>
                 Un salón crece por recomendación entre amigas. Cada clienta tiene su propio link para pasar: si la otra persona se registra desde ahí, las dos suman puntos.
               </p>
@@ -187,7 +187,7 @@ export default function ParaPeluquerias() {
           <div style={s.faqList}>
             {FAQS_RUBRO.map((f) => (
               <div key={f.q}>
-                <div style={s.faqQ}>{f.q}</div>
+                <h3 style={s.faqQ}>{f.q}</h3>
                 <p style={s.faqA}>{f.a}</p>
               </div>
             ))}
@@ -203,7 +203,7 @@ export default function ParaPeluquerias() {
             El plan gratis te sirve hasta 50 clientas, sin tarjeta de crédito. Se configura en cinco minutos.
           </p>
           <a href="/onboarding/registro" style={{ ...s.ctaPrimary, fontSize: 17, padding: '17px 38px' }}>
-            Empezá gratis →
+            Empezá gratis
           </a>
         </div>
       </section>
@@ -214,7 +214,7 @@ export default function ParaPeluquerias() {
           ¿Tenés otro tipo de negocio? Mirá cómo funciona en{' '}
           <a href="/para/barberias" style={s.otrosLink}>barberías</a>,{' '}
           <a href="/para/cafeterias" style={s.otrosLink}>cafeterías</a> o{' '}
-          <a href="/para" style={s.otrosLink}>ver todos los rubros →</a>
+          <a href="/para" style={s.otrosLink}>ver todos los rubros</a>
         </div>
       </section>
 

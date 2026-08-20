@@ -68,7 +68,7 @@ export default function ParaCafeterias() {
         </a>
         <div style={{ display: 'flex', gap: 24, alignItems: 'center' }}>
           <a href="/login" style={s.navLink}>Ingresar</a>
-          <a href="/onboarding/registro" style={s.navCta}>Empezá →</a>
+          <a href="/onboarding/registro" style={s.navCta}>Empezá gratis</a>
         </div>
       </nav>
 
@@ -84,7 +84,7 @@ export default function ParaCafeterias() {
             Nadie piensa mucho dónde toma el café: pasa por el que tiene más a mano. Fielty le da a tu cliente una razón concreta para que ese lugar sea el tuyo, sin que tenga que instalar ninguna app.
           </p>
           <div style={s.ctaRow}>
-            <a href="/onboarding/registro" style={s.ctaPrimary}>Empezá gratis →</a>
+            <a href="/onboarding/registro" style={s.ctaPrimary}>Empezá gratis</a>
             <a href="/faq" style={s.ctaSecondary}>Ver preguntas frecuentes</a>
           </div>
         </div>
@@ -96,19 +96,19 @@ export default function ParaCafeterias() {
           <h2 style={s.h2}>Por qué funciona en una cafetería</h2>
           <div style={s.grid}>
             <div style={s.card}>
-              <div style={s.cardTitle}>La competencia está a media cuadra</div>
+              <h3 style={s.cardTitle}>La competencia está a media cuadra</h3>
               <p style={s.cardText}>
                 Para el cliente, dos cafeterías parecidas son casi intercambiables. Tener puntos acumulados con vos es lo que lo hace pasar de largo la otra esquina.
               </p>
             </div>
             <div style={s.card}>
-              <div style={s.cardTitle}>Vienen seguido y deciden rápido</div>
+              <h3 style={s.cardTitle}>Vienen seguido y deciden rápido</h3>
               <p style={s.cardText}>
                 No es una compra que se piensa: es un hábito de treinta segundos, muchas veces por semana. Cuantas más veces te compran, más rápido se les acumula y más difícil es que arranquen de cero en otro lado.
               </p>
             </div>
             <div style={s.card}>
-              <div style={s.cardTitle}>No todos gastan lo mismo</div>
+              <h3 style={s.cardTitle}>No todos gastan lo mismo</h3>
               <p style={s.cardText}>
                 Un café para llevar no es un desayuno para dos, ni una torta encargada. Los puntos van por monto, así el que gasta más suma más sin que tengas que llevar cuentas aparte.
               </p>
@@ -129,14 +129,14 @@ export default function ParaCafeterias() {
             <div style={s.step}>
               <div style={s.stepNum}>1</div>
               <div>
-                <div style={s.stepTitle}>Ponés el QR en el mostrador</div>
+                <h3 style={s.stepTitle}>Ponés el QR en el mostrador</h3>
                 <p style={s.stepText}>Te lo generamos listo para imprimir. El cliente lo escanea con la cámara mientras espera el pedido y se registra en 30 segundos.</p>
               </div>
             </div>
             <div style={s.step}>
               <div style={s.stepNum}>2</div>
               <div>
-                <div style={s.stepTitle}>Definís la regla de puntos</div>
+                <h3 style={s.stepTitle}>Definís la regla de puntos</h3>
                 <p style={s.stepText}>
                   Acá conviene que los puntos vayan por monto y no por visita, porque lo que se lleva cada uno cambia mucho. Elegís cada cuántos pesos se suman puntos y listo.
                 </p>
@@ -145,7 +145,7 @@ export default function ParaCafeterias() {
             <div style={s.step}>
               <div style={s.stepNum}>3</div>
               <div>
-                <div style={s.stepTitle}>Cargás la venta y listo</div>
+                <h3 style={s.stepTitle}>Cargás la venta y listo</h3>
                 <p style={s.stepText}>Buscás al cliente por nombre o DNI desde la caja, o escaneás el código de su tarjeta. Cuando llega al premio, te muestra un código que validás antes de dárselo.</p>
               </div>
             </div>
@@ -159,19 +159,19 @@ export default function ParaCafeterias() {
           <h2 style={s.h2}>Lo que más se usa en este rubro</h2>
           <div style={s.grid}>
             <div style={s.card}>
-              <div style={s.cardTitle}>Puntos de cumpleaños</div>
+              <h3 style={s.cardTitle}>Puntos de cumpleaños</h3>
               <p style={s.cardText}>
                 El día del cumpleaños le entran puntos de regalo automáticamente. En una pastelería es el mejor momento posible: justo cuando va a necesitar la torta.
               </p>
             </div>
             <div style={s.card}>
-              <div style={s.cardTitle}>Ver quién dejó de venir</div>
+              <h3 style={s.cardTitle}>Ver quién dejó de venir</h3>
               <p style={s.cardText}>
                 Con mucha gente entrando y saliendo es imposible darte cuenta de que el de todas las mañanas hace tres semanas que no aparece. El panel te lo muestra, y en los planes Pro y Business podés mandarle un mail para invitarlo a volver.
               </p>
             </div>
             <div style={s.card}>
-              <div style={s.cardTitle}>Referidos</div>
+              <h3 style={s.cardTitle}>Referidos</h3>
               <p style={s.cardText}>
                 Cada cliente tiene su propio link para compartir. Si alguien se registra desde ese link, los dos suman puntos: el que recomendó y el que llega.
               </p>
@@ -187,7 +187,7 @@ export default function ParaCafeterias() {
           <div style={s.faqList}>
             {FAQS_RUBRO.map((f) => (
               <div key={f.q}>
-                <div style={s.faqQ}>{f.q}</div>
+                <h3 style={s.faqQ}>{f.q}</h3>
                 <p style={s.faqA}>{f.a}</p>
               </div>
             ))}
@@ -203,7 +203,7 @@ export default function ParaCafeterias() {
             El plan gratis te sirve hasta 50 clientes, sin tarjeta de crédito. Se configura en cinco minutos.
           </p>
           <a href="/onboarding/registro" style={{ ...s.ctaPrimary, fontSize: 17, padding: '17px 38px' }}>
-            Empezá gratis →
+            Empezá gratis
           </a>
         </div>
       </section>
@@ -214,7 +214,7 @@ export default function ParaCafeterias() {
           ¿Tenés otro tipo de negocio? Mirá cómo funciona en{' '}
           <a href="/para/barberias" style={s.otrosLink}>barberías</a>,{' '}
           <a href="/para/veterinarias" style={s.otrosLink}>veterinarias</a> o{' '}
-          <a href="/para" style={s.otrosLink}>ver todos los rubros →</a>
+          <a href="/para" style={s.otrosLink}>ver todos los rubros</a>
         </div>
       </section>
 

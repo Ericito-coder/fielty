@@ -68,7 +68,7 @@ export default function ParaRestaurantes() {
         </a>
         <div style={{ display: 'flex', gap: 24, alignItems: 'center' }}>
           <a href="/login" style={s.navLink}>Ingresar</a>
-          <a href="/onboarding/registro" style={s.navCta}>Empezá →</a>
+          <a href="/onboarding/registro" style={s.navCta}>Empezá gratis</a>
         </div>
       </nav>
 
@@ -84,7 +84,7 @@ export default function ParaRestaurantes() {
             Salir a comer no es una necesidad como cortarse el pelo: es una elección que se hace de nuevo cada vez. Fielty le da a tu cliente una razón concreta para elegirte a vos otra vez, sin instalar ninguna app.
           </p>
           <div style={s.ctaRow}>
-            <a href="/onboarding/registro" style={s.ctaPrimary}>Empezá gratis →</a>
+            <a href="/onboarding/registro" style={s.ctaPrimary}>Empezá gratis</a>
             <a href="/faq" style={s.ctaSecondary}>Ver preguntas frecuentes</a>
           </div>
         </div>
@@ -96,19 +96,19 @@ export default function ParaRestaurantes() {
           <h2 style={s.h2}>Por qué funciona en un restaurante</h2>
           <div style={s.grid}>
             <div style={s.card}>
-              <div style={s.cardTitle}>Nadie tiene que volver, por eso vale premiarlo</div>
+              <h3 style={s.cardTitle}>Nadie tiene que volver, por eso vale premiarlo</h3>
               <p style={s.cardText}>
                 El pelo crece igual para todos, pero salir a comer se decide cada vez desde cero. Que el cliente tenga puntos acumulados con vos inclina esa decisión a tu favor la próxima vez que no sabe dónde ir.
               </p>
             </div>
             <div style={s.card}>
-              <div style={s.cardTitle}>Una mesa no vale lo mismo que otra</div>
+              <h3 style={s.cardTitle}>Una mesa no vale lo mismo que otra</h3>
               <p style={s.cardText}>
                 Un café de paso y una cena para cuatro dejan números muy distintos. Los puntos van por monto, así el que gasta más suma más sin que tengas que llevar cuentas aparte.
               </p>
             </div>
             <div style={s.card}>
-              <div style={s.cardTitle}>Se elige por recomendación</div>
+              <h3 style={s.cardTitle}>Se elige por recomendación</h3>
               <p style={s.cardText}>
                 Un restaurante nuevo se llena por recomendación tanto como uno de siempre: alguien le dice a un amigo que lo pruebe. Esa recomendación hoy no te deja nada; con un programa de puntos, el que te recomienda también gana algo por hacerlo.
               </p>
@@ -129,14 +129,14 @@ export default function ParaRestaurantes() {
             <div style={s.step}>
               <div style={s.stepNum}>1</div>
               <div>
-                <div style={s.stepTitle}>Ponés el QR en la mesa o en la caja</div>
+                <h3 style={s.stepTitle}>Ponés el QR en la mesa o en la caja</h3>
                 <p style={s.stepText}>Te lo generamos listo para imprimir. El cliente lo escanea con la cámara mientras espera la cuenta y se registra en 30 segundos.</p>
               </div>
             </div>
             <div style={s.step}>
               <div style={s.stepNum}>2</div>
               <div>
-                <div style={s.stepTitle}>Definís la regla de puntos</div>
+                <h3 style={s.stepTitle}>Definís la regla de puntos</h3>
                 <p style={s.stepText}>
                   Conviene por monto, porque entre una mesa y otra la diferencia puede ser grande. Elegís cada cuántos pesos se suman puntos y aplica igual para toda la cuenta: comida, bebida y postre.
                 </p>
@@ -145,7 +145,7 @@ export default function ParaRestaurantes() {
             <div style={s.step}>
               <div style={s.stepNum}>3</div>
               <div>
-                <div style={s.stepTitle}>Cargás la cuenta y listo</div>
+                <h3 style={s.stepTitle}>Cargás la cuenta y listo</h3>
                 <p style={s.stepText}>Buscás al cliente por nombre o DNI desde la caja, o escaneás el código de su tarjeta. No atrasa el cierre de mesa: cuando llega al premio, te muestra un código que validás antes de dárselo.</p>
               </div>
             </div>
@@ -159,19 +159,19 @@ export default function ParaRestaurantes() {
           <h2 style={s.h2}>Lo que más se usa en este rubro</h2>
           <div style={s.grid}>
             <div style={s.card}>
-              <div style={s.cardTitle}>Referidos</div>
+              <h3 style={s.cardTitle}>Referidos</h3>
               <p style={s.cardText}>
                 Cada cliente tiene su propio link para pasarle a un amigo. Si el amigo se registra desde ahí, los dos suman puntos: le pone un beneficio concreto a algo que ya pasaba gratis.
               </p>
             </div>
             <div style={s.card}>
-              <div style={s.cardTitle}>Puntos de cumpleaños</div>
+              <h3 style={s.cardTitle}>Puntos de cumpleaños</h3>
               <p style={s.cardText}>
                 El día del cumpleaños le entran puntos de regalo automáticamente. Es una buena excusa para que el festejo sea en tu mesa y no en otro restaurante.
               </p>
             </div>
             <div style={s.card}>
-              <div style={s.cardTitle}>Ver quién dejó de venir</div>
+              <h3 style={s.cardTitle}>Ver quién dejó de venir</h3>
               <p style={s.cardText}>
                 Con las mesas rotando todo el servicio es difícil notar que el habitué de los viernes hace un mes que no aparece. El panel te lo lista, y en los planes Pro y Business podés mandarle un mail para invitarlo a volver.
               </p>
@@ -187,7 +187,7 @@ export default function ParaRestaurantes() {
           <div style={s.faqList}>
             {FAQS_RUBRO.map((f) => (
               <div key={f.q}>
-                <div style={s.faqQ}>{f.q}</div>
+                <h3 style={s.faqQ}>{f.q}</h3>
                 <p style={s.faqA}>{f.a}</p>
               </div>
             ))}
@@ -203,7 +203,7 @@ export default function ParaRestaurantes() {
             El plan gratis te sirve hasta 50 clientes, sin tarjeta de crédito. Se configura en cinco minutos.
           </p>
           <a href="/onboarding/registro" style={{ ...s.ctaPrimary, fontSize: 17, padding: '17px 38px' }}>
-            Empezá gratis →
+            Empezá gratis
           </a>
         </div>
       </section>
@@ -214,7 +214,7 @@ export default function ParaRestaurantes() {
           ¿Tenés otro tipo de negocio? Mirá cómo funciona en{' '}
           <a href="/para/cafeterias" style={s.otrosLink}>cafeterías</a>,{' '}
           <a href="/para/gimnasios" style={s.otrosLink}>gimnasios</a> o{' '}
-          <a href="/para" style={s.otrosLink}>ver todos los rubros →</a>
+          <a href="/para" style={s.otrosLink}>ver todos los rubros</a>
         </div>
       </section>
 

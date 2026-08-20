@@ -82,7 +82,7 @@ export default function PorRubro() {
         </a>
         <div style={{ display: 'flex', gap: 24, alignItems: 'center' }}>
           <a href="/login" style={s.navLink}>Ingresar</a>
-          <a href="/onboarding/registro" style={s.navCta}>Empezá →</a>
+          <a href="/onboarding/registro" style={s.navCta}>Empezá gratis</a>
         </div>
       </nav>
 
@@ -106,7 +106,7 @@ export default function PorRubro() {
           <div style={{ ...s.grid, marginTop: 0 }}>
             {RUBROS.map((r) => (
               <a key={r.href} href={r.href} style={{ ...s.card, textDecoration: 'none', display: 'block' }}>
-                <div style={{ ...s.cardTitle, marginBottom: 10 }}>{r.nombre} →</div>
+                <h3 style={{ ...s.cardTitle, marginBottom: 10 }}>{r.nombre}</h3>
                 <p style={s.cardText}>{r.hook}</p>
               </a>
             ))}
@@ -126,7 +126,7 @@ export default function PorRubro() {
             El plan gratis te sirve hasta 50 clientes, sin tarjeta de crédito. Se configura en cinco minutos.
           </p>
           <a href="/onboarding/registro" style={{ ...s.ctaPrimary, fontSize: 17, padding: '17px 38px' }}>
-            Empezá gratis →
+            Empezá gratis
           </a>
         </div>
       </section>

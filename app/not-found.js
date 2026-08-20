@@ -10,7 +10,7 @@ export default function NotFound() {
 
         <div style={{ fontSize: 96, fontWeight: 900, color: '#1a1a1a', lineHeight: 1, marginBottom: 8, letterSpacing: -4 }}>404</div>
         <h1 style={{ fontSize: 24, fontWeight: 800, color: 'white', marginBottom: 12 }}>Esta página no existe</h1>
-        <p style={{ fontSize: 15, color: theme.grayMid, marginBottom: 40, lineHeight: 1.6 }}>
+        <p style={{ fontSize: 15, color: theme.darkMuted, marginBottom: 40, lineHeight: 1.6 }}>
           El link que seguiste puede estar roto o la página fue removida.
         </p>
 

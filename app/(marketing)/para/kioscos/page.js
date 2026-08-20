@@ -68,7 +68,7 @@ export default function ParaKioscos() {
         </a>
         <div style={{ display: 'flex', gap: 24, alignItems: 'center' }}>
           <a href="/login" style={s.navLink}>Ingresar</a>
-          <a href="/onboarding/registro" style={s.navCta}>Empezá →</a>
+          <a href="/onboarding/registro" style={s.navCta}>Empezá gratis</a>
         </div>
       </nav>
 
@@ -84,7 +84,7 @@ export default function ParaKioscos() {
             Sos el negocio al que más veces por semana entra el mismo cliente. Fielty le da una razón para que ese mostrador sea siempre el tuyo y no el de la otra esquina, sin que tenga que instalar ninguna app.
           </p>
           <div style={s.ctaRow}>
-            <a href="/onboarding/registro" style={s.ctaPrimary}>Empezá gratis →</a>
+            <a href="/onboarding/registro" style={s.ctaPrimary}>Empezá gratis</a>
             <a href="/faq" style={s.ctaSecondary}>Ver preguntas frecuentes</a>
           </div>
         </div>
@@ -96,19 +96,19 @@ export default function ParaKioscos() {
           <h2 style={s.h2}>Por qué funciona en un kiosco</h2>
           <div style={s.grid}>
             <div style={s.card}>
-              <div style={s.cardTitle}>Es el rubro de mayor frecuencia</div>
+              <h3 style={s.cardTitle}>Es el rubro de mayor frecuencia</h3>
               <p style={s.cardText}>
                 Un mismo cliente puede pasar varias veces por semana, a veces por día. Eso significa que los puntos se acumulan rápido y el premio llega antes que en cualquier otro rubro.
               </p>
             </div>
             <div style={s.card}>
-              <div style={s.cardTitle}>La competencia está en la vereda de enfrente</div>
+              <h3 style={s.cardTitle}>La competencia está en la vereda de enfrente</h3>
               <p style={s.cardText}>
                 Casi todos los kioscos venden lo mismo. Cuando el producto es idéntico, lo único que hace que alguien elija el tuyo y no el de al lado son los puntos que ya tiene acumulados con vos.
               </p>
             </div>
             <div style={s.card}>
-              <div style={s.cardTitle}>Cada compra es chica, pero se repiten todo el tiempo</div>
+              <h3 style={s.cardTitle}>Cada compra es chica, pero se repiten todo el tiempo</h3>
               <p style={s.cardText}>
                 Nadie deja de venir por una sola compra perdida. El negocio se pierde de a poco, cuando alguien empieza a comprar del otro lado sin que te des cuenta. Los puntos son la razón para que no arranque a probar.
               </p>
@@ -129,14 +129,14 @@ export default function ParaKioscos() {
             <div style={s.step}>
               <div style={s.stepNum}>1</div>
               <div>
-                <div style={s.stepTitle}>Ponés el QR en el mostrador</div>
+                <h3 style={s.stepTitle}>Ponés el QR en el mostrador</h3>
                 <p style={s.stepText}>Te lo generamos listo para imprimir. El cliente lo escanea con la cámara mientras paga y se registra en 30 segundos.</p>
               </div>
             </div>
             <div style={s.step}>
               <div style={s.stepNum}>2</div>
               <div>
-                <div style={s.stepTitle}>Definís la regla de puntos</div>
+                <h3 style={s.stepTitle}>Definís la regla de puntos</h3>
                 <p style={s.stepText}>
                   Acá el monto por compra suele ser chico pero la frecuencia es alta, así que conviene un premio que se alcance rápido: por ejemplo, cada $300 un punto y el premio a los 15 puntos, para que en dos o tres semanas ya lo puedan canjear.
                 </p>
@@ -145,7 +145,7 @@ export default function ParaKioscos() {
             <div style={s.step}>
               <div style={s.stepNum}>3</div>
               <div>
-                <div style={s.stepTitle}>Cargás la venta y listo</div>
+                <h3 style={s.stepTitle}>Cargás la venta y listo</h3>
                 <p style={s.stepText}>Buscás al cliente por nombre o DNI desde la caja, o escaneás el código de su tarjeta. Cuando llega al premio, te muestra un código que validás antes de dárselo.</p>
               </div>
             </div>
@@ -159,19 +159,19 @@ export default function ParaKioscos() {
           <h2 style={s.h2}>Lo que más se usa en este rubro</h2>
           <div style={s.grid}>
             <div style={s.card}>
-              <div style={s.cardTitle}>Puntos de cumpleaños</div>
+              <h3 style={s.cardTitle}>Puntos de cumpleaños</h3>
               <p style={s.cardText}>
                 El día del cumpleaños le entran puntos de regalo automáticamente. Una excusa más para pasar por el mostrador.
               </p>
             </div>
             <div style={s.card}>
-              <div style={s.cardTitle}>Ver quién dejó de venir</div>
+              <h3 style={s.cardTitle}>Ver quién dejó de venir</h3>
               <p style={s.cardText}>
                 Con tanta gente entrando y saliendo todo el día es imposible notar que el de siempre hace dos semanas que no aparece. El panel te lo muestra solo.
               </p>
             </div>
             <div style={s.card}>
-              <div style={s.cardTitle}>Referidos</div>
+              <h3 style={s.cardTitle}>Referidos</h3>
               <p style={s.cardText}>
                 Cada cliente tiene su propio link para compartir. Si un vecino se registra desde ese link, los dos suman puntos: el que invitó y el que llega.
               </p>
@@ -187,7 +187,7 @@ export default function ParaKioscos() {
           <div style={s.faqList}>
             {FAQS_RUBRO.map((f) => (
               <div key={f.q}>
-                <div style={s.faqQ}>{f.q}</div>
+                <h3 style={s.faqQ}>{f.q}</h3>
                 <p style={s.faqA}>{f.a}</p>
               </div>
             ))}
@@ -203,7 +203,7 @@ export default function ParaKioscos() {
             El plan gratis te sirve hasta 50 clientes, sin tarjeta de crédito. Se configura en cinco minutos.
           </p>
           <a href="/onboarding/registro" style={{ ...s.ctaPrimary, fontSize: 17, padding: '17px 38px' }}>
-            Empezá gratis →
+            Empezá gratis
           </a>
         </div>
       </section>
@@ -214,7 +214,7 @@ export default function ParaKioscos() {
           ¿Tenés otro tipo de negocio? Mirá cómo funciona en{' '}
           <a href="/para/cafeterias" style={s.otrosLink}>cafeterías</a>,{' '}
           <a href="/para/panaderias" style={s.otrosLink}>panaderías</a> o{' '}
-          <a href="/para" style={s.otrosLink}>ver todos los rubros →</a>
+          <a href="/para" style={s.otrosLink}>ver todos los rubros</a>
         </div>
       </section>
 

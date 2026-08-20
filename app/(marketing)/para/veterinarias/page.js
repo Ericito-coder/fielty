@@ -68,7 +68,7 @@ export default function ParaVeterinarias() {
         </a>
         <div style={{ display: 'flex', gap: 24, alignItems: 'center' }}>
           <a href="/login" style={s.navLink}>Ingresar</a>
-          <a href="/onboarding/registro" style={s.navCta}>Empezá →</a>
+          <a href="/onboarding/registro" style={s.navCta}>Empezá gratis</a>
         </div>
       </nav>
 
@@ -84,7 +84,7 @@ export default function ParaVeterinarias() {
             La compra que más se repite es el alimento, y es justo la que más fácil se te va al pet shop o al supermercado. Fielty le da a tu cliente una razón concreta para comprar todo con vos, sin instalar ninguna app.
           </p>
           <div style={s.ctaRow}>
-            <a href="/onboarding/registro" style={s.ctaPrimary}>Empezá gratis →</a>
+            <a href="/onboarding/registro" style={s.ctaPrimary}>Empezá gratis</a>
             <a href="/faq" style={s.ctaSecondary}>Ver preguntas frecuentes</a>
           </div>
         </div>
@@ -96,19 +96,19 @@ export default function ParaVeterinarias() {
           <h2 style={s.h2}>Por qué funciona en una veterinaria o pet shop</h2>
           <div style={s.grid}>
             <div style={s.card}>
-              <div style={s.cardTitle}>El alimento vuelve todos los meses</div>
+              <h3 style={s.cardTitle}>El alimento vuelve todos los meses</h3>
               <p style={s.cardText}>
                 Una bolsa se termina y hay que reponerla, siempre. Es la compra más previsible que tenés y también la que más competencia tiene: cualquier pet shop o góndola de supermercado te la puede sacar. Los puntos hacen que reponerla con vos tenga un beneficio acumulado.
               </p>
             </div>
             <div style={s.card}>
-              <div style={s.cardTitle}>Hay compras que ya son previsibles</div>
+              <h3 style={s.cardTitle}>Hay compras que ya son previsibles</h3>
               <p style={s.cardText}>
                 En una veterinaria son las vacunas, los antiparasitarios y los controles; en un pet shop, la arena, la piedra sanitaria y la reposición de siempre. En los dos casos ya sabés que va a volver: el programa hace que además se lleve el resto del mismo mostrador.
               </p>
             </div>
             <div style={s.card}>
-              <div style={s.cardTitle}>La decisión no es solo por precio</div>
+              <h3 style={s.cardTitle}>La decisión no es solo por precio</h3>
               <p style={s.cardText}>
                 Con la mascota de por medio pesa la confianza, no únicamente cuánto sale. Un premio bien elegido — un baño, una bolsa de alimento, un accesorio — se valora bastante más que unos pesos de descuento.
               </p>
@@ -129,14 +129,14 @@ export default function ParaVeterinarias() {
             <div style={s.step}>
               <div style={s.stepNum}>1</div>
               <div>
-                <div style={s.stepTitle}>Ponés el QR en el mostrador</div>
+                <h3 style={s.stepTitle}>Ponés el QR en el mostrador</h3>
                 <p style={s.stepText}>Te lo generamos listo para imprimir. El cliente lo escanea con la cámara mientras espera o mientras paga, y el registro toma 30 segundos.</p>
               </div>
             </div>
             <div style={s.step}>
               <div style={s.stepNum}>2</div>
               <div>
-                <div style={s.stepTitle}>Definís la regla de puntos</div>
+                <h3 style={s.stepTitle}>Definís la regla de puntos</h3>
                 <p style={s.stepText}>
                   Conviene por monto, porque una bolsa grande de alimento y una consulta no tienen nada que ver entre sí. Elegís cada cuántos pesos se suman puntos y aplica igual a lo que se lleve: alimento, medicación, accesorios o el servicio.
                 </p>
@@ -145,7 +145,7 @@ export default function ParaVeterinarias() {
             <div style={s.step}>
               <div style={s.stepNum}>3</div>
               <div>
-                <div style={s.stepTitle}>Cargás la venta y listo</div>
+                <h3 style={s.stepTitle}>Cargás la venta y listo</h3>
                 <p style={s.stepText}>Buscás al cliente por nombre o DNI desde la caja, o escaneás el código de su tarjeta. Cuando llega al premio, te muestra un código que validás antes de entregarlo.</p>
               </div>
             </div>
@@ -159,19 +159,19 @@ export default function ParaVeterinarias() {
           <h2 style={s.h2}>Lo que más se usa en este rubro</h2>
           <div style={s.grid}>
             <div style={s.card}>
-              <div style={s.cardTitle}>Ver quién dejó de venir</div>
+              <h3 style={s.cardTitle}>Ver quién dejó de venir</h3>
               <p style={s.cardText}>
                 Acá es lo más valioso: si alguien no apareció por la vacuna anual, o hace tres meses que no repone el alimento ni la arena, es plata que estás perdiendo y capaz ya la está comprando en otro lado. El panel te lista los clientes inactivos, y en los planes Pro y Business podés mandarles un mail para que vuelvan.
               </p>
             </div>
             <div style={s.card}>
-              <div style={s.cardTitle}>Premios de distinto valor</div>
+              <h3 style={s.cardTitle}>Premios de distinto valor</h3>
               <p style={s.cardText}>
                 Podés tener varias recompensas activas a la vez con distinto costo en puntos: algo chico que se alcance seguido, como un corte de uñas, y algo grande para el cliente que compra el alimento siempre con vos.
               </p>
             </div>
             <div style={s.card}>
-              <div style={s.cardTitle}>Niveles de lealtad</div>
+              <h3 style={s.cardTitle}>Niveles de lealtad</h3>
               <p style={s.cardText}>
                 Bronce, Plata y Oro según los puntos acumulados en total. Te deja distinguir al cliente de años del que entró una vez por una urgencia.
               </p>
@@ -187,7 +187,7 @@ export default function ParaVeterinarias() {
           <div style={s.faqList}>
             {FAQS_RUBRO.map((f) => (
               <div key={f.q}>
-                <div style={s.faqQ}>{f.q}</div>
+                <h3 style={s.faqQ}>{f.q}</h3>
                 <p style={s.faqA}>{f.a}</p>
               </div>
             ))}
@@ -203,7 +203,7 @@ export default function ParaVeterinarias() {
             El plan gratis te sirve hasta 50 clientes, sin tarjeta de crédito. Se configura en cinco minutos.
           </p>
           <a href="/onboarding/registro" style={{ ...s.ctaPrimary, fontSize: 17, padding: '17px 38px' }}>
-            Empezá gratis →
+            Empezá gratis
           </a>
         </div>
       </section>
@@ -214,7 +214,7 @@ export default function ParaVeterinarias() {
           ¿Tenés otro tipo de negocio? Mirá cómo funciona en{' '}
           <a href="/para/cafeterias" style={s.otrosLink}>cafeterías</a>,{' '}
           <a href="/para/peluquerias" style={s.otrosLink}>peluquerías</a> o{' '}
-          <a href="/para" style={s.otrosLink}>ver todos los rubros →</a>
+          <a href="/para" style={s.otrosLink}>ver todos los rubros</a>
         </div>
       </section>
 

@@ -68,7 +68,7 @@ export default function ParaPanaderias() {
         </a>
         <div style={{ display: 'flex', gap: 24, alignItems: 'center' }}>
           <a href="/login" style={s.navLink}>Ingresar</a>
-          <a href="/onboarding/registro" style={s.navCta}>Empezá →</a>
+          <a href="/onboarding/registro" style={s.navCta}>Empezá gratis</a>
         </div>
       </nav>
 
@@ -84,7 +84,7 @@ export default function ParaPanaderias() {
             El pan se compra casi todos los días, y hay una panadería a cada par de cuadras. Fielty hace que esa costumbre diaria sea con vos y no con la de la esquina, sin que el cliente instale ninguna app.
           </p>
           <div style={s.ctaRow}>
-            <a href="/onboarding/registro" style={s.ctaPrimary}>Empezá gratis →</a>
+            <a href="/onboarding/registro" style={s.ctaPrimary}>Empezá gratis</a>
             <a href="/faq" style={s.ctaSecondary}>Ver preguntas frecuentes</a>
           </div>
         </div>
@@ -96,19 +96,19 @@ export default function ParaPanaderias() {
           <h2 style={s.h2}>Por qué funciona en una panadería</h2>
           <div style={s.grid}>
             <div style={s.card}>
-              <div style={s.cardTitle}>Es la compra más frecuente que hay</div>
+              <h3 style={s.cardTitle}>Es la compra más frecuente que hay</h3>
               <p style={s.cardText}>
                 Nadie compra pan una vez al mes. Pasa casi todos los días, muchas veces sin pensarlo, así que los puntos se acumulan rápido y el cliente lo nota enseguida.
               </p>
             </div>
             <div style={s.card}>
-              <div style={s.cardTitle}>El ticket es parejo</div>
+              <h3 style={s.cardTitle}>El ticket es parejo</h3>
               <p style={s.cardText}>
                 A diferencia de un restaurante, la mayoría de las compras rondan un valor parecido: pan, facturas, algún bizcochito. Eso hace fácil replicar la lógica de la vieja tarjeta de sellos: cada compra suma un punto.
               </p>
             </div>
             <div style={s.card}>
-              <div style={s.cardTitle}>La de la otra cuadra es igual de fácil</div>
+              <h3 style={s.cardTitle}>La de la otra cuadra es igual de fácil</h3>
               <p style={s.cardText}>
                 Para el cliente, dos panaderías cerca son casi intercambiables. Tener puntos acumulados con vos es la razón concreta para no cambiar de vereda.
               </p>
@@ -129,14 +129,14 @@ export default function ParaPanaderias() {
             <div style={s.step}>
               <div style={s.stepNum}>1</div>
               <div>
-                <div style={s.stepTitle}>Ponés el QR en el mostrador</div>
+                <h3 style={s.stepTitle}>Ponés el QR en el mostrador</h3>
                 <p style={s.stepText}>Te lo generamos listo para imprimir. El cliente lo escanea con la cámara mientras espera que lo atiendan y se registra en 30 segundos.</p>
               </div>
             </div>
             <div style={s.step}>
               <div style={s.stepNum}>2</div>
               <div>
-                <div style={s.stepTitle}>Definís la regla de puntos</div>
+                <h3 style={s.stepTitle}>Definís la regla de puntos</h3>
                 <p style={s.stepText}>
                   Si la mayoría de tus ventas rondan un valor parecido, conviene poner el precio típico de una compra como regla: así cada visita suma un punto, igual que la tarjetita de siempre. Si también vendés tortas o pastelería de mayor valor, podés ir por monto en vez de por visita.
                 </p>
@@ -145,7 +145,7 @@ export default function ParaPanaderias() {
             <div style={s.step}>
               <div style={s.stepNum}>3</div>
               <div>
-                <div style={s.stepTitle}>Cargás la venta y listo</div>
+                <h3 style={s.stepTitle}>Cargás la venta y listo</h3>
                 <p style={s.stepText}>Buscás al cliente por nombre o DNI desde la caja, o escaneás el código de su tarjeta. Es rápido a propósito: no tiene que atrasar la fila de la mañana.</p>
               </div>
             </div>
@@ -159,19 +159,19 @@ export default function ParaPanaderias() {
           <h2 style={s.h2}>Lo que más se usa en este rubro</h2>
           <div style={s.grid}>
             <div style={s.card}>
-              <div style={s.cardTitle}>Un premio que se alcanza rápido</div>
+              <h3 style={s.cardTitle}>Un premio que se alcanza rápido</h3>
               <p style={s.cardText}>
                 Como se compra casi a diario, conviene un premio a pocas visitas de distancia — por ejemplo cada diez compras, algo gratis. El cliente ve el circuito completo (sumar y canjear) en cuestión de semanas, y eso es lo que hace que vuelva.
               </p>
             </div>
             <div style={s.card}>
-              <div style={s.cardTitle}>Puntos de cumpleaños</div>
+              <h3 style={s.cardTitle}>Puntos de cumpleaños</h3>
               <p style={s.cardText}>
                 El día del cumpleaños le entran puntos de regalo automáticamente. Es una buena excusa para que la torta la encargue con vos.
               </p>
             </div>
             <div style={s.card}>
-              <div style={s.cardTitle}>Varios mostradores, varias sucursales</div>
+              <h3 style={s.cardTitle}>Varios mostradores, varias sucursales</h3>
               <p style={s.cardText}>
                 Si tenés más de un local, cada uno entra con su propio PIN, pero el cliente suma puntos en cualquiera de los dos.
               </p>
@@ -187,7 +187,7 @@ export default function ParaPanaderias() {
           <div style={s.faqList}>
             {FAQS_RUBRO.map((f) => (
               <div key={f.q}>
-                <div style={s.faqQ}>{f.q}</div>
+                <h3 style={s.faqQ}>{f.q}</h3>
                 <p style={s.faqA}>{f.a}</p>
               </div>
             ))}
@@ -203,7 +203,7 @@ export default function ParaPanaderias() {
             El plan gratis te sirve hasta 50 clientes, sin tarjeta de crédito. Se configura en cinco minutos.
           </p>
           <a href="/onboarding/registro" style={{ ...s.ctaPrimary, fontSize: 17, padding: '17px 38px' }}>
-            Empezá gratis →
+            Empezá gratis
           </a>
         </div>
       </section>
@@ -214,7 +214,7 @@ export default function ParaPanaderias() {
           ¿Tenés otro tipo de negocio? Mirá cómo funciona en{' '}
           <a href="/para/cafeterias" style={s.otrosLink}>cafeterías</a>,{' '}
           <a href="/para/restaurantes" style={s.otrosLink}>restaurantes</a> o{' '}
-          <a href="/para" style={s.otrosLink}>ver todos los rubros →</a>
+          <a href="/para" style={s.otrosLink}>ver todos los rubros</a>
         </div>
       </section>
 
