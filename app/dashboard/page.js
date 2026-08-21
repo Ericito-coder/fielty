@@ -447,8 +447,8 @@ function InicioSection({ negocio, metricas, isDesktop }) {
                   <div style={{fontSize:13, fontWeight:600, color:theme.black}}>{t.descripcion}</div>
                   <div style={{fontSize:11, color:theme.gray, marginTop:2}}>{new Date(t.created_at).toLocaleDateString('es-AR')}</div>
                 </div>
-                <div style={{fontSize:14, fontWeight:800, fontFamily:'monospace', color: t.tipo === 'suma' || t.tipo === 'cumpleanos' || t.tipo === 'referido' ? theme.green : theme.red}}>
-                  {t.tipo === 'suma' || t.tipo === 'cumpleanos' || t.tipo === 'referido' ? '+' : '-'}{t.puntos} pts
+                <div style={{fontSize:14, fontWeight:800, fontFamily:'monospace', color: t.tipo === 'canje' ? theme.red : theme.green}}>
+                  {t.tipo === 'canje' ? '-' : '+'}{t.puntos} pts
                 </div>
               </div>
             ))}

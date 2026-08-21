@@ -213,8 +213,8 @@ export default function Admin() {
                           <div style={{fontSize:13, color:'white'}}>{t.descripcion}</div>
                           <div style={{fontSize:11, color:theme.grayMid}}>{new Date(t.created_at).toLocaleDateString('es-AR')}</div>
                         </div>
-                        <div style={{fontSize:13, fontWeight:800, fontFamily:'monospace', color: t.tipo === 'suma' || t.tipo === 'referido' || t.tipo === 'cumpleanos' ? theme.green : theme.red}}>
-                          +{t.puntos} pts
+                        <div style={{fontSize:13, fontWeight:800, fontFamily:'monospace', color: t.tipo === 'canje' ? theme.red : theme.green}}>
+                          {t.tipo === 'canje' ? '-' : '+'}{t.puntos} pts
                         </div>
                       </div>
                     ))}
