@@ -29,11 +29,13 @@ export async function POST(request) {
     }
 
     const body = await request.json()
-    const { nombre, dni, telefono, password, slug, referidoPor, fechaNacimiento, googleToken } = body
+    const { dni, telefono, password, slug, referidoPor, fechaNacimiento, googleToken } = body
 
-    // Con Google el email sale del token verificado (nunca del formulario)
-    // y la cuenta no tiene contraseña. Sin Google, email + contraseña son
+    // Con Google el email y el nombre salen del token verificado (nunca del
+    // formulario: el navegador decodifica el JWT solo para prellenar) y la
+    // cuenta no tiene contraseña. Sin Google, email + contraseña son
     // obligatorios como siempre.
+    let nombre = body.nombre
     let email = body.email
     let passwordHash = null
     let viaGoogle = false
@@ -44,6 +46,7 @@ export async function POST(request) {
         return NextResponse.json({ error: 'No pudimos verificar tu cuenta de Google. Probá de nuevo o registrate con tu email.' }, { status: 401 })
       }
       email = google.email
+      if (google.nombre) nombre = google.nombre
       viaGoogle = true
     } else {
       if (!email || !password) {
