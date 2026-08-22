@@ -2,7 +2,7 @@ import { s } from '../estilos'
 
 export const metadata = {
   title: 'Programa de puntos para barberías | Fielty',
-  description: 'Sistema de fidelización para barberías: tus clientes escanean un QR, suman puntos en cada corte y vuelven más seguido. Sin app y sin tarjetitas que se pierden. Empezá gratis.',
+  description: 'Programa de puntos para barberías sin app: escanean un QR y suman en cada corte. Que la vuelta de cada mes sea con vos. Gratis hasta 50 clientes.',
   alternates: { canonical: '/para/barberias' },
   openGraph: {
     title: 'Programa de puntos para barberías | Fielty',

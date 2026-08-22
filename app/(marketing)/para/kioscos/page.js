@@ -2,7 +2,7 @@ import { s } from '../estilos'
 
 export const metadata = {
   title: 'Programa de puntos para kioscos y despensas | Fielty',
-  description: 'Sistema de fidelización para kioscos y despensas: tus clientes escanean un QR, suman puntos en cada compra y eligen tu mostrador todos los días. Sin app. Empezá gratis.',
+  description: 'Programa de puntos para kioscos sin app: escanean un QR y suman en cada compra. Sos donde más veces entra el mismo cliente: que siga siendo con vos.',
   alternates: { canonical: '/para/kioscos' },
   openGraph: {
     title: 'Programa de puntos para kioscos y despensas | Fielty',

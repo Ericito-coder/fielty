@@ -2,7 +2,7 @@ import { s } from '../estilos'
 
 export const metadata = {
   title: 'Programa de puntos para panaderías | Fielty',
-  description: 'Sistema de fidelización para panaderías: tus clientes escanean un QR, suman puntos en cada compra de pan y eligen tu mostrador todos los días. Sin app. Empezá gratis.',
+  description: 'Programa de puntos para panaderías sin app: escanean un QR y suman en cada compra. El pan se compra todos los días: que sea en tu mostrador.',
   alternates: { canonical: '/para/panaderias' },
   openGraph: {
     title: 'Programa de puntos para panaderías | Fielty',

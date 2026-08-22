@@ -2,7 +2,7 @@ import { s } from '../estilos'
 
 export const metadata = {
   title: 'Programa de puntos para restaurantes | Fielty',
-  description: 'Sistema de fidelización para restaurantes: tus clientes escanean un QR, suman puntos en cada mesa y eligen volver en vez de probar otro lugar. Sin app. Empezá gratis.',
+  description: 'Programa de puntos para restaurantes sin app: escanean un QR y suman en cada mesa. Salir a comer se elige cada vez: dales una razón para volver.',
   alternates: { canonical: '/para/restaurantes' },
   openGraph: {
     title: 'Programa de puntos para restaurantes | Fielty',

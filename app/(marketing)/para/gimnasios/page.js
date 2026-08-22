@@ -2,7 +2,7 @@ import { s } from '../estilos'
 
 export const metadata = {
   title: 'Programa de puntos para gimnasios | Fielty',
-  description: 'Sistema de fidelización para gimnasios: premiá al socio que renueva mes a mes y lo que compra en el mostrador. Puntos con QR, sin app. Empezá gratis.',
+  description: 'Programa de puntos para gimnasios sin app: el socio acumula mes a mes y lo pierde si se va. Premiá la renovación. Gratis hasta 50 socios.',
   alternates: { canonical: '/para/gimnasios' },
   openGraph: {
     title: 'Programa de puntos para gimnasios | Fielty',

@@ -2,7 +2,7 @@ import { s } from '../estilos'
 
 export const metadata = {
   title: 'Programa de puntos para peluquerías y salones | Fielty',
-  description: 'Sistema de fidelización para peluquerías: tus clientas escanean un QR, suman puntos según lo que gastan y vuelven por el color con vos. Sin app. Empezá gratis.',
+  description: 'Programa de puntos para peluquerías sin app: cada clienta suma según lo que gasta, así un color pesa más que un brushing. Gratis hasta 50 clientas.',
   alternates: { canonical: '/para/peluquerias' },
   openGraph: {
     title: 'Programa de puntos para peluquerías y salones | Fielty',

@@ -2,7 +2,7 @@ import { s } from '../estilos'
 
 export const metadata = {
   title: 'Programa de puntos para veterinarias y pet shops | Fielty',
-  description: 'Sistema de fidelización para veterinarias: que el alimento y los antiparasitarios los compren con vos y no en el pet shop. Puntos con QR, sin app. Empezá gratis.',
+  description: 'Programa de puntos para veterinarias sin app: que el alimento y los antiparasitarios los compren con vos y no en el super. Gratis hasta 50 clientes.',
   alternates: { canonical: '/para/veterinarias' },
   openGraph: {
     title: 'Programa de puntos para veterinarias y pet shops | Fielty',

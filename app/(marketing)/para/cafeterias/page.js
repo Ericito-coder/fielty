@@ -2,7 +2,7 @@ import { s } from '../estilos'
 
 export const metadata = {
   title: 'Programa de puntos para cafeterías y pastelerías | Fielty',
-  description: 'Sistema de fidelización para cafeterías y pastelerías: tus clientes escanean un QR, suman puntos en cada compra y eligen tu mostrador en vez del de la esquina. Sin app. Empezá gratis.',
+  description: 'Programa de puntos para cafeterías sin app: suman escaneando un QR en cada compra. Que el café de todos los días sea el tuyo, no el de la esquina.',
   alternates: { canonical: '/para/cafeterias' },
   openGraph: {
     title: 'Programa de puntos para cafeterías y pastelerías | Fielty',

@@ -2,7 +2,7 @@ import { s } from './estilos'
 
 export const metadata = {
   title: 'Programas de fidelización por rubro | Fielty',
-  description: 'Cómo se arma un programa de puntos según el tipo de negocio: barberías, cafeterías, peluquerías, veterinarias, gimnasios, restaurantes, panaderías y kioscos. Cada rubro tiene su propia regla de puntos y sus premios.',
+  description: 'Guías por rubro: barberías, cafeterías, veterinarias, gimnasios y más. El programa de puntos no se arma igual en un negocio que en otro.',
   alternates: { canonical: '/para' },
   openGraph: {
     title: 'Programas de fidelización por rubro | Fielty',
