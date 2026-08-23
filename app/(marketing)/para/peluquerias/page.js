@@ -23,7 +23,13 @@ const jsonLd = {
   ],
 }
 
+// La primera define la entidad completa -- qué es Fielty, en qué país y a qué
+// precio -- para que la página se sostenga sola como respuesta.
 const FAQS_RUBRO = [
+  {
+    q: '¿Qué es Fielty y cuánto cuesta para una peluquería?',
+    a: 'Fielty es un programa de fidelización con puntos por QR para negocios físicos en Argentina. En una peluquería, la clienta escanea el QR de recepción, se registra en 30 segundos y ve su tarjeta de puntos desde el navegador, sin instalar ninguna app. El plan gratis cubre hasta 50 clientas y los planes pagos arrancan en $20.000 por mes con clientas ilimitadas.',
+  },
   {
     q: '¿Sirve si cada servicio tiene un precio muy distinto, como corte, color y brushing?',
     a: 'Sí, para eso conviene ir por monto y no por visita: un color paga más puntos que un brushing sin que tengas que crear categorías.',
@@ -122,7 +128,7 @@ export default function ParaPeluquerias() {
         <div style={s.inner}>
           <h2 style={s.h2}>Cómo queda armado</h2>
           <p style={s.sectionSub}>
-            La tarjetita de cartón con sellos ya hacía esto. Fielty es lo mismo, pero vive en el celular de la clienta.
+            La tarjetita de cartón con sellos ya hacía esto. Fielty es el mismo programa de puntos, pero vive en el celular de la clienta y no se pierde.
           </p>
 
           <div style={s.steps}>

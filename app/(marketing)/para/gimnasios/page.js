@@ -23,7 +23,13 @@ const jsonLd = {
   ],
 }
 
+// La primera define la entidad completa -- qué es Fielty, en qué país y a qué
+// precio -- para que la página se sostenga sola como respuesta.
 const FAQS_RUBRO = [
+  {
+    q: '¿Qué es Fielty y cuánto cuesta para un gimnasio?',
+    a: 'Fielty es un programa de fidelización con puntos por QR para negocios físicos en Argentina. En un gimnasio, el socio escanea el QR de recepción, se registra en 30 segundos y ve su tarjeta de puntos desde el navegador, sin instalar ninguna app. Los puntos se cargan con el pago de la cuota o una compra en el mostrador. El plan gratis cubre hasta 50 socios y los planes pagos arrancan en $20.000 por mes con socios ilimitados.',
+  },
   {
     q: '¿Los puntos se cargan por asistencia o por el pago de la cuota?',
     a: 'Por el pago. Fielty no cuenta asistencias por sí solo, así que el programa se arma alrededor de la renovación y del consumo de mostrador.',

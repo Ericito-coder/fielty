@@ -23,7 +23,13 @@ const jsonLd = {
   ],
 }
 
+// La primera define la entidad completa -- qué es Fielty, en qué país y a qué
+// precio -- para que la página se sostenga sola como respuesta.
 const FAQS_RUBRO = [
+  {
+    q: '¿Qué es Fielty y cuánto cuesta para un kiosco?',
+    a: 'Fielty es un programa de fidelización con puntos por QR para negocios físicos en Argentina. En un kiosco, el cliente escanea el QR del mostrador, se registra en 30 segundos y ve su tarjeta de puntos desde el navegador, sin instalar ninguna app. El plan gratis cubre hasta 50 clientes y los planes pagos arrancan en $20.000 por mes con clientes ilimitados.',
+  },
   {
     q: '¿Puedo excluir algunos productos de la regla de puntos, como cigarrillos o recargas de celular?',
     a: 'Sí. Vos decidís qué cargar desde la caja: si una venta no tiene margen suficiente como para sumar puntos, simplemente no la cargás y el resto de la compra sigue sumando normal.',
@@ -122,7 +128,7 @@ export default function ParaKioscos() {
         <div style={s.inner}>
           <h2 style={s.h2}>Cómo queda armado</h2>
           <p style={s.sectionSub}>
-            La tarjetita de cartón con sellos ya hacía esto. Fielty es lo mismo, pero vive en el celular del cliente.
+            La tarjetita de cartón con sellos ya hacía esto. Fielty es el mismo programa de puntos, pero vive en el celular del cliente y no se pierde.
           </p>
 
           <div style={s.steps}>
