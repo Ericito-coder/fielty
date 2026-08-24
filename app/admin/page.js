@@ -21,6 +21,15 @@ const COLUMNAS = [
   { label: 'Registrado', campo: 'created_at', tipo: 'fecha' },
 ]
 
+// Una promesa que falla en vez de esperar para siempre. Sin esto, cualquier
+// llamada que no vuelve deja la pantalla de carga fija.
+function conTimeout(promesa, ms) {
+  return Promise.race([
+    promesa,
+    new Promise((_, rechazar) => setTimeout(() => rechazar(new Error('timeout')), ms)),
+  ])
+}
+
 // El plan se ordena por jerarquía, no alfabéticamente
 const RANGO_PLAN = { gratis: 0, pro_early: 1, pro: 2, business: 3 }
 
@@ -37,48 +46,95 @@ export default function Admin() {
   const [orden, setOrden] = useState({ campo: 'created_at', dir: 'desc' })
 
   useEffect(() => {
-    supabase.auth.getSession().then(async ({ data: { session } }) => {
+    iniciar()
+  }, [])
+
+  // getSession() puede romper o no contestar nunca: sesión guardada vieja,
+  // o el lock que supabase-js comparte entre pestañas trabado por otra.
+  // Sin este try/catch la página se queda en "Cargando" para siempre y no
+  // hay forma de salir salvo borrar los datos del sitio a mano.
+  async function iniciar() {
+    try {
+      const { data: { session } } = await conTimeout(supabase.auth.getSession(), 10000)
       if (!session) { window.location.href = '/login'; return }
       setToken(session.access_token)
-      fetchData(session.access_token)
-    })
-  }, [])
+      await fetchData(session.access_token)
+    } catch {
+      setError('No pudimos verificar tu sesión.')
+      setCargando(false)
+    }
+  }
 
   // Quién es el admin lo decide /api/admin/data contra el token: si no es
   // él, contesta 401 y lo mandamos al dashboard. El navegador nunca supo
   // cuál es el email de admin.
   async function fetchData(t) {
     setCargando(true)
-    const res = await fetch('/api/admin/data', { headers: { Authorization: `Bearer ${t}` } })
-    if (res.status === 401) { window.location.href = '/dashboard'; return }
-    if (!res.ok) { setError('Error cargando datos'); setCargando(false); return }
-    const json = await res.json()
-    setData(json)
-    setCargando(false)
+    setError('')
+    try {
+      const res = await conTimeout(fetch('/api/admin/data', { headers: { Authorization: `Bearer ${t}` } }), 20000)
+      if (res.status === 401) { window.location.href = '/dashboard'; return }
+      if (!res.ok) { setError('Error cargando datos'); setCargando(false); return }
+      const json = await res.json()
+      setData(json)
+      setCargando(false)
+    } catch {
+      setError('No se pudieron cargar los datos.')
+      setCargando(false)
+    }
+  }
+
+  // Si getSession() está trabado, signOut() también lo va a estar: usa el
+  // mismo lock. Borramos la sesión guardada a mano y arrancamos de cero.
+  function volverAEntrar() {
+    try {
+      Object.keys(localStorage)
+        .filter(k => k.startsWith('sb-') && k.includes('-auth-token'))
+        .forEach(k => localStorage.removeItem(k))
+    } catch { /* modo incógnito o storage bloqueado */ }
+    window.location.href = '/login'
   }
 
   async function abrirDetalle(negocio) {
     setNegocioDetalle(negocio)
     setDetalleData(null)
     setCargandoDetalle(true)
-    const res = await fetch(`/api/admin/negocio/${negocio.id}`, { headers: { Authorization: `Bearer ${token}` } })
-    if (res.ok) setDetalleData(await res.json())
+    try {
+      const res = await conTimeout(fetch(`/api/admin/negocio/${negocio.id}`, { headers: { Authorization: `Bearer ${token}` } }), 20000)
+      if (res.ok) setDetalleData(await res.json())
+    } catch { /* el panel queda sin datos, pero deja de cargar */ }
     setCargandoDetalle(false)
   }
 
   async function cambiarPlan(negocioId, plan) {
     setCambiandoPlan(negocioId)
-    await fetch('/api/admin/update-plan', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-      body: JSON.stringify({ negocioId, plan }),
-    })
-    await fetchData(token)
+    try {
+      await conTimeout(fetch('/api/admin/update-plan', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ negocioId, plan }),
+      }), 20000)
+      await fetchData(token)
+    } catch {
+      setError('No se pudo cambiar el plan.')
+      setCargando(false)
+    }
     setCambiandoPlan(null)
   }
 
   if (cargando) return <div style={s.wrap}><div style={{color:theme.gray}}>Cargando panel de admin...</div></div>
-  if (error) return <div style={s.wrap}><div style={{color:theme.red}}>{error}</div></div>
+  if (error) return (
+    <div style={s.wrap}>
+      <div style={{textAlign:'center', padding:'60px 20px'}}>
+        <div style={{fontSize:32, marginBottom:12}}>⚠️</div>
+        <div style={{fontSize:15, fontWeight:700, color:'white', marginBottom:20}}>{error}</div>
+        <div style={{display:'flex', gap:10, justifyContent:'center'}}>
+          <button onClick={() => window.location.reload()} style={s.botonError}>Reintentar</button>
+          <button onClick={volverAEntrar} style={{...s.botonError, background:'#1a1a1a', color:theme.gray}}>Volver a entrar</button>
+        </div>
+      </div>
+    </div>
+  )
   if (!data) return null
 
   const { metricas, facturacion, alertas, crecimiento, negocios } = data
@@ -454,4 +510,5 @@ const s = {
   cardsRow: { display:'flex', gap:12, marginBottom:32, flexWrap:'wrap' },
   metricCard: { flex:1, minWidth:160, background:'#111', borderRadius:16, padding:'20px 24px' },
   alertCard: { background:'#111', borderRadius:16, padding:20 },
+  botonError: { padding:'10px 24px', background:theme.red, border:'none', borderRadius:10, color:'white', fontSize:14, fontWeight:700, cursor:'pointer', fontFamily:'inherit' },
 }
