@@ -49,9 +49,16 @@ const organizationLd = {
       logo: 'https://www.fielty.app/icons/icon-1024.png',
       email: 'hola@fielty.app',
       description: 'Programa de fidelización de clientes con puntos por QR, sin app, para negocios físicos en Argentina.',
+      // Hay otra marca llamada Fielty en el mismo rubro: una app de puntos
+      // para clientes publicada en Google Play por Vicking Labs. Declarar el
+      // país es la señal más barata para que Google y los modelos separen las
+      // dos entidades, y es justo el eje en el que difieren.
+      areaServed: { '@type': 'Country', name: 'Argentina' },
       // Perfiles oficiales: le confirman a Google que la cuenta es de esta
       // marca. Van acá y no en la home porque este nodo es el que tiene @id
-      // y aparece en todas las páginas.
+      // y aparece en todas las páginas. Solo van perfiles verificables: una
+      // URL que no es de la marca acá desmiente la identidad en vez de
+      // confirmarla.
       sameAs: ['https://www.instagram.com/fieltyapp'],
     },
     {
