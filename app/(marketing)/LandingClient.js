@@ -3,10 +3,7 @@ import { theme } from '@/lib/theme'
 import { useEffect, useState } from 'react'
 import Icono from '@/app/components/Iconos'
 
-// `prueba` llega del server component ya contada, redondeada y filtrada por el
-// piso: acá es null o strings listos para pintar. A propósito no se importa
-// nada de lib/metricas, que arrastra la service role key.
-export default function LandingClient({ prueba }) {
+export default function LandingClient() {
   const [scrolled, setScrolled] = useState(false)
   const [menuAbierto, setMenuAbierto] = useState(false)
 
@@ -243,18 +240,6 @@ export default function LandingClient({ prueba }) {
         </div>
       </section>
 
-      {/* PRUEBA SOCIAL — va justo antes de precios a propósito: primero se
-          muestra que otros ya lo usan y recién después se pide la plata.
-          Solo aparece si los números dan (ver PISO_NEGOCIOS en lib/metricas). */}
-      {prueba && (
-        <section style={{padding:'0 32px', textAlign:'center'}}>
-          <p style={s.pruebaSocial}>
-            <strong style={s.pruebaNum}>{prueba.negocios}</strong> negocios ya armaron su programa de puntos con Fielty
-            {prueba.clientes && <>, y <strong style={s.pruebaNum}>{prueba.clientes}</strong> clientes suman desde el celular</>}
-          </p>
-        </section>
-      )}
-
       {/* PRECIOS */}
       <section id="precios" style={s.section}>
         <div style={s.sectionInner}>
@@ -431,8 +416,6 @@ const s = {
   pricingGrid: { display:'grid', gridTemplateColumns:'repeat(auto-fit, minmax(280px, 1fr))', gap:24 },
   planCard: { background:'#1a1a1a', borderRadius:24, padding:32, position:'relative', display:'flex', flexDirection:'column' },
   planBadge: { position:'absolute', top:-12, left:'50%', transform:'translateX(-50%)', padding:'4px 16px', borderRadius:100, fontSize:11, fontWeight:700, color:'white', whiteSpace:'nowrap' },
-  pruebaSocial: { maxWidth:640, margin:'0 auto', fontSize:16, lineHeight:1.7, color:theme.darkText },
-  pruebaNum: { color:'white', fontWeight:800 },
   planCta: { display:'block', textAlign:'center', padding:'14px 24px', borderRadius:12, fontSize:15, fontWeight:700, textDecoration:'none', marginTop:'auto' }, // pega los tres botones abajo, ahora que las cards miden lo mismo
   footer: { borderTop:'1px solid #1a1a1a', padding:'32px' },
   footerInner: { maxWidth:1100, margin:'0 auto', display:'flex', alignItems:'center', justifyContent:'space-between', flexWrap:'wrap', gap:16 },
