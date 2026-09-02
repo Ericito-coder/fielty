@@ -1,6 +1,13 @@
 @import "tailwindcss";
 
 :root {
+  /* La app es toda de fondo claro: no hay ni una pantalla diseñada en
+     oscuro. Declararlo explícitamente le dice al navegador que pinte los
+     controles de formulario en claro y, en Chrome de Android, apaga el
+     "modo oscuro automático" que invertía los colores por su cuenta. Sin
+     esto, en un celular en modo oscuro el texto que el cliente escribía
+     salía blanco sobre la tarjeta blanca. */
+  color-scheme: light;
   --background: #ffffff;
   --foreground: #171717;
 }
@@ -12,17 +19,34 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+}
+
+/* Los inputs de la app definen su borde y su padding inline, pero
+   ninguno declaraba color de texto ni fondo: quedaban a merced del
+   navegador. Fijarlos acá los deja legibles en cualquier celular sin
+   tener que tocar los estilos de cada pantalla. -webkit-text-fill-color
+   es para iOS, que ignora `color` en los inputs deshabilitados y en el
+   autocompletado. */
+input:not([type="color"]):not([type="file"]):not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+textarea,
+select {
+  color: #0e0e0e;
+  background-color: #ffffff;
+  -webkit-text-fill-color: #0e0e0e;
+}
+
+/* #767676 es el gris más claro que sigue dando 4.5:1 sobre blanco, o
+   sea el mínimo legible. Queda casi igual al placeholder que pone
+   Chrome por su cuenta, pero ahora no depende del navegador. */
+input::placeholder,
+textarea::placeholder {
+  color: #767676;
+  -webkit-text-fill-color: #767676;
+  opacity: 1; /* Firefox lo baja a 0.54 por su cuenta */
 }
 
 /* Foco visible para navegación por teclado. Los estilos inline de los
