@@ -2,7 +2,7 @@ import { theme } from '@/lib/theme'
 
 export const metadata = {
   title: 'Cómo armar un programa de puntos para tu negocio | Fielty',
-  description: 'Guía práctica: qué premio ofrecer, cuánto tiene que costarte, cada cuántas visitas conviene que se alcance, cómo explicarlo en el mostrador y qué medir el primer mes.',
+  description: 'Qué premio ofrecer, cuánto tiene que costarte, cada cuántas visitas conviene que se alcance y qué medir el primer mes. Guía práctica para tu negocio.',
   alternates: { canonical: '/como-armar-un-programa-de-puntos' },
   openGraph: {
     title: 'Cómo armar un programa de puntos para tu negocio',

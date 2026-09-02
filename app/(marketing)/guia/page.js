@@ -1,7 +1,7 @@
 import { theme } from '@/lib/theme'
 export const metadata = {
   title: 'Guía completa de Fielty | Cómo fidelizar clientes sin app',
-  description: 'Guía de producto de Fielty: cómo crear tu programa de puntos, registrar clientes por QR, configurar recompensas, niveles de lealtad, referidos, campañas de reactivación por email y Google Wallet para negocios físicos en Argentina.',
+  description: 'Guía completa de Fielty: cómo armar tu programa de puntos, registrar clientes por QR y configurar premios, niveles y referidos. Negocios en Argentina.',
   alternates: { canonical: '/guia' },
 }
 

@@ -3,7 +3,7 @@ import { FAQS } from './faqData'
 
 export const metadata = {
   title: 'Preguntas frecuentes sobre Fielty | Fidelización de clientes sin app',
-  description: 'Cómo funciona Fielty: registro de clientes, acreditación de puntos, canje de premios, planes y precios, seguridad de los datos. Todo lo que necesitás saber antes de empezar.',
+  description: 'Cómo funciona Fielty: registro de clientes, carga de puntos, canje de premios, planes y precios. Lo que necesitás saber antes de empezar.',
   alternates: { canonical: '/faq' },
   openGraph: {
     title: 'Preguntas frecuentes sobre Fielty',

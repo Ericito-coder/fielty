@@ -5,7 +5,7 @@ export const revalidate = 21600
 
 export const metadata = {
   title: 'Fielty — Programa de fidelización y puntos para negocios sin app',
-  description: 'Creá un programa de puntos para tu negocio en 5 minutos. Tus clientes escanean un QR, suman puntos y canjean premios desde el celular, sin instalar nada. Ideal para barberías, peluquerías, cafeterías, veterinarias, pet shops y gimnasios en Argentina.',
+  description: 'Programa de fidelización con puntos por QR para negocios en Argentina. Tus clientes suman en cada compra, sin instalar nada. Gratis hasta 50 clientes.',
   alternates: { canonical: '/' },
   openGraph: {
     title: 'Fielty — Fidelización de clientes sin app',
