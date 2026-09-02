@@ -2,6 +2,7 @@
 import { theme } from '@/lib/theme'
 import { useState, useEffect } from 'react'
 import GoogleSignInButton from '@/components/GoogleSignInButton'
+import { juntarNombre, partirNombre } from '@/lib/clientes'
 import Image from 'next/image'
 
 export const dynamic = 'force-dynamic'
@@ -20,6 +21,7 @@ function decodificarJwt(token) {
 
 export default function RegistroSlug({ params }) {
   const [nombre, setNombre] = useState('')
+  const [apellido, setApellido] = useState('')
   const [dni, setDni] = useState('')
   const [telefono, setTelefono] = useState('')
   const [email, setEmail] = useState('')
@@ -53,25 +55,36 @@ export default function RegistroSlug({ params }) {
   // (WhatsApp, cumpleaños) se completa después desde la tarjeta.
   function conectarGoogle(token) {
     const payload = decodificarJwt(token)
-    const nombreGoogle = payload?.name || nombre
+    // Google manda el nombre partido en given_name / family_name, que es
+    // justo lo que necesitan los dos campos. Si la cuenta no los trae
+    // separados, se parte el `name` completo a mano.
+    const desdeName = partirNombre(payload?.name)
+    const nombreGoogle = payload?.given_name || desdeName.nombre
+    const apellidoGoogle = payload?.family_name || desdeName.apellido
+    const completoGoogle = juntarNombre(nombreGoogle, apellidoGoogle) || juntarNombre(nombre, apellido)
     setGoogle({ token, email: payload?.email || '' })
     if (nombreGoogle) setNombre(n => n || nombreGoogle)
+    if (apellidoGoogle) setApellido(a => a || apellidoGoogle)
     setError('')
     setRegistrandoGoogle(true)
-    registrar({ googleToken: token, nombre: nombreGoogle })
+    registrar({ googleToken: token, nombre: completoGoogle })
   }
 
   async function registrar(override = {}) {
-    const nombreFinal = override.nombre || nombre
+    const nombreFinal = override.nombre || juntarNombre(nombre, apellido)
     const tokenGoogle = override.googleToken || google?.token || null
 
-    if (!nombreFinal) { setError('Ingresá tu nombre'); return }
     if (!tokenGoogle) {
+      if (!nombre.trim()) { setError('Ingresá tu nombre'); return }
+      if (!apellido.trim()) { setError('Ingresá tu apellido'); return }
       if (!dni) { setError('Ingresá tu DNI'); return }
       if (!email) { setError('Ingresá tu email'); return }
       if (!password) { setError('Creá una contraseña'); return }
       if (password.length < 8) { setError('La contraseña debe tener al menos 8 caracteres'); return }
     }
+    // Red de seguridad para el camino de Google: si la cuenta no trajo
+    // ningún nombre, no se puede crear la tarjeta sin uno.
+    if (!nombreFinal) { setError('Ingresá tu nombre'); return }
     if (!negocio) { setError('Negocio no encontrado'); return }
     setError('')
     setCargando(true)
@@ -199,10 +212,19 @@ export default function RegistroSlug({ params }) {
           </div>
         )}
 
-        <div style={styles.field}>
-          <label style={styles.label} htmlFor="cliente-nombre">Tu nombre</label>
-          <input id="cliente-nombre" style={styles.input} placeholder="Ej: Martina García"
-            value={nombre} onChange={e => setNombre(e.target.value)} />
+        {/* Nombre y apellido van en una sola fila: son dos campos pero
+            ocupan un renglón, así el formulario no se hace más largo. */}
+        <div style={{display:'flex', gap:10}}>
+          <div style={{...styles.field, flex:1, minWidth:0}}>
+            <label style={styles.label} htmlFor="cliente-nombre">Nombre</label>
+            <input id="cliente-nombre" style={styles.input} placeholder="Ej: Martina" autoComplete="given-name"
+              value={nombre} onChange={e => setNombre(e.target.value)} />
+          </div>
+          <div style={{...styles.field, flex:1, minWidth:0}}>
+            <label style={styles.label} htmlFor="cliente-apellido">Apellido</label>
+            <input id="cliente-apellido" style={styles.input} placeholder="Ej: García" autoComplete="family-name"
+              value={apellido} onChange={e => setApellido(e.target.value)} />
+          </div>
         </div>
         <div style={styles.field}>
           <label style={styles.label} htmlFor="cliente-dni">

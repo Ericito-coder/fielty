@@ -3,6 +3,7 @@ import { theme } from '@/lib/theme'
 import { useEffect, useState } from 'react'
 import QRCode from 'qrcode'
 import Image from 'next/image'
+import { juntarNombre, partirNombre } from '@/lib/clientes'
 
 export default function Tarjeta({ params }) {
   const [cliente, setCliente] = useState(null)
@@ -393,9 +394,15 @@ function PerfilSection({ cliente, onGuardado }) {
   // `nudge` se calcula una sola vez al montar: si se recalculara en cada
   // render, la sección se volvería a abrir sola después de guardar cuando
   // el cliente completó solo una parte.
-  const [nudge, setNudge] = useState(!cliente.telefono || !cliente.fecha_nacimiento)
+  // Falta el apellido también cuenta como perfil incompleto: los que se
+  // registraron cuando el formulario pedía un solo campo quedaron como
+  // "Lucas" a secas, y el negocio no los puede distinguir entre sí.
+  const [nudge, setNudge] = useState(
+    !cliente.telefono || !cliente.fecha_nacimiento || !partirNombre(cliente.nombre).apellido
+  )
   const [editando, setEditando] = useState(false)
-  const [nombre, setNombre] = useState(cliente.nombre || '')
+  const [nombre, setNombre] = useState(() => partirNombre(cliente.nombre).nombre)
+  const [apellido, setApellido] = useState(() => partirNombre(cliente.nombre).apellido)
   const [dni, setDni] = useState(cliente.dni || '')
   const [telefono, setTelefono] = useState(cliente.telefono || '')
   const [fechaNacimiento, setFechaNacimiento] = useState(cliente.fecha_nacimiento || '')
@@ -412,7 +419,7 @@ function PerfilSection({ cliente, onGuardado }) {
       const res = await fetch('/api/tarjeta/perfil', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ clienteId: cliente.id, nombre, dni, telefono, fechaNacimiento: fechaNacimiento || null }),
+        body: JSON.stringify({ clienteId: cliente.id, nombre: juntarNombre(nombre, apellido), dni, telefono, fechaNacimiento: fechaNacimiento || null }),
       })
       const data = await res.json()
       if (!res.ok) { setError(data.error || 'Hubo un error, intentá de nuevo'); setGuardando(false); return }
@@ -428,7 +435,8 @@ function PerfilSection({ cliente, onGuardado }) {
   }
 
   function cancelar() {
-    setNombre(cliente.nombre || '')
+    setNombre(partirNombre(cliente.nombre).nombre)
+    setApellido(partirNombre(cliente.nombre).apellido)
     setDni(cliente.dni || '')
     setTelefono(cliente.telefono || '')
     setFechaNacimiento(cliente.fecha_nacimiento || '')
@@ -464,9 +472,15 @@ function PerfilSection({ cliente, onGuardado }) {
 
       {abierto ? (
         <>
-          <div style={st.field}>
-            <label style={st.fieldLabel} htmlFor="perfil-nombre">Nombre</label>
-            <input id="perfil-nombre" style={st.input} value={nombre} onChange={e => setNombre(e.target.value)} placeholder="Ej: Martina García" />
+          <div style={{display:'flex', gap:10}}>
+            <div style={{...st.field, flex:1, minWidth:0}}>
+              <label style={st.fieldLabel} htmlFor="perfil-nombre">Nombre</label>
+              <input id="perfil-nombre" style={st.input} value={nombre} onChange={e => setNombre(e.target.value)} placeholder="Ej: Martina" autoComplete="given-name" />
+            </div>
+            <div style={{...st.field, flex:1, minWidth:0}}>
+              <label style={st.fieldLabel} htmlFor="perfil-apellido">Apellido</label>
+              <input id="perfil-apellido" style={st.input} value={apellido} onChange={e => setApellido(e.target.value)} placeholder="Ej: García" autoComplete="family-name" />
+            </div>
           </div>
           <div style={st.field}>
             <label style={st.fieldLabel} htmlFor="perfil-telefono">
