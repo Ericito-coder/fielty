@@ -5,6 +5,7 @@ import { supabase } from '@/lib/supabase'
 import { storage } from '@/lib/storage'
 import { linkWhatsApp } from '@/lib/wa'
 import { esPago } from '@/lib/planes'
+import { coincideBusqueda, identidadCliente } from '@/lib/clientes'
 import { PINES_COMUNES, validarPin } from '@/lib/pin'
 
 const NAV_ITEMS = [
@@ -547,7 +548,7 @@ function ClientesSection({ negocioId, color, plan, nombreNegocio, isDesktop }) {
   function exportarCSV() {
     const headers = ['Nombre', 'DNI', 'Teléfono', 'Email', 'Puntos', 'Puntos históricos', 'Visitas', 'Última visita', 'Registrado']
     const rows = filtrados.map(c => [
-      c.nombre, c.dni, c.telefono || '', c.email || '',
+      c.nombre, c.dni || '', c.telefono || '', c.email || '',
       c.puntos, c.puntos_historicos, c.visitas,
       c.ultima_visita ? new Date(c.ultima_visita).toLocaleDateString('es-AR') : '',
       new Date(c.created_at).toLocaleDateString('es-AR'),
@@ -565,8 +566,7 @@ function ClientesSection({ negocioId, color, plan, nombreNegocio, isDesktop }) {
     const matchFiltro = filtro === 'activos' ? c.ultima_visita && new Date(c.ultima_visita) > hace30dias
       : filtro === 'inactivos' ? !c.ultima_visita || new Date(c.ultima_visita) <= hace30dias
       : filtro === 'referidos' ? c.referido_por : true
-    const matchBusqueda = !busqueda || c.nombre.toLowerCase().includes(busqueda.toLowerCase()) || c.dni.includes(busqueda)
-    return matchFiltro && matchBusqueda
+    return matchFiltro && coincideBusqueda(c, busqueda)
   })
 
   const getNivel = (pts) => pts >= 5000 ? '🥇 Oro' : pts >= 1000 ? '🥈 Plata' : '🥉 Bronce'
@@ -581,11 +581,15 @@ function ClientesSection({ negocioId, color, plan, nombreNegocio, isDesktop }) {
             </button>
           ))}
         </div>
-        {isDesktop && (
-          <div style={{display:'flex', gap:8, alignItems:'center'}}>
-            <input data-clarity-mask="True" placeholder="🔍 Buscar por nombre o DNI..." value={busqueda} onChange={e => setBusqueda(e.target.value)}
-              style={{padding:'10px 16px', border:'2px solid #e8eaf0', borderRadius:12, fontSize:14, fontFamily:'inherit', outline:'none', width:280}} />
-            {esPago(plan) ? (
+        {/* El buscador va afuera del isDesktop: antes solo existía en
+            pantalla grande y desde el celular no había forma de encontrar
+            a un cliente. El CSV sí queda solo en desktop, que es donde se
+            puede hacer algo con el archivo. */}
+        <div style={{display:'flex', gap:8, alignItems:'center', marginBottom: isDesktop ? 0 : 12}}>
+          <input data-clarity-mask="True" placeholder={isDesktop ? '🔍 Buscar por nombre, DNI, teléfono o email...' : '🔍 Buscar cliente...'}
+            value={busqueda} onChange={e => setBusqueda(e.target.value)}
+            style={{padding:'10px 16px', border:'2px solid #e8eaf0', borderRadius:12, fontSize: isDesktop ? 14 : 16, fontFamily:'inherit', outline:'none', boxSizing:'border-box', width: isDesktop ? 280 : '100%', flex: isDesktop ? 'none' : 1, minWidth:0}} />
+          {isDesktop && (esPago(plan) ? (
               <button onClick={exportarCSV} style={{padding:'10px 16px', background:theme.black, border:'none', borderRadius:12, color:'white', fontSize:13, fontWeight:700, cursor:'pointer', fontFamily:'inherit', whiteSpace:'nowrap'}}>
                 ↓ Exportar CSV
               </button>
@@ -593,9 +597,8 @@ function ClientesSection({ negocioId, color, plan, nombreNegocio, isDesktop }) {
               <button onClick={() => window.location.href = '/dashboard/upgrade'} title="Disponible en los planes Pro y Business" style={{padding:'10px 16px', background:theme.bgMuted2, border:'1px dashed #ccc', borderRadius:12, color:theme.grayLight, fontSize:13, fontWeight:700, cursor:'pointer', fontFamily:'inherit', whiteSpace:'nowrap'}}>
                 🔒 Exportar CSV
               </button>
-            )}
-          </div>
-        )}
+            ))}
+        </div>
       </div>
       <div style={s.card}>
         <div style={{fontSize:11, color:theme.gray, marginBottom:12}}>{filtrados.length} clientes</div>
@@ -619,7 +622,7 @@ function ClientesSection({ negocioId, color, plan, nombreNegocio, isDesktop }) {
                       <div style={{fontSize:14, fontWeight:700, color:theme.black}}>{c.nombre}</div>
                     </div>
                   </td>
-                  <td style={{padding:'14px 12px', fontSize:13, color:theme.gray}}>{c.dni}</td>
+                  <td style={{padding:'14px 12px', fontSize:13, color:theme.gray}}>{c.dni || '—'}</td>
                   <td style={{padding:'14px 12px', fontSize:13}}>{getNivel(c.puntos_historicos || 0)}</td>
                   <td style={{padding:'14px 12px', fontSize:16, fontWeight:800, color:theme.gold, fontFamily:'monospace'}}>{c.puntos}</td>
                   <td style={{padding:'14px 12px', fontSize:13, color:theme.gray}}>{c.visitas || 0}</td>
@@ -645,7 +648,7 @@ function ClientesSection({ negocioId, color, plan, nombreNegocio, isDesktop }) {
                 </div>
                 <div style={{flex:1}}>
                   <div style={{fontSize:14, fontWeight:700, color:theme.black}}>{c.nombre}</div>
-                  <div style={{fontSize:11, color:theme.gray, marginTop:2}}>DNI {c.dni} · {getNivel(c.puntos_historicos || 0)}</div>
+                  <div style={{fontSize:11, color:theme.gray, marginTop:2}}>{identidadCliente(c)} · {getNivel(c.puntos_historicos || 0)}</div>
                 </div>
                 <div style={{textAlign:'right'}}>
                   <div style={{fontSize:16, fontWeight:800, color:theme.gold, fontFamily:'monospace'}}>{c.puntos}</div>
@@ -661,7 +664,11 @@ function ClientesSection({ negocioId, color, plan, nombreNegocio, isDesktop }) {
             ))}
           </div>
         )}
-        {filtrados.length === 0 && <div style={{textAlign:'center', padding:24, color:theme.gray, fontSize:14}}>No hay clientes en este filtro</div>}
+        {filtrados.length === 0 && (
+          <div style={{textAlign:'center', padding:24, color:theme.gray, fontSize:14}}>
+            {busqueda.trim() ? `Ningún cliente coincide con "${busqueda.trim()}"` : 'No hay clientes en este filtro'}
+          </div>
+        )}
       </div>
     </>
   )
