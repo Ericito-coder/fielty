@@ -25,27 +25,37 @@ body {
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
 }
 
-/* Los inputs de la app definen su borde y su padding inline, pero
-   ninguno declaraba color de texto ni fondo: quedaban a merced del
-   navegador. Fijarlos acá los deja legibles en cualquier celular sin
-   tener que tocar los estilos de cada pantalla. -webkit-text-fill-color
-   es para iOS, que ignora `color` en los inputs deshabilitados y en el
-   autocompletado. */
+/* Casi todos los inputs de la app definen su borde y su padding inline
+   pero no su color ni su fondo, y quedaban a merced del navegador. Estos
+   son los valores por defecto para las pantallas claras, que son la
+   mayoría.
+
+   Van solo `color` y `background-color` a propósito: los estilos inline
+   le ganan a esta regla, así que las pantallas oscuras que sí declaran
+   lo suyo — la caja de /c/[slug] y el panel de admin, con texto blanco
+   sobre #1a1a1a — se siguen viendo como corresponde.
+
+   Acá había también un -webkit-text-fill-color y fue un error: esa
+   propiedad le gana a `color` al pintar, incluso al inline, así que
+   pisaba el blanco de la caja y del admin y dejaba el texto casi negro
+   sobre fondo negro. No hace falta para nada: con `color` declarado, el
+   text-fill hereda de él solo. No volver a agregarla. */
 input:not([type="color"]):not([type="file"]):not([type="checkbox"]):not([type="radio"]):not([type="range"]),
 textarea,
 select {
   color: #0e0e0e;
   background-color: #ffffff;
-  -webkit-text-fill-color: #0e0e0e;
 }
 
-/* #767676 es el gris más claro que sigue dando 4.5:1 sobre blanco, o
-   sea el mínimo legible. Queda casi igual al placeholder que pone
-   Chrome por su cuenta, pero ahora no depende del navegador. */
+/* El placeholder se deriva del color del propio input en vez de ser un
+   gris fijo: un gris claro se lee bien sobre los formularios blancos
+   pero se apaga sobre el fondo oscuro de la caja. Al mezclarlo con
+   `currentColor` se adapta solo — gris medio sobre blanco, blanco
+   apagado sobre negro — sin que cada pantalla tenga que declarar nada.
+   60% es lo mínimo que deja 4.5:1 (el piso legible) sobre blanco. */
 input::placeholder,
 textarea::placeholder {
-  color: #767676;
-  -webkit-text-fill-color: #767676;
+  color: color-mix(in oklab, currentColor 60%, transparent);
   opacity: 1; /* Firefox lo baja a 0.54 por su cuenta */
 }
 
