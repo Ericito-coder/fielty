@@ -586,7 +586,18 @@ function ClientesSection({ negocioId, color, plan, nombreNegocio, isDesktop }) {
             a un cliente. El CSV sí queda solo en desktop, que es donde se
             puede hacer algo con el archivo. */}
         <div style={{display:'flex', gap:8, alignItems:'center', marginBottom: isDesktop ? 0 : 12}}>
-          <input data-clarity-mask="True" placeholder={isDesktop ? '🔍 Buscar por nombre, DNI, teléfono o email...' : '🔍 Buscar cliente...'}
+          {/* Este placeholder tiene poquísimo lugar y se corta sin avisar:
+              "Buscar por nombre, DNI, teléfono o email..." medía 293px
+              contra los 244 utiles del campo en desktop (280 menos padding
+              y borde), asi que moria en "teléfono o" y el dueño nunca se
+              enteraba de que también puede buscar por email.
+
+              Sin el verbo mide 213px — la lupa ya dice que es un buscador —
+              y sirve igual en celular, donde el campo es fluido: en una
+              pantalla de 320px quedan 252px utiles contra 243 del texto a
+              16px, medido con Geist y con el fallback Arial. Entra, pero
+              con poco margen: si se le agrega una palabra, medirlo antes. */}
+          <input data-clarity-mask="True" placeholder="🔍 Nombre, DNI, teléfono o email"
             value={busqueda} onChange={e => setBusqueda(e.target.value)}
             style={{padding:'10px 16px', border:'2px solid #e8eaf0', borderRadius:12, fontSize: isDesktop ? 14 : 16, fontFamily:'inherit', outline:'none', boxSizing:'border-box', width: isDesktop ? 280 : '100%', flex: isDesktop ? 'none' : 1, minWidth:0}} />
           {isDesktop && (esPago(plan) ? (
