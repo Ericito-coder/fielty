@@ -1,6 +1,6 @@
 'use client'
 import { theme } from '@/lib/theme'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import QRCode from 'qrcode'
 import Image from 'next/image'
 import { juntarNombre, partirNombre } from '@/lib/clientes'
@@ -23,6 +23,45 @@ export default function Tarjeta({ params }) {
   const [esIOS, setEsIOS] = useState(false)
   const [deferredPrompt, setDeferredPrompt] = useState(null)
   const [modalIOSAbierto, setModalIOSAbierto] = useState(false)
+
+  // El bloque del código de canje se renderiza arriba de todo, pero el
+  // botón que lo genera está abajo, en la lista de recompensas. El
+  // cliente canjeaba, no pasaba nada visible en su parte de la pantalla
+  // y se quedaba esperando sin saber que el código ya estaba arriba.
+  // `scrollAlCanje` marca que este canje lo acaba de hacer él: cuando el
+  // código viene de un canje ya activo al cargar la página no hay que
+  // mover nada, porque el navegador ya arranca arriba.
+  //
+  // El flag se prende en `canjear()` y no se apaga nunca: el único otro
+  // lugar que escribe `codigoCanje` es `cargarDatos()`, que corre una
+  // sola vez al montar y siempre antes de cualquier canje. Apagarlo
+  // dentro del efecto parece más prolijo pero lo rompe — en desarrollo
+  // React corre cada efecto dos veces a propósito, y la segunda pasada
+  // se encontraba el flag ya apagado y no scrolleaba nada. Así el efecto
+  // es idempotente: si corre de más, repite el mismo salto.
+  const canjeRef = useRef(null)
+  const scrollAlCanje = useRef(false)
+  const [destellar, setDestellar] = useState(false)
+
+  useEffect(() => {
+    if (!codigoCanje || !scrollAlCanje.current) return
+    setDestellar(true)
+
+    // Salto seco, no `behavior: 'smooth'`. El bloque aparece arriba de
+    // todo y empuja el resto de la página para abajo; el navegador
+    // compensa ese salto moviendo el scroll (scroll anchoring) para que
+    // el cliente siga viendo lo mismo, o sea justo al revés de lo que
+    // queremos: medido acá, el scroll se iba de 375px a 679px, dejándolo
+    // todavía más lejos del código que antes de canjear. El scroll suave
+    // es una animación y pierde contra eso — se cancela si el layout se
+    // mueve mientras corre, y ni siquiera arranca si la pestaña no se
+    // está pintando. El salto llega siempre, y el destello verde del
+    // bloque es lo que le dice al cliente qué fue lo que cambió.
+    canjeRef.current?.scrollIntoView({ block: 'start' })
+
+    const finDestello = setTimeout(() => setDestellar(false), 1600)
+    return () => clearTimeout(finDestello)
+  }, [codigoCanje])
 
   useEffect(() => { params.then(p => setId(p.id)) }, [params])
   useEffect(() => { if (!id) return; cargarDatos() }, [id])
@@ -103,6 +142,7 @@ export default function Tarjeta({ params }) {
       if (!res.ok) { setCanjeando(null); return }
 
       setCliente({ ...cliente, puntos: data.puntos ?? cliente.puntos - recompensa.puntos_necesarios })
+      scrollAlCanje.current = true
       setCodigoCanje({ codigo: data.codigo, recompensa })
       setSegundos(Math.floor((new Date(data.expira_at) - new Date()) / 1000))
     } catch {}
@@ -153,7 +193,8 @@ export default function Tarjeta({ params }) {
 
       {/* CANJE ACTIVO */}
       {codigoCanje && (
-        <div style={{background:'linear-gradient(135deg, #0e0e0e, #1a1a2e)', borderRadius:24, padding:24, marginBottom:16, textAlign:'center', boxShadow:'0 8px 32px rgba(0,0,0,0.2)'}}>
+        <div ref={canjeRef} className={destellar ? 'fielty-destello' : undefined}
+          style={{background:'linear-gradient(135deg, #0e0e0e, #1a1a2e)', borderRadius:24, padding:24, marginBottom:16, textAlign:'center', boxShadow:'0 8px 32px rgba(0,0,0,0.2)', scrollMarginTop:16}}>
           {segundos <= 0 ? (
             <>
               <div style={{fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.1em', color:theme.red, marginBottom:8}}>⏱ Código vencido</div>
@@ -582,7 +623,14 @@ function HistorialSection({ transacciones, cargando }) {
 }
 
 const st = {
-  wrap: { minHeight:'100vh', background:theme.bgMuted, padding:'20px 16px 60px', maxWidth:420, margin:'0 auto' },
+  // overflowAnchor:'none' apaga el "scroll anchoring" del navegador en
+  // esta pantalla. Cuando aparece el bloque del código de canje arriba
+  // de todo, el navegador empuja el scroll para abajo por su cuenta para
+  // que el cliente siga viendo lo mismo — y eso le ganaba al scroll que
+  // lo lleva justo hasta el código, dejándolo más lejos que antes. Es la
+  // única pantalla donde se inserta contenido arriba de lo que el
+  // usuario está mirando, así que se apaga acá nomás.
+  wrap: { minHeight:'100vh', background:theme.bgMuted, padding:'20px 16px 60px', maxWidth:420, margin:'0 auto', overflowAnchor:'none' },
   loader: { textAlign:'center', padding:60, color:theme.gray, fontSize:16 },
   loyaltyCard: { background:'linear-gradient(145deg, #1a1a2e, #0f3460)', borderRadius:28, padding:28, marginBottom:16, boxShadow:'0 20px 60px rgba(26,26,46,0.3)' },
   cardTop: { display:'flex', alignItems:'center', gap:12, marginBottom:28 },

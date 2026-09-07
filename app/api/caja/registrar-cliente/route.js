@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import bcrypt from 'bcryptjs'
 import { getSupabaseAdmin, validarPinCaja, getRequestIp } from '@/lib/server'
+import { calcularPuntos } from '@/lib/puntos'
 
 export async function POST(request) {
   try {
@@ -34,9 +35,9 @@ export async function POST(request) {
     }
 
     // Calcular puntos: bienvenida + consumo (si se ingresó monto)
-    const puntosBienvenida = negocio.puntos_bienvenida || 10
+    const puntosBienvenida = negocio.puntos_bienvenida ?? 10
     const ptsConsumo = monto
-      ? Math.round(parseInt(monto) / (negocio.pesos_por_punto || 100) * (negocio.puntos_por_tramo || 1))
+      ? calcularPuntos(parseInt(monto), negocio.pesos_por_punto, negocio.puntos_por_tramo)
       : 0
     const puntosIniciales = puntosBienvenida + ptsConsumo
 

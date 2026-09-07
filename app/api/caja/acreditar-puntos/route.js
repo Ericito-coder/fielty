@@ -2,6 +2,7 @@ import { NextResponse, after } from 'next/server'
 import { enviarEmail } from '@/lib/email'
 import { getSupabaseAdmin, validarPinCaja, getRequestIp } from '@/lib/server'
 import { actualizarPuntosWallet } from '@/lib/googleWallet'
+import { calcularPuntos, montoMinimoParaUnPunto } from '@/lib/puntos'
 
 export async function POST(request) {
   try {
@@ -11,8 +12,13 @@ export async function POST(request) {
       return NextResponse.json({ error: 'Faltan datos' }, { status: 400 })
     }
 
+    // El piso era $100 y no tenía nada que ver con los puntos: era un
+    // número fijo, igual para un kiosco que para una concesionaria. Lo
+    // que importa es que la compra llegue a sumar 1 punto con la regla
+    // del negocio, y eso se valida más abajo, cuando ya sabemos cuál es
+    // esa regla. Acá solo queda que sea un monto posible.
     const montoNum = parseInt(monto, 10)
-    if (!Number.isInteger(montoNum) || montoNum < 100 || montoNum > 100000000) {
+    if (!Number.isInteger(montoNum) || montoNum < 1 || montoNum > 100000000) {
       return NextResponse.json({ error: 'Monto inválido' }, { status: 400 })
     }
 
@@ -35,9 +41,18 @@ export async function POST(request) {
       return NextResponse.json({ error: 'Cliente no encontrado' }, { status: 404 })
     }
 
-    const pesosPorPunto = negocio.pesos_por_punto || 100
-    const puntosPorTramo = negocio.puntos_por_tramo || 1
-    const pts = Math.round(montoNum / pesosPorPunto * puntosPorTramo)
+    const pts = calcularPuntos(montoNum, negocio.pesos_por_punto, negocio.puntos_por_tramo)
+
+    // Una compra que no llega a sumar ni 1 punto no se acredita. Antes sí
+    // pasaba: quedaba una transacción de 0 puntos en el historial del
+    // cliente y le salía un mail diciendo "+0 puntos". Con reglas como
+    // "cada $50.000 → 1 punto" eso lo disparaba cualquier compra chica.
+    if (pts < 1) {
+      const minimo = montoMinimoParaUnPunto(negocio.pesos_por_punto, negocio.puntos_por_tramo)
+      return NextResponse.json({
+        error: `Con $${montoNum.toLocaleString('es-AR')} no llega a sumar 1 punto. En este negocio hace falta desde $${minimo.toLocaleString('es-AR')}.`,
+      }, { status: 400 })
+    }
 
     // Suma atómica (evita que dos cajas simultáneas se pisen)
     const { data: resultado, error: rpcError } = await supabaseAdmin

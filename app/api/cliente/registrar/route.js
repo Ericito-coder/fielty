@@ -112,7 +112,7 @@ export async function POST(request) {
       return NextResponse.json({ error: 'Ya tenés una tarjeta en este negocio registrada con ese email. ¡Pedile al empleado que te busque!' }, { status: 409 })
     }
 
-    const puntosIniciales = referidoPorValidado ? 0 : (negocio.puntos_bienvenida || 10)
+    const puntosIniciales = referidoPorValidado ? 0 : (negocio.puntos_bienvenida ?? 10)
 
     const { data, error: insertError } = await supabaseAdmin
       .from('clientes')
@@ -199,7 +199,7 @@ export async function POST(request) {
       const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://www.fielty.app'
       const puntosRecibidos = referidoPorValidado
         ? (negocio.puntos_referido_receptor || 50)
-        : (negocio.puntos_bienvenida || 10)
+        : (negocio.puntos_bienvenida ?? 10)
       after(() => enviarEmail({
         from: 'Fielty <hola@fielty.app>',
         to: nuevoCliente.email,

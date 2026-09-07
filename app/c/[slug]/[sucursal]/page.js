@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react'
 import QRCode from 'qrcode'
 import { linkWhatsApp } from '@/lib/wa'
 import { identidadCliente } from '@/lib/clientes'
+import { calcularPuntos, montoMinimoParaUnPunto } from '@/lib/puntos'
+import AvisoMontoChico from '@/components/AvisoMontoChico'
 import EscanerQR from '@/app/components/EscanerQR'
 
 export default function CajaSlugSucursal({ params }) {
@@ -102,7 +104,11 @@ export default function CajaSlugSucursal({ params }) {
 
   async function acreditarPuntos() {
     const valor = parseInt(monto)
-    if (!valor || valor < 100) { mostrarMensaje('⚠️ Ingresá un monto válido', 'error'); return }
+    if (!valor || valor < 1) { mostrarMensaje('⚠️ Ingresá un monto válido', 'error'); return }
+    if (!montoAlcanza) {
+      mostrarMensaje(`⚠️ Con $${valor.toLocaleString('es-AR')} no suma ningún punto. Desde $${montoMinimo.toLocaleString('es-AR')} sí.`, 'error')
+      return
+    }
 
     setCargando(true)
     const res = await fetch('/api/caja/acreditar-puntos', {
@@ -182,7 +188,13 @@ export default function CajaSlugSucursal({ params }) {
 
   const pesosPorPunto = negocio?.pesos_por_punto || 100
   const puntosPorTramo = negocio?.puntos_por_tramo || 1
-  const ptsPreview = Math.round((parseInt(monto) || 0) / pesosPorPunto * puntosPorTramo)
+  const ptsPreview = calcularPuntos(parseInt(monto) || 0, pesosPorPunto, puntosPorTramo)
+  // La compra más chica que suma 1 punto con la regla de este negocio.
+  // Reemplaza al piso fijo de $100 que había antes, que no miraba la
+  // regla: con "cada $50.000 → 1 punto", una compra de $100 lo pasaba y
+  // terminaba acreditando 0 puntos.
+  const montoMinimo = montoMinimoParaUnPunto(pesosPorPunto, puntosPorTramo)
+  const montoAlcanza = ptsPreview >= 1
 
   const getNivel = (pts) => {
     if (pts >= 5000) return { nombre:'Oro', emoji:'🥇' }
@@ -472,8 +484,9 @@ export default function CajaSlugSucursal({ params }) {
                         </button>
                       ))}
                     </div>
-                    <button style={{width:'100%', padding:20, background: negocio.color, border:'none', borderRadius:16, color:'white', fontSize:18, fontWeight:800, cursor:'pointer', fontFamily:'inherit', opacity: !monto || parseInt(monto)<100 ? 0.4 : 1}}
-                      onClick={acreditarPuntos} disabled={cargando || !monto || parseInt(monto)<100}>
+                    {!montoAlcanza && <AvisoMontoChico monto={monto} montoMinimo={montoMinimo} />}
+                    <button style={{width:'100%', padding:20, background: negocio.color, border:'none', borderRadius:16, color:'white', fontSize:18, fontWeight:800, cursor:'pointer', fontFamily:'inherit', opacity: montoAlcanza ? 1 : 0.4}}
+                      onClick={acreditarPuntos} disabled={cargando || !montoAlcanza}>
                       {cargando ? 'Acreditando...' : `Sumar ${ptsPreview} puntos a ${clienteSeleccionado.nombre.split(' ')[0]}`}
                     </button>
                     {avisoWa && (
@@ -595,8 +608,9 @@ export default function CajaSlugSucursal({ params }) {
               </button>
             ))}
           </div>
-          <button style={{width:'100%', padding:18, background: negocio.color, border:'none', borderRadius:16, color:'white', fontSize:17, fontWeight:800, cursor:'pointer', fontFamily:'inherit', opacity: !monto || parseInt(monto)<100 ? 0.4 : 1}}
-            onClick={acreditarPuntos} disabled={cargando || !monto || parseInt(monto)<100}>
+          {!montoAlcanza && <AvisoMontoChico monto={monto} montoMinimo={montoMinimo} />}
+          <button style={{width:'100%', padding:18, background: negocio.color, border:'none', borderRadius:16, color:'white', fontSize:17, fontWeight:800, cursor:'pointer', fontFamily:'inherit', opacity: montoAlcanza ? 1 : 0.4}}
+            onClick={acreditarPuntos} disabled={cargando || !montoAlcanza}>
             {cargando ? 'Acreditando...' : 'Sumar puntos al cliente'}
           </button>
           {avisoWa && (

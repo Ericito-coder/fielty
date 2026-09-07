@@ -72,3 +72,22 @@ a:focus-visible,
   outline: 2px solid #0e76fd !important;
   outline-offset: 2px !important;
 }
+
+/* Destello del canje recién generado en /tarjeta/[id]. Al canjear, el
+   código aparece arriba de todo mientras el cliente está mirando la
+   lista de recompensas, abajo: la página lo lleva hasta ahí sola, y este
+   anillo verde le dice cuál de los bloques es el que acaba de aparecer.
+   Sin él, el scroll deja al cliente en un lugar nuevo sin señalar qué
+   cambió. Un solo pulso, no un loop: comunica y se apaga. */
+@keyframes fielty-destello {
+  from { box-shadow: 0 8px 32px rgba(0,0,0,0.2), 0 0 0 3px #00b96b; }
+  to   { box-shadow: 0 8px 32px rgba(0,0,0,0.2), 0 0 0 3px rgba(0,185,107,0); }
+}
+
+.fielty-destello {
+  animation: fielty-destello 1.4s ease-out 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fielty-destello { animation: none; }
+}

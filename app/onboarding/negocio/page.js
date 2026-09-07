@@ -12,6 +12,7 @@ export default function ConfigNegocio() {
   const [color, setColor] = useState(theme.red)
   const [pesosPorTramo, setPesosPorTramo] = useState('100')
   const [puntosPorTramo, setPuntosPorTramo] = useState('1')
+  const [puntosBienvenida, setPuntosBienvenida] = useState('10')
   const [puntosCumpleanos, setPuntosCumpleanos] = useState('50')
   const [puntosReferidoEmisor, setPuntosReferidoEmisor] = useState('100')
   const [puntosReferidoReceptor, setPuntosReferidoReceptor] = useState('50')
@@ -48,6 +49,10 @@ export default function ConfigNegocio() {
       tipo: 'puntos',
       pesos_por_punto: parseInt(pesosPorTramo) || 100,
       puntos_por_tramo: parseInt(puntosPorTramo) || 1,
+      // Este sí acepta 0: hay negocios que no quieren regalar nada al
+      // registrarse, y con `|| 10` no tenían forma de decirlo. Los otros
+      // caen al default solo cuando el campo quedó vacío o ilegible.
+      puntos_bienvenida: Number.isInteger(parseInt(puntosBienvenida)) ? parseInt(puntosBienvenida) : 10,
       puntos_cumpleanos: parseInt(puntosCumpleanos) || 50,
       puntos_referido_emisor: parseInt(puntosReferidoEmisor) || 100,
       puntos_referido_receptor: parseInt(puntosReferidoReceptor) || 50,
@@ -144,6 +149,18 @@ export default function ConfigNegocio() {
           </div>
           <div style={{fontSize:12, color:theme.grayLight, marginTop:8}}>
             Ej: compra de ${(parseInt(pesosPorTramo)||100) * 5} → {(parseInt(puntosPorTramo)||1) * 5} puntos
+          </div>
+        </div>
+
+        <div style={s.field}>
+          <label style={s.label} htmlFor="negocio-puntos-bienvenida">Puntos de bienvenida</label>
+          <div style={{display:'flex', alignItems:'center', gap:10}}>
+            <input id="negocio-puntos-bienvenida" style={{...s.input, width:100}} type="number" min="0" placeholder="10"
+              value={puntosBienvenida} onChange={e => setPuntosBienvenida(e.target.value)} />
+            <span style={{fontSize:14, color:theme.gray}}>puntos al registrarse</span>
+          </div>
+          <div style={{fontSize:12, color:theme.grayLight, marginTop:8}}>
+            Es el primer saldo que ve el cliente en su tarjeta 🎁 Poné 0 si no querés regalar nada.
           </div>
         </div>
 

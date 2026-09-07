@@ -7,6 +7,7 @@ import { linkWhatsApp } from '@/lib/wa'
 import { esPago } from '@/lib/planes'
 import { coincideBusqueda, identidadCliente } from '@/lib/clientes'
 import { PINES_COMUNES, validarPin } from '@/lib/pin'
+import BotonCopiar from '@/components/BotonCopiar'
 
 const NAV_ITEMS = [
   { id:'inicio', label:'Inicio', icon:'📊' },
@@ -411,7 +412,9 @@ function InicioSection({ negocio, metricas, isDesktop }) {
                 {typeof window !== 'undefined' ? window.location.origin : ''}/registro/{negocio.slug}
               </div>
               <div style={{display:'flex', gap:8}}>
-                <button style={{...s.btnRed, padding:10, fontSize:13, flex:1}} onClick={() => { navigator.clipboard.writeText(`${window.location.origin}/registro/${negocio.slug}`); storage.set('fielty_tutorial_link_copiado', '1') }}>📋 Copiar link</button>
+                <BotonCopiar style={{...s.btnRed, padding:10, fontSize:13, flex:1}}
+                  texto={`${window.location.origin}/registro/${negocio.slug}`}
+                  onCopiado={() => storage.set('fielty_tutorial_link_copiado', '1')} />
                 <button style={{...s.btnRed, padding:10, fontSize:13, flex:1, background:theme.black}} onClick={() => window.open(`/qr/${negocio.slug}`, '_blank')}>🖨️ Ver QR</button>
               </div>
             </div>
@@ -421,7 +424,8 @@ function InicioSection({ negocio, metricas, isDesktop }) {
                 {typeof window !== 'undefined' ? window.location.origin : ''}/mi-tarjeta
               </div>
               <div style={{display:'flex', gap:8}}>
-                <button style={{...s.btnRed, padding:10, fontSize:13, flex:1}} onClick={() => navigator.clipboard.writeText(`${window.location.origin}/mi-tarjeta`)}>📋 Copiar link</button>
+                <BotonCopiar style={{...s.btnRed, padding:10, fontSize:13, flex:1}}
+                  texto={`${window.location.origin}/mi-tarjeta`} />
                 <button style={{...s.btnRed, padding:10, fontSize:13, flex:1, background:theme.black}} onClick={() => window.open('/qr/mi-tarjeta', '_blank')}>🖨️ Imprimir cartel</button>
               </div>
             </div>
@@ -430,7 +434,8 @@ function InicioSection({ negocio, metricas, isDesktop }) {
               <div style={{background:theme.bgMuted, borderRadius:10, padding:'10px 14px', fontSize:12, fontFamily:'monospace', color:theme.black, wordBreak:'break-all', marginBottom:8}}>
                 {typeof window !== 'undefined' ? window.location.origin : ''}/c/{negocio.slug}
               </div>
-              <button style={{...s.btnRed, padding:10, fontSize:13}} onClick={() => navigator.clipboard.writeText(`${window.location.origin}/c/${negocio.slug}`)}>📋 Copiar link de caja</button>
+              <BotonCopiar style={{...s.btnRed, padding:10, fontSize:13}} label="📋 Copiar link de caja"
+                texto={`${window.location.origin}/c/${negocio.slug}`} />
             </div>
           </div>
         </div>
@@ -1077,7 +1082,7 @@ function ConfigSection({ negocio, setNegocio }) {
     telefono: negocio.telefono || '',
     pesos_por_punto: negocio.pesos_por_punto || 100,
     puntos_por_tramo: negocio.puntos_por_tramo || 1,
-    puntos_bienvenida: negocio.puntos_bienvenida || 10,
+    puntos_bienvenida: negocio.puntos_bienvenida ?? 10,
     puntos_cumpleanos: negocio.puntos_cumpleanos || 50,
     puntos_referido_emisor: negocio.puntos_referido_emisor || 100,
     puntos_referido_receptor: negocio.puntos_referido_receptor || 50,
@@ -1310,7 +1315,8 @@ function SucursalesSection({ negocio }) {
           <div style={{background:theme.bgMuted, borderRadius:10, padding:'10px 14px', fontSize:12, fontFamily:'monospace', color:theme.black, wordBreak:'break-all', marginBottom:8}}>
             {urlBase}/c/{negocio.slug}/{suc.slug}
           </div>
-          <button style={{...s.btnRed, padding:12, fontSize:13, marginBottom:12}} onClick={() => navigator.clipboard.writeText(`${urlBase}/c/${negocio.slug}/${suc.slug}`)}>📋 Copiar URL de caja</button>
+          <BotonCopiar style={{...s.btnRed, padding:12, fontSize:13, marginBottom:12}} label="📋 Copiar URL de caja"
+            texto={`${urlBase}/c/${negocio.slug}/${suc.slug}`} />
           <PinSucursal suc={suc} recargar={cargar} />
         </div>
       ))}
