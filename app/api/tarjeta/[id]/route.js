@@ -7,7 +7,8 @@ import { rateLimit } from '@/lib/rateLimit'
 // Datos completos de la tarjeta del cliente: datos propios (sin
 // password_hash ni otros campos sensibles), recompensas activas,
 // canje pendiente e historial. Antes de responder, expira los
-// canjes vencidos y devuelve esos puntos al saldo.
+// canjes vencidos y devuelve esos puntos al saldo, y vence los puntos
+// si el cliente pasó el plazo de inactividad de su negocio.
 export async function GET(request, { params }) {
   try {
     const { id } = await params
@@ -33,21 +34,28 @@ export async function GET(request, { params }) {
       .eq('estado', 'pendiente')
       .lte('expira_at', new Date().toISOString())
 
-    if (vencidos?.length) {
-      let devueltos = false
-      for (const c of vencidos) {
-        const { data: ok } = await supabaseAdmin.rpc('fn_expirar_canje', { p_canje_id: c.id })
-        devueltos = devueltos || !!ok
-      }
-      if (devueltos) {
-        const { data: actualizado } = await supabaseAdmin
-          .from('clientes').select('puntos').eq('id', id).single()
-        if (actualizado) cliente.puntos = actualizado.puntos
-        after(() => actualizarPuntosWallet(id))
-      }
+    let saldoCambio = false
+    for (const c of vencidos || []) {
+      const { data: ok } = await supabaseAdmin.rpc('fn_expirar_canje', { p_canje_id: c.id })
+      saldoCambio = saldoCambio || !!ok
     }
 
-    const [{ data: recompensas }, { data: canjeActivo }, { data: transacciones }] = await Promise.all([
+    // Puntos vencidos por inactividad. El cron lo hace una vez por día;
+    // acá se repite para que la tarjeta nunca muestre un saldo que ya venció.
+    const conVencimiento = !!cliente.negocio?.vencimiento_meses
+    if (conVencimiento) {
+      const { data: puntosVencidos } = await supabaseAdmin.rpc('fn_vencer_puntos', { p_cliente_id: id })
+      saldoCambio = saldoCambio || !!puntosVencidos?.length
+    }
+
+    if (saldoCambio) {
+      const { data: actualizado } = await supabaseAdmin
+        .from('clientes').select('puntos').eq('id', id).single()
+      if (actualizado) cliente.puntos = actualizado.puntos
+      after(() => actualizarPuntosWallet(id))
+    }
+
+    const [{ data: recompensas }, { data: canjeActivo }, { data: transacciones }, { data: puntosVencenAt }] = await Promise.all([
       supabaseAdmin
         .from('recompensas')
         .select('id, nombre, puntos_necesarios')
@@ -69,6 +77,9 @@ export async function GET(request, { params }) {
         .eq('cliente_id', id)
         .order('created_at', { ascending: false })
         .limit(20),
+      conVencimiento
+        ? supabaseAdmin.rpc('fn_puntos_vencen_at', { p_cliente_id: id })
+        : Promise.resolve({ data: null }),
     ])
 
     // El plan viene en el negocio anidado, así que se lee antes de que
@@ -76,7 +87,7 @@ export async function GET(request, { params }) {
     const plan = cliente.negocio?.plan
 
     return NextResponse.json({
-      cliente: { ...cliente, negocio: negocioPublico(cliente.negocio) },
+      cliente: { ...cliente, puntos_vencen_at: puntosVencenAt || null, negocio: negocioPublico(cliente.negocio) },
       recompensas: recompensas || [],
       canjeActivo: canjeActivo || null,
       transacciones: transacciones || [],

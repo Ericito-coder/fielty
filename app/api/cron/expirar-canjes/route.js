@@ -9,6 +9,9 @@ export const maxDuration = 60
 // vencidos y devuelve los puntos, aunque el cliente nunca vuelva
 // a abrir su tarjeta. Vercel manda Authorization: Bearer CRON_SECRET.
 //
+// También vence los puntos de los clientes inactivos en los negocios
+// que activaron el vencimiento (ver migracion-vencimiento-puntos.sql).
+//
 // Aprovecha la misma corrida para sincronizar las suscripciones con
 // Mercado Pago (el plan Hobby permite solo 2 crons): así los pagos
 // que el webhook no procesó y las bajas sin avisar se corrigen solos.
@@ -28,19 +31,26 @@ export async function GET(request) {
       .limit(500)
 
     let expirados = 0
-    const clientesConDevolucion = new Set()
+    const clientesConCambioDeSaldo = new Set()
     for (const canje of vencidos || []) {
       const { data: ok } = await supabaseAdmin.rpc('fn_expirar_canje', { p_canje_id: canje.id })
       if (ok) {
         expirados++
-        if (canje.cliente_id) clientesConDevolucion.add(canje.cliente_id)
+        if (canje.cliente_id) clientesConCambioDeSaldo.add(canje.cliente_id)
       }
     }
 
-    // Expirar devuelve los puntos: el pase de Wallet tiene que reflejarlo.
-    if (clientesConDevolucion.size) {
+    // Va después de los canjes: un canje reciente cuenta como actividad,
+    // así que devolverle esos puntos a alguien no choca con vencérselos.
+    const { data: conPuntosVencidos, error: errorVencer } = await supabaseAdmin.rpc('fn_vencer_puntos')
+    if (errorVencer) console.error('cron fn_vencer_puntos error:', errorVencer)
+    for (const clienteId of conPuntosVencidos || []) clientesConCambioDeSaldo.add(clienteId)
+
+    // Devoluciones y vencimientos cambian el saldo: el pase de Wallet
+    // tiene que reflejarlo.
+    if (clientesConCambioDeSaldo.size) {
       after(async () => {
-        for (const clienteId of clientesConDevolucion) {
+        for (const clienteId of clientesConCambioDeSaldo) {
           await actualizarPuntosWallet(clienteId)
         }
       })
@@ -48,7 +58,7 @@ export async function GET(request) {
 
     const suscripciones = await sincronizarSuscripciones(supabaseAdmin)
 
-    return NextResponse.json({ ok: true, expirados, suscripciones })
+    return NextResponse.json({ ok: true, expirados, puntosVencidos: conPuntosVencidos?.length || 0, suscripciones })
   } catch (error) {
     console.error('cron expirar-canjes error:', error)
     return NextResponse.json({ error: 'Error interno' }, { status: 500 })

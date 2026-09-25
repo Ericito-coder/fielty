@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import QRCode from 'qrcode'
 import Image from 'next/image'
 import { juntarNombre, partirNombre } from '@/lib/clientes'
+import { restaPuntos } from '@/lib/puntos'
 
 export default function Tarjeta({ params }) {
   const [cliente, setCliente] = useState(null)
@@ -188,6 +189,11 @@ export default function Tarjeta({ params }) {
   const meta = proxima ? proxima.puntos_necesarios : recompensas[recompensas.length - 1]?.puntos_necesarios || 100
   const pct = Math.min((cliente.puntos / meta) * 100, 100)
 
+  // Solo aparece si el negocio activó el vencimiento y hay puntos que perder.
+  const venceTexto = cliente.puntos > 0 && cliente.puntos_vencen_at
+    ? `⏳ Vencen el ${new Date(cliente.puntos_vencen_at).toLocaleDateString('es-AR', { day:'numeric', month:'long', year:'numeric' })} si no comprás ni canjeás antes`
+    : null
+
   return (
     <main style={st.wrap}>
 
@@ -242,7 +248,8 @@ export default function Tarjeta({ params }) {
           🥉 Bronce · 🥈 Plata desde 1.000 pts históricos · 🥇 Oro desde 5.000 pts históricos
         </div>
         <div style={st.ptsLabel}>Tus puntos</div>
-        <div style={st.ptsValue}>{cliente.puntos} <span style={st.ptsUnit}>pts</span></div>
+        <div style={{...st.ptsValue, marginBottom: venceTexto ? 8 : 20}}>{cliente.puntos} <span style={st.ptsUnit}>pts</span></div>
+        {venceTexto && <div style={st.ptsVence}>{venceTexto}</div>}
 
         <div style={st.progressInfo}>
           <span style={st.progressText}>
@@ -588,11 +595,12 @@ function HistorialSection({ transacciones, cargando }) {
     if (tipo === 'referido') return '🤝'
     if (tipo === 'canje') return '🎁'
     if (tipo === 'devolucion') return '↩️'
+    if (tipo === 'vencimiento') return '⏳'
     return '✨'
   }
 
-  const getColor = (tipo) => tipo === 'canje' ? theme.red : theme.green
-  const getPrefix = (tipo) => tipo === 'canje' ? '-' : '+'
+  const getColor = (tipo) => restaPuntos(tipo) ? theme.red : theme.green
+  const getPrefix = (tipo) => restaPuntos(tipo) ? '-' : '+'
 
   return (
     <div style={st.section}>
@@ -603,7 +611,7 @@ function HistorialSection({ transacciones, cargando }) {
       )}
       {transacciones.map((t, i) => (
         <div key={i} style={{...st.histItem, borderBottom: i < transacciones.length - 1 ? '1px solid #f0f1f5' : 'none'}}>
-          <div style={{...st.histIcon, background: t.tipo === 'canje' ? theme.errorBg : t.tipo === 'cumpleanos' ? '#fff8e0' : theme.bgMuted}}>
+          <div style={{...st.histIcon, background: restaPuntos(t.tipo) ? theme.errorBg : t.tipo === 'cumpleanos' ? '#fff8e0' : theme.bgMuted}}>
             {getIcono(t.tipo)}
           </div>
           <div style={st.histInfo}>
@@ -641,6 +649,7 @@ const st = {
   ptsLabel: { fontSize:11, color:'rgba(255,255,255,0.45)', textTransform:'uppercase', letterSpacing:'0.1em', marginBottom:4 },
   ptsValue: { fontSize:54, fontWeight:900, color:'white', lineHeight:1, letterSpacing:-2, marginBottom:20 },
   ptsUnit: { fontSize:20, fontWeight:400, color:'rgba(255,255,255,0.5)', letterSpacing:0 },
+  ptsVence: { fontSize:12, color:'rgba(255,255,255,0.55)', lineHeight:1.4, marginBottom:20 },
   progressInfo: { marginBottom:10 },
   progressText: { fontSize:13, color:'rgba(255,255,255,0.6)', fontWeight:500 },
   progressBg: { height:8, background:'rgba(255,255,255,0.12)', borderRadius:100, overflow:'hidden' },

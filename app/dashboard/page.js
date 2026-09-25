@@ -7,6 +7,7 @@ import { linkWhatsApp } from '@/lib/wa'
 import { esPago } from '@/lib/planes'
 import { coincideBusqueda, identidadCliente } from '@/lib/clientes'
 import { PINES_COMUNES, validarPin } from '@/lib/pin'
+import { restaPuntos } from '@/lib/puntos'
 import BotonCopiar from '@/components/BotonCopiar'
 
 const NAV_ITEMS = [
@@ -446,15 +447,15 @@ function InicioSection({ negocio, metricas, isDesktop }) {
             {metricas.transacciones.length === 0 && <div style={{textAlign:'center', padding:24, color:theme.gray, fontSize:14}}>Todavía no hay transacciones</div>}
             {metricas.transacciones.map((t, i) => (
               <div key={i} style={{display:'flex', alignItems:'center', gap:12, padding:'12px 0', borderBottom:'1px solid #f0f2f7'}}>
-                <div style={{width:36, height:36, borderRadius:10, display:'flex', alignItems:'center', justifyContent:'center', fontSize:16, flexShrink:0, background: t.tipo === 'suma' ? theme.successBg : t.tipo === 'cumpleanos' ? '#fff8e0' : '#f0f0ff'}}>
-                  {t.tipo === 'suma' ? '⭐' : t.tipo === 'cumpleanos' ? '🎂' : t.tipo === 'referido' ? '🤝' : '🎁'}
+                <div style={{width:36, height:36, borderRadius:10, display:'flex', alignItems:'center', justifyContent:'center', fontSize:16, flexShrink:0, background: t.tipo === 'suma' ? theme.successBg : t.tipo === 'cumpleanos' ? '#fff8e0' : t.tipo === 'vencimiento' ? theme.errorBg : '#f0f0ff'}}>
+                  {t.tipo === 'suma' ? '⭐' : t.tipo === 'cumpleanos' ? '🎂' : t.tipo === 'referido' ? '🤝' : t.tipo === 'vencimiento' ? '⏳' : '🎁'}
                 </div>
                 <div style={{flex:1}}>
                   <div style={{fontSize:13, fontWeight:600, color:theme.black}}>{t.descripcion}</div>
                   <div style={{fontSize:11, color:theme.gray, marginTop:2}}>{new Date(t.created_at).toLocaleDateString('es-AR')}</div>
                 </div>
-                <div style={{fontSize:14, fontWeight:800, fontFamily:'monospace', color: t.tipo === 'canje' ? theme.red : theme.green}}>
-                  {t.tipo === 'canje' ? '-' : '+'}{t.puntos} pts
+                <div style={{fontSize:14, fontWeight:800, fontFamily:'monospace', color: restaPuntos(t.tipo) ? theme.red : theme.green}}>
+                  {restaPuntos(t.tipo) ? '-' : '+'}{t.puntos} pts
                 </div>
               </div>
             ))}
@@ -1086,6 +1087,7 @@ function ConfigSection({ negocio, setNegocio }) {
     puntos_cumpleanos: negocio.puntos_cumpleanos || 50,
     puntos_referido_emisor: negocio.puntos_referido_emisor || 100,
     puntos_referido_receptor: negocio.puntos_referido_receptor || 50,
+    vencimiento_meses: negocio.vencimiento_meses ?? null,
     pin_caja: '',
     pin_confirmar: '',
   })
@@ -1226,6 +1228,18 @@ function ConfigSection({ negocio, setNegocio }) {
           <input id="dashboard-puntos-cumple" style={{...s.inputField, width:100}} type="number" value={form.puntos_cumpleanos} onChange={e => setForm({...form, puntos_cumpleanos: parseInt(e.target.value)})} />
         </div>
         <div style={s.configField}>
+          <label style={s.configLabel} htmlFor="dashboard-vencimiento">Vencimiento de puntos ⏳</label>
+          <select id="dashboard-vencimiento" style={s.inputField}
+            value={form.vencimiento_meses ?? ''}
+            onChange={e => setForm({...form, vencimiento_meses: e.target.value ? parseInt(e.target.value) : null})}>
+            <option value="">Nunca vencen</option>
+            <option value="3">A los 3 meses sin compras ni canjes</option>
+            <option value="6">A los 6 meses sin compras ni canjes</option>
+            <option value="12">A los 12 meses sin compras ni canjes</option>
+          </select>
+          <div style={{fontSize:11, color:theme.grayLight, marginTop:6, lineHeight:1.5}}>{ayudaVencimiento(negocio, form.vencimiento_meses)}</div>
+        </div>
+        <div style={s.configField}>
           <div style={s.configLabel}>PIN de caja 🔐</div>
           <PinActualDisplay pinActual={negocio.pin_caja} esDebil={pinActualEsDebil} />
           <div style={{display:'flex', flexDirection:'column', gap:8, maxWidth:220, marginTop:10}}>
@@ -1253,6 +1267,20 @@ function ConfigSection({ negocio, setNegocio }) {
       </div>
     </div>
   )
+}
+
+// El texto de ayuda anticipa qué pasa al guardar: la base reinicia la
+// cuenta al activar el vencimiento o al acortar el plazo, y la mantiene
+// si se alarga (ver supabase/migracion-vencimiento-puntos.sql).
+function ayudaVencimiento(negocio, mesesElegidos) {
+  if (!mesesElegidos) return 'Los clientes conservan sus puntos hasta que los canjean.'
+  const aviso = 'Si un cliente pasa ese tiempo sin comprar ni canjear, pierde los puntos que tenía.'
+  const guardado = negocio.vencimiento_meses
+  if (!guardado || mesesElegidos < guardado || !negocio.vencimiento_desde) {
+    return `${aviso} El plazo empieza a contar el día que guardás, así que nadie pierde puntos de golpe.`
+  }
+  const desde = new Date(negocio.vencimiento_desde).toLocaleDateString('es-AR')
+  return `${aviso} Contando desde el ${desde}. Cada cliente ve en su tarjeta hasta cuándo tiene para usarlos.`
 }
 
 // ===== SUCURSALES =====

@@ -74,7 +74,7 @@ export const FAQS = [
       },
       {
         q: '¿Los puntos vencen?',
-        a: 'No. Los puntos que acumula un cliente no tienen fecha de vencimiento y quedan disponibles hasta que los canjee. Lo único que tiene tiempo límite es el código de canje: cuando el cliente canjea un premio se genera un código válido por 24 horas, y si no lo usa en ese plazo los puntos vuelven automáticamente a su cuenta.',
+        a: 'Depende de cada negocio. Por defecto no vencen: quedan disponibles hasta que el cliente los canjee. Si querés, desde la configuración de tu panel podés hacer que venzan cuando un cliente pasa 3, 6 o 12 meses sin comprar ni canjear. El plazo empieza a contar el día que lo activás, así que nadie pierde puntos de golpe, y cada cliente ve en su tarjeta hasta cuándo tiene para usarlos. Aparte, el código de canje dura 24 horas: si el cliente no lo usa en ese plazo, los puntos vuelven automáticamente a su cuenta.',
       },
     ],
   },

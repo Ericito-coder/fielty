@@ -3,6 +3,7 @@ import { theme } from '@/lib/theme'
 import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
 import { linkWhatsApp } from '@/lib/wa'
+import { restaPuntos } from '@/lib/puntos'
 
 const PLAN_COLORES = { gratis: theme.gray, pro_early: theme.red, pro: theme.red, business: theme.gold }
 const PLAN_LABELS = { gratis: 'Gratis', pro_early: 'Pro Early', pro: 'Pro', business: 'Business' }
@@ -269,8 +270,8 @@ export default function Admin() {
                           <div style={{fontSize:13, color:'white'}}>{t.descripcion}</div>
                           <div style={{fontSize:11, color:theme.grayMid}}>{new Date(t.created_at).toLocaleDateString('es-AR')}</div>
                         </div>
-                        <div style={{fontSize:13, fontWeight:800, fontFamily:'monospace', color: t.tipo === 'canje' ? theme.red : theme.green}}>
-                          {t.tipo === 'canje' ? '-' : '+'}{t.puntos} pts
+                        <div style={{fontSize:13, fontWeight:800, fontFamily:'monospace', color: restaPuntos(t.tipo) ? theme.red : theme.green}}>
+                          {restaPuntos(t.tipo) ? '-' : '+'}{t.puntos} pts
                         </div>
                       </div>
                     ))}

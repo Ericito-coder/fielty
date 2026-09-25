@@ -43,6 +43,7 @@
 - **Logo propio** (Pro+) en tarjeta, página de registro y pase de Wallet.
 - Regla de puntos configurable: "cada $X de compra, Y puntos".
 - Puntos de bienvenida, puntos de cumpleaños y puntos de referidos (para el que invita y el invitado), todos configurables.
+- **Vencimiento de puntos** opcional: nunca (por defecto), o a los 3, 6 o 12 meses sin compras ni canjes. El plazo cuenta desde el día que se activa, así que nadie pierde puntos de golpe.
 - PIN de caja.
 
 ### Pagos
@@ -68,6 +69,7 @@
 - **Registro sin app**: escanea el QR del mostrador o entra al link, completa sus datos y ya tiene su tarjeta con puntos de bienvenida. Todo en el navegador.
 - **Tarjeta digital** con la identidad del negocio: puntos, **nivel (🥉 Bronce / 🥈 Plata / 🥇 Oro)** según puntos históricos, barra de progreso hacia el próximo premio.
 - **Canjes self-service**: cuando le alcanzan los puntos, canjea desde la tarjeta y recibe un código válido por 24 horas con cuenta regresiva. Si vence, los puntos se devuelven solos.
+- **Fecha de vencimiento a la vista**: si el negocio activó el vencimiento, la tarjeta le muestra hasta cuándo tiene para usar sus puntos.
 - **"Mostrar mi código"**: QR grande para que lo escaneen en la caja.
 - **👛 Google Wallet** (todos los planes): la tarjeta como pase en la billetera del teléfono — puntos, nivel y "te faltan X pts para tu premio" **que se actualizan solos** con cada compra. Como Starbucks.
 - **App instalable (PWA)**: la tarjeta queda como ícono en el inicio del celular y **funciona sin conexión**.
@@ -83,6 +85,7 @@
 
 - 🎂 **Cumpleaños**: todos los días acredita los puntos de regalo a quienes cumplen años.
 - ⏱ **Canjes vencidos**: expira los códigos de más de 24hs y devuelve los puntos al cliente.
+- ⏳ **Puntos vencidos**: en los negocios que lo activaron, vence el saldo de los clientes que pasaron el plazo sin comprar ni canjear, lo deja en el historial y actualiza el pase de Wallet.
 - 📧 **Alertas de límite**: al dueño en plan Gratis le avisa cuando llega a 45 y 50 clientes.
 - 💳 **Suscripciones**: el pago de Mercado Pago activa el plan solo; la cancelación lo baja a Gratis sola.
 - 👛 **Wallet siempre al día**: cada acreditación o canje actualiza el pase en la billetera del cliente.
