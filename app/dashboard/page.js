@@ -1241,10 +1241,10 @@ function ConfigSection({ negocio, setNegocio }) {
             </select>
             {form.vencimiento_meses !== null && (
               <>
-                <input style={{...s.inputField, width:'auto'}} type="text" inputMode="numeric" size={3} maxLength={2}
+                <input style={{...s.inputField, width:100}} type="number" min={VENCIMIENTO_MIN_MESES} max={VENCIMIENTO_MAX_MESES} step={1}
                   aria-label={`Meses sin compras ni canjes hasta que vencen (entre ${VENCIMIENTO_MIN_MESES} y ${VENCIMIENTO_MAX_MESES})`}
                   value={form.vencimiento_meses}
-                  onChange={e => { const n = parseInt(e.target.value.replace(/\D/g, ''), 10); setForm({...form, vencimiento_meses: Number.isNaN(n) ? '' : n}); setErrorVencimiento('') }} />
+                  onChange={e => { const n = parseInt(e.target.value, 10); setForm({...form, vencimiento_meses: Number.isNaN(n) ? '' : n}); setErrorVencimiento('') }} />
                 <span style={{fontSize:13, color:theme.gray}}>meses sin compras ni canjes</span>
               </>
             )}
