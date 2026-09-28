@@ -207,7 +207,7 @@ Al llegar al límite, el formulario de nueva sucursal se bloquea con un aviso pa
 - **Regla de puntos**: cuántos puntos por cada peso de compra
   - Ej: "1 punto cada $100"
 - **Puntos de bienvenida**: los que recibe un cliente orgánico al registrarse (default: 10). Los clientes que llegan por referido reciben los puntos de referido en su lugar, no los de bienvenida.
-- **Vencimiento de puntos**: nunca (default), o a los 3, 6 o 12 meses sin compras ni canjes (ver "Vencimiento de puntos" más abajo).
+- **Vencimiento de puntos**: nunca (default), o el plazo que elija, de 1 a 36 meses sin compras ni canjes (ver "Vencimiento de puntos" más abajo).
 
 **Sistema de referidos:**
 - **Puntos para el que invita** (emisor): default 100 pts
@@ -418,7 +418,7 @@ Si el cliente cargó su fecha de nacimiento, el día de su cumpleaños recibe pu
 
 ## Vencimiento de puntos
 
-Apagado por defecto: los puntos no vencen. Si el dueño lo activa desde Configuración, el saldo de un cliente vence cuando pasa 3, 6 o 12 meses sin actividad.
+Apagado por defecto: los puntos no vencen. Si el dueño lo activa desde Configuración, el saldo de un cliente vence cuando pasa el plazo que eligió (de 1 a 36 meses) sin actividad. Si elige menos de 3 meses, el panel le avisa que es un plazo corto.
 - **Actividad** = una compra (en la caja o en Tiendanube) o un canje. El alta también cuenta como punto de partida. Los puntos de cumpleaños y de referido no reinician el plazo.
 - **Sin sorpresas**: el plazo empieza a contar el día que el dueño lo activa. Si después lo acorta, vuelve a contar desde ese día; si lo alarga, se mantiene la fecha original.
 - El cliente ve en su tarjeta hasta cuándo tiene para usar sus puntos.

@@ -1094,6 +1094,7 @@ function ConfigSection({ negocio, setNegocio }) {
   const [guardando, setGuardando] = useState(false)
   const [ok, setOk] = useState(false)
   const [errorPin, setErrorPin] = useState('')
+  const [errorVencimiento, setErrorVencimiento] = useState('')
 
   const pinActualEsDebil = PINES_COMUNES.includes(negocio.pin_caja || '1234')
 
@@ -1104,6 +1105,8 @@ function ConfigSection({ negocio, setNegocio }) {
       if (errorValidacion) { setErrorPin(errorValidacion); return }
     }
     setErrorPin('')
+    const errorPlazo = validarVencimiento(form.vencimiento_meses)
+    if (errorPlazo) { setErrorVencimiento(errorPlazo); return }
     setGuardando(true)
     const payload = { ...form }
     // Sin trim, un espacio al final se cuela en los emails y en la tarjeta
@@ -1229,14 +1232,29 @@ function ConfigSection({ negocio, setNegocio }) {
         </div>
         <div style={s.configField}>
           <label style={s.configLabel} htmlFor="dashboard-vencimiento">Vencimiento de puntos ⏳</label>
-          <select id="dashboard-vencimiento" style={s.inputField}
-            value={form.vencimiento_meses ?? ''}
-            onChange={e => setForm({...form, vencimiento_meses: e.target.value ? parseInt(e.target.value) : null})}>
-            <option value="">Nunca vencen</option>
-            <option value="3">A los 3 meses sin compras ni canjes</option>
-            <option value="6">A los 6 meses sin compras ni canjes</option>
-            <option value="12">A los 12 meses sin compras ni canjes</option>
-          </select>
+          <div style={{display:'flex', alignItems:'center', gap:8, flexWrap:'wrap'}}>
+            <select id="dashboard-vencimiento" style={{...s.inputField, width:'auto'}}
+              value={form.vencimiento_meses === null ? 'nunca' : 'vencen'}
+              onChange={e => { setForm({...form, vencimiento_meses: e.target.value === 'nunca' ? null : (negocio.vencimiento_meses || 6)}); setErrorVencimiento('') }}>
+              <option value="nunca">Nunca vencen</option>
+              <option value="vencen">Vencen a los…</option>
+            </select>
+            {form.vencimiento_meses !== null && (
+              <>
+                <input style={{...s.inputField, width:'auto'}} type="text" inputMode="numeric" size={3} maxLength={2}
+                  aria-label={`Meses sin compras ni canjes hasta que vencen (entre ${VENCIMIENTO_MIN_MESES} y ${VENCIMIENTO_MAX_MESES})`}
+                  value={form.vencimiento_meses}
+                  onChange={e => { const n = parseInt(e.target.value.replace(/\D/g, ''), 10); setForm({...form, vencimiento_meses: Number.isNaN(n) ? '' : n}); setErrorVencimiento('') }} />
+                <span style={{fontSize:13, color:theme.gray}}>meses sin compras ni canjes</span>
+              </>
+            )}
+          </div>
+          {errorVencimiento && <div style={{fontSize:12, color:theme.red, marginTop:6}}>⚠️ {errorVencimiento}</div>}
+          {form.vencimiento_meses >= 1 && form.vencimiento_meses < 3 && (
+            <div style={{fontSize:12, color:'#b26a00', background:'#fff4e5', borderRadius:10, padding:'8px 12px', marginTop:8, lineHeight:1.5}}>
+              Es un plazo corto: un cliente que tarda más de {form.vencimiento_meses === 1 ? 'un mes' : `${form.vencimiento_meses} meses`} en volver pierde todos sus puntos.
+            </div>
+          )}
           <div style={{fontSize:11, color:theme.grayLight, marginTop:6, lineHeight:1.5}}>{ayudaVencimiento(negocio, form.vencimiento_meses)}</div>
         </div>
         <div style={s.configField}>
@@ -1269,11 +1287,24 @@ function ConfigSection({ negocio, setNegocio }) {
   )
 }
 
+// El dueño elige el plazo libremente dentro del mismo rango que acepta la
+// base (negocios_vencimiento_meses_check). Devuelve el error a mostrar, o ''
+// si el plazo sirve. null = los puntos no vencen.
+const VENCIMIENTO_MIN_MESES = 1
+const VENCIMIENTO_MAX_MESES = 36
+function validarVencimiento(meses) {
+  if (meses == null) return ''
+  if (!Number.isInteger(meses) || meses < VENCIMIENTO_MIN_MESES || meses > VENCIMIENTO_MAX_MESES) {
+    return `Elegí un plazo entre ${VENCIMIENTO_MIN_MESES} y ${VENCIMIENTO_MAX_MESES} meses.`
+  }
+  return ''
+}
+
 // El texto de ayuda anticipa qué pasa al guardar: la base reinicia la
 // cuenta al activar el vencimiento o al acortar el plazo, y la mantiene
 // si se alarga (ver supabase/migracion-vencimiento-puntos.sql).
 function ayudaVencimiento(negocio, mesesElegidos) {
-  if (!mesesElegidos) return 'Los clientes conservan sus puntos hasta que los canjean.'
+  if (mesesElegidos == null) return 'Los clientes conservan sus puntos hasta que los canjean.'
   const aviso = 'Si un cliente pasa ese tiempo sin comprar ni canjear, pierde los puntos que tenía.'
   const guardado = negocio.vencimiento_meses
   if (!guardado || mesesElegidos < guardado || !negocio.vencimiento_desde) {

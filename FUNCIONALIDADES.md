@@ -43,7 +43,7 @@
 - **Logo propio** (Pro+) en tarjeta, página de registro y pase de Wallet.
 - Regla de puntos configurable: "cada $X de compra, Y puntos".
 - Puntos de bienvenida, puntos de cumpleaños y puntos de referidos (para el que invita y el invitado), todos configurables.
-- **Vencimiento de puntos** opcional: nunca (por defecto), o a los 3, 6 o 12 meses sin compras ni canjes. El plazo cuenta desde el día que se activa, así que nadie pierde puntos de golpe.
+- **Vencimiento de puntos** opcional: nunca (por defecto), o el plazo que elija el dueño, de 1 a 36 meses sin compras ni canjes. Si elige menos de 3, el panel le avisa que es un plazo corto. El plazo cuenta desde el día que se activa, así que nadie pierde puntos de golpe.
 - PIN de caja.
 
 ### Pagos
