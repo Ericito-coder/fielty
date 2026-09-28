@@ -1,9 +1,11 @@
 'use client'
 import { theme } from '@/lib/theme'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
 import { storage } from '@/lib/storage'
 import { validarPin } from '@/lib/pin'
+import { medirConversion } from '@/lib/medicion'
+import { leerOrigen } from '@/lib/origen'
 
 const COLORES = [theme.red, theme.blue, theme.green, theme.purple, theme.gold, theme.black]
 
@@ -20,6 +22,15 @@ export default function ConfigNegocio() {
   const [pinConfirmar, setPinConfirmar] = useState('')
   const [cargando, setCargando] = useState(false)
   const [error, setError] = useState('')
+
+  // Llegar hasta acá significa cuenta recién creada: por email desde
+  // /onboarding/registro, o por Google (el botón manda a esta página solo
+  // si el dueño todavía no tiene negocio). Se mide al entrar y no antes de
+  // redirigir porque fbq manda un beacon y la navegación lo puede cortar
+  // antes de que salga.
+  useEffect(() => {
+    medirConversion('cuenta', { unaVezPorClave: 'fielty_conv_cuenta' })
+  }, [])
 
   async function guardar() {
     // Sin trim, un espacio al final se cuela en los emails y en la tarjeta
@@ -71,9 +82,18 @@ export default function ConfigNegocio() {
       ? await supabase.from('negocios').update(payload).eq('id', existente.id).select().single()
       : await supabase.from('negocios').insert([payload]).select().single()
 
-    setCargando(false)
-    if (dbError) { setError('Hubo un error, intentá de nuevo'); return }
+    if (dbError) { setCargando(false); setError('Hubo un error, intentá de nuevo'); return }
 
+    // De dónde vino el dueño (ver lib/origen.js). Va en un update aparte y
+    // no en el insert: si falla por lo que sea, el negocio ya está creado y
+    // el alta sigue. Medir nunca puede costar un registro. Se espera igual,
+    // porque la redirección de abajo cortaría el pedido a medio camino.
+    const origen = leerOrigen()
+    if (!existente && origen) {
+      try { await supabase.from('negocios').update({ origen }).eq('id', data.id) } catch { /* no bloquea el alta */ }
+    }
+
+    setCargando(false)
     storage.set('fielty_negocio_id', data.id)
     window.location.href = '/onboarding/recompensa'
   }

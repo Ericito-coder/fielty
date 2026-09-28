@@ -5,6 +5,7 @@ import { supabase } from '@/lib/supabase'
 import { storage } from '@/lib/storage'
 import { linkWhatsApp } from '@/lib/wa'
 import { esPago } from '@/lib/planes'
+import { medirPagoNuevo } from '@/lib/medicion'
 import { coincideBusqueda, identidadCliente } from '@/lib/clientes'
 import { PINES_COMUNES, validarPin } from '@/lib/pin'
 import { restaPuntos } from '@/lib/puntos'
@@ -51,8 +52,9 @@ export default function Dashboard() {
       const params = new URLSearchParams(window.location.search)
       if (params.get('suscripcion') === 'ok') {
         window.history.replaceState({}, '', '/dashboard')
-        const actualizado = await verificarPago(negocioData.id)
-        if (actualizado) negocioData = { ...negocioData, plan: actualizado }
+        const verificado = await verificarPago(negocioData.id)
+        if (verificado?.plan) negocioData = { ...negocioData, plan: verificado.plan }
+        medirPagoNuevo(negocioData, verificado?.monto)
         setMostrarExito(true)
         setTimeout(() => setMostrarExito(false), 8000)
       }
@@ -111,7 +113,8 @@ export default function Dashboard() {
   }
 
   // Consulta Mercado Pago y activa el plan si hay un pago autorizado.
-  // Devuelve el plan resultante, o null si no pudo verificar.
+  // Devuelve el plan resultante y lo que cobra MP por mes, o null si no
+  // pudo verificar.
   async function verificarPago(negocioId) {
     try {
       const { data: { session } } = await supabase.auth.getSession()
@@ -122,7 +125,7 @@ export default function Dashboard() {
       })
       if (!res.ok) return null
       const data = await res.json()
-      return data.plan || null
+      return data.plan ? { plan: data.plan, monto: data.monto || null } : null
     } catch {
       return null
     }

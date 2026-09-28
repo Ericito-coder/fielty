@@ -34,6 +34,7 @@ export async function POST(request) {
       plan: resultado.plan,
       cambio: resultado.cambio,
       encontradas: resultado.suscripcionesEncontradas,
+      monto: resultado.monto,
     })
   } catch (error) {
     console.error('suscripcion/verificar error:', error)

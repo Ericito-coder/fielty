@@ -15,21 +15,21 @@ export default function Privacidad() {
           <span style={{ fontSize: 18, fontWeight: 800, color: 'white', letterSpacing: -0.5 }}>fielty</span>
         </a>
         <div style={{ display: 'flex', gap: 24, alignItems: 'center' }}>
-          <a href="/login" style={{ fontSize: 13, color: theme.gray, textDecoration: 'none', fontWeight: 500 }}>Ingresar</a>
-          <a href="/onboarding/registro" style={{ fontSize: 13, color: 'white', textDecoration: 'none', fontWeight: 700, background: theme.red, padding: '9px 16px', borderRadius: 10 }}>Empezá →</a>
+          <a href="/login" style={{ fontSize: 13, color: theme.darkText, textDecoration: 'none', fontWeight: 500 }}>Ingresar</a>
+          <a href="/onboarding/registro" style={{ fontSize: 13, color: 'white', textDecoration: 'none', fontWeight: 700, background: theme.red, padding: '9px 16px', borderRadius: 10 }}>Empezá gratis</a>
         </div>
       </nav>
 
       <div style={{ maxWidth: 720, margin: '0 auto', padding: '64px 24px 48px' }}>
-        <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', color: theme.red, marginBottom: 16 }}>Legal</div>
+        <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', color: theme.redOnDark, marginBottom: 16 }}>Legal</div>
         <h1 style={{ fontSize: 40, fontWeight: 900, color: 'white', marginBottom: 16, letterSpacing: -1, lineHeight: 1.1 }}>Política de privacidad</h1>
-        <p style={{ fontSize: 14, color: theme.grayMid, lineHeight: 1.7 }}>Última actualización: agosto de 2026</p>
+        <p style={{ fontSize: 14, color: theme.darkMuted, lineHeight: 1.7 }}>Última actualización: septiembre de 2026</p>
       </div>
 
       <div style={{ maxWidth: 720, margin: '0 auto', padding: '0 24px 80px' }}>
 
         <Section title="1. Responsable del tratamiento">
-          Fielty (en adelante &quot;nosotros&quot; o &quot;Fielty&quot;) es responsable del tratamiento de los datos personales de los dueños de negocios registrados en la plataforma. Para consultas sobre privacidad, podés contactarnos en <a href="mailto:hola@fielty.app" style={{ color: theme.red, textDecoration: 'none', fontWeight: 600 }}>hola@fielty.app</a>.
+          Fielty (en adelante &quot;nosotros&quot; o &quot;Fielty&quot;) es responsable del tratamiento de los datos personales de los dueños de negocios registrados en la plataforma. Para consultas sobre privacidad, podés contactarnos en <a href="mailto:hola@fielty.app" style={{ color: theme.redOnDark, textDecoration: 'none', fontWeight: 600 }}>hola@fielty.app</a>.
         </Section>
 
         <Section title="2. Qué datos recopilamos">
@@ -49,7 +49,7 @@ export default function Privacidad() {
         </Section>
 
         <Section title="5. Servicios de terceros">
-          Fielty utiliza los siguientes servicios de terceros para operar: Supabase (base de datos y autenticación), Vercel (hosting), Resend (envío de emails transaccionales), Mercado Pago (procesamiento de pagos), Google Wallet (cuando un cliente agrega su tarjeta como pase de Google Wallet, se comparten su nombre, sus puntos y su nivel con la API de Google), Google Analytics (estadísticas de uso del sitio) y Microsoft Clarity (grabación de sesiones y mapas de calor para entender cómo se usa la plataforma). En el panel del dueño de negocio y en la caja, el nombre, DNI, teléfono y email de tus clientes se excluyen automáticamente de las grabaciones de Microsoft Clarity. Cada uno de estos servicios cuenta con su propia política de privacidad.
+          Fielty utiliza los siguientes servicios de terceros para operar: Supabase (base de datos y autenticación), Vercel (hosting), Resend (envío de emails transaccionales), Mercado Pago (procesamiento de pagos), Google Wallet (cuando un cliente agrega su tarjeta como pase de Google Wallet, se comparten su nombre, sus puntos y su nivel con la API de Google), Google Analytics (estadísticas de uso del sitio), Microsoft Clarity (grabación de sesiones y mapas de calor para entender cómo se usa la plataforma) y Meta (pixel de Facebook e Instagram, para medir cuántas personas que ven nuestros anuncios terminan creando un negocio en Fielty). En el panel del dueño de negocio y en la caja, el nombre, DNI, teléfono y email de tus clientes se excluyen automáticamente de las grabaciones de Microsoft Clarity. Cada uno de estos servicios cuenta con su propia política de privacidad.
         </Section>
 
         <Section title="6. Retención de datos">
@@ -57,11 +57,11 @@ export default function Privacidad() {
         </Section>
 
         <Section title="7. Derechos del titular de los datos">
-          De acuerdo con la Ley 25.326 de Protección de Datos Personales de la República Argentina, tenés derecho a: acceder a tus datos personales, rectificarlos si son inexactos, solicitar su eliminación (derecho al olvido) y oponerte a su tratamiento. Para ejercer cualquiera de estos derechos, escribinos a <a href="mailto:hola@fielty.app" style={{ color: theme.red, textDecoration: 'none', fontWeight: 600 }}>hola@fielty.app</a> y te respondemos dentro de los 5 días hábiles.
+          De acuerdo con la Ley 25.326 de Protección de Datos Personales de la República Argentina, tenés derecho a: acceder a tus datos personales, rectificarlos si son inexactos, solicitar su eliminación (derecho al olvido) y oponerte a su tratamiento. Para ejercer cualquiera de estos derechos, escribinos a <a href="mailto:hola@fielty.app" style={{ color: theme.redOnDark, textDecoration: 'none', fontWeight: 600 }}>hola@fielty.app</a> y te respondemos dentro de los 5 días hábiles.
         </Section>
 
         <Section title="8. Cookies">
-          Fielty utiliza almacenamiento local del navegador (localStorage) para mantener tu sesión activa y guardar preferencias básicas. También usamos Google Analytics y Microsoft Clarity, que pueden usar cookies o almacenamiento similar para medir el uso del sitio y grabar sesiones con fines estadísticos. No usamos esos datos con fines publicitarios ni los compartimos con redes de publicidad de terceros.
+          Fielty utiliza almacenamiento local del navegador (localStorage) para mantener tu sesión activa, guardar preferencias básicas y recordar desde qué sitio llegaste a Fielty la primera vez (por ejemplo, un buscador o una red social). Ese dato se guarda junto con tu negocio cuando lo creás, y lo usamos solo para saber qué canales nos traen negocios nuevos. También usamos Google Analytics y Microsoft Clarity, que pueden usar cookies o almacenamiento similar para medir el uso del sitio y grabar sesiones con fines estadísticos. En las páginas públicas donde presentamos el servicio y en el alta de un negocio nuevo usamos además el pixel de Meta, que sí tiene fines publicitarios: mide cuáles de nuestros anuncios en Facebook e Instagram traen registros y permite que Meta te muestre publicidad de Fielty. El pixel de Meta no corre en las tarjetas de los clientes de los negocios ni en la caja: si sos cliente de un negocio que usa Fielty, tu actividad dentro de tu tarjeta no se comparte con redes de publicidad. Podés limitar el uso de estos datos desde la configuración de anuncios de tu cuenta de Facebook o Instagram.
         </Section>
 
         <Section title="9. Cambios en esta política">
@@ -70,15 +70,15 @@ export default function Privacidad() {
 
         <Section title="10. Contacto">
           Para cualquier consulta relacionada con el tratamiento de tus datos personales, escribinos a{' '}
-          <a href="mailto:hola@fielty.app" style={{ color: theme.red, textDecoration: 'none', fontWeight: 600 }}>hola@fielty.app</a>.
+          <a href="mailto:hola@fielty.app" style={{ color: theme.redOnDark, textDecoration: 'none', fontWeight: 600 }}>hola@fielty.app</a>.
         </Section>
 
       </div>
 
-      <div style={{ borderTop: '1px solid #1a1a1a', textAlign: 'center', padding: '24px 20px 40px', fontSize: 13, color: '#444' }}>
-        <a href="/terminos" style={{ color: '#444', textDecoration: 'none', marginRight: 20 }}>Términos</a>
-        <a href="/privacidad" style={{ color: theme.gray, textDecoration: 'none', marginRight: 20 }}>Privacidad</a>
-        <a href="/" style={{ color: '#444', textDecoration: 'none' }}>fielty.app</a>
+      <div style={{ borderTop: '1px solid #1a1a1a', textAlign: 'center', padding: '24px 20px 40px', fontSize: 13, color: theme.darkMuted }}>
+        <a href="/terminos" style={{ color: theme.darkMuted, textDecoration: 'none', marginRight: 20 }}>Términos</a>
+        <a href="/privacidad" style={{ color: theme.darkText, textDecoration: 'none', marginRight: 20 }}>Privacidad</a>
+        <a href="/" style={{ color: theme.darkMuted, textDecoration: 'none' }}>fielty.app</a>
       </div>
 
     </div>
@@ -89,7 +89,7 @@ function Section({ title, children }) {
   return (
     <div style={{ marginBottom: 40 }}>
       <h2 style={{ fontSize: 17, fontWeight: 800, color: 'white', marginBottom: 12 }}>{title}</h2>
-      <p style={{ fontSize: 14, color: theme.gray, lineHeight: 1.9 }}>{children}</p>
+      <p style={{ fontSize: 14, color: theme.darkText, lineHeight: 1.9 }}>{children}</p>
     </div>
   )
 }

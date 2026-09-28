@@ -4,11 +4,19 @@ import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
 import { storage } from '@/lib/storage'
 import QRCode from 'qrcode'
+import { medirConversion } from '@/lib/medicion'
 
 export default function Listo() {
   const [negocio, setNegocio] = useState(null)
   const [qrUrl, setQrUrl] = useState('')
   const [copiado, setCopiado] = useState(false)
+
+  // Onboarding terminado: cuenta + negocio + recompensa cargada. Es la
+  // conversión principal (evento clave en GA, la que optimizan Meta y
+  // Google Ads), así que va una sola vez por dueño y no en cada F5.
+  useEffect(() => {
+    medirConversion('alta', { unaVezPorClave: 'fielty_conv_alta' })
+  }, [])
 
   useEffect(() => {
     const id = storage.get('fielty_negocio_id')

@@ -1,4 +1,6 @@
 import Script from "next/script";
+import MetaPixel from "@/app/components/MetaPixel";
+import CapturaOrigen from "@/app/components/CapturaOrigen";
 
 const CLARITY_PROJECT_ID = "xtnx388cxd";
 
@@ -14,6 +16,8 @@ export default function MarketingLayout({ children }) {
           })(window, document, "clarity", "script", "${CLARITY_PROJECT_ID}");
         `}
       </Script>
+      <MetaPixel />
+      <CapturaOrigen />
       {children}
     </>
   );

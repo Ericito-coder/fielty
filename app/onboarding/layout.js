@@ -1,4 +1,6 @@
 import ClarityScript from '@/app/components/ClarityScript'
+import MetaPixel from '@/app/components/MetaPixel'
+import CapturaOrigen from '@/app/components/CapturaOrigen'
 
 // El onboarding está linkeado desde todas las páginas públicas ("Empezá"),
 // así que Google lo encuentra sí o sí. Bloquearlo por robots.txt no alcanza:
@@ -13,6 +15,8 @@ export default function OnboardingLayout({ children }) {
   return (
     <>
       <ClarityScript />
+      <MetaPixel />
+      <CapturaOrigen />
       {children}
     </>
   )
