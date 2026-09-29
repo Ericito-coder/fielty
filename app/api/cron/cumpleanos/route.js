@@ -1,10 +1,17 @@
 import { NextResponse, after } from 'next/server'
 import { getSupabaseAdmin } from '@/lib/server'
 import { actualizarPuntosWallet } from '@/lib/googleWallet'
+import { enviarSeguimientoAltas } from '@/lib/seguimientoAltas'
+
+export const maxDuration = 60
 
 // Cron diario (ver vercel.json): acredita los puntos de cumpleaños
 // a los clientes que cumplen años hoy. Toda la lógica (matching de
 // fecha, anti-duplicado, suma atómica) vive en fn_acreditar_cumpleanos.
+//
+// Aprovecha la misma corrida para el seguimiento de las altas nuevas
+// (lib/seguimientoAltas.js): las 12:00 UTC son las 9 AM en Argentina,
+// buena hora para que le entre un mail a un comerciante.
 export async function GET(request) {
   try {
     const authHeader = request.headers.get('authorization')
@@ -39,7 +46,14 @@ export async function GET(request) {
       })
     }
 
-    return NextResponse.json({ ok: true, acreditados })
+    // Los mails nunca pueden tumbar la acreditación de puntos: si el
+    // seguimiento falla se loguea y la corrida sigue siendo un éxito.
+    const seguimiento = await enviarSeguimientoAltas(supabaseAdmin).catch(error => {
+      console.error('seguimiento altas error:', error)
+      return { error: true }
+    })
+
+    return NextResponse.json({ ok: true, acreditados, seguimiento })
   } catch (error) {
     console.error('cron cumpleanos error:', error)
     return NextResponse.json({ error: 'Error interno' }, { status: 500 })
