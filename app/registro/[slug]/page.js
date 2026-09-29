@@ -2,7 +2,7 @@
 import { theme } from '@/lib/theme'
 import { useState, useEffect } from 'react'
 import GoogleSignInButton from '@/components/GoogleSignInButton'
-import { juntarNombre, partirNombre } from '@/lib/clientes'
+import { juntarNombre, partirNombre, emailValido } from '@/lib/clientes'
 import Image from 'next/image'
 
 export const dynamic = 'force-dynamic'
@@ -79,6 +79,7 @@ export default function RegistroSlug({ params }) {
       if (!apellido.trim()) { setError('Ingresá tu apellido'); return }
       if (!dni) { setError('Ingresá tu DNI'); return }
       if (!email) { setError('Ingresá tu email'); return }
+      if (!emailValido(email)) { setError('Revisá el email, parece que está mal escrito. Tiene que ser algo como nombre@gmail.com'); return }
       if (!password) { setError('Creá una contraseña'); return }
       if (password.length < 8) { setError('La contraseña debe tener al menos 8 caracteres'); return }
     }

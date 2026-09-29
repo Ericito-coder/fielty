@@ -81,9 +81,15 @@ export async function POST(request) {
     const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://www.fielty.app'
     let enviados = 0
 
-    // Enviar en tandas de 10 para no exceder el timeout
-    for (let i = 0; i < clientes.length; i += 10) {
-      const tanda = clientes.slice(i, i + 10)
+    // Resend acepta 10 pedidos por segundo en toda la cuenta, y en paralelo
+    // salen los mails de registro y de puntos desde otras rutas. Con tandas
+    // de 8 y al menos un segundo por tanda queda margen; antes eran de a 10
+    // y sin pausa, y lo que Resend rechazaba por exceso se perdía. Con el
+    // tope de MAX_POR_CAMPANA son unos 13 segundos, lejos del maxDuration.
+    const TANDA = 8
+    for (let i = 0; i < clientes.length; i += TANDA) {
+      const inicioTanda = Date.now()
+      const tanda = clientes.slice(i, i + TANDA)
       const resultados = await Promise.allSettled(tanda.map(c => {
         const cuerpo = reemplazarVariables(mensaje, c, negocio)
         return enviarEmail({
@@ -99,6 +105,9 @@ export async function POST(request) {
           tanda[j]._enviado = true
         }
       })
+
+      const resto = 1000 - (Date.now() - inicioTanda)
+      if (resto > 0 && i + TANDA < clientes.length) await new Promise(r => setTimeout(r, resto))
     }
 
     const enviadosIds = clientes.filter(c => c._enviado).map(c => c.id)

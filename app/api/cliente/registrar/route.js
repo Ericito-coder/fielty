@@ -6,6 +6,7 @@ import { verificarGoogleToken } from '@/lib/googleToken'
 import { actualizarPuntosWallet } from '@/lib/googleWallet'
 import { rateLimit } from '@/lib/rateLimit'
 import { getRequestIp } from '@/lib/server'
+import { emailValido } from '@/lib/clientes'
 
 const supabaseAdmin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL,
@@ -51,6 +52,9 @@ export async function POST(request) {
     } else {
       if (!email || !password) {
         return NextResponse.json({ error: 'Faltan datos obligatorios' }, { status: 400 })
+      }
+      if (!emailValido(email)) {
+        return NextResponse.json({ error: 'Revisá el email, parece que está mal escrito. Tiene que ser algo como nombre@gmail.com' }, { status: 400 })
       }
       if (password.length < 8) {
         return NextResponse.json({ error: 'La contraseña debe tener al menos 8 caracteres' }, { status: 400 })

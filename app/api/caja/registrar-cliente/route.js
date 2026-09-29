@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import bcrypt from 'bcryptjs'
 import { getSupabaseAdmin, validarPinCaja, getRequestIp } from '@/lib/server'
 import { calcularPuntos } from '@/lib/puntos'
+import { emailValido } from '@/lib/clientes'
 
 export async function POST(request) {
   try {
@@ -9,6 +10,13 @@ export async function POST(request) {
 
     if (!negocioId || !nombre || !dni || !pin) {
       return NextResponse.json({ error: 'Faltan datos obligatorios' }, { status: 400 })
+    }
+    // El email es opcional en la caja, pero si se carga tiene que servir:
+    // uno mal escrito no recibe los puntos por mail ni puede recuperar la
+    // contraseña. Mejor que lo corrija quien lo está cargando, que tiene al
+    // cliente adelante.
+    if (email && !emailValido(email)) {
+      return NextResponse.json({ error: 'El email parece mal escrito. Revisalo o dejalo vacío.' }, { status: 400 })
     }
 
     const supabaseAdmin = getSupabaseAdmin()
