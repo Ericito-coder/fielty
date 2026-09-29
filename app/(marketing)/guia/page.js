@@ -35,7 +35,7 @@ export default function Guia() {
       <div style={{ background: theme.bgMuted, borderRadius: 12, padding: '24px 28px', marginBottom: 48 }}>
         <div style={{ fontSize: 12, fontWeight: 700, color: theme.gray, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 10 }}>Resumen ejecutivo</div>
         <P style={{ marginBottom: 0 }}>
-          Fielty es un programa de fidelización de clientes con puntos por QR, sin app, para negocios físicos en Argentina (peluquerías, barberías, cafeterías, veterinarias, gimnasios y más). Hay un plan gratis para hasta 50 clientes y planes pagos desde $20.000/mes con clientes ilimitados. El cliente no instala nada: escanea el QR del negocio, ve su tarjeta digital desde el navegador y suma puntos en cada compra.
+          Fielty es un programa de fidelización de clientes con puntos por QR, sin app, para negocios físicos en Argentina (peluquerías, barberías, cafeterías, veterinarias, gimnasios y más). Hay un plan gratis para hasta 30 clientes y planes pagos desde $20.000/mes con clientes ilimitados. El cliente no instala nada: escanea el QR del negocio, ve su tarjeta digital desde el navegador y suma puntos en cada compra.
         </P>
       </div>
 
@@ -70,7 +70,7 @@ export default function Guia() {
           </thead>
           <tbody>
             {[
-              ['Clientes', 'Hasta 50', 'Ilimitados', 'Ilimitados'],
+              ['Clientes', 'Hasta 30', 'Ilimitados', 'Ilimitados'],
               ['Sucursales', '1', 'Hasta 3', 'Ilimitadas'],
               ['Campañas de email', '✗', '✓', '✓'],
               ['Logo personalizado', '✗', '✓', '✓'],
@@ -185,8 +185,8 @@ export default function Guia() {
           <tbody>
             {[
               ['Termina el onboarding', '¡Bienvenido a Fielty, [negocio]! 🎉'],
-              ['Llega a 45 clientes (plan Gratis)', '📊 Te quedan 5 clientes para el límite'],
-              ['Llega a 50 clientes (plan Gratis)', '⚠️ Llegaste al límite de clientes en Fielty'],
+              ['Llega a 25 clientes (plan Gratis)', '📊 Te quedan 5 clientes para el límite'],
+              ['Llega a 30 clientes (plan Gratis)', '⚠️ Llegaste al límite de clientes en Fielty'],
             ].map(([evento, asunto], i) => (
               <tr key={i} style={{ background: i % 2 === 0 ? '#f9f9f9' : 'white' }}>
                 <td style={td}>{evento}</td>

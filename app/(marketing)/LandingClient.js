@@ -254,7 +254,7 @@ export default function LandingClient() {
                 periodo: 'siempre',
                 color: theme.darkMuted,
                 colorTexto: theme.darkMuted,
-                features: ['Hasta 50 clientes', '1 sucursal', 'Puntos, niveles y referidos', 'Caja con escáner QR', 'Tarjeta digital sin app', 'Tarjeta de cliente en Google Wallet'],
+                features: ['Hasta 30 clientes', '1 sucursal', 'Puntos, niveles y referidos', 'Caja con escáner QR', 'Tarjeta digital sin app', 'Tarjeta de cliente en Google Wallet'],
                 cta: 'Empezá gratis',
                 href: '/onboarding/registro',
                 destacado: false,

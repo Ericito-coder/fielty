@@ -23,7 +23,7 @@ export default function Terminos() {
       <div style={{ maxWidth: 720, margin: '0 auto', padding: '64px 24px 48px' }}>
         <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', color: theme.redOnDark, marginBottom: 16 }}>Legal</div>
         <h1 style={{ fontSize: 40, fontWeight: 900, color: 'white', marginBottom: 16, letterSpacing: -1, lineHeight: 1.1 }}>Términos y condiciones</h1>
-        <p style={{ fontSize: 14, color: theme.darkMuted, lineHeight: 1.7 }}>Última actualización: mayo de 2026</p>
+        <p style={{ fontSize: 14, color: theme.darkMuted, lineHeight: 1.7 }}>Última actualización: septiembre de 2026</p>
       </div>
 
       <div style={{ maxWidth: 720, margin: '0 auto', padding: '0 24px 80px' }}>
@@ -41,7 +41,7 @@ export default function Terminos() {
         </Section>
 
         <Section title="4. Planes y pagos">
-          Fielty ofrece un plan gratuito con hasta 50 clientes, y planes de pago con funcionalidades adicionales. Los planes de pago se facturan mensualmente a través de Mercado Pago. Podés cancelar tu suscripción en cualquier momento directamente desde Mercado Pago; el servicio continuará activo hasta el fin del período ya abonado. No se realizan reembolsos por períodos parciales.
+          Fielty ofrece un plan gratuito con hasta 30 clientes (los negocios registrados antes del 29 de septiembre de 2026 mantienen el límite de 50 con el que se dieron de alta), y planes de pago con funcionalidades adicionales. Los planes de pago se facturan mensualmente a través de Mercado Pago. Podés cancelar tu suscripción en cualquier momento directamente desde Mercado Pago; el servicio continuará activo hasta el fin del período ya abonado. No se realizan reembolsos por períodos parciales.
         </Section>
 
         <Section title="5. Uso aceptable">

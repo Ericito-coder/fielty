@@ -7,6 +7,7 @@ import { actualizarPuntosWallet } from '@/lib/googleWallet'
 import { rateLimit } from '@/lib/rateLimit'
 import { getRequestIp } from '@/lib/server'
 import { emailValido } from '@/lib/clientes'
+import { limiteClientes } from '@/lib/planes'
 
 const supabaseAdmin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL,
@@ -89,7 +90,7 @@ export async function POST(request) {
     const { count } = await supabaseAdmin
       .from('clientes').select('*', { count: 'exact', head: true }).eq('negocio_id', negocio.id)
 
-    if (negocio.plan === 'gratis' && count >= 50) {
+    if (count >= limiteClientes(negocio)) {
       return NextResponse.json({ error: 'No se pudo completar el registro. Contactá al negocio para más información.' }, { status: 403 })
     }
 

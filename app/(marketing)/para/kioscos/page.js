@@ -28,7 +28,7 @@ const jsonLd = {
 const FAQS_RUBRO = [
   {
     q: '¿Qué es Fielty y cuánto cuesta para un kiosco?',
-    a: 'Fielty es un programa de fidelización con puntos por QR para negocios físicos en Argentina. En un kiosco, el cliente escanea el QR del mostrador, se registra en 30 segundos y ve su tarjeta de puntos desde el navegador, sin instalar ninguna app. El plan gratis cubre hasta 50 clientes y los planes pagos arrancan en $20.000 por mes con clientes ilimitados.',
+    a: 'Fielty es un programa de fidelización con puntos por QR para negocios físicos en Argentina. En un kiosco, el cliente escanea el QR del mostrador, se registra en 30 segundos y ve su tarjeta de puntos desde el navegador, sin instalar ninguna app. El plan gratis cubre hasta 30 clientes y los planes pagos arrancan en $20.000 por mes con clientes ilimitados.',
   },
   {
     q: '¿Puedo excluir algunos productos de la regla de puntos, como cigarrillos o recargas de celular?',
@@ -206,7 +206,7 @@ export default function ParaKioscos() {
         <div style={{ ...s.inner, maxWidth: 600 }}>
           <h2 style={{ ...s.h2, marginBottom: 16 }}>Probalo con tu kiosco</h2>
           <p style={{ ...s.sectionSub, marginBottom: 32 }}>
-            El plan gratis te sirve hasta 50 clientes, sin tarjeta de crédito. Se configura en cinco minutos.
+            El plan gratis te sirve hasta 30 clientes, sin tarjeta de crédito. Se configura en cinco minutos.
           </p>
           <a href="/onboarding/registro" style={{ ...s.ctaPrimary, fontSize: 17, padding: '17px 38px' }}>
             Empezá gratis

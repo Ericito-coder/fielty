@@ -83,7 +83,7 @@ export const FAQS = [
     preguntas: [
       {
         q: '¿Cuánto cuesta Fielty?',
-        a: 'Hay un plan Gratis que permite hasta 50 clientes sin costo. El plan Pro cuesta $20.000/mes e incluye clientes ilimitados, hasta 3 sucursales y soporte prioritario. El plan Business cuesta $35.000/mes y agrega exportación CSV, logo personalizado y sucursales ilimitadas.',
+        a: 'Hay un plan Gratis que permite hasta 30 clientes sin costo. El plan Pro cuesta $20.000/mes e incluye clientes ilimitados, hasta 3 sucursales, campañas de email, tu logo en la tarjeta y exportación CSV. El plan Business cuesta $35.000/mes y agrega sucursales ilimitadas y soporte prioritario.',
       },
       {
         q: '¿Puedo cancelar en cualquier momento?',
@@ -94,8 +94,8 @@ export const FAQS = [
         a: 'El pago es mensual y se procesa automáticamente a través de Mercado Pago. Podés pagar con tarjeta de crédito, débito o dinero en cuenta de MP.',
       },
       {
-        q: '¿Qué pasa cuando llego al límite de 50 clientes en el plan Gratis?',
-        a: 'Te avisamos por email cuando llegás a 45 clientes para que tengas tiempo de decidir. Al llegar a 50, los nuevos clientes no pueden registrarse hasta que mejorés el plan.',
+        q: '¿Qué pasa cuando llego al límite de 30 clientes en el plan Gratis?',
+        a: 'Te avisamos por email cuando llegás a 25 clientes para que tengas tiempo de decidir. Al llegar a 30, los nuevos clientes no pueden registrarse hasta que mejorés el plan.',
       },
     ],
   },

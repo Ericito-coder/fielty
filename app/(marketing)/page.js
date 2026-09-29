@@ -5,7 +5,7 @@ export const revalidate = 21600
 
 export const metadata = {
   title: 'Fielty — Programa de fidelización y puntos para negocios sin app',
-  description: 'Programa de fidelización con puntos por QR para negocios en Argentina. Tus clientes suman en cada compra, sin instalar nada. Gratis hasta 50 clientes.',
+  description: 'Programa de fidelización con puntos por QR para negocios en Argentina. Tus clientes suman en cada compra, sin instalar nada. Gratis hasta 30 clientes.',
   alternates: { canonical: '/' },
   openGraph: {
     title: 'Fielty — Fidelización de clientes sin app',
@@ -31,7 +31,7 @@ const jsonLd = {
   url: 'https://www.fielty.app',
   description: 'Sistema de fidelización de clientes con programa de puntos, niveles y referidos para negocios físicos. Sin app, funciona desde el navegador vía QR.',
   offers: [
-    { '@type': 'Offer', name: 'Gratis', price: '0', priceCurrency: 'ARS', description: 'Hasta 50 clientes, 1 sucursal, puntos, niveles, referidos y tarjeta de cliente en Google Wallet.' },
+    { '@type': 'Offer', name: 'Gratis', price: '0', priceCurrency: 'ARS', description: 'Hasta 30 clientes, 1 sucursal, puntos, niveles, referidos y tarjeta de cliente en Google Wallet.' },
     { '@type': 'Offer', name: 'Pro', price: '20000', priceCurrency: 'ARS', description: 'Clientes ilimitados, hasta 3 sucursales, campañas de email, tu logo en la tarjeta del cliente y en Google Wallet.' },
     { '@type': 'Offer', name: 'Business', price: '35000', priceCurrency: 'ARS', description: 'Sucursales ilimitadas, WhatsApp automático y soporte prioritario.' },
   ],

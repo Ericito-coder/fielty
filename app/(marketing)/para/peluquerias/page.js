@@ -2,7 +2,7 @@ import { s } from '../estilos'
 
 export const metadata = {
   title: 'Programa de puntos para peluquerías y salones | Fielty',
-  description: 'Programa de puntos para peluquerías sin app: cada clienta suma según lo que gasta, así un color pesa más que un brushing. Gratis hasta 50 clientas.',
+  description: 'Programa de puntos para peluquerías sin app: cada clienta suma según lo que gasta, así un color pesa más que un brushing. Gratis hasta 30 clientas.',
   alternates: { canonical: '/para/peluquerias' },
   openGraph: {
     title: 'Programa de puntos para peluquerías y salones | Fielty',
@@ -28,7 +28,7 @@ const jsonLd = {
 const FAQS_RUBRO = [
   {
     q: '¿Qué es Fielty y cuánto cuesta para una peluquería?',
-    a: 'Fielty es un programa de fidelización con puntos por QR para negocios físicos en Argentina. En una peluquería, la clienta escanea el QR de recepción, se registra en 30 segundos y ve su tarjeta de puntos desde el navegador, sin instalar ninguna app. El plan gratis cubre hasta 50 clientas y los planes pagos arrancan en $20.000 por mes con clientas ilimitadas.',
+    a: 'Fielty es un programa de fidelización con puntos por QR para negocios físicos en Argentina. En una peluquería, la clienta escanea el QR de recepción, se registra en 30 segundos y ve su tarjeta de puntos desde el navegador, sin instalar ninguna app. El plan gratis cubre hasta 30 clientas y los planes pagos arrancan en $20.000 por mes con clientas ilimitadas.',
   },
   {
     q: '¿Sirve si cada servicio tiene un precio muy distinto, como corte, color y brushing?',
@@ -206,7 +206,7 @@ export default function ParaPeluquerias() {
         <div style={{ ...s.inner, maxWidth: 600 }}>
           <h2 style={{ ...s.h2, marginBottom: 16 }}>Probalo con tu salón</h2>
           <p style={{ ...s.sectionSub, marginBottom: 32 }}>
-            El plan gratis te sirve hasta 50 clientas, sin tarjeta de crédito. Se configura en cinco minutos.
+            El plan gratis te sirve hasta 30 clientas, sin tarjeta de crédito. Se configura en cinco minutos.
           </p>
           <a href="/onboarding/registro" style={{ ...s.ctaPrimary, fontSize: 17, padding: '17px 38px' }}>
             Empezá gratis

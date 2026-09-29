@@ -14,21 +14,21 @@ export default function sitemap() {
   const base = 'https://www.fielty.app'
 
   const routes = [
-    { path: '/', priority: 1.0, changeFrequency: 'weekly', lastModified: '2026-09-02' },
-    { path: '/para', priority: 0.9, changeFrequency: 'monthly', lastModified: '2026-08-22' },
-    { path: '/para/barberias', priority: 0.9, changeFrequency: 'monthly', lastModified: '2026-08-22' },
-    { path: '/para/cafeterias', priority: 0.9, changeFrequency: 'monthly', lastModified: '2026-08-22' },
-    { path: '/para/peluquerias', priority: 0.9, changeFrequency: 'monthly', lastModified: '2026-08-22' },
-    { path: '/para/veterinarias', priority: 0.9, changeFrequency: 'monthly', lastModified: '2026-08-22' },
-    { path: '/para/gimnasios', priority: 0.9, changeFrequency: 'monthly', lastModified: '2026-08-22' },
-    { path: '/para/restaurantes', priority: 0.9, changeFrequency: 'monthly', lastModified: '2026-08-22' },
-    { path: '/para/panaderias', priority: 0.9, changeFrequency: 'monthly', lastModified: '2026-08-22' },
-    { path: '/para/kioscos', priority: 0.9, changeFrequency: 'monthly', lastModified: '2026-08-22' },
-    { path: '/como-armar-un-programa-de-puntos', priority: 0.8, changeFrequency: 'monthly', lastModified: '2026-09-02' },
-    { path: '/faq', priority: 0.8, changeFrequency: 'monthly', lastModified: '2026-09-02' },
-    { path: '/guia', priority: 0.6, changeFrequency: 'monthly', lastModified: '2026-09-02' },
-    { path: '/terminos', priority: 0.3, changeFrequency: 'yearly', lastModified: '2026-05-17' },
-    { path: '/privacidad', priority: 0.3, changeFrequency: 'yearly', lastModified: '2026-08-01' },
+    { path: '/', priority: 1.0, changeFrequency: 'weekly', lastModified: '2026-09-29' },
+    { path: '/para', priority: 0.9, changeFrequency: 'monthly', lastModified: '2026-09-29' },
+    { path: '/para/barberias', priority: 0.9, changeFrequency: 'monthly', lastModified: '2026-09-29' },
+    { path: '/para/cafeterias', priority: 0.9, changeFrequency: 'monthly', lastModified: '2026-09-29' },
+    { path: '/para/peluquerias', priority: 0.9, changeFrequency: 'monthly', lastModified: '2026-09-29' },
+    { path: '/para/veterinarias', priority: 0.9, changeFrequency: 'monthly', lastModified: '2026-09-29' },
+    { path: '/para/gimnasios', priority: 0.9, changeFrequency: 'monthly', lastModified: '2026-09-29' },
+    { path: '/para/restaurantes', priority: 0.9, changeFrequency: 'monthly', lastModified: '2026-09-29' },
+    { path: '/para/panaderias', priority: 0.9, changeFrequency: 'monthly', lastModified: '2026-09-29' },
+    { path: '/para/kioscos', priority: 0.9, changeFrequency: 'monthly', lastModified: '2026-09-29' },
+    { path: '/como-armar-un-programa-de-puntos', priority: 0.8, changeFrequency: 'monthly', lastModified: '2026-09-29' },
+    { path: '/faq', priority: 0.8, changeFrequency: 'monthly', lastModified: '2026-09-29' },
+    { path: '/guia', priority: 0.6, changeFrequency: 'monthly', lastModified: '2026-09-29' },
+    { path: '/terminos', priority: 0.3, changeFrequency: 'yearly', lastModified: '2026-09-29' },
+    { path: '/privacidad', priority: 0.3, changeFrequency: 'yearly', lastModified: '2026-09-28' },
   ]
 
   return routes.map((route) => ({

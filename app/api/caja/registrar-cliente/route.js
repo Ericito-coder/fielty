@@ -1,8 +1,9 @@
-import { NextResponse } from 'next/server'
+import { NextResponse, after } from 'next/server'
 import bcrypt from 'bcryptjs'
 import { getSupabaseAdmin, validarPinCaja, getRequestIp } from '@/lib/server'
 import { calcularPuntos } from '@/lib/puntos'
 import { emailValido } from '@/lib/clientes'
+import { limiteClientes } from '@/lib/planes'
 
 export async function POST(request) {
   try {
@@ -30,7 +31,7 @@ export async function POST(request) {
     const { count } = await supabaseAdmin
       .from('clientes').select('*', { count: 'exact', head: true }).eq('negocio_id', negocioId)
 
-    if (negocio.plan === 'gratis' && count >= 50) {
+    if (count >= limiteClientes(negocio)) {
       return NextResponse.json({ error: 'Límite de clientes alcanzado en el plan gratuito' }, { status: 403 })
     }
 
@@ -73,6 +74,21 @@ export async function POST(request) {
 
     // Solo los campos que la caja necesita (nunca password_hash)
     const { id, nombre: nombreCliente, dni: dniCliente, telefono: telCliente, puntos, puntos_historicos } = data[0]
+
+    // El aviso de límite también tiene que salir cuando el cliente lo carga
+    // el dueño y no solo cuando se registra por QR: un negocio que carga todo
+    // desde la caja llegaba al tope sin haber recibido ningún aviso. Mismo
+    // pedido que hace /api/cliente/registrar.
+    if (negocio.plan === 'gratis') {
+      after(() => fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/notificar-limite`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-internal-secret': process.env.WEBHOOK_SECRET || '',
+        },
+        body: JSON.stringify({ negocioId: negocio.id }),
+      }).catch(() => {}))
+    }
 
     return NextResponse.json({
       ok: true,

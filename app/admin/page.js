@@ -348,14 +348,14 @@ export default function Admin() {
             <div style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:16, marginBottom:32}}>
               {alertas.cercaDelLimite.length > 0 && (
                 <div style={s.alertCard}>
-                  <div style={{fontSize:13, fontWeight:700, color:theme.gold, marginBottom:12}}>⚠️ Cerca del límite (40+ clientes en gratis)</div>
+                  <div style={{fontSize:13, fontWeight:700, color:theme.gold, marginBottom:12}}>⚠️ Cerca del límite del plan gratis</div>
                   {alertas.cercaDelLimite.map(n => (
                     <div key={n.id} style={{display:'flex', justifyContent:'space-between', alignItems:'center', padding:'8px 0', borderBottom:'1px solid #1e1e1e'}}>
                       <div>
                         <div style={{fontSize:13, fontWeight:700, color:'white'}}>{n.nombre}</div>
                         <div style={{fontSize:11, color:theme.grayMid}}>{n.email}</div>
                       </div>
-                      <div style={{fontSize:13, fontWeight:700, color:theme.gold}}>{n.totalClientes}/50</div>
+                      <div style={{fontSize:13, fontWeight:700, color:theme.gold}}>{n.totalClientes}/{n.limite}</div>
                     </div>
                   ))}
                 </div>

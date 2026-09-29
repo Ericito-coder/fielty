@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
 import { storage } from '@/lib/storage'
 import { linkWhatsApp } from '@/lib/wa'
-import { esPago } from '@/lib/planes'
+import { esPago, limiteClientes } from '@/lib/planes'
 import { medirPagoNuevo } from '@/lib/medicion'
 import { coincideBusqueda, identidadCliente } from '@/lib/clientes'
 import { PINES_COMUNES, validarPin } from '@/lib/pin'
@@ -201,7 +201,7 @@ export default function Dashboard() {
       </header>
       <main style={{padding:16}}>
         {mostrarExito && <BannerExito onClose={() => setMostrarExito(false)} />}
-        {negocio.plan === 'gratis' && metricas && <BannerLimite totalClientes={metricas.totalClientes} />}
+        {negocio.plan === 'gratis' && metricas && <BannerLimite totalClientes={metricas.totalClientes} limite={limiteClientes(negocio)} />}
         <BannerPinDebil negocio={negocio} onConfigurar={() => { setSeccion('config'); setMenuAbierto(false) }} />
         <SeccionContenido seccion={seccion} negocio={negocio} metricas={metricas} setNegocio={setNegocio} />
       </main>
@@ -274,7 +274,7 @@ export default function Dashboard() {
       {/* MAIN CONTENT */}
       <main style={{marginLeft:260, flex:1, padding:32, minHeight:'100vh'}}>
         {mostrarExito && <BannerExito onClose={() => setMostrarExito(false)} />}
-        {negocio.plan === 'gratis' && metricas && <BannerLimite totalClientes={metricas.totalClientes} />}
+        {negocio.plan === 'gratis' && metricas && <BannerLimite totalClientes={metricas.totalClientes} limite={limiteClientes(negocio)} />}
         <BannerPinDebil negocio={negocio} onConfigurar={() => setSeccion('config')} />
         {/* Header */}
         <div style={{marginBottom:28}}>
@@ -1127,7 +1127,7 @@ function ConfigSection({ negocio, setNegocio }) {
   }
 
   const planInfo = {
-    gratis:    { label: 'Gratis', color: theme.gray,    desc: 'Hasta 50 clientes' },
+    gratis:    { label: 'Gratis', color: theme.gray,    desc: `Hasta ${limiteClientes(negocio)} clientes` },
     pro_early: { label: 'Pro',    color: theme.red, desc: 'Early Adopter · $10.000/mes' },
     pro:       { label: 'Pro',    color: theme.red, desc: '$20.000/mes' },
     business:  { label: 'Business', color: theme.gold, desc: '$35.000/mes' },
@@ -1585,9 +1585,9 @@ function BannerPinDebil({ negocio, onConfigurar }) {
   )
 }
 
-function BannerLimite({ totalClientes }) {
-  if (totalClientes < 40) return null
-  const esLimite = totalClientes >= 50
+function BannerLimite({ totalClientes, limite }) {
+  if (totalClientes < limite - 10) return null
+  const esLimite = totalClientes >= limite
 
   return (
     <div style={{
@@ -1603,12 +1603,12 @@ function BannerLimite({ totalClientes }) {
     }}>
       <div>
         <div style={{ fontSize: 14, fontWeight: 700, color: theme.black, marginBottom: 2 }}>
-          {esLimite ? '⚠️ Llegaste al límite de 50 clientes' : `📊 ${totalClientes} de 50 clientes — te estás acercando al límite`}
+          {esLimite ? `⚠️ Llegaste al límite de ${limite} clientes` : `📊 ${totalClientes} de ${limite} clientes — te estás acercando al límite`}
         </div>
         <div style={{ fontSize: 13, color: theme.gray }}>
           {esLimite
             ? 'Los nuevos clientes no pueden registrarse. Pasate al plan Pro para seguir creciendo.'
-            : 'En el plan Gratis podés tener hasta 50. Pasate al Pro para no tener límite.'}
+            : `En el plan Gratis podés tener hasta ${limite}. Pasate al Pro para no tener límite.`}
         </div>
       </div>
       <button

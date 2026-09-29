@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { enviarEmail } from '@/lib/email'
+import { limiteClientes } from '@/lib/planes'
 import { createClient } from '@supabase/supabase-js'
 
 const supabaseAdmin = createClient(
@@ -23,15 +24,10 @@ export async function POST(request) {
       .select('*', { count: 'exact', head: true })
       .eq('negocio_id', negocioId)
 
-    // Solo notificar en 45 (aviso) y 50 (límite alcanzado)
-    if (count !== 45 && count !== 50) {
-      return NextResponse.json({ ok: true })
-    }
-
     // Obtener datos del negocio y email del dueño
     const { data: negocio } = await supabaseAdmin
       .from('negocios')
-      .select('nombre, user_id, plan')
+      .select('nombre, user_id, plan, created_at')
       .eq('id', negocioId)
       .single()
 
@@ -39,10 +35,17 @@ export async function POST(request) {
       return NextResponse.json({ ok: true })
     }
 
+    // Avisa 5 antes del límite y al llegar. El límite depende de cuándo se
+    // registró el negocio (ver limiteClientes).
+    const limite = limiteClientes(negocio)
+    if (count !== limite - 5 && count !== limite) {
+      return NextResponse.json({ ok: true })
+    }
+
     const { data: { user } } = await supabaseAdmin.auth.admin.getUserById(negocio.user_id)
     if (!user?.email) return NextResponse.json({ ok: true })
 
-    const esLimite = count === 50
+    const esLimite = count === limite
     const asunto = esLimite
       ? `⚠️ Llegaste al límite de clientes en Fielty`
       : `📊 Te quedan 5 clientes para el límite en Fielty`
@@ -52,9 +55,9 @@ export async function POST(request) {
         <div style="margin-bottom: 24px;">
           <span style="font-size: 22px; font-weight: 900; color: #0e0e0e; letter-spacing: -0.5px;">● fielty</span>
         </div>
-        <h1 style="font-size: 24px; font-weight: 800; color: #0e0e0e; margin-bottom: 8px;">Llegaste al límite de 50 clientes</h1>
+        <h1 style="font-size: 24px; font-weight: 800; color: #0e0e0e; margin-bottom: 8px;">Llegaste al límite de ${limite} clientes</h1>
         <p style="font-size: 15px; color: #555; line-height: 1.6; margin-bottom: 24px;">
-          Hola, tu negocio <strong>${negocio.nombre}</strong> alcanzó los 50 clientes del plan Gratis.
+          Hola, tu negocio <strong>${negocio.nombre}</strong> alcanzó los ${limite} clientes del plan Gratis.
           A partir de ahora, los nuevos clientes no van a poder registrarse.
         </p>
         <p style="font-size: 15px; color: #555; line-height: 1.6; margin-bottom: 32px;">
@@ -75,8 +78,8 @@ export async function POST(request) {
         </div>
         <h1 style="font-size: 24px; font-weight: 800; color: #0e0e0e; margin-bottom: 8px;">Te quedan 5 clientes para el límite</h1>
         <p style="font-size: 15px; color: #555; line-height: 1.6; margin-bottom: 24px;">
-          Hola, tu negocio <strong>${negocio.nombre}</strong> ya tiene 45 clientes registrados.
-          El plan Gratis permite hasta 50.
+          Hola, tu negocio <strong>${negocio.nombre}</strong> ya tiene ${limite - 5} clientes registrados.
+          El plan Gratis permite hasta ${limite}.
         </p>
         <p style="font-size: 15px; color: #555; line-height: 1.6; margin-bottom: 32px;">
           Si querés seguir creciendo, pasate al plan Pro antes de llegar al límite.

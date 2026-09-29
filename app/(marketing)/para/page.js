@@ -123,7 +123,7 @@ export default function PorRubro() {
         <div style={{ ...s.inner, maxWidth: 600 }}>
           <h2 style={{ ...s.h2, marginBottom: 16 }}>Empezá con tu negocio</h2>
           <p style={{ ...s.sectionSub, marginBottom: 32 }}>
-            El plan gratis te sirve hasta 50 clientes, sin tarjeta de crédito. Se configura en cinco minutos.
+            El plan gratis te sirve hasta 30 clientes, sin tarjeta de crédito. Se configura en cinco minutos.
           </p>
           <a href="/onboarding/registro" style={{ ...s.ctaPrimary, fontSize: 17, padding: '17px 38px' }}>
             Empezá gratis

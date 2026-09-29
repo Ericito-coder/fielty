@@ -2,7 +2,7 @@ import { s } from '../estilos'
 
 export const metadata = {
   title: 'Programa de puntos para gimnasios | Fielty',
-  description: 'Programa de puntos para gimnasios sin app: el socio acumula mes a mes y lo pierde si se va. Premiá la renovación. Gratis hasta 50 socios.',
+  description: 'Programa de puntos para gimnasios sin app: el socio acumula mes a mes y lo pierde si se va. Premiá la renovación. Gratis hasta 30 socios.',
   alternates: { canonical: '/para/gimnasios' },
   openGraph: {
     title: 'Programa de puntos para gimnasios | Fielty',
@@ -28,7 +28,7 @@ const jsonLd = {
 const FAQS_RUBRO = [
   {
     q: '¿Qué es Fielty y cuánto cuesta para un gimnasio?',
-    a: 'Fielty es un programa de fidelización con puntos por QR para negocios físicos en Argentina. En un gimnasio, el socio escanea el QR de recepción, se registra en 30 segundos y ve su tarjeta de puntos desde el navegador, sin instalar ninguna app. Los puntos se cargan con el pago de la cuota o una compra en el mostrador. El plan gratis cubre hasta 50 socios y los planes pagos arrancan en $20.000 por mes con socios ilimitados.',
+    a: 'Fielty es un programa de fidelización con puntos por QR para negocios físicos en Argentina. En un gimnasio, el socio escanea el QR de recepción, se registra en 30 segundos y ve su tarjeta de puntos desde el navegador, sin instalar ninguna app. Los puntos se cargan con el pago de la cuota o una compra en el mostrador. El plan gratis cubre hasta 30 socios y los planes pagos arrancan en $20.000 por mes con socios ilimitados.',
   },
   {
     q: '¿Los puntos se cargan por asistencia o por el pago de la cuota?',
@@ -206,7 +206,7 @@ export default function ParaGimnasios() {
         <div style={{ ...s.inner, maxWidth: 600 }}>
           <h2 style={{ ...s.h2, marginBottom: 16 }}>Probalo con tu gimnasio</h2>
           <p style={{ ...s.sectionSub, marginBottom: 32 }}>
-            El plan gratis te sirve hasta 50 socios, sin tarjeta de crédito. Se configura en cinco minutos.
+            El plan gratis te sirve hasta 30 socios, sin tarjeta de crédito. Se configura en cinco minutos.
           </p>
           <a href="/onboarding/registro" style={{ ...s.ctaPrimary, fontSize: 17, padding: '17px 38px' }}>
             Empezá gratis

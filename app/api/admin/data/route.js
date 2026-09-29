@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { getRequestIp } from '@/lib/server'
 import { rateLimit } from '@/lib/rateLimit'
+import { limiteClientes } from '@/lib/planes'
 
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL
 
@@ -87,9 +88,10 @@ export async function GET(request) {
     inicioMes.setHours(0, 0, 0, 0)
     const nuevosEsteMes = negocios?.filter(n => new Date(n.created_at) >= inicioMes).length || 0
 
-    // Alertas
+    // Alertas. Cerca del límite es a 10 clientes o menos de llegar, y el
+    // límite depende de cuándo se registró cada negocio (ver limiteClientes).
     const cercaDelLimite = negocios?.filter(n =>
-      (!n.plan || n.plan === 'gratis') && (clientesPorNegocio[n.id] || 0) >= 40
+      (!n.plan || n.plan === 'gratis') && (clientesPorNegocio[n.id] || 0) >= limiteClientes(n) - 10
     ) || []
 
     const negociosInactivos30 = negocios?.filter(n => {
@@ -131,7 +133,7 @@ export async function GET(request) {
       },
       facturacion: { porPlan, mrr, nuevosEsteMes },
       alertas: {
-        cercaDelLimite: cercaDelLimite.map(n => ({ ...n, email: emailPorUserId[n.user_id] || '—', nombreDueno: nombrePorUserId[n.user_id] || null, totalClientes: clientesPorNegocio[n.id] || 0 })),
+        cercaDelLimite: cercaDelLimite.map(n => ({ ...n, email: emailPorUserId[n.user_id] || '—', nombreDueno: nombrePorUserId[n.user_id] || null, totalClientes: clientesPorNegocio[n.id] || 0, limite: limiteClientes(n) })),
         inactivos: negociosInactivos30.slice(0, 10).map(n => ({ ...n, email: emailPorUserId[n.user_id] || '—', nombreDueno: nombrePorUserId[n.user_id] || null, totalClientes: clientesPorNegocio[n.id] || 0 })),
       },
       crecimiento,

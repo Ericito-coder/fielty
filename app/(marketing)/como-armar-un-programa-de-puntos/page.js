@@ -228,7 +228,7 @@ export default function ComoArmarUnProgramaDePuntos() {
             panel te muestra justamente cuántos volvieron a sumar.
           </p>
           <a href="/onboarding/registro" style={s.ctaBoton}>Empezá gratis</a>
-          <div style={s.ctaNota}>Plan gratis hasta 50 clientes, sin tarjeta de crédito.</div>
+          <div style={s.ctaNota}>Plan gratis hasta 30 clientes, sin tarjeta de crédito.</div>
         </div>
 
         <div style={s.relacionados}>

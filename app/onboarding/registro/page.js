@@ -70,7 +70,7 @@ export default function Registro() {
           {plan === 'pro_early' && 'Estás a un paso de activar el plan Pro. Primero creá tu cuenta.'}
           {plan === 'pro' && 'Estás a un paso de activar el plan Pro. Primero creá tu cuenta.'}
           {plan === 'business' && 'Estás a un paso de activar el plan Business. Primero creá tu cuenta.'}
-          {!plan && 'Gratis para empezar. Sin tarjeta de crédito.'}
+          {!plan && 'Gratis hasta 30 clientes. Sin tarjeta de crédito.'}
         </p>
 
         <div style={s.field}>
