@@ -1098,6 +1098,8 @@ function ConfigSection({ negocio, setNegocio }) {
   const [ok, setOk] = useState(false)
   const [errorPin, setErrorPin] = useState('')
   const [errorVencimiento, setErrorVencimiento] = useState('')
+  const [errorColor, setErrorColor] = useState('')
+  const [errorGuardar, setErrorGuardar] = useState('')
 
   const pinActualEsDebil = PINES_COMUNES.includes(negocio.pin_caja || '1234')
 
@@ -1110,6 +1112,14 @@ function ConfigSection({ negocio, setNegocio }) {
     setErrorPin('')
     const errorPlazo = validarVencimiento(form.vencimiento_meses)
     if (errorPlazo) { setErrorVencimiento(errorPlazo); return }
+    // El campo de texto deja el color a medio escribir, y la base rechaza
+    // lo que no sea #rrggbb (ver supabase/migracion-color-negocio.sql).
+    if (!/^#[0-9a-fA-F]{6}$/.test(form.color || '')) {
+      setErrorColor('El color tiene que ser # y 6 caracteres, por ejemplo #e0001b. También podés elegirlo con el selector.')
+      return
+    }
+    setErrorColor('')
+    setErrorGuardar('')
     setGuardando(true)
     const payload = { ...form }
     // Sin trim, un espacio al final se cuela en los emails y en la tarjeta
@@ -1117,7 +1127,14 @@ function ConfigSection({ negocio, setNegocio }) {
     payload.nombre = payload.nombre.trim()
     delete payload.pin_confirmar
     if (!payload.pin_caja) delete payload.pin_caja // No sobreescribir si no cambió
-    const { data } = await supabase.from('negocios').update(payload).eq('id', negocio.id).select().single()
+    const { data, error } = await supabase.from('negocios').update(payload).eq('id', negocio.id).select().single()
+    // Sin este corte, un guardado rechazado dejaba el negocio en null y el
+    // panel entero se caía hasta recargar.
+    if (error || !data) {
+      setGuardando(false)
+      setErrorGuardar('No pudimos guardar los cambios. Revisá los datos e intentá de nuevo.')
+      return
+    }
     setNegocio(data)
     setForm(f => ({ ...f, pin_caja: '', pin_confirmar: '' }))
     setGuardando(false)
@@ -1179,6 +1196,7 @@ function ConfigSection({ negocio, setNegocio }) {
             <input type="color" aria-labelledby="dashboard-color-label" value={form.color} onChange={e => setForm({...form, color: e.target.value})} style={{width:48, height:36, borderRadius:10, border:'1px solid #e8eaf0', cursor:'pointer', padding:2}} />
             <input style={{...s.inputField, flex:1, fontFamily:'monospace'}} aria-labelledby="dashboard-color-label" placeholder="e0001b" maxLength={7} value={form.color} onChange={e => setForm({...form, color: e.target.value})} />
           </div>
+          {errorColor && <div style={{fontSize:12, color:theme.red, marginTop:6}}>⚠️ {errorColor}</div>}
         </div>
         {/* Logo */}
         <div style={s.configField}>
@@ -1284,6 +1302,8 @@ function ConfigSection({ negocio, setNegocio }) {
           </div>
         </div>
         {ok && <div style={{background:theme.successBg, color:theme.green, padding:'10px 14px', borderRadius:10, fontSize:13, marginBottom:12}}>✅ Cambios guardados</div>}
+        {/* El error del color se repite acá: el campo queda muy arriba del botón y no se ve al guardar. */}
+        {(errorColor || errorGuardar) && <div style={{background:theme.errorBg, color:theme.red, padding:'10px 14px', borderRadius:10, fontSize:13, marginBottom:12}}>⚠️ {errorColor || errorGuardar}</div>}
         <button style={s.btnRed} onClick={guardar} disabled={guardando}>{guardando ? 'Guardando...' : 'Guardar cambios'}</button>
       </div>
     </div>
