@@ -37,6 +37,9 @@ export default function ConfigNegocio() {
     // del cliente (queda "Pizza city  — tu tarjeta...", con doble espacio).
     const nombreLimpio = nombre.trim()
     if (!nombreLimpio) { setError('Ingresá el nombre del negocio'); return }
+    // El campo de texto deja el color a medio escribir ("#", "#EBCF"). Así
+    // guardado, la tarjeta sale sin color y Google Wallet rechaza el pase.
+    if (!/^#[0-9a-fA-F]{6}$/.test(color)) { setError('El color tiene que tener 6 caracteres, por ejemplo e0001b. También podés elegir uno de la paleta.'); return }
     // El PIN se elige acá y no después: la URL de la caja es pública, así
     // que un negocio que nunca lo configura queda abierto a cualquiera.
     const errorPin = validarPin(pinCaja, pinConfirmar)
