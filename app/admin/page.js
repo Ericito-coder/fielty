@@ -15,6 +15,7 @@ const COLUMNAS = [
   { label: 'Negocio', campo: 'nombre', tipo: 'texto' },
   { label: 'Contacto', campo: null },
   { label: 'Plan', campo: 'plan', tipo: 'plan' },
+  { label: 'Origen', campo: 'origenFuente', tipo: 'texto' },
   { label: 'Clientes', campo: 'totalClientes', tipo: 'numero' },
   { label: 'Canjes', campo: 'totalCanjesNegocio', tipo: 'numero' },
   { label: 'Pts circ.', campo: 'totalPuntosNegocio', tipo: 'numero' },
@@ -33,6 +34,11 @@ function conTimeout(promesa, ms) {
 
 // El plan se ordena por jerarquía, no alfabéticamente
 const RANGO_PLAN = { gratis: 0, pro_early: 1, pro: 2, business: 3 }
+
+// lib/origen.js guarda la fuente normalizada (un host o un utm_source).
+// Acá solo se le pone nombre a las que conocemos; el resto sale tal cual.
+const FUENTES = { 'chatgpt.com': 'ChatGPT', google: 'Google', bing: 'Bing', perplexity: 'Perplexity', instagram: 'Instagram', facebook: 'Facebook', direct: 'Directo' }
+const nombreFuente = f => FUENTES[f] || f
 
 export default function Admin() {
   const [data, setData] = useState(null)
@@ -138,13 +144,14 @@ export default function Admin() {
   )
   if (!data) return null
 
-  const { metricas, facturacion, alertas, crecimiento, negocios } = data
+  const { metricas, facturacion, alertas, crecimiento, negocios, origenes = [] } = data
 
   const negociosFiltrados = negocios.filter(n =>
     n.nombre?.toLowerCase().includes(busqueda.toLowerCase()) ||
     n.nombreDueno?.toLowerCase().includes(busqueda.toLowerCase()) ||
     n.email?.toLowerCase().includes(busqueda.toLowerCase()) ||
-    n.telefono?.includes(busqueda)
+    n.telefono?.includes(busqueda) ||
+    (n.origenFuente && nombreFuente(n.origenFuente).toLowerCase().includes(busqueda.toLowerCase()))
   )
 
   const columnaOrden = COLUMNAS.find(c => c.campo === orden.campo)
@@ -160,6 +167,13 @@ export default function Admin() {
       const tb = b[campo] ? new Date(b[campo]).getTime() : null
       if (ta === null || tb === null) return ta === tb ? 0 : (ta === null ? 1 : -1)
       return orden.dir === 'asc' ? ta - tb : tb - ta
+    }
+
+    // Lo mismo con un texto vacío: el origen solo existe en las altas
+    // nuevas, y sin esto ordenar por esa columna mostraba primero cien
+    // filas en blanco.
+    if (tipo === 'texto' && (!a[campo] || !b[campo])) {
+      return !a[campo] === !b[campo] ? 0 : (!a[campo] ? 1 : -1)
     }
 
     let base
@@ -197,6 +211,13 @@ export default function Admin() {
               <div style={{flex:1}}>
                 <div style={{fontSize:17, fontWeight:800, color:'white'}}>{negocioDetalle.nombre}</div>
                 <div style={{fontSize:12, color:theme.grayMid, marginTop:2}}>{negocioDetalle.email} · desde {new Date(negocioDetalle.created_at).toLocaleDateString('es-AR')}</div>
+                {negocioDetalle.origenFuente && (
+                  <div style={{fontSize:12, color:theme.grayMid, marginTop:2}}>
+                    Llegó por {nombreFuente(negocioDetalle.origenFuente)}
+                    {negocioDetalle.origen?.campana ? ` (${negocioDetalle.origen.campana})` : ''}
+                    {negocioDetalle.origen?.landing ? ` · entró en ${negocioDetalle.origen.landing}` : ''}
+                  </div>
+                )}
               </div>
               <div style={{display:'flex', alignItems:'center', gap:10}}>
                 <span style={{fontSize:12, fontWeight:700, color: PLAN_COLORES[negocioDetalle.plan || 'gratis'], background:'#1a1a1a', padding:'4px 10px', borderRadius:100}}>{PLAN_LABELS[negocioDetalle.plan || 'gratis']}</span>
@@ -321,7 +342,14 @@ export default function Admin() {
           <div style={{...s.metricCard, flex:2}}>
             <div style={{fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.08em', color:theme.grayMid, marginBottom:12}}>MRR</div>
             <div style={{fontSize:38, fontWeight:900, color:'#00c853', fontFamily:'monospace'}}>${facturacion.mrr.toLocaleString('es-AR')}</div>
-            <div style={{fontSize:12, color:theme.grayMid, marginTop:4}}>por mes</div>
+            <div style={{fontSize:12, color:theme.grayMid, marginTop:4}}>
+              por mes · {facturacion.pagando} {facturacion.pagando === 1 ? 'negocio pagando' : 'negocios pagando'}
+            </div>
+            {facturacion.aMano > 0 && (
+              <div style={{fontSize:12, color:theme.grayMid, marginTop:10, paddingTop:10, borderTop:'1px solid #1e1e1e'}}>
+                No incluye {facturacion.aMano} {facturacion.aMano === 1 ? 'plan puesto' : 'planes puestos'} a mano (${facturacion.mrrAMano.toLocaleString('es-AR')} que no se cobran)
+              </div>
+            )}
           </div>
           <div style={{...s.metricCard, flex:2}}>
             <div style={{fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.08em', color:theme.grayMid, marginBottom:12}}>Negocios por plan</div>
@@ -398,6 +426,34 @@ export default function Admin() {
             <div style={{display:'flex', alignItems:'center', gap:6}}><div style={{width:10, height:10, borderRadius:2, background:theme.red}} /><span style={{fontSize:11, color:theme.grayMid}}>Negocios</span></div>
             <div style={{display:'flex', alignItems:'center', gap:6}}><div style={{width:10, height:10, borderRadius:2, background:theme.blue}} /><span style={{fontSize:11, color:theme.grayMid}}>Clientes</span></div>
           </div>
+        </div>
+
+        {/* Origen de las altas */}
+        <div style={s.sectionTitle}>De dónde vienen las altas (desde el 28/09)</div>
+        <div style={{background:'#111', borderRadius:16, overflow:'hidden', marginBottom:32}}>
+          {origenes.length === 0 ? (
+            <div style={{padding:24, color:theme.grayMid, fontSize:13}}>Todavía no hay altas con origen registrado.</div>
+          ) : (
+            <table style={{width:'100%', borderCollapse:'collapse'}}>
+              <thead>
+                <tr style={{borderBottom:'1px solid #1e1e1e'}}>
+                  {['Fuente', 'Altas', 'Con clientes', 'Pagan'].map((t, i) => (
+                    <th key={t} style={{padding:'12px 16px', textAlign: i === 0 ? 'left' : 'right', fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.06em', color:theme.grayMid}}>{t}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {origenes.map(o => (
+                  <tr key={o.fuente} style={{borderBottom:'1px solid #151515'}}>
+                    <td style={{padding:'12px 16px', fontSize:13, fontWeight:700, color:'white'}}>{nombreFuente(o.fuente)}</td>
+                    <td style={{padding:'12px 16px', textAlign:'right', fontSize:13, fontWeight:700, color:'white', fontFamily:'monospace'}}>{o.altas}</td>
+                    <td style={{padding:'12px 16px', textAlign:'right', fontSize:13, color:theme.gray, fontFamily:'monospace'}}>{o.conClientes}</td>
+                    <td style={{padding:'12px 16px', textAlign:'right', fontSize:13, fontWeight:700, color: o.pagos > 0 ? '#00c853' : theme.grayMid, fontFamily:'monospace'}}>{o.pagos}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
         </div>
 
         {/* Tabla de negocios */}
@@ -479,6 +535,18 @@ export default function Admin() {
                         style={{fontSize:10, color:theme.gray, marginTop:4, whiteSpace:'nowrap'}}>
                         ✋ a mano
                       </div>
+                    )}
+                  </td>
+                  <td style={{padding:'14px 16px'}}>
+                    {n.origenFuente ? (
+                      <>
+                        <div style={{fontSize:12, color:'white', fontWeight:600}}>{nombreFuente(n.origenFuente)}</div>
+                        {n.origen?.landing && n.origen.landing !== '/' && (
+                          <div style={{fontSize:11, color:theme.grayMid, maxWidth:140, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap'}} title={n.origen.landing}>{n.origen.landing}</div>
+                        )}
+                      </>
+                    ) : (
+                      <div style={{fontSize:12, color:theme.grayMid}}>—</div>
                     )}
                   </td>
                   <td style={{padding:'14px 16px', fontSize:13, fontWeight:700, color:'white', fontFamily:'monospace'}}>{n.totalClientes}</td>
