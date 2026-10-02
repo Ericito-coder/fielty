@@ -3,7 +3,7 @@ import { MercadoPagoConfig, PreApproval } from 'mercadopago'
 import crypto from 'crypto'
 import { enviarEmail } from '@/lib/email'
 import { getSupabaseAdmin } from '@/lib/server'
-import { resolverNegocio, sincronizarSuscripcion } from '@/lib/mp'
+import { mpGet, resolverNegocio, sincronizarSuscripcion } from '@/lib/mp'
 
 const client = new MercadoPagoConfig({ accessToken: process.env.MP_ACCESS_TOKEN })
 // Valida el header x-signature que manda MP (HMAC-SHA256 sobre
@@ -79,9 +79,34 @@ export async function POST(request) {
 
     if (!data?.id) return NextResponse.json({ ok: true })
 
+    // En subscription_authorized_payment el data.id es el de la cuota
+    // cobrada (authorized_payment), no el de la suscripción: pedirlo como
+    // preapproval da 404 "Preapproval not found". Primero se trae la
+    // cuota, que dice a qué suscripción pertenece en preapproval_id.
+    let preapprovalId = data.id
+    let cuota = null
+    if (tipoEvento === 'subscription_authorized_payment') {
+      cuota = await mpGet(`/authorized_payments/${encodeURIComponent(data.id)}`)
+      preapprovalId = cuota?.preapproval_id
+
+      if (!preapprovalId) {
+        // Sin suscripción no hay negocio que sincronizar. Queda registrado
+        // y se responde 200: un reintento de MP no lo arregla, y el cron
+        // diario deja el plan como corresponde de todos modos.
+        await logEvento(supabaseAdmin, {
+          tipo: tipoEvento,
+          data_id: String(data.id),
+          estado: cuota ? 'cuota_sin_preapproval_id' : 'cuota_no_disponible',
+          resuelto: false,
+          payload: body,
+        })
+        return NextResponse.json({ ok: true })
+      }
+    }
+
     // Traer los detalles de la suscripción desde MP
     const preApproval = new PreApproval(client)
-    const suscripcion = await preApproval.get({ id: data.id })
+    const suscripcion = await preApproval.get({ id: preapprovalId })
     const estado = suscripcion?.status
 
     const resuelto = await resolverNegocio(supabaseAdmin, suscripcion)
@@ -92,14 +117,23 @@ export async function POST(request) {
       estado,
       negocio_id: resuelto?.negocioId || null,
       resuelto: !!resuelto,
-      payload: { external_reference: suscripcion?.external_reference, preapproval_plan_id: suscripcion?.preapproval_plan_id, status: estado, via: resuelto?.via },
+      payload: {
+        external_reference: suscripcion?.external_reference, preapproval_plan_id: suscripcion?.preapproval_plan_id, status: estado, via: resuelto?.via,
+        // En los eventos de cuota el data_id no es el de la suscripción, así
+        // que se guarda aparte, junto con cómo salió el cobro: es lo que hay
+        // que mirar cuando un cliente dice que le rechazaron el pago.
+        ...(cuota && {
+          preapproval_id: String(preapprovalId),
+          cuota: { status: cuota.status, pago: cuota.payment?.status, detalle: cuota.payment?.status_detail },
+        }),
+      },
     })
 
     if (!resuelto) {
       // Pago que no se puede asociar a ningún negocio: avisar para
       // resolverlo a mano antes de que el cliente reclame.
-      console.error('Webhook MP: no se pudo asociar la suscripción', data.id, suscripcion?.preapproval_plan_id)
-      after(() => avisarHuerfano({ dataId: data.id, planId: suscripcion?.preapproval_plan_id, estado }).catch(() => {}))
+      console.error('Webhook MP: no se pudo asociar la suscripción', preapprovalId, suscripcion?.preapproval_plan_id)
+      after(() => avisarHuerfano({ dataId: preapprovalId, planId: suscripcion?.preapproval_plan_id, estado }).catch(() => {}))
       return NextResponse.json({ ok: true })
     }
 
