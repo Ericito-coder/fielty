@@ -30,12 +30,20 @@ export default function Login() {
     setError('')
     setCargando(true)
 
-    const { error: resetError } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${window.location.origin}/reset-password`
-    })
+    // El mail lo manda nuestra API y no Supabase directo: el de Supabase
+    // llegaba en inglés y sin la marca (ver /api/dueno/forgot-password).
+    let enviado = false
+    try {
+      const res = await fetch('/api/dueno/forgot-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      })
+      enviado = res.ok
+    } catch { /* sin conexión: se muestra el error de abajo */ }
 
     setCargando(false)
-    if (resetError) { setError('Hubo un error, intentá de nuevo'); return }
+    if (!enviado) { setError('Hubo un error, intentá de nuevo'); return }
     setResetOk(true)
   }
 
