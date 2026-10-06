@@ -50,14 +50,18 @@ export default function Dashboard() {
       // contra la API de MP en vez de esperar el webhook: así el plan
       // queda activo aunque la notificación no llegue.
       const params = new URLSearchParams(window.location.search)
+      let montoPagado
       if (params.get('suscripcion') === 'ok') {
         window.history.replaceState({}, '', '/dashboard')
         const verificado = await verificarPago(negocioData.id)
         if (verificado?.plan) negocioData = { ...negocioData, plan: verificado.plan }
-        medirPagoNuevo(negocioData, verificado?.monto)
+        montoPagado = verificado?.monto
         setMostrarExito(true)
         setTimeout(() => setMostrarExito(false), 8000)
       }
+      // Fuera del if: el dueño que pagó y no volvió por el back_url entra
+      // al panel por la URL de siempre, y el pago se mide igual.
+      medirPagoNuevo(negocioData, montoPagado)
 
       setNegocio(negocioData)
       await cargarMetricas(negocioData.id)

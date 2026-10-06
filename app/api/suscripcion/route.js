@@ -86,7 +86,10 @@ export async function POST(request) {
 
     return NextResponse.json({
       init_point: resultado.init_point,
-      id: resultado.id
+      id: resultado.id,
+      // El panel lo guarda para medir el pago con su valor aunque el
+      // dueño no vuelva desde Mercado Pago (ver medirPagoNuevo).
+      monto: precio,
     })
 
   } catch (error) {

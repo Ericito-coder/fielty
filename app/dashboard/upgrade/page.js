@@ -78,12 +78,18 @@ export default function Upgrade() {
       const data = await res.json()
       if (data.init_point) {
         storage.remove('fielty_plan')
-        // El dashboard lo lee al volver de Mercado Pago para saber si el
-        // pago activó un plan que antes no estaba. No alcanza con el
-        // `cambio` de la verificación: si el webhook llegó antes que el
-        // usuario, el plan ya figura activo y la verificación dice que no
-        // cambió nada.
-        storage.set('fielty_checkout', JSON.stringify({ negocioId: negocio.id, planAnterior: negocio.plan || 'gratis' }))
+        // El dashboard lo lee en cada entrada para saber si el pago activó
+        // un plan que antes no estaba. No alcanza con el `cambio` de la
+        // verificación: si el webhook llegó antes que el usuario, el plan
+        // ya figura activo y la verificación dice que no cambió nada. El
+        // monto y la fecha van acá porque el dueño puede no volver por el
+        // back_url, y entonces no hay verificación que informe el monto.
+        storage.set('fielty_checkout', JSON.stringify({
+          negocioId: negocio.id,
+          planAnterior: negocio.plan || 'gratis',
+          monto: data.monto,
+          fecha: new Date().toISOString(),
+        }))
         window.location.href = data.init_point
       } else {
         setError('No se pudo iniciar el pago. Intentá de nuevo.')
