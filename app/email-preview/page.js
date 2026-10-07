@@ -14,6 +14,8 @@ export default function EmailPreview() {
       const res = await fetch('/api/admin/verificar', {
         headers: { Authorization: `Bearer ${session.access_token}` },
       })
+      // 403 es el admin sin la verificación en dos pasos: se hace en /admin.
+      if (res.status === 403) { window.location.href = '/admin'; return }
       if (!res.ok) { window.location.href = '/dashboard'; return }
       setAutorizado(true)
     })

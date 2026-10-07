@@ -1,10 +1,7 @@
 import { NextResponse, after } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
-import { getRequestIp } from '@/lib/server'
+import { verificarAdmin } from '@/lib/server'
 import { sincronizarClaseWallet } from '@/lib/googleWallet'
-import { rateLimit } from '@/lib/rateLimit'
-
-const ADMIN_EMAIL = process.env.ADMIN_EMAIL
 
 const supabaseAdmin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL,
@@ -13,16 +10,8 @@ const supabaseAdmin = createClient(
 
 export async function POST(request) {
   try {
-    const { ok } = await rateLimit({ key: `admin-auth:${getRequestIp(request)}`, maxAttempts: 30, windowMs: 15 * 60 * 1000 })
-    if (!ok) return NextResponse.json({ error: 'Demasiados intentos. Esperá un momento.' }, { status: 429 })
-
-    const token = request.headers.get('Authorization')?.replace('Bearer ', '')
-    if (!token) return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
-
-    const { data: { user } } = await supabaseAdmin.auth.getUser(token)
-    if (!ADMIN_EMAIL || user?.email !== ADMIN_EMAIL) {
-      return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
-    }
+    const admin = await verificarAdmin(supabaseAdmin, request)
+    if (admin.error) return NextResponse.json({ error: admin.error, mfa: admin.mfa }, { status: admin.status })
 
     const { negocioId, plan } = await request.json()
     const planesValidos = ['gratis', 'pro_early', 'pro', 'business']

@@ -1,9 +1,6 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
-import { getRequestIp } from '@/lib/server'
-import { rateLimit } from '@/lib/rateLimit'
-
-const ADMIN_EMAIL = process.env.ADMIN_EMAIL
+import { verificarAdmin } from '@/lib/server'
 
 const supabaseAdmin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL,
@@ -12,14 +9,8 @@ const supabaseAdmin = createClient(
 
 export async function GET(request, { params }) {
   try {
-    const { ok } = await rateLimit({ key: `admin-auth:${getRequestIp(request)}`, maxAttempts: 30, windowMs: 15 * 60 * 1000 })
-    if (!ok) return NextResponse.json({ error: 'Demasiados intentos. Esperá un momento.' }, { status: 429 })
-
-    const token = request.headers.get('Authorization')?.replace('Bearer ', '')
-    if (!token) return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
-
-    const { data: { user } } = await supabaseAdmin.auth.getUser(token)
-    if (!ADMIN_EMAIL || user?.email !== ADMIN_EMAIL) return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
+    const admin = await verificarAdmin(supabaseAdmin, request)
+    if (admin.error) return NextResponse.json({ error: admin.error, mfa: admin.mfa }, { status: admin.status })
 
     const { id } = await params
 

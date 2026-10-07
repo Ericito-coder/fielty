@@ -82,6 +82,11 @@ export default function Admin() {
   const [detalleData, setDetalleData] = useState(null)
   const [cargandoDetalle, setCargandoDetalle] = useState(false)
   const [orden, setOrden] = useState({ campo: 'created_at', dir: 'desc' })
+  // Verificación en dos pasos pendiente: { paso: 'configurar' | 'verificar', factorId, qr, secreto }
+  const [mfa, setMfa] = useState(null)
+  const [codigo, setCodigo] = useState('')
+  const [mfaError, setMfaError] = useState('')
+  const [verificando, setVerificando] = useState(false)
 
   useEffect(() => {
     iniciar()
@@ -112,6 +117,7 @@ export default function Admin() {
     try {
       const res = await conTimeout(fetch('/api/admin/data', { headers: { Authorization: `Bearer ${t}` } }), 20000)
       if (res.status === 401) { window.location.href = '/dashboard'; return }
+      if (res.status === 403) { await pedirSegundoPaso(); setCargando(false); return }
       if (!res.ok) { setError('Error cargando datos'); setCargando(false); return }
       const json = await res.json()
       setData(json)
@@ -120,6 +126,52 @@ export default function Admin() {
       setError('No se pudieron cargar los datos.')
       setCargando(false)
     }
+  }
+
+  // El servidor contesta 403 cuando la cuenta es la del admin pero la sesión
+  // todavía no pasó la verificación en dos pasos. Si ya hay una app de
+  // autenticación configurada se pide el código; si no, se configura acá.
+  async function pedirSegundoPaso() {
+    const { data: factores, error: fallo } = await conTimeout(supabase.auth.mfa.listFactors(), 10000)
+    if (fallo) throw fallo
+    const configurado = factores.totp[0]
+    if (configurado) { setMfa({ paso: 'verificar', factorId: configurado.id }); return }
+
+    // Una configuración que quedó a medias (se cerró la pestaña antes de
+    // poner el código) no sirve para entrar y choca con la nueva.
+    for (const f of factores.all.filter(f => f.status === 'unverified')) {
+      await conTimeout(supabase.auth.mfa.unenroll({ factorId: f.id }), 10000)
+    }
+    const alta = await conTimeout(supabase.auth.mfa.enroll({ factorType: 'totp', issuer: 'Fielty admin' }), 10000)
+    if (alta.error) throw alta.error
+    setMfa({ paso: 'configurar', factorId: alta.data.id, qr: alta.data.totp.qr_code, secreto: alta.data.totp.secret })
+  }
+
+  // Al verificar el código, Supabase cambia la sesión por una de nivel aal2:
+  // hay que volver a leerla, el token de antes ya no sirve para el panel.
+  async function confirmarCodigo(e) {
+    e.preventDefault()
+    setVerificando(true)
+    setMfaError('')
+    try {
+      const { error: fallo } = await conTimeout(supabase.auth.mfa.challengeAndVerify({ factorId: mfa.factorId, code: codigo }), 15000)
+      if (fallo) {
+        setMfaError(fallo.code === 'mfa_verification_failed'
+          ? 'Ese código no es válido. Fijate que sea el que muestra la app ahora y probá de nuevo.'
+          : 'No pudimos verificar el código. Probá de nuevo.')
+        setCodigo('')
+        setVerificando(false)
+        return
+      }
+      const { data: { session } } = await conTimeout(supabase.auth.getSession(), 10000)
+      setToken(session.access_token)
+      setMfa(null)
+      setCodigo('')
+      await fetchData(session.access_token)
+    } catch {
+      setMfaError('No pudimos verificar el código. Probá de nuevo.')
+    }
+    setVerificando(false)
   }
 
   // Si getSession() está trabado, signOut() también lo va a estar: usa el
@@ -171,6 +223,52 @@ export default function Admin() {
           <button onClick={volverAEntrar} style={{...s.botonError, background:'#1a1a1a', color:theme.gray}}>Volver a entrar</button>
         </div>
       </div>
+    </div>
+  )
+  if (mfa) return (
+    <div style={s.wrap}>
+      <form onSubmit={confirmarCodigo} style={{width:'100%', maxWidth:380, alignSelf:'center', background:'#111', borderRadius:20, padding:32}}>
+        <div style={{fontSize:18, fontWeight:800, color:'white', marginBottom:8}}>Verificación en dos pasos</div>
+        {mfa.paso === 'configurar' ? (
+          <>
+            <div style={{fontSize:13, color:theme.darkText, lineHeight:1.6, marginBottom:20}}>
+              El panel de admin la pide siempre. Escaneá este código con Google Authenticator o la app de autenticación que uses.
+            </div>
+            <div style={{background:'white', borderRadius:12, padding:12, width:200, margin:'0 auto 16px'}}>
+              <img src={mfa.qr} alt="Código QR para la app de autenticación" style={{width:'100%', display:'block'}} />
+            </div>
+            <div style={{fontSize:12, color:theme.darkMuted, marginBottom:6}}>Si no podés escanearlo, cargá esta clave a mano:</div>
+            <div style={{fontSize:12, color:theme.darkText, fontFamily:'monospace', wordBreak:'break-all', userSelect:'all', background:'#1a1a1a', borderRadius:8, padding:'8px 10px', marginBottom:20}}>{mfa.secreto}</div>
+            <div style={{fontSize:13, color:theme.darkText, lineHeight:1.6, marginBottom:10}}>Después escribí el código de 6 dígitos que te muestra la app.</div>
+          </>
+        ) : (
+          <div style={{fontSize:13, color:theme.darkText, lineHeight:1.6, marginBottom:20}}>
+            Escribí el código de 6 dígitos que te muestra tu app de autenticación.
+          </div>
+        )}
+        <input
+          value={codigo}
+          // Sin maxLength a propósito: las apps muestran el código como
+          // "123 456" y, al pegarlo así, el tope cortaba el último dígito
+          // antes de que se sacara el espacio.
+          onChange={e => setCodigo(e.target.value.replace(/\D/g, '').slice(0, 6))}
+          inputMode="numeric"
+          autoComplete="one-time-code"
+          autoFocus
+          aria-label="Código de 6 dígitos"
+          placeholder="000000"
+          style={{width:'100%', boxSizing:'border-box', padding:'12px 16px', background:'#1a1a1a', border:'1px solid #2a2a2a', borderRadius:10, color:'white', fontSize:22, fontFamily:'monospace', letterSpacing:'0.3em', textAlign:'center', outline:'none', marginBottom:12}}
+        />
+        {mfaError && <div style={{fontSize:13, color:theme.redOnDark, lineHeight:1.5, marginBottom:12}}>{mfaError}</div>}
+        <button type="submit" disabled={verificando || codigo.length < 6}
+          style={{...s.botonError, width:'100%', padding:'12px 24px', opacity: verificando || codigo.length < 6 ? 0.5 : 1, cursor: verificando || codigo.length < 6 ? 'default' : 'pointer'}}>
+          {verificando ? 'Verificando...' : mfa.paso === 'configurar' ? 'Activar' : 'Entrar'}
+        </button>
+        <button type="button" onClick={() => supabase.auth.signOut().then(() => window.location.href = '/login')}
+          style={{width:'100%', marginTop:8, padding:'10px 24px', background:'none', border:'none', color:theme.darkMuted, fontSize:13, cursor:'pointer', fontFamily:'inherit'}}>
+          Salir
+        </button>
+      </form>
     </div>
   )
   if (!data) return null
