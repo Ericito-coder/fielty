@@ -40,6 +40,37 @@ const RANGO_PLAN = { gratis: 0, pro_early: 1, pro: 2, business: 3 }
 const FUENTES = { 'chatgpt.com': 'ChatGPT', google: 'Google', bing: 'Bing', perplexity: 'Perplexity', instagram: 'Instagram', facebook: 'Facebook', direct: 'Directo' }
 const nombreFuente = f => FUENTES[f] || f
 
+const pesos = n => '$' + Math.round(n).toLocaleString('es-AR')
+const fecha = t => new Date(t).toLocaleDateString('es-AR')
+const decimal = n => n.toLocaleString('es-AR', { maximumFractionDigits: 1 })
+
+// "hace 2 meses": la antigüedad de un pago se lee mejor así que como fecha.
+function haceCuanto(t) {
+  const dias = Math.floor((Date.now() - new Date(t).getTime()) / 86400000)
+  if (dias < 1) return 'hoy'
+  if (dias < 31) return `hace ${dias} ${dias === 1 ? 'día' : 'días'}`
+  const meses = Math.floor(dias / 30.44)
+  if (meses < 12) return `hace ${meses} ${meses === 1 ? 'mes' : 'meses'}`
+  const anios = Math.floor(meses / 12)
+  const resto = meses % 12
+  return `hace ${anios} ${anios === 1 ? 'año' : 'años'}${resto ? ` y ${resto} ${resto === 1 ? 'mes' : 'meses'}` : ''}`
+}
+
+// Días entre que el negocio se registró y su primer pago.
+function delAltaAlPago(dias) {
+  if (dias === null || dias === undefined) return '—'
+  if (dias < 1) return 'El mismo día'
+  return `${decimal(dias)} ${dias === 1 ? 'día' : 'días'}`
+}
+
+// Arriba los que pagan hoy, del más antiguo al más nuevo; al final las bajas.
+function ordenPagos(a, b) {
+  if (a.paga !== b.paga) return a.paga ? -1 : 1
+  const ta = a.suscripcion ? new Date(a.suscripcion.pagaDesde).getTime() : Infinity
+  const tb = b.suscripcion ? new Date(b.suscripcion.pagaDesde).getTime() : Infinity
+  return ta - tb
+}
+
 export default function Admin() {
   const [data, setData] = useState(null)
   const [cargando, setCargando] = useState(true)
@@ -144,7 +175,11 @@ export default function Admin() {
   )
   if (!data) return null
 
-  const { metricas, facturacion, alertas, crecimiento, negocios, origenes = [] } = data
+  const { metricas, facturacion, alertas, crecimiento, negocios, origenes = [], pagos = {}, gratis = {} } = data
+
+  // Los que pagan hoy y los que pagaron alguna vez y se dieron de baja.
+  const clientesPagos = negocios.filter(n => n.paga || n.suscripcion).sort(ordenPagos)
+  const sinTerminarPago = negocios.filter(n => n.intentoPago)
 
   const negociosFiltrados = negocios.filter(n =>
     n.nombre?.toLowerCase().includes(busqueda.toLowerCase()) ||
@@ -226,6 +261,33 @@ export default function Admin() {
             </div>
 
             <div style={{padding:24, flex:1}}>
+              {/* Suscripción: ya viene con el negocio, no espera al detalle */}
+              {negocioDetalle.suscripcion && (
+                <>
+                  <div style={{fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.08em', color:theme.grayMid, marginBottom:10}}>Suscripción</div>
+                  <div style={{display:'grid', gridTemplateColumns:'repeat(2,1fr)', gap:10, marginBottom:24}}>
+                    {[
+                      { label: `Paga desde, ${haceCuanto(negocioDetalle.suscripcion.pagaDesde)}`, value: fecha(negocioDetalle.suscripcion.pagaDesde) },
+                      { label: negocioDetalle.suscripcion.cuotas === 1 ? 'Cuota cobrada' : 'Cuotas cobradas', value: negocioDetalle.suscripcion.cuotas },
+                      { label: 'Cobrado', value: pesos(negocioDetalle.suscripcion.cobrado) },
+                      negocioDetalle.suscripcion.bajaEl
+                        ? { label: 'Baja', value: fecha(negocioDetalle.suscripcion.bajaEl) }
+                        : { label: 'Próximo cobro', value: negocioDetalle.suscripcion.proximoCobro ? fecha(negocioDetalle.suscripcion.proximoCobro) : '—' },
+                    ].map((item, i) => (
+                      <div key={i} style={{background:'#1a1a1a', borderRadius:12, padding:'12px 14px', textAlign:'center'}}>
+                        <div style={{fontSize:18, fontWeight:800, color:'white', fontFamily:'monospace'}}>{item.value}</div>
+                        <div style={{fontSize:10, color:theme.grayMid, marginTop:3}}>{item.label}</div>
+                      </div>
+                    ))}
+                  </div>
+                </>
+              )}
+              {negocioDetalle.intentoPago && (
+                <div style={{background:'#1a1a1a', borderRadius:12, padding:'12px 14px', marginBottom:24, fontSize:13, color:theme.darkText}}>
+                  Abrió el pago de {PLAN_LABELS[negocioDetalle.intentoPago.plan] || negocioDetalle.intentoPago.plan} el {fecha(negocioDetalle.intentoPago.fecha)} y no lo terminó.
+                </div>
+              )}
+
               {cargandoDetalle && <div style={{color:theme.grayMid, textAlign:'center', padding:40}}>Cargando...</div>}
 
               {detalleData && (
@@ -233,7 +295,7 @@ export default function Admin() {
                   {/* Stats rápidos */}
                   <div style={{display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:10, marginBottom:24}}>
                     {[
-                      { label:'Clientes', value: detalleData.totalClientes },
+                      { label: negocioDetalle.limite ? 'Clientes, del límite gratis' : 'Clientes', value: negocioDetalle.limite ? `${detalleData.totalClientes}/${negocioDetalle.limite}` : detalleData.totalClientes },
                       { label:'Activos 30d', value: detalleData.activos },
                       { label:'Nuevos mes', value: detalleData.nuevosEsteMes },
                       { label:'Canjes', value: negocioDetalle.totalCanjesNegocio },
@@ -368,6 +430,143 @@ export default function Admin() {
             <div style={{fontSize:32, fontWeight:900, color:theme.blue, fontFamily:'monospace'}}>{facturacion.nuevosEsteMes}</div>
           </div>
         </div>
+
+        {/* Clientes pagos: desde cuándo paga cada uno y cuánto dejó */}
+        <div style={s.sectionTitle}>Clientes pagos ({clientesPagos.length})</div>
+        {!pagos.mpDisponible && (
+          <div style={{...s.alertCard, marginBottom:12, display:'flex', alignItems:'center', justifyContent:'space-between', gap:16}}>
+            <div style={{fontSize:13, color:theme.darkMuted}}>No se pudo consultar Mercado Pago: faltan desde cuándo paga cada negocio y cuánto se le cobró.</div>
+            <button onClick={() => fetchData(token)} style={{padding:'8px 16px', background:'#1a1a1a', border:'none', borderRadius:10, color:'white', fontSize:13, fontWeight:600, cursor:'pointer', fontFamily:'inherit', flexShrink:0}}>Reintentar</button>
+          </div>
+        )}
+        <div style={{...s.cardsRow, marginBottom:12}}>
+          {[
+            {
+              label: 'Cobrado hasta hoy',
+              value: pagos.mpDisponible ? pesos(pagos.cobradoTotal) : '—',
+              color: '#00c853',
+              sub: pagos.mpDisponible && `${pagos.cuotasTotal} ${pagos.cuotasTotal === 1 ? 'cuota' : 'cuotas'}, antes de la comisión de Mercado Pago`,
+            },
+            {
+              label: 'Cobrado por negocio',
+              value: pagos.cobradoPorNegocio ? pesos(pagos.cobradoPorNegocio) : '—',
+              sub: pagos.cobradoPorNegocio && `${decimal(pagos.cuotasPorNegocio)} cuotas en promedio, a ${pesos(pagos.ticketPromedio || 0)} por mes`,
+            },
+            {
+              label: 'LTV estimado',
+              value: pagos.ltvEstimado ? pesos(pagos.ltvEstimado) : '—',
+              sub: pagos.ltvEstimado
+                ? `Un cliente dura ${decimal(1 / pagos.churnMensual)} meses: ${pagos.bajas} ${pagos.bajas === 1 ? 'baja' : 'bajas'} en ${pagos.cuotasTotal} cuotas`
+                : pagos.pagaronAlgunaVez > 0 && 'Todavía no hubo bajas, y sin bajas no se sabe cuánto dura un cliente',
+            },
+            {
+              label: 'Del alta al pago',
+              value: delAltaAlPago(pagos.medianaDiasHastaPagar),
+              sub: pagos.pagaronAlgunaVez > 0 && `Mediana de los ${pagos.pagaronAlgunaVez} que pagaron`,
+            },
+          ].map(m => (
+            <div key={m.label} style={s.metricCard}>
+              <div style={{fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.08em', color:theme.grayMid, marginBottom:8}}>{m.label}</div>
+              <div style={{fontSize:26, fontWeight:900, color: m.color || 'white', fontFamily:'monospace'}}>{m.value}</div>
+              {m.sub && <div style={{fontSize:12, color:theme.darkMuted, marginTop:6, lineHeight:1.4}}>{m.sub}</div>}
+            </div>
+          ))}
+        </div>
+        <div style={{background:'#111', borderRadius:16, overflow:'hidden', marginBottom:32}}>
+          {clientesPagos.length === 0 ? (
+            <div style={{padding:24, color:theme.darkMuted, fontSize:13}}>Todavía no hay negocios pagando.</div>
+          ) : (
+            <table style={{width:'100%', borderCollapse:'collapse'}}>
+              <thead>
+                <tr style={{borderBottom:'1px solid #1e1e1e'}}>
+                  {['Negocio', 'Plan', 'Paga desde', 'Del alta al pago', 'Cuotas', 'Cobrado', 'Por mes', 'Próximo cobro'].map((t, i) => (
+                    <th key={t} style={{padding:'12px 16px', textAlign: i >= 4 && i <= 6 ? 'right' : 'left', fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.06em', color:theme.grayMid, whiteSpace:'nowrap'}}>{t}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {clientesPagos.map(n => {
+                  const sus = n.suscripcion
+                  return (
+                    <tr key={n.id} style={{borderBottom:'1px solid #151515', cursor:'pointer'}} onClick={() => abrirDetalle(n)}>
+                      <td style={{padding:'12px 16px'}}>
+                        <div style={{display:'flex', alignItems:'center', gap:10}}>
+                          <div style={{width:32, height:32, borderRadius:8, background: n.color || '#333', display:'flex', alignItems:'center', justifyContent:'center', fontSize:12, fontWeight:900, color:'white', flexShrink:0}}>
+                            {n.nombre?.slice(0,2).toUpperCase()}
+                          </div>
+                          <div style={{fontSize:13, fontWeight:700, color:'white', maxWidth:220, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap'}} title={n.nombre}>{n.nombre}</div>
+                        </div>
+                      </td>
+                      <td style={{padding:'12px 16px', fontSize:12, fontWeight:700, color: PLAN_COLORES[n.plan || 'gratis'], whiteSpace:'nowrap'}}>{PLAN_LABELS[n.plan || 'gratis']}</td>
+                      <td style={{padding:'12px 16px'}}>
+                        {sus ? (
+                          <>
+                            <div style={{fontSize:13, color:'white'}}>{fecha(sus.pagaDesde)}</div>
+                            <div style={{fontSize:11, color:theme.darkMuted}}>{haceCuanto(sus.pagaDesde)}</div>
+                          </>
+                        ) : <div style={{fontSize:13, color:theme.grayMid}}>—</div>}
+                      </td>
+                      <td style={{padding:'12px 16px', fontSize:13, color:theme.darkText}}>{delAltaAlPago(sus?.diasHastaPagar)}</td>
+                      <td style={{padding:'12px 16px', textAlign:'right', fontSize:13, color:theme.darkText, fontFamily:'monospace'}}>{sus ? sus.cuotas : '—'}</td>
+                      <td style={{padding:'12px 16px', textAlign:'right', fontSize:13, fontWeight:700, color:'white', fontFamily:'monospace'}}>{sus ? pesos(sus.cobrado) : '—'}</td>
+                      <td style={{padding:'12px 16px', textAlign:'right', fontSize:13, color:theme.darkText, fontFamily:'monospace'}}>{sus?.mensual ? pesos(sus.mensual) : '—'}</td>
+                      <td style={{padding:'12px 16px', fontSize:13, color: sus?.bajaEl ? theme.redOnDark : theme.darkText, whiteSpace:'nowrap'}}>
+                        {sus?.bajaEl ? `Baja el ${fecha(sus.bajaEl)}` : sus?.proximoCobro ? fecha(sus.proximoCobro) : '—'}
+                      </td>
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </table>
+          )}
+        </div>
+
+        {/* Plan gratis: cuántos lo usan de verdad y cuántos estuvieron por pagar */}
+        <div style={s.sectionTitle}>Plan gratis ({gratis.total || 0})</div>
+        <div style={{...s.cardsRow, marginBottom: sinTerminarPago.length > 0 ? 12 : 32}}>
+          {[
+            { label: 'Con clientes cargados', value: gratis.conClientes, sub: gratis.total > 0 && `${decimal(gratis.conClientes / gratis.total * 100)}% de los gratis` },
+            { label: 'Activos (30 días)', value: gratis.activos30, sub: 'Con visitas en el último mes' },
+            { label: 'En el límite', value: gratis.enElLimite, sub: 'No pueden sumar clientes sin pagar' },
+            { label: 'Abrieron el pago', value: gratis.intentaronPagar, sub: 'Y no lo terminaron' },
+            { label: 'Conversión a pago', value: gratis.base > 0 ? `${decimal(gratis.pagaron / gratis.base * 100)}%` : '—', sub: gratis.base > 0 && `${gratis.pagaron} de ${gratis.base} negocios` },
+          ].map(m => (
+            <div key={m.label} style={s.metricCard}>
+              <div style={{fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.08em', color:theme.grayMid, marginBottom:8}}>{m.label}</div>
+              <div style={{fontSize:26, fontWeight:900, color:'white', fontFamily:'monospace'}}>{m.value ?? 0}</div>
+              {m.sub && <div style={{fontSize:12, color:theme.darkMuted, marginTop:6, lineHeight:1.4}}>{m.sub}</div>}
+            </div>
+          ))}
+        </div>
+        {sinTerminarPago.length > 0 && (
+          <div style={{...s.alertCard, marginBottom:32}}>
+            <div style={{fontSize:13, fontWeight:700, color:'white', marginBottom:12}}>Abrieron el pago y no lo terminaron</div>
+            {sinTerminarPago.map(n => (
+              <div key={n.id} onClick={() => abrirDetalle(n)} style={{display:'flex', justifyContent:'space-between', alignItems:'center', gap:16, padding:'8px 0', borderBottom:'1px solid #1e1e1e', cursor:'pointer'}}>
+                <div style={{minWidth:0}}>
+                  <div style={{fontSize:13, fontWeight:700, color:'white', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap'}}>{n.nombre}</div>
+                  <div style={{fontSize:11, color:theme.darkMuted}}>{n.email}</div>
+                </div>
+                <div style={{display:'flex', alignItems:'center', gap:20, flexShrink:0}}>
+                  {n.telefono && (
+                    <a
+                      href={linkWhatsApp(n.telefono, `Hola ${n.nombreDueno || n.nombre}! Te escribo de Fielty.`)}
+                      target="_blank"
+                      rel="noreferrer"
+                      onClick={e => e.stopPropagation()}
+                      style={{fontSize:12, color:theme.green, textDecoration:'none'}}
+                    >
+                      {n.telefono}
+                    </a>
+                  )}
+                  <div style={{fontSize:12, color:theme.darkText, textAlign:'right'}}>
+                    {PLAN_LABELS[n.intentoPago.plan] || n.intentoPago.plan} · {fecha(n.intentoPago.fecha)}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
 
         {/* Alertas */}
         {(alertas.cercaDelLimite.length > 0 || alertas.inactivos.length > 0) && (

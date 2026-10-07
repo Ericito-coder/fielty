@@ -3,6 +3,8 @@ import { createClient } from '@supabase/supabase-js'
 import { getRequestIp } from '@/lib/server'
 import { rateLimit } from '@/lib/rateLimit'
 import { limiteClientes } from '@/lib/planes'
+import { listarPreapprovals } from '@/lib/mp'
+import { suscripcionesPorNegocio, resumenPagos } from '@/lib/facturacion'
 
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL
 
@@ -25,17 +27,22 @@ export async function GET(request) {
       return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
     }
 
-    // Traer todo en paralelo
+    // Traer todo en paralelo. Mercado Pago va con tope de espera y sin
+    // romper nada si falla: el panel se muestra igual, sin fechas ni cobros.
     const [
       { data: negocios },
       { data: clientes },
       { data: canjes },
-      { data: usersData }
+      { data: usersData },
+      { data: intentos },
+      preapprovals,
     ] = await Promise.all([
       supabaseAdmin.from('negocios').select('*').order('created_at', { ascending: false }),
       supabaseAdmin.from('clientes').select('negocio_id, puntos, ultima_visita, created_at'),
       supabaseAdmin.from('canjes').select('negocio_id, estado, created_at').eq('estado', 'usado'),
       supabaseAdmin.auth.admin.listUsers({ perPage: 1000 }),
+      supabaseAdmin.from('suscripciones').select('negocio_id, mp_plan_id, plan_tipo, created_at'),
+      listarPreapprovals({ signal: AbortSignal.timeout(8000) }).catch(() => null),
     ])
 
     const usuarios = usersData?.users || []
@@ -87,8 +94,43 @@ export async function GET(request) {
     negocios?.forEach(n => { porPlan[n.plan || 'gratis'] = (porPlan[n.plan || 'gratis'] || 0) + 1 })
     const pagos = negocios?.filter(paga) || []
     const aMano = negocios?.filter(n => n.plan_manual && precioDe(n) > 0) || []
-    const mrr = pagos.reduce((sum, n) => sum + precioDe(n), 0)
     const mrrAMano = aMano.reduce((sum, n) => sum + precioDe(n), 0)
+
+    // Desde cuándo paga cada uno y cuánto se le cobró, según Mercado Pago.
+    // El MRR usa lo que MP cobra de verdad por mes y cae al precio de lista
+    // solo si no se pudo consultar: hay negocios con precio heredado.
+    const suscripciones = suscripcionesPorNegocio({
+      negocios: negocios || [],
+      intentos: intentos || [],
+      preapprovals: preapprovals || [],
+    })
+    const mrr = pagos.reduce((sum, n) => sum + (suscripciones.get(n.id)?.mensual ?? precioDe(n)), 0)
+    const resumen = resumenPagos({ negocios: negocios || [], suscripciones, pagos, mrr })
+
+    // Negocios gratis que abrieron el checkout y no terminaron: el último
+    // intento de cada uno. Los que llegaron a pagar y se dieron de baja no
+    // cuentan acá, esos tienen su suscripción.
+    const intentoPorNegocio = {}
+    intentos?.forEach(i => {
+      const previo = intentoPorNegocio[i.negocio_id]
+      if (!previo || i.created_at > previo.fecha) intentoPorNegocio[i.negocio_id] = { fecha: i.created_at, plan: i.plan_tipo }
+    })
+    const esGratis = n => !n.plan || n.plan === 'gratis'
+    const intentoDe = n => (esGratis(n) && !suscripciones.has(n.id) && intentoPorNegocio[n.id]) || null
+
+    const gratisLista = negocios?.filter(esGratis) || []
+    // Para la conversión no cuentan los planes puestos a mano: son cortesías
+    // o pruebas, ni pagaron ni se les ofreció pagar.
+    const baseConversion = negocios?.filter(n => !(n.plan_manual && precioDe(n) > 0)) || []
+    const gratis = {
+      total: gratisLista.length,
+      conClientes: gratisLista.filter(n => (clientesPorNegocio[n.id] || 0) > 0).length,
+      activos30: gratisLista.filter(n => ultimaActividadPorNegocio[n.id] > hace30dias).length,
+      enElLimite: gratisLista.filter(n => (clientesPorNegocio[n.id] || 0) >= limiteClientes(n)).length,
+      intentaronPagar: gratisLista.filter(intentoDe).length,
+      pagaron: baseConversion.filter(n => paga(n) || suscripciones.get(n.id)?.cuotas > 0).length,
+      base: baseConversion.length,
+    }
 
     // De dónde vino cada alta. El origen se guarda desde el 28/09/2026 (ver
     // lib/origen.js): los negocios anteriores no tienen dato y quedan afuera
@@ -139,6 +181,10 @@ export async function GET(request) {
       email: emailPorUserId[n.user_id] || '—',
       nombreDueno: nombrePorUserId[n.user_id] || null,
       origenFuente: n.origen?.fuente || null,
+      paga: paga(n),
+      suscripcion: suscripciones.get(n.id) || null,
+      intentoPago: intentoDe(n),
+      limite: esGratis(n) ? limiteClientes(n) : null,
       totalClientes: clientesPorNegocio[n.id] || 0,
       totalCanjesNegocio: canjesPorNegocio[n.id] || 0,
       totalPuntosNegocio: puntosPorNegocio[n.id] || 0,
@@ -154,6 +200,8 @@ export async function GET(request) {
         totalCanjes: canjes?.length || 0,
       },
       facturacion: { porPlan, mrr, pagando: pagos.length, mrrAMano, aMano: aMano.length, nuevosEsteMes },
+      pagos: { mpDisponible: !!preapprovals, ...resumen },
+      gratis,
       origenes,
       alertas: {
         cercaDelLimite: cercaDelLimite.map(n => ({ ...n, email: emailPorUserId[n.user_id] || '—', nombreDueno: nombrePorUserId[n.user_id] || null, totalClientes: clientesPorNegocio[n.id] || 0, limite: limiteClientes(n) })),
