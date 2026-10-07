@@ -23,7 +23,7 @@ export async function GET(request) {
     if (!token) return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
 
     const { data: { user } } = await supabaseAdmin.auth.getUser(token)
-    if (user?.email !== ADMIN_EMAIL) {
+    if (!ADMIN_EMAIL || user?.email !== ADMIN_EMAIL) {
       return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
     }
 
