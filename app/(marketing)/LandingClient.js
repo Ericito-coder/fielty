@@ -360,6 +360,9 @@ export default function LandingClient() {
             <a href="/guia" style={{fontSize:13, color: theme.darkMuted, textDecoration:'none'}}>Guía completa</a>
             <a href="/como-armar-un-programa-de-puntos" style={{fontSize:13, color: theme.darkMuted, textDecoration:'none'}}>Cómo armar un programa de puntos</a>
             <a href="/para" style={{fontSize:13, color: theme.darkMuted, textDecoration:'none'}}>Por rubro</a>
+            <a href="/tarjeta-de-fidelizacion-digital" style={{fontSize:13, color: theme.darkMuted, textDecoration:'none'}}>Tarjeta de fidelización digital</a>
+            <a href="/app-para-fidelizar-clientes" style={{fontSize:13, color: theme.darkMuted, textDecoration:'none'}}>App para fidelizar clientes</a>
+            <a href="/software-de-fidelizacion-de-clientes" style={{fontSize:13, color: theme.darkMuted, textDecoration:'none'}}>Software de fidelización</a>
             <a href="https://www.instagram.com/fieltyapp" target="_blank" rel="noreferrer me" style={{fontSize:13, color: theme.darkMuted, textDecoration:'none'}}>Instagram</a>
             <a href="/login" style={{fontSize:13, color: theme.darkMuted, textDecoration:'none'}}>Ingresar</a>
             <a href="/onboarding/registro" style={{fontSize:13, color: theme.darkMuted, textDecoration:'none'}}>Empezá gratis</a>
