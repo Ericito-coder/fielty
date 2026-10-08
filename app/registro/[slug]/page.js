@@ -1,6 +1,6 @@
 'use client'
 import { theme } from '@/lib/theme'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import GoogleSignInButton from '@/components/GoogleSignInButton'
 import { juntarNombre, partirNombre, emailValido } from '@/lib/clientes'
 import Image from 'next/image'
@@ -17,6 +17,18 @@ function decodificarJwt(token) {
     const bytes = Uint8Array.from(atob(base64), c => c.charCodeAt(0))
     return JSON.parse(new TextDecoder().decode(bytes))
   } catch { return null }
+}
+
+// `keepalive` deja terminar el pedido aunque el cliente toque "Ver mi
+// tarjeta" enseguida y la página se vaya.
+async function enviarPromos(clienteId, acepta) {
+  const res = await fetch('/api/tarjeta/promos', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ clienteId, acepta }),
+    keepalive: true,
+  })
+  if (!res.ok) throw new Error('No se guardó la preferencia de promociones')
 }
 
 export default function RegistroSlug({ params }) {
@@ -36,6 +48,21 @@ export default function RegistroSlug({ params }) {
   const [REFERIDO_POR, setReferidoPor] = useState(null)
   const [esIOS, setEsIOS] = useState(false)
   const [yaInstalada, setYaInstalada] = useState(false)
+  const [aceptaPromos, setAceptaPromos] = useState(true)
+  const [errorPromos, setErrorPromos] = useState(false)
+  const colaPromos = useRef(Promise.resolve())
+
+  // La casilla de promociones viene marcada (decisión de Eric, 07/10/2026:
+  // prefiere llegar a más clientes aunque una casilla premarcada pruebe
+  // menos que una que el cliente marcó). Por eso el sí se guarda solo, con
+  // la fecha, apenas aparece la pantalla de bienvenida: es el momento en
+  // que el cliente la tuvo adelante. Si la desmarca, se guarda el no.
+  //
+  // Si este pedido falla no se avisa nada: el cliente no tocó nada, y en
+  // la base `acepta_marketing` ya nace en true.
+  useEffect(() => {
+    if (clienteId) colaPromos.current = enviarPromos(clienteId, true).catch(() => {})
+  }, [clienteId])
 
   useEffect(() => {
     params.then(p => {
@@ -126,6 +153,28 @@ export default function RegistroSlug({ params }) {
     }
   }
 
+  // La casilla va en la pantalla de bienvenida y no en el formulario
+  // porque el que entra con Google no pasa por el formulario: toca el
+  // botón y la tarjeta ya está creada. Acá la ven los dos.
+  //
+  // Los pedidos van en fila: el sí automático de arriba y un "no" que el
+  // cliente toca medio segundo después tienen que llegar a la base en ese
+  // orden, o gana el que no corresponde.
+  async function cambiarPromos(acepta) {
+    setAceptaPromos(acepta)
+    setErrorPromos(false)
+    const pedido = colaPromos.current.then(() => enviarPromos(clienteId, acepta))
+    colaPromos.current = pedido.catch(() => {})
+    try {
+      await pedido
+    } catch {
+      // Si no se guardó, la casilla no puede quedar mostrando lo que el
+      // cliente eligió: vuelve a como estaba.
+      setAceptaPromos(!acepta)
+      setErrorPromos(true)
+    }
+  }
+
   if (!negocio) return (
     <div style={styles.wrap}>
       <div style={{color:'white', textAlign:'center'}}>Cargando...</div>
@@ -150,6 +199,19 @@ export default function RegistroSlug({ params }) {
         <p style={styles.sub}>
           Tu tarjeta fue creada con <strong>{REFERIDO_POR ? `${negocio.puntos_referido_receptor || 50} puntos por referido` : `${negocio.puntos_bienvenida ?? 10} puntos`}</strong> de regalo.
         </p>
+        <label style={styles.promos}>
+          <input type="checkbox" checked={aceptaPromos} onChange={e => cambiarPromos(e.target.checked)}
+            style={{width:20, height:20, margin:'1px 0 0', flexShrink:0, accentColor: negocio.color, cursor:'pointer'}} />
+          <span>
+            <span style={{display:'block', fontSize:14, fontWeight:600, color:theme.black, lineHeight:1.4}}>
+              Quiero recibir novedades y promociones de {negocio.nombre}
+            </span>
+            <span style={{display:'block', fontSize:12, color:theme.gray, lineHeight:1.5, marginTop:3}}>
+              Por mail o WhatsApp. Podés darte de baja cuando quieras.
+            </span>
+          </span>
+        </label>
+        {errorPromos && <div style={styles.error}>No pudimos guardar el cambio. Probá de nuevo.</div>}
         <button style={{...styles.btn, background: negocio.color}} onClick={() => window.location.href = `/tarjeta/${clienteId}`}>
           Ver mi tarjeta →
         </button>
@@ -281,5 +343,6 @@ const styles = {
   label: { display:'block', fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:'0.06em', color:theme.gray, marginBottom:8 },
   input: { width:'100%', padding:'14px 16px', border:'2px solid #e8eaf0', borderRadius:12, fontSize:16, fontFamily:'inherit', outline:'none', boxSizing:'border-box', maxWidth:'100%' },
   btn: { width:'100%', padding:18, border:'none', borderRadius:14, color:'white', fontSize:16, fontWeight:800, cursor:'pointer', marginTop:8, fontFamily:'inherit' },
-  error: { background:theme.errorBg, color:theme.red, padding:'10px 14px', borderRadius:10, fontSize:13, marginBottom:12 }
+  error: { background:theme.errorBg, color:theme.red, padding:'10px 14px', borderRadius:10, fontSize:13, marginBottom:12 },
+  promos: { display:'flex', gap:12, alignItems:'flex-start', background:theme.bgMuted2, borderRadius:14, padding:'14px 16px', marginBottom:12, cursor:'pointer' },
 }
